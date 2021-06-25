@@ -1,4 +1,4 @@
-from monarch_ingest import __version__
+from mingestibles import __version__
 
 
 def test_version():
