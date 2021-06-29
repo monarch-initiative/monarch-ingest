@@ -1,0 +1,21 @@
+name: 'rgd-gene'
+file_metadata:
+  description: 'Mapping file to capture list of valid RGD gene IDs'
+
+source: 'RGD'
+
+compression: 'gzip'
+
+files:
+  - './data/rgd.gpi.gz' #  http://current.geneontology.org/annotations/rgd.gpi.gz
+
+standard_format: gpi
+
+has_header: False
+
+skip_lines: 1
+
+key: 'DB_Object_ID'
+
+values:
+  - 'DB_Object_Type'
