@@ -14,6 +14,9 @@ if row['objectId'].replace('RGD:', '') in map.keys():  # limit to genes
     if len(row['phenotypeTermIdentifiers']) != 1:
         raise ValueError('This import should always have a single phenotype term')
 
+    if 'conditionRelations' in row.keys() and row['conditionRelations'] is not None:
+        raise ValueError("This import should never have phenotypes with experimental conditions")
+
     gene = Gene(id=row['objectId'])
     phenotypicFeature = PhenotypicFeature(id=row['phenotypeTermIdentifiers'][0]['termId'])
     association = GeneToPhenotypicFeatureAssociation(
@@ -21,7 +24,8 @@ if row['objectId'].replace('RGD:', '') in map.keys():  # limit to genes
         subject=gene.id,
         predicate=Predicate.has_phenotype,
         object=phenotypicFeature.id,
-        relation=translation_table.resolve_term('has phenotype')
+        relation=translation_table.resolve_term('has phenotype'),
+        publications=[row['evidence']['publicationId']]
     )
     write(source_name, gene, phenotypicFeature, association)
 
