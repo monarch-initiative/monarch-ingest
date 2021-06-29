@@ -1,0 +1,11 @@
+name: 'RGD'
+
+dataset_description:
+  ingest_title: 'RGD'
+  ingest_url: 'https://download.rgd.mcw.edu/data_release/agr/'
+  description: 'Ingest of Rat Genome Database gene to mammalian phenotype gaf file'
+  rights: 'https://rgd.mcw.edu/wg/disclaimer/'
+
+source_files:
+  - 'gene-to-phenotype.yaml'
+
