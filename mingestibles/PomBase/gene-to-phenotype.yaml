@@ -1,0 +1,23 @@
+name: 'gene-to-phenotype'
+
+standard_format: phaf
+
+files:
+  - './data/phenotype_annotations.pombase.phaf.gz'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'publications'
+  - 'provided_by'
