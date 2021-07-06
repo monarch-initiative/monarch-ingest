@@ -1,0 +1,11 @@
+name: 'PomBase'
+
+dataset_description:
+  ingest_title: 'PomBase'
+  ingest_url: 'https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz'
+  description: 'Ingest of PomBase phenotype annotations'
+  rights: 'https://www.pombase.org/about/terms-of-use'
+
+source_files:
+  - 'gene2phenotype.yaml'
+

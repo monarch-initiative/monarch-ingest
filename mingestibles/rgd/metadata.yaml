@@ -7,5 +7,5 @@ dataset_description:
   rights: 'https://rgd.mcw.edu/wg/disclaimer/'
 
 source_files:
-  - 'gene-to-phenotype.yaml'
+  - 'gene2phenotype.yaml'
 
