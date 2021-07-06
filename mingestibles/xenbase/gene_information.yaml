@@ -5,6 +5,8 @@ files:
 
 standard_format: 'gpi'
 
+skip_lines: 22
+
 compression: 'gzip'
 
 node_properties:

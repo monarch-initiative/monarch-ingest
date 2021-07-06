@@ -29,3 +29,6 @@ if row["Condition"]:
     association.qualifiers = row["Condition"].split(",")
 
 write(source_name, gene, phenotype, association)
+
+
+
