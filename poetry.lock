@@ -437,7 +437,7 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.0.1a4"
+version = "0.0.1a6"
 description = "Koza, an ETL framework for the Biolink model"
 category = "main"
 optional = false
@@ -1593,8 +1593,8 @@ kgx = [
     {file = "kgx-1.3.0.tar.gz", hash = "sha256:028b7523fece14068b9eeed2d6c958fab9126564d08dc405302284771826e6db"},
 ]
 koza = [
-    {file = "koza-0.0.1a4-py3-none-any.whl", hash = "sha256:48287ef5a9e71816265819de95142baa81b93e9a88ad27b47a35dd88ed6b2983"},
-    {file = "koza-0.0.1a4.tar.gz", hash = "sha256:2aba8b519fb371528a0f9df488725e65acd29b0b8ddd9878c336685a3bb7535b"},
+    {file = "koza-0.0.1a6-py3-none-any.whl", hash = "sha256:f1dc96878ac8e0ded58a97351cc7da81225eb7fe56400d1b089bae79bd51f748"},
+    {file = "koza-0.0.1a6.tar.gz", hash = "sha256:e0fe5da97cae6550d5cea554b1a4a62864bd00b9aa369a05c981b4849e582bec"},
 ]
 linkml = [
     {file = "linkml-1.0.0-py3-none-any.whl", hash = "sha256:0d44e206e2c14a713868de7dfd1862fcd4ed7a5cd3d86932112e62c66ee93373"},
