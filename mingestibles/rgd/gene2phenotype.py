@@ -37,3 +37,5 @@ if row["objectId"].replace("RGD:", "") in map.keys():  # limit to genes
         publications=[row["evidence"]["publicationId"]],
     )
     write(source_name, gene, phenotypicFeature, association)
+else:
+    print("hi")
