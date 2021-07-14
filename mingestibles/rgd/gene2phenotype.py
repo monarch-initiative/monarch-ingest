@@ -14,7 +14,9 @@ translation_table = inject_translation_table()
 map = inject_map("rgd-gene")
 row = inject_row(source_name)
 
-if row["objectId"].replace("RGD:", "") in map.keys():  # limit to genes
+internal_id = row["objectId"].replace("RGD:", "")
+
+if internal_id in map.keys() and map[internal_id]['DB_Object_Type'] == 'gene':
 
     if len(row["phenotypeTermIdentifiers"]) != 1:
         raise ValueError("This import should always have a single phenotype term")
@@ -37,5 +39,4 @@ if row["objectId"].replace("RGD:", "") in map.keys():  # limit to genes
         publications=[row["evidence"]["publicationId"]],
     )
     write(source_name, gene, phenotypicFeature, association)
-else:
-    print("hi")
+
