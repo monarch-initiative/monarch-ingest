@@ -25,4 +25,7 @@ association = GeneToPhenotypicFeatureAssociation(
     relation=row["RELATION"].replace("_", ":"),
 )
 
+if row["SOURCE"]:
+    association.publications = [row["SOURCE"]]
+
 write(source_name, gene, association, phenotype)
