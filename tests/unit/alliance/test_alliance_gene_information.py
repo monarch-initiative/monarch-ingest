@@ -3,71 +3,71 @@ from koza.koza_runner import get_translation_table
 
 @pytest.fixture
 def tt():
-    get_translation_table("mingestibles/translation_table.yaml", None)
+    get_translation_table('mingestibles/translation_table.yaml', None)
 
 @pytest.fixture
 def source_name():
-    return "gene-information"
+    return 'gene-information'
 
 @pytest.fixture
 def script():
-    return "./mingestibles/alliance/gene_information.py"
+    return './mingestibles/alliance/gene_information.py'
 
 @pytest.fixture
 def pax2a_row():
     return {
-               "symbol": "pax2a",
-               "name": "paired box 2a",
-               "soTermId": "SO:0001217",
-               "basicGeneticEntity": {
-                   "synonyms": [
-                       "no isthmus",
-                       "pax2.1",
-                       "pax-b",
-                       "cb378",
-                       "pax[zf-b]",
-                       "pax2a1",
-                       "noi",
-                       "Pax-2",
-                       "Pax2.1",
-                       "paxb",
+               'symbol': 'pax2a',
+               'name': 'paired box 2a',
+               'soTermId': 'SO:0001217',
+               'basicGeneticEntity': {
+                   'synonyms': [
+                       'no isthmus',
+                       'pax2.1',
+                       'pax-b',
+                       'cb378',
+                       'pax[zf-b]',
+                       'pax2a1',
+                       'noi',
+                       'Pax-2',
+                       'Pax2.1',
+                       'paxb',
                    ],
-                   "secondaryIds": ["ZFIN:ZDB-LOCUS-990215-377"],
-                   "primaryId": "ZFIN:ZDB-GENE-990415-8",
-                   "crossReferences": [
-                       {"id": "UniProtKB:Q90268", "pages": []},
-                       {"id": "NCBI_Gene:30425", "pages": []},
-                       {"id": "UniProtKB:F1QKT4", "pages": []},
-                       {"id": "UniProtKB:A0A0R4IAI2", "pages": []},
-                       {"id": "ENSEMBL:ENSDARG00000028148", "pages": []},
-                       {"id": "UniProtKB:F1R5S6", "pages": []},
-                       {"id": "UniProtKB:F1Q6N9", "pages": []},
-                       {"id": "UniProtKB:F1R6E2", "pages": []},
-                       {"id": "PANTHER:PTHR24329", "pages": []},
+                   'secondaryIds': ['ZFIN:ZDB-LOCUS-990215-377'],
+                   'primaryId': 'ZFIN:ZDB-GENE-990415-8',
+                   'crossReferences': [
+                       {'id': 'UniProtKB:Q90268', 'pages': []},
+                       {'id': 'NCBI_Gene:30425', 'pages': []},
+                       {'id': 'UniProtKB:F1QKT4', 'pages': []},
+                       {'id': 'UniProtKB:A0A0R4IAI2', 'pages': []},
+                       {'id': 'ENSEMBL:ENSDARG00000028148', 'pages': []},
+                       {'id': 'UniProtKB:F1R5S6', 'pages': []},
+                       {'id': 'UniProtKB:F1Q6N9', 'pages': []},
+                       {'id': 'UniProtKB:F1R6E2', 'pages': []},
+                       {'id': 'PANTHER:PTHR24329', 'pages': []},
                        {
-                           "id": "ZFIN:ZDB-GENE-990415-8",
-                           "pages": [
-                               "gene",
-                               "gene/expression",
-                               "gene/wild_type_expression",
-                               "gene/expression_images",
-                               "gene/references",
+                           'id': 'ZFIN:ZDB-GENE-990415-8',
+                           'pages': [
+                               'gene',
+                               'gene/expression',
+                               'gene/wild_type_expression',
+                               'gene/expression_images',
+                               'gene/references',
                            ],
                        },
-                       {"id": "UniProtKB:F1QEK2", "pages": []},
-                       {"id": "UniProtKB:F1QHP2", "pages": []},
-                       {"id": "UniProtKB:B8JJS3", "pages": []},
-                       {"id": "UniProtKB:B8JJS4", "pages": []},
+                       {'id': 'UniProtKB:F1QEK2', 'pages': []},
+                       {'id': 'UniProtKB:F1QHP2', 'pages': []},
+                       {'id': 'UniProtKB:B8JJS3', 'pages': []},
+                       {'id': 'UniProtKB:B8JJS4', 'pages': []},
                    ],
-                   "genomeLocations": [
+                   'genomeLocations': [
                        {
-                           "assembly": "GRCz11",
-                           "chromosome": "13",
-                           "startPosition": 29770837,
-                           "endPosition": 29803764,
+                           'assembly': 'GRCz11',
+                           'chromosome': '13',
+                           'startPosition': 29770837,
+                           'endPosition': 29803764,
                        }
                    ],
-                   "taxonId": "NCBITaxon:7955",
+                   'taxonId': 'NCBITaxon:7955',
                },
            }
 
@@ -103,11 +103,15 @@ def test_gene_information_gene(pax2a):
 def test_gene_information_synonym(pax2a):
     gene = pax2a[0]
     assert gene.synonym
-    assert "no isthmus" in gene.synonym
+    assert 'no isthmus' in gene.synonym
 
 def test_gene_information_id(pax2a):
     gene = pax2a[0]
-    assert gene.id == "ZFIN:ZDB-GENE-990415-8"
+    assert gene.id == 'ZFIN:ZDB-GENE-990415-8'
+
+def test_gene_information_type(pax2a):
+    gene = pax2a[0]
+    assert gene.type == 'SO:0001217'
 
 def test_gene_information_no_synonyms(no_synonym_gene):
     gene = no_synonym_gene[0]

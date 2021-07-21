@@ -18,6 +18,7 @@ gene = Gene(
     id=row['basicGeneticEntity']['primaryId'],
     symbol=row['symbol'],
     name=row['name'],
+    type=row['soTermId'],
     in_taxon=row['basicGeneticEntity']['taxonId'],
     source=source,
 )
