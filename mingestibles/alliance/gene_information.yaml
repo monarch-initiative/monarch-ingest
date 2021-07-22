@@ -1,0 +1,39 @@
+name: 'gene-information'
+
+files:
+    - "./data/BGI_MGI.json.gz"
+    - "./data/BGI_FB.json.gz"
+    - "./data/BGI_SGD.json.gz"
+    - "./data/BGI_HUMAN.json.gz"
+    - "./data/BGI_RGD.json.gz"
+    - "./data/BGI_WB.json.gz"
+    - "./data/BGI_ZFIN.json.gz"
+
+format: 'json'
+
+compression: 'gzip'
+
+json_path:
+  - 'data'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'name'
+  - 'symbol'
+  - 'description'
+  - 'type' # soTermId
+  - 'in_taxon'
+  - 'xref'
+  - 'synonyms'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
