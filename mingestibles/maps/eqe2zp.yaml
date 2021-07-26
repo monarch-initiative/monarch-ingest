@@ -1,0 +1,25 @@
+name: 'eqe2zp'
+
+file_metadata:
+  description: 'Mapping file from ZFIN EQE to ZP Terms'
+
+source: 'OBO Phenotype'
+
+format: 'csv'
+
+delimiter: '\t'
+
+#  https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
+files:
+  - './data/id_map_zfin.tsv'
+
+has_header: true
+
+columns:
+  - 'iri'
+  - 'id'
+
+key: 'id'
+
+values:
+  - 'iri'
