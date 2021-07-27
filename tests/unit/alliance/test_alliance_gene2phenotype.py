@@ -40,7 +40,7 @@ def entities(mock_koza):
     return mock_koza(
         "gene-to-phenotype",
         rows,
-        "./mingestibles/rgd/gene2phenotype.py",
+        "./mingestibles/alliance/gene2phenotype.py",
         map_cache=map_cache,
         translation_table=tt,
     )

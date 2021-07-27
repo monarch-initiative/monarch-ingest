@@ -3,13 +3,17 @@ name: 'gene-to-phenotype'
 format: 'json'
 
 files:
-  - './data/phenotypes.10116.json'
+  - './data/PHENOTYPE_RGD.json.gz'
+  - './data/PHENOTYPE_SGD.json.gz'
+  - './data/PHENOTYPE_MGI.json.gz'
+  - './data/PHENOTYPE_FB.json.gz'
+  - './data/PHENOTYPE_WB.json.gz'
 
 json_path:
   - 'data'
 
-depends_on:
-  - './mingestibles/maps/rgd-gene.yaml'
+#depends_on:
+#  - './mingestibles/maps/rgd-gene.yaml'
 
 node_properties:
   - 'id'
@@ -23,6 +27,7 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
+  - 'qualifiers'
   - 'publications'
   - 'provided_by'
 

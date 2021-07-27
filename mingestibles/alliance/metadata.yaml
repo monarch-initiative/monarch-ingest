@@ -10,4 +10,5 @@ dataset_description:
   rights: 'https://www.alliancegenome.org/privacy-warranty-licensing'
 
 source_files:
-  - 'gene_information.yaml'
+#  - 'gene_information.yaml'
+  - 'gene2phenotype.yaml'
