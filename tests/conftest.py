@@ -59,6 +59,6 @@ def mock_koza():
         )
         set_koza(koza_app)
         koza_app.process_sources()
-        return koza_app._entities
+        return koza_app._entities if hasattr(koza_app, '_entities') else list()
 
     return _transform
