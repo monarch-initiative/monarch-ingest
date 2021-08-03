@@ -1,0 +1,25 @@
+name: 'alliance-gene'
+file_metadata:
+  description: 'Mapping file to look up whether an Alliance ID is for a gene'
+
+source: 'Alliance'
+
+compression: 'gzip'
+
+delimiter: '\t'
+
+# This is generated from Alliance BGI files using:
+# gzcat BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > alliance_gene_ids.txt.gz
+files:
+  - './data/alliance_gene_ids.txt.gz'
+
+has_header: false
+
+columns:
+  - 'gene_id'
+
+key: 'gene_id'
+
+values:
+  - 'gene_id'
+
