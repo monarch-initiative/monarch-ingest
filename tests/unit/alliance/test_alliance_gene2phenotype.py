@@ -21,9 +21,11 @@ def source_name():
 def script():
     return "./mingestibles/alliance/gene2phenotype.py"
 
+
 @pytest.fixture
 def map_cache():
-    return {"alliance-gene": {"61958": {"gene_id": "gene"}}}
+    return {"alliance-gene": {"RGD:61958": {"gene_id": "RGD:61958"}}}
+
 
 @pytest.fixture
 def rat_row():
