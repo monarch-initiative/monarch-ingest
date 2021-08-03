@@ -8,39 +8,46 @@ from koza.koza_runner import get_translation_table
 
 
 @pytest.fixture
-def entities(mock_koza):
+def tt():
+    return get_translation_table("./mingestibles/translation_table.yaml", None)
+
+
+@pytest.fixture
+def source_name():
+    return "gene-to-phenotype"
+
+
+@pytest.fixture
+def script():
+    return "./mingestibles/alliance/gene2phenotype.py"
+
+@pytest.fixture
+def map_cache():
+    return {"alliance-gene": {"61958": {"gene_id": "gene"}}}
+
+@pytest.fixture
+def rat_row():
+    return {
+        "dateAssigned": "2006-10-25T18:06:17.000-05:00",
+        "evidence": {
+            "crossReference": {"id": "RGD:1357201", "pages": ["reference"]},
+            "publicationId": "PMID:11549339",
+        },
+        "objectId": "RGD:61958",
+        "phenotypeStatement": "cardiac hypertrophy",
+        "phenotypeTermIdentifiers": [{"termId": "MP:0001625", "termOrder": 1}],
+    }
+
+
+@pytest.fixture
+def rat(rat_row, mock_koza, source_name, script, map_cache, tt):
     # First row is a gene, second is a feature and should get ignored
-    rows = iter(
-        [
-            {
-                "dateAssigned": "2006-10-25T18:06:17.000-05:00",
-                "evidence": {
-                    "crossReference": {"id": "RGD:1357201", "pages": ["reference"]},
-                    "publicationId": "PMID:11549339",
-                },
-                "objectId": "RGD:61958",
-                "phenotypeStatement": "cardiac hypertrophy",
-                "phenotypeTermIdentifiers": [{"termId": "MP:0001625", "termOrder": 1}],
-            },
-            {
-                "dateAssigned": "2008-07-23T00:00:00.000-05:00",
-                "evidence": {
-                    "crossReference": {"id": "RGD:625461", "pages": ["reference"]},
-                    "publicationId": "PMID:12195039",
-                },
-                "objectId": "RGD:2298772",
-                "phenotypeStatement": "fuzzy hair",
-                "phenotypeTermIdentifiers": [{"termId": "MP:0009930", "termOrder": 1}],
-            },
-        ]
-    )
-    map_cache = {"rgd-gene": {"61958": {"DB_Object_Type": "gene"}}}
-    tt = get_translation_table("./mingestibles/translation_table.yaml", None)
+    rows = iter([rat_row])
 
     return mock_koza(
-        "gene-to-phenotype",
+        source_name,
         rows,
-        "./mingestibles/alliance/gene2phenotype.py",
+        script,
         map_cache=map_cache,
         translation_table=tt,
     )
@@ -50,17 +57,17 @@ def entities(mock_koza):
 @pytest.mark.parametrize(
     "cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation]
 )
-def confirm_one_of_each_classes(cls, entities):
-    class_entities = [entity for entity in entities if isinstance(entity, cls)]
+def confirm_one_of_each_classes(cls, rat):
+    class_entities = [entity for entity in rat if isinstance(entity, cls)]
     assert class_entities
     assert len(class_entities) == 1
     assert class_entities[0]
 
 
-def test_association_publication(entities):
+def test_association_publication(rat):
     associations = [
         association
-        for association in entities
+        for association in rat
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ]
     assert associations[0].publications[0] == "PMID:11549339"
