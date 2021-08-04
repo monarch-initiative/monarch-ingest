@@ -1,0 +1,120 @@
+# Sourced from: https://github.com/biolink/kgx/tree/master/examples
+---
+configuration:
+  output_directory: output/merged
+  checkpoint: false
+
+  curie_map:
+  # define non-canonical CURIE to IRI mappings (for RDF)
+  node_properties:
+  # define predicates that are to be treated as direct node properties (for RDF)
+  predicate_mappings:
+  # map non-canonical predicates to a property name (for RDF)
+  property_types:
+  # define the type for non-canonical properties for RDF export
+
+merged_graph:
+  name: Monarch Graph
+  source:
+    alliance-gene:
+      input:
+        format: tsv
+        filename:
+          - output/Alliance.gene-information_nodes.tsv
+    alliance-gene-to-phenotype:
+      input:
+        format: tsv
+        filename:
+          - output/Alliance.gene-to-phenotype_nodes.tsv
+          - output/Alliance.gene-to-phenotype_edges.tsv
+    pombase-gene-to-phenotype:
+      input:
+        format: tsv
+        filename:
+          - output/PomBase.gene-to-phenotype_nodes.tsv
+          - output/PomBase.gene-to-phenotype_edges.tsv
+    xenbase-gene:
+      input:
+        format: tsv
+        filename:
+          - output/Xenbase.gene-information_nodes.tsv
+    xenbase-gene-to-phenotype:
+      input:
+        format: tsv
+        filename:
+          - output/Xenbase.gene-to-phenotype_nodes.tsv
+          - output/Xenbase.gene-to-phenotype_edges.tsv
+    xenbase-gene-literature:
+      input:
+        format: tsv
+        filename:
+          - output/Xenbase.gene-literature_nodes.tsv
+          - output/Xenbase.gene-literature_edges.tsv
+    zfin-gene-to-phenotype:
+      input:
+        format: tsv
+        filename:
+          - output/ZFIN.gene-to-phenotype_nodes.tsv
+          - output/ZFIN.gene-to-phenotype_edges.tsv
+
+    fypo:
+      input:
+        format: owl
+        filename:
+          - data/fypo.owl
+# TODO: track down why this fails
+#    hp:
+#      input:
+#        format: owl
+#        filename:
+#          - data/hp.owl
+    mp:
+      input:
+        format: owl
+        filename:
+          - data/mp.owl
+    pato:
+      input:
+        format: owl
+        filename:
+          - data/pato.owl
+    wbphenotype:
+      input:
+        format: owl
+        filename:
+          - data/wbphenotype.owl
+    xpo:
+      input:
+        format: owl
+        filename:
+          - data/xpo.owl
+    zp:
+      input:
+        format: owl
+        filename:
+          - data/zp.owl
+    zfa:
+      input:
+        format: owl
+        filename:
+          - data/zfa.owl
+
+  operations:
+    - name: kgx.graph_operations.summarize_graph.generate_graph_stats
+      args:
+        graph_name: Monarch Graph
+        filename: merged_graph_stats.yaml
+        node_facet_properties:
+          - provided_by
+        edge_facet_properties:
+          - provided_by
+  destination:
+    merged-kg-tsv:
+      format: tsv
+      compression: tar.gz
+      filename: merged-kg
+# TODO: this requires property type definitions above
+#    merged-kg-nt:
+#      format: nt
+#      compression: tar.gz
+#      filename: merged-kg

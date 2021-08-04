@@ -68,7 +68,7 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "biolink-model-pydantic"
-version = "0.0.5"
+version = "0.0.6"
 description = "Pydantic dataclasses for the Biolink model"
 category = "main"
 optional = false
@@ -1408,8 +1408,8 @@ babel = [
     {file = "Babel-2.9.1.tar.gz", hash = "sha256:bc0c176f9f6a994582230df350aa6e05ba2ebe4b3ac317eab29d9be5d2768da0"},
 ]
 biolink-model-pydantic = [
-    {file = "biolink_model_pydantic-0.0.5-py3-none-any.whl", hash = "sha256:f1eac8b6bc99cceab1c2cd7fe9b25d1f0b438d3c82d4b214a5e9863188c53a70"},
-    {file = "biolink_model_pydantic-0.0.5.tar.gz", hash = "sha256:5d1c1c511e6d7105398a07cff5ee3a3c422357d3384f29f06b4d6b2c01c63fba"},
+    {file = "biolink_model_pydantic-0.0.6-py3-none-any.whl", hash = "sha256:dbb32a25c7e9b3ef374d3c8264c082f442ae21ac3c387a8fc51a6d7eac2c7a25"},
+    {file = "biolink_model_pydantic-0.0.6.tar.gz", hash = "sha256:5a0c9e9a226ede4c1444cd03f962dca99f6bd62167f57d23f79dac7806611bb7"},
 ]
 bmt = [
     {file = "bmt-0.7.2-py3-none-any.whl", hash = "sha256:c215ea5eaeffc104918393b81225af4cefef2c4d7500891d191bab18bcb7bd2d"},
