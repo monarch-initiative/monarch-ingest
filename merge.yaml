@@ -62,7 +62,7 @@ merged_graph:
         format: owl
         filename:
           - data/fypo.owl
-# TODO: track down why this fails
+# TODO: This fails with kgx 1.3.0, but looks like it will be ok when kgx 1.4.0 is released
 #    hp:
 #      input:
 #        format: owl
