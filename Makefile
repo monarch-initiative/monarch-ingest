@@ -42,4 +42,6 @@ format:
 	poetry run isort mingestibles tests
 	poetry run black mingestibles tests
 
-
+.PHONY: merge
+merge:
+	kgx merge --merge-config merge.yaml
