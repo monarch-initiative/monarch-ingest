@@ -30,7 +30,7 @@ def entities(
         ]
     )
     return mock_koza(
-        "gene-to-phenotype", row, "./mingestibles/xenbase/gene2phenotype.py"
+        "gene-to-phenotype", row, "./monarch_ingest/xenbase/gene2phenotype.py"
     )
 
 

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mingestibles"
+name = "monarch-ingest"
 version = "0.1.0"
 description = ""
 authors = ["Kevin Schaper <kevinschaper@gmail.com>"]

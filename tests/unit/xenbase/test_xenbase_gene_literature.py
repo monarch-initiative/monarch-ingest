@@ -57,12 +57,12 @@ def gene_literature_entities(mock_koza):
             },
         }
     }
-    tt = get_translation_table("mingestibles/translation_table.yaml", None)
+    tt = get_translation_table("monarch_ingest/translation_table.yaml", None)
 
     return mock_koza(
         "gene-literature",
         row,
-        "./mingestibles/xenbase/gene_literature.py",
+        "./monarch_ingest/xenbase/gene_literature.py",
         map_cache=map_cache,
         translation_table=tt,
     )
