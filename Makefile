@@ -27,9 +27,9 @@ clean:
 
 .PHONY: lint
 lint:
-	poetry run flake8 --exit-zero --max-line-length 120 mingestibles/ tests/
-	poetry run black --check --diff mingestibles tests
-	poetry run isort --check-only --diff mingestibles tests
+	poetry run flake8 --exit-zero --max-line-length 120 monarch_ingest/ tests/
+	poetry run black --check --diff monarch_ingest tests
+	poetry run isort --check-only --diff monarch_ingest tests
 
 .PHONY: format
 format:
@@ -38,9 +38,9 @@ format:
 		--remove-all-unused-imports \
 		--remove-unused-variables \
 		--ignore-init-module-imports \
-		--in-place mingestibles tests
-	poetry run isort mingestibles tests
-	poetry run black mingestibles tests
+		--in-place monarch_ingest tests
+	poetry run isort monarch_ingest tests
+	poetry run black monarch_ingest tests
 
 .PHONY: merge
 merge:

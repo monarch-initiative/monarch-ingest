@@ -39,7 +39,7 @@ columns:
   - 'Figure ID'
 
 depends_on:
-  - './mingestibles/maps/eqe2zp.yaml'
+  - './monarch_ingest/maps/eqe2zp.yaml'
 
 node_properties:
   - 'id'

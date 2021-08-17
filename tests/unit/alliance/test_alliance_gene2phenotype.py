@@ -9,7 +9,7 @@ from koza.koza_runner import get_translation_table
 
 @pytest.fixture
 def tt():
-    return get_translation_table("./mingestibles/translation_table.yaml", None)
+    return get_translation_table("./monarch_ingest/translation_table.yaml", None)
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./mingestibles/alliance/gene2phenotype.py"
+    return "./monarch_ingest/alliance/gene2phenotype.py"
 
 
 @pytest.fixture

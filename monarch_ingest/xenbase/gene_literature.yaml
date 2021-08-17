@@ -13,7 +13,7 @@ columns:
   - 'gene_pages'
 
 depends_on:
-  - './mingestibles/maps/genepage-2-gene.yaml'
+  - './monarch_ingest/maps/genepage-2-gene.yaml'
 
 node_properties:
   - 'id'

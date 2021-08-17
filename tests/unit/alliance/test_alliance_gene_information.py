@@ -4,7 +4,7 @@ from koza.koza_runner import get_translation_table
 
 @pytest.fixture
 def tt():
-    get_translation_table("mingestibles/translation_table.yaml", None)
+    get_translation_table("monarch_ingest/translation_table.yaml", None)
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./mingestibles/alliance/gene_information.py"
+    return "./monarch_ingest/alliance/gene_information.py"
 
 
 @pytest.fixture

@@ -35,12 +35,12 @@ def entities(mock_koza):
             }
         ]
     )
-    tt = get_translation_table("mingestibles/translation_table.yaml", None)
+    tt = get_translation_table("monarch_ingest/translation_table.yaml", None)
 
     return mock_koza(
         "gene-to-phenotype",
         row,
-        "./mingestibles/pombase/gene2phenotype.py",
+        "./monarch_ingest/pombase/gene2phenotype.py",
         translation_table=tt,
     )
 
