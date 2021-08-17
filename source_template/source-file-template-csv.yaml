@@ -1,0 +1,50 @@
+name: 'source-file-template-csv'
+
+# List of files to be ingested
+files:
+  - './data/something_annotations.tsv.gz'
+
+# Specify compression if necessary
+compression: 'gzip'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+# Presence of a header defaults to true
+# if no header is present in the file, use
+# header = false
+
+# If the source_file has metadata lines to skip, use
+# skip_lines: 10
+
+# Optionally, if a source file depends on any map files, specify their configuration file here
+# depends_on:
+#   - './path/to/map.yaml'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - 'ID'
+  - 'Name'
+  - 'Xrefs'
+
+
+# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'publications'
+  - 'provided_by'

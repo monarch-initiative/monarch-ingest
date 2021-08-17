@@ -10,7 +10,7 @@ configuration:
   # define predicates that are to be treated as direct node properties (for RDF)
   predicate_mappings:
   # map non-canonical predicates to a property name (for RDF)
-  property_types:
+  # property_types:
   # define the type for non-canonical properties for RDF export
 
 merged_graph:
@@ -56,18 +56,17 @@ merged_graph:
         filename:
           - output/ZFIN.gene-to-phenotype_nodes.tsv
           - output/ZFIN.gene-to-phenotype_edges.tsv
-
     fypo:
       input:
         format: owl
         filename:
           - data/fypo.owl
 # TODO: This fails with kgx 1.3.0, but looks like it will be ok when kgx 1.4.0 is released
-#    hp:
-#      input:
-#        format: owl
-#        filename:
-#          - data/hp.owl
+    hp:
+      input:
+        format: owl
+        filename:
+          - data/hp.owl
     mp:
       input:
         format: owl
@@ -78,6 +77,11 @@ merged_graph:
         format: owl
         filename:
           - data/pato.owl
+    peco:
+      input:
+        format: owl
+          filename:
+            - data/peco.owl
     wbphenotype:
       input:
         format: owl
@@ -113,8 +117,12 @@ merged_graph:
       format: tsv
       compression: tar.gz
       filename: merged-kg
-# TODO: this requires property type definitions above
 #    merged-kg-nt:
 #      format: nt
 #      compression: tar.gz
-#      filename: merged-kg
+#      filename: merged-kg.nt.gz
+#    merged-kg-neo4j:
+#      format: neo4j
+#      uri: http://localhost:7474
+#      username: neo4j
+#      password: admin
