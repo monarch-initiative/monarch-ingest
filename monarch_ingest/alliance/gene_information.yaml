@@ -16,6 +16,15 @@ compression: 'gzip'
 json_path:
   - 'data'
 
+required_properties:
+  - 'basicGeneticEntity'
+  - 'symbol'
+  - 'name'
+  - 'soTermId'
+  # Nested properties that are also required, but can't be specified yet
+  #  - 'basicGeneticEntity.primaryId'
+  #  - 'basicGeneticEntity.taxonId'
+
 node_properties:
   - 'id'
   - 'category'
