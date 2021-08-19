@@ -3,3 +3,97 @@ KEGG is a database resource for understanding high-level functions and utilities
 
 ## API
 The [RESTful API](https://www.kegg.jp/kegg/rest/keggapi.html) provides information about how to query the KEGG database.
+
+### URL form
+`http://rest.kegg.jp/<operation>/<argument>[/<argument2[/<argument3> ...]]`
+```
+<operation> = info | list | find | get | conv | link | ddi
+
+<database> =  KEGG databases (Table 1), KEGG MEDICUS extension databases (Table 2) and 
+              Outside databases integrated in KEGG (Table 3)
+              
+           = pathway | brite | module | ko | genome | <org> | vg | ag | compound |
+             glycan | reaction | rclass | enzyme | network | variant | disease |
+             drug | dgroup | environ | genes | ligand | kegg | <medicus> | <outside>
+             
+<org> = KEGG organism code
+
+<medicus> = disease_ja | drug_ja | dgroup_ja | environ_ja | compound_ja |
+            brite_ja | atc | jtc | ndc | yj
+
+<outside> = pubmed | ncbi-geneid | ncbi-proteinid | uniprot | pubchem | chebi
+
+```
+
+### Info
+Display database release information and linked db information
+
+URL: `http://rest.kegg.jp/info/<database>`
+```
+<database> = kegg | pathway | brite | module | ko | genome | genes | <org> | vg | ag |
+             ligand | compound | glycan | reaction | rclass | enzyme | network |
+             variant | disease | drug | dgroup | environ
+```
+
+### List
+Obtain a list of entry identifiers and associated definition
+
+URL: `http://rest.kegg.jp/list/<database>[/<option>]`
+```
+<database> = pathway | brite | module | ko | genome | <org> | vg | ag | compound |
+             glycan | reaction | rclass | enzyme | network | variant | disease |
+             drug | dgroup | environ | organism | <medicus>
+```
+
+### Get
+Retrieve given database entries
+
+URL: `http://rest.kegg.jp/get/<dbentries>[/<option>]`
+```
+<dbentries> = KEGG database entries of the following <database>
+<database> = pathway | brite | module | ko | genome | <org> | vg | ag | compound |
+             glycan | reaction | rclass | enzyme | network | variant | disease |
+             drug | dgroup | environ | disease_ja | drug_ja | dgroup_ja | environ_ja |
+             compound_ja
+```
+
+### Link
+URL: `http://rest.kegg.jp/link/<target_db>/<source_db>`
+```
+<target_db> = <database>
+<source_db> = <database>
+
+<database> = pathway | brite | module | ko | genome | <org> | vg | ag | compound |
+             glycan | reaction | rclass | enzyme | network | variant | disease |
+             drug | dgroup | environ | atc | jtc | ndc | yj | pubmed
+```
+
+### Conversions
+Convert KEGG identifiers to/from outside identifiers
+
+#### Database to Database:
+URL: `http://rest.kegg.jp/conv/<target_db>/<source_db>`
+```
+(<target_db> <source_db>) = (<kegg_db> <outside_db>) | (<outside_db> <kegg_db>)
+
+# For gene identifiers:
+<kegg_db> = <org>
+<org> = KEGG organism code or T number
+<outside_db> = ncbi-geneid | ncbi-proteinid | uniprot
+
+# For chemical substance identifiers:
+<kegg_db> = compound | glycan | drug
+<outside_db> = pubchem | chebi
+```
+#### Database to Database:
+URL: `http://rest.kegg.jp/conv/<target_db>/<dbentries>`
+```
+# For gene identifiers:
+<dbentries> = database entries of the following <database>
+<database> = <org> | genes | ncbi-geneid | ncbi-proteinid | uniprot
+<org> = KEGG organism code or T number
+
+# For chemical substance identifiers:
+<dbentries> = database entries of the following <database>
+<database> = compound | glycan | drug | pubchem | chebi
+```
