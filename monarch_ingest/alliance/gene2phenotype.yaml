@@ -11,6 +11,15 @@ files:
 json_path:
   - 'data'
 
+required_properties:
+  - 'objectId'
+  - 'phenotypeTermIdentifiers'
+  - 'evidence'
+  # Nested properties that are also required, but can't be specified yet
+  # - 'phenotypeTermIdentifiers[0]['termId']
+  # - 'evidence.publicationId'
+
+
 depends_on:
   - './monarch_ingest/maps/alliance-gene.yaml'
 

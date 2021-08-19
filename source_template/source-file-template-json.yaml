@@ -14,6 +14,12 @@ compression: 'gzip'
 json_path:
   - 'data'
 
+# specify any top level properties that are required for the ingest
+# there's no way yet to specify nested properties, but they can be added as comments for now
+required_properties:
+  - 'id'
+  - 'symbol'
+
 # Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
 node_properties:
   - 'id'
