@@ -1,0 +1,50 @@
+name: 'kegg-compounds'
+
+files:
+  - './data/kegg-compounds.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'ENTRY' 
+    - 'NAME'
+    -	'FORMULA'
+    - 'EXACT_MASS'
+    - 'MOL_WEIGHT'
+    - 'REMARK'
+    - 'REACTION'
+    - 'PATHWAY'
+    - 'MODULE'
+    - 'ENZYME'
+    - 'BRITE'
+    - 'DBLINKS'
+    - 'ATOM'
+    - 'BOND'
+    - 'COMMENT'
+    - 'BRACKET'
+    - 'ORIGINAL'
+    - 'REPEAT'
+    - 'SEQUENCE'
+    - 'ORGANISM'
+    - 'TYPE'
+    - 'GENE'
+    - 'REFERENCE'
+    - 'AUTHORS'
+    - 'TITLE'
+    - 'JOURNAL'
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'

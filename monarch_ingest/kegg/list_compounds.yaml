@@ -1,0 +1,26 @@
+name: 'compounds'
+
+files:
+  - './data/compounds.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'compound_id' 
+    - 'compound_name'
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'
