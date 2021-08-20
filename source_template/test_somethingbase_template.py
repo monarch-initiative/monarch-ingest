@@ -1,12 +1,3 @@
-### Testing
-
-You may want to start with the test template within `source_template`
-
-##### Basic fixtures
-
-Initially, set up your basic fixtures, taking care to set the correct source name and location for the transform code.
-
-```python
 import pytest
 from koza.koza_runner import get_translation_table
 
@@ -24,17 +15,9 @@ def source_name():
 @pytest.fixture
 def script():
     return "./monarch_ingest/somethingbase/something2somethingelse.py"
-```
 
 
-##### A map, if necessary
-
-Some ingests will depend on one or more maps, that fixture can be set up here. Note that this fixture must return a map of maps, and that the inner maps will map from an ID to a dictionary representing column headers and values. 
-
-In the example below, a map is created that maps from a big concatenated natural key (as the ID) for ZP to a single column (called `iri`) that contains the ZP ID. 
-
-This map is then placed into the map cache under the name `eqe2zp`
-```python
+# If the ingest requires a map, it can be created here with just the entries that are required
 @pytest.fixture
 def map_cache():
     eqe2zp = {
@@ -47,35 +30,43 @@ def map_cache():
         },
     }
     return {"eqe2zp": eqe2zp}
-```
 
 
-##### Fixtures for test data
-
-Create a fixture that returns a dictionary to represent a single row. As a matter of strategy, this row should probably represent a fairly basic row being ingested. 
-
-One trick so that you don't have to manually convert from the imput format to a python dictionary format is to run your ingest with a debugger and set a breakpoint just after a row has been injected. If you want a more specific piece of data, check out conditional breakpoints. 
-
-````python
+# Create a fixture for a full row, it should be relatively representative of the rows ingested, and can
+# be modified for testing edge cases
 @pytest.fixture
 def basic_row():
     return {
         "ID": "341492416",
         "Gene Symbol": "pax2a",
         "Gene ID": "ZDB-GENE-990415-8",
-         #...
+        "Affected Structure or Process 1 subterm ID": "",
+        "Affected Structure or Process 1 subterm Name": "",
+        "Post-composed Relationship ID": "",
+        "Post-composed Relationship Name": "",
+        "Affected Structure or Process 1 superterm ID": "ZFA:0000042",
+        "Affected Structure or Process 1 superterm Name": "midbrain hindbrain boundary",
+        "Phenotype Keyword ID": "PATO:0000638",
+        "Phenotype Keyword Name": "apoptotic",
+        "Phenotype Tag": "abnormal",
+        "Affected Structure or Process 2 subterm ID": "",
+        "Affected Structure or Process 2 subterm name": "",
+        "Post-composed Relationship (rel) ID": "",
+        "Post-composed Relationship (rel) Name": "",
+        "Affected Structure or Process 2 superterm ID": "",
+        "Affected Structure or Process 2 superterm name": "",
+        "Fish ID": "ZDB-FISH-150901-29679",
+        "Fish Display Name": "pax2a<sup>th44/th44</sup>",
+        "Start Stage ID": "ZDB-STAGE-010723-13",
+        "End Stage ID": "ZDB-STAGE-010723-13",
         "Fish Environment ID": "ZDB-GENOX-041102-1385",
         "Publication ID": "ZDB-PUB-970210-19",
         "Figure ID": "ZDB-FIG-120307-8",
     }
-````
 
 
-##### Fixture for transforming a single row
-
-This sets up a fixture you can call more than once to independently test different attributes
-
-```python
+# This is the outward facing fixture that can be used by individual tests, it will return
+# a list of biolink instances
 @pytest.fixture
 def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, tt):
     return mock_koza(
@@ -85,14 +76,7 @@ def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, tt):
         map_cache=map_cache,
         translation_table=tt,
     )
-```
 
-
-##### Test the basics of the ingest
-
-Confirm that entities are created matching the expectations on the row
-
-```python
 # A simple end-to-end test is to confirm that the IDs are set on
 def test_gene(basic_g2p):
     gene = basic_g2p[0]
@@ -113,16 +97,10 @@ def test_association(basic_g2p):
     assert association.object == "ZP:0004225"
     assert association.publications
     assert association.publications[0] == "ZFIN:ZDB-PUB-970210-19"
-```
 
 
-##### Test against an alternate row
-
-For any branching within the transform code, it's a good idea to test against all of the paths through the code. It's possible to set conditional breakpoints to find real examples in the code that will hit each code path, but it may be more practical to modify the basic row as a new fixture
-
-The example below creates a row with additional columns filled in.
-
-```python
+# A that fixture creates entities from a modified row is quick way to test all of
+# the paths through the code
 @pytest.fixture
 def postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt):
 
@@ -137,16 +115,16 @@ def postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt):
         map_cache=map_cache,
         translation_table=tt,
     )
-```
 
 
-##### Parameterized tests 
+def test_postcomposed(postcomposed):
+    phenotypic_feature = postcomposed[1]
+    assert phenotypic_feature.id == "ZP:0011243"
 
-Mixing [parameterization](https://docs.pytest.org/en/6.2.x/parametrize.html) and fixtures changes the approach a little. In this case it makes more sense to alter the row using a parameter and then create the entities within the same method.  
 
-The test below is intended to confirm that when the tag column has any of the specified values, the row will be ignored (confirmed because no entities are created).
-
-```python
+# To parameterize multiple scenarios, the test can depend directly on the row fixture,
+# the entities can be generated within the test and the then the state can be checked
+# at the end.
 @pytest.mark.parametrize("tag", ["normal", "exacerbated", "ameliorated"])
 def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tt, tag):
     basic_row["Phenotype Tag"] = tag
@@ -158,4 +136,4 @@ def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tt,
         translation_table=tt,
     )
     assert len(entities) == 0
-```
+
