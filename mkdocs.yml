@@ -1,0 +1,16 @@
+site_name: Monarch Ingest
+site_url: https://monarch-initiative.github.io/monarch-ingest/
+nav:
+  - Tutorials:
+    - Configure Ingest: tutorials/configure-ingest.md
+    - Tests First: tutorials/test-ingest.md
+    - Implement Ingest: tutorials/implement-ingest.md
+    - Validate Output: tutorials/validate-output.md
+    - Add Documentation: tutorials/add-documentation.md
+  - Sources:
+    - Alliance of Genome Resources: ingests/alliance.md
+    - PomBase: ingests/pombase.md
+    - XenBase: ingests/xenbase.md
+    - ZFIN: ingests/zfin.md
+theme:
+ name: material
