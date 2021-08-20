@@ -3,3 +3,126 @@ KEGG is a database resource for understanding high-level functions and utilities
 
 ## API
 The [RESTful API](https://www.kegg.jp/kegg/rest/keggapi.html) provides information about how to query the KEGG database.
+
+## Data
+The KEGG API enables retrieving a list of all of the following entites:
+* Compound
+* Orthology
+* Pathway
+* Reaction
+
+## List Information
+This query returns the list of all available entities
+
+### Compound List
+
+URL: http://rest.kegg.jp/list/cpd <br/>
+prefix: KEGG.COMPOUND
+
+### Biolink captured
+
+* biolink:SmallMolecule
+    * id
+    * category
+
+### Orthology List
+
+URL: http://rest.kegg.jp/list/ko <br/>
+prefix: KEGG.ORTHOLOGY
+
+#### Biolink captured
+
+* biolink:GeneFamily
+    * id
+    * category
+
+### Pathway List
+
+URL: http://rest.kegg.jp/list/pathway <br/>
+prefix: KEGG
+
+#### Biolink captured
+
+* biolink:Pathway
+    * id
+    * category
+
+### Reaction List
+
+URL: http://rest.kegg.jp/list/reaction <br/>
+prefix: KEGG
+
+#### Biolink captured
+
+* biolink:MolecularActivity
+    * id
+    * category
+
+## GET Information
+For each item in the list information above, the 'get' call returns details about the item queried.
+
+### Compound 
+
+URL: `http://rest.kegg.jp/list/<coumpound_id>`
+
+#### Biolink captured
+
+* biolink:SmallMolecule
+    * id
+    * category
+* biolink:ChemicalFormulaValue ('FORMULA')
+* biolink:PhysicalEssenceOrOccurrent ('EXACT_MASS'; 'MOL_WEIGHT')
+* biolink:*NEED COMPOUND-2-REACTION ASSOCIATION* ('REACTION')
+* biolink:*NEED COMPOUND-2-PATHWAY ASSOCIATION* ('PATHWAY')
+* biolink:*NEED COMPOUND-2-MODULE-ENZYME ASSOCIATION* ('MODULE ENZYME')
+* biolink:*NEED COMPOUND-2-BRITE ASSOCIATION* ('BRITE')
+* biolink:*NEED COMPOUND-2-DBLINKS ASSOCIATION* ('DBLINKS')
+
+### Orthology 
+
+URL: `http://rest.kegg.jp/list/<orthology_id>`
+
+#### Biolink captured
+
+* biolink:GeneFamily
+    * id
+    * category
+    * description
+
+* biolink:*NEED ORTHOLOGY-2-PATHWAY ASSOCIATION* ('PATHWAY')
+* biolink:*NEED ORTHOLOGY-2-BRITE ASSOCIATION* ('BRITE')
+* biolink:*NEED ORTHOLOGY-2-DBLINKS ASSOCIATION* ('DBLINKS')
+* biolink:Gene
+    * id
+
+### Pathway 
+
+URL: `http://rest.kegg.jp/list/<pathway_id>`
+
+#### Biolink captured
+
+* biolink:Pathway
+    * id
+    * category
+    * description
+
+* biolink:*NEED PATHWAY-2-MODULE ASSOCIATION* ('MODULE')
+* biolink:*NEED PATHWAY-2-DBLINKS ASSOCIATION* ('DBLINKS')
+* publication ('REFERENCE')
+
+### Reaction
+
+URL: `http://rest.kegg.jp/list/<reaction_id>`
+
+#### Biolink captured
+
+* biolink:MolecularActivity
+    * id
+    * category
+    * description ('DEFINITION' ; 'COMMENT')
+* biolink:*NEED REACTION-2-EQUATION ASSOCIATION* ('EQUATION')
+* biolink:*NEED REACTION-2-ENZYME ASSOCIATION* ('ENZYME')
+* biolink:*NEED REACTION-2-ORTHOLOGY ASSOCIATION* ('ORTHOLOGY')
+* biolink:*NEED REACTION-2-PATHWAY ASSOCIATION* ('PATHWAY')
+* biolink:*NEED REACTION-2-DBLINKS ASSOCIATION* ('DBLINKS')
+
