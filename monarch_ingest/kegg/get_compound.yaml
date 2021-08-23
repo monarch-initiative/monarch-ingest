@@ -10,7 +10,7 @@ delimiter: '\t'
 columns:
     - 'ENTRY' 
     - 'NAME'
-    -	'FORMULA'
+    - 'FORMULA'
     - 'EXACT_MASS'
     - 'MOL_WEIGHT'
     - 'REMARK'
