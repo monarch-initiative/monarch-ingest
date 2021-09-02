@@ -16,8 +16,8 @@ install-requirements: install-poetry
 	poetry install
 
 .PHONY: test
-test: install-requirements
-	poetry run python -m pytest
+test: 
+	poetry run python -m pytest --ignore=source_template
 
 clean:
 	rm -rf `find . -name __pycache__`
@@ -42,6 +42,16 @@ format:
 	poetry run isort monarch_ingest tests
 	poetry run black monarch_ingest tests
 
+
+.PHONY: download
+download:
+	gsutil -m cp -R gs://monarch-ingest/data .
+
+
+.PHONY: transform
+transform:
+	find monarch_ingest -name metadata.yaml -exec poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source {} --output-format tsv \;
+
 .PHONY: merge
 merge:
-	kgx merge --merge-config merge.yaml
+	poetry run kgx merge --merge-config merge.yaml

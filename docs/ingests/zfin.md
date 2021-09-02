@@ -1,5 +1,3 @@
-## ZFIN
-
 ZFIN is the Zebrafish Model Organism Database. 
 
 * [ZFIN bulk downloads](https://zfin.org/downloads)

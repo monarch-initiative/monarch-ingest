@@ -1,5 +1,3 @@
-## PomBase
-
 PomBase is a comprehensive database for the fission yeast Schizosaccharomyces pombe, providing structural and functional annotation, literature curation and access to large-scale data sets. Within this ingest there will be a transformation of gene to phenotypic feature associations, gene entities aren't yet loaded as a part of this ingest, and FYPO ontology terms will be brought in directly from the ontology without transformation.
 
 * [PomBase Bulk Downloads](https://www.pombase.org/datasets)

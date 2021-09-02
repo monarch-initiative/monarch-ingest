@@ -1,5 +1,3 @@
-## Xenbase
-
 Xenbase is a web-accessible resource that integrates all the diverse biological, genomic, genotype and phenotype data available from Xenopus research.
 
 [Xenbase Bulk Data](http://www.xenbase.org/other/static-xenbase/ftpDatafiles.jsp)

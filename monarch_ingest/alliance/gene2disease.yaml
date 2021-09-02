@@ -1,0 +1,47 @@
+name: 'gene-to-disease'
+
+format: 'csv'
+
+delimiter: '\t'
+
+skip_lines: 15
+
+files:
+  - './data/DISEASE-ALLIANCE_COMBINED.tsv.gz' # "https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz"
+
+columns:
+  - 'Taxon'
+  - 'SpeciesName'
+  - 'DBobjectType'
+  - 'DBObjectID'
+  - 'DBObjectSymbol'
+  - 'AssociationType'
+  - 'DOID'
+  - 'DOtermName'
+  - 'WithOrtholog'
+  - 'InferredFromID'
+  - 'InferredFromSymbol'
+  - 'ExperimentalCondition'
+  - 'Modifier'
+  - 'EvidenceCode'
+  - 'EvidenceCodeName'
+  - 'Reference'
+  - 'Date'
+  - 'Source'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'source'
+  - 'negated'
+  - 'publications'
+  - 'provided_by'

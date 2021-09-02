@@ -27,6 +27,12 @@ merged_graph:
         filename:
           - output/Alliance.gene-to-phenotype_nodes.tsv
           - output/Alliance.gene-to-phenotype_edges.tsv
+    alliance-gene-to-disease:
+      input:
+        format: tsv
+        filename:
+          - output/Alliance.gene-to-disease_nodes.tsv
+          - output/Alliance.gene-to-disease_edges.tsv
     pombase-gene-to-phenotype:
       input:
         format: tsv
@@ -80,8 +86,8 @@ merged_graph:
     peco:
       input:
         format: owl
-          filename:
-            - data/peco.owl
+        filename:
+          - data/peco.owl
     wbphenotype:
       input:
         format: owl
@@ -116,11 +122,11 @@ merged_graph:
     merged-kg-tsv:
       format: tsv
       compression: tar.gz
-      filename: merged-kg
+      filename: monarch-kg
 #    merged-kg-nt:
 #      format: nt
 #      compression: tar.gz
-#      filename: merged-kg.nt.gz
+#      filename: monarch-kg.nt.gz
 #    merged-kg-neo4j:
 #      format: neo4j
 #      uri: http://localhost:7474
