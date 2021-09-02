@@ -50,30 +50,29 @@ excluding any experimental conditions to start, since they're just text descript
 is the ECO term a qualifier? 
 Need a predicate for each kind of relationship:
 
-| Alliance AssociationType | predicate | 
+| Alliance AssociationType | predicate | relation | 
 |  ----------------------- | --------- |
-| biomarker_via_orthology  | _do we want inferred via orthology?_ |
-| implicated_via_orthology  | _do we want inferred via orthology?_ |
-| is_implicated_in | "involved in": "RO:0002331" _(maybe?)_ |
-| is_marker_for | is marker for RO:0002607 **(needs to go into TT)** |
-| is_model_of | "is model of": "RO:0003301" |
-| is_not_implicated_in | negation plus "involved in": "RO:0002331" _(maybe?)_ |
+| biomarker_via_orthology  | Predicate.biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
+| implicated_via_orthology  | Predicate.contributes_to | _currently excluded, is this is_implicated_in, but with a qualifier?_ |
+| is_implicated_in | Predicate.contributes_to | "RO:0003302" |
+| is_marker_for | Predicate.biomarker_for | "RO:0002607" |
+| is_model_of | Predicate.model_of | "RO:0003301" |
+| is_not_implicated_in | negation plus "RO:0003302"|
 
 #### Biolink captured
 
 * biolink:Gene
-  * id (row['DBObjectID'])
+    * id (row['DBObjectID'])
 
 * biolink:Disease
-  * id (row['DOID'])
+    * id (row['DOID'])
 
 * biolink:GeneToDiseaseAssociation
-  * id (random uuid)
-  * subject (gene.id)
-  * predicates (see table above)
-  * object (disease.id)
-  * negated (for 'is not implicated in')
-  * relation (see predicate table above? )
-  * in_taxon (row['Taxon'])
-  * publications (row['Reference'])
-  * source (row['source'])
+    * id (random uuid)
+    * subject (gene.id)
+    * predicates (see table above)
+    * object (disease.id)
+    * negated (for 'is not implicated in')
+    * relation (see predicate table above? )
+    * publications (row['Reference'])
+    * source (row['source'])

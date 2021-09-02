@@ -12,3 +12,4 @@ dataset_description:
 source_files:
   - 'gene_information.yaml'
   - 'gene2phenotype.yaml'
+  - 'gene2disease.yaml'

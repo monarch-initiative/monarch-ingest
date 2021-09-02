@@ -38,3 +38,24 @@ poetry run koza transform --global-table monarch_ingest/translation_table.yaml -
  kgx validate -i tsv output/Alliance.gene-to-phenotype_nodes.tsv output/Alliance.gene-to-phenotype_edges.tsv 
 ```
 
+### Running all transforms
+
+```bash
+make transform
+```
+
+### KGX Merge
+
+To merge all of the transformed files with ontologies into a single pair of node and edge files
+
+```bash
+make merge
+```
+
+### TLDR
+
+If you want to generate it all as `output/merged/merged`
+
+```bash
+make download transform merge
+```
