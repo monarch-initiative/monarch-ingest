@@ -12,6 +12,8 @@ nav:
     - PomBase: ingests/pombase.md
     - XenBase: ingests/xenbase.md
     - ZFIN: ingests/zfin.md
+  - Kozathon:
+      - Setup: kozathon/setup.md
 theme:
  name: material
 markdown_extensions:

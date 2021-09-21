@@ -159,3 +159,9 @@ def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tt,
     )
     assert len(entities) == 0
 ```
+
+### Next
+
+[Validate the ingest](validate-output.md)
+
+This is also a good time to circle back and update the documentation.
