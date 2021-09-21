@@ -11,3 +11,7 @@ poetry run kgx validate -i tsv output/Somethingbase.gene-to-disease_nodes.tsv ou
 ```
 
 Finally, add the node and edge files to `merge.yaml` at the root of the project
+
+### Next
+
+Maybe double check that documentation one last time.

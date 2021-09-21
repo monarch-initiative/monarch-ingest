@@ -70,3 +70,8 @@ To execute the ingest from outside of a poetry shell:
 poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/<YOUR SOURCE>/metadata.yaml --output-format tsv
 ```
 
+### Next
+
+[Testing!](test-ingest.md)
+
+This is also a good time to circle back and update the documentation.

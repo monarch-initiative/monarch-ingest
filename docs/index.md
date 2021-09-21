@@ -2,6 +2,11 @@
 
 The Monarch Ingest generates [KGX](https://github.com/biolink/kgx/blob/master/specification/kgx-format.md) formatted files conforming to the [BioLink Model](https://biolink.github.io/biolink-model/) from a wide variety of biomedical data sources. 
 
+
+### Kozathon
+
+[Get set up for Kozathon](kozathon/setup.md)
+
 ### Getting Started
 
 First, clone the repository
@@ -35,7 +40,7 @@ poetry run koza transform --global-table monarch_ingest/translation_table.yaml -
 ### Validate the output
 
 ```bash
- kgx validate -i tsv output/Alliance.gene-to-phenotype_nodes.tsv output/Alliance.gene-to-phenotype_edges.tsv 
+poetry run kgx validate -i tsv output/Alliance.gene-to-phenotype_nodes.tsv output/Alliance.gene-to-phenotype_edges.tsv 
 ```
 
 ### Running all transforms
@@ -54,7 +59,7 @@ make merge
 
 ### TLDR
 
-If you want to generate it all as `output/merged/merged`
+If you want to generate it all as `output/merged/monarch-kg.tar.gz`
 
 ```bash
 make download transform merge

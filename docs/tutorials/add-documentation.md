@@ -12,4 +12,6 @@ Some helpful resources:
     * Use a Jupyter Notebook with [Biolink Model Toolkit]() to do things like `get_element_by_mapping('RO:0002410')`
     * For ingests migrating from Dipper, check out the [documentation](https://dipper.readthedocs.io/en/latest/sources.html) and [source code](https://github.com/monarch-initiative/dipper/tree/master/dipper/sources)
  
+### Next
 
+[Begin implementation](implement-ingest.md)
