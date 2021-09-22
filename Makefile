@@ -6,7 +6,7 @@ MAKEFLAGS += --no-builtin-variables
 SHELL := bash
 
 .PHONY: all
-all: install-poetry format test
+all: install-requirements format test
 
 .PHONY: install-poetry
 install-poetry:

@@ -22,9 +22,9 @@ Download data files for our demo ingests. PomBase's phenotype annotations, a min
 
 ```bash
 cd data
-wget https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
-wget https://raw.githubusercontent.com/monarch-initiative/koza/main/tests/resources/source-files/string.tsv
-wget http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
+curl -OJ https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
+curl -OJ https://raw.githubusercontent.com/monarch-initiative/koza/main/tests/resources/source-files/string.tsv
+curl -OJ http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
 cd ..
 ```
 
