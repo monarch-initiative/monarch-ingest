@@ -5,7 +5,7 @@
 First, clone the repository
 
 ```bash
-gh repo clone monarch-initiative/monarch-ingest && cd monarch-ingest
+git clone https://github.com/monarch-initiative/monarch-ingest.git && cd monarch-ingest
 ```
 
 The Monarch Ingest is built using [Poetry](https://python-poetry.org), which will create its own virtual environment.
@@ -21,6 +21,8 @@ This will install Poetry, create the virtual environment and fetch dependencies.
 Download data files for our demo ingests. PomBase's phenotype annotations, a mini-StringDB file, and the HPOA file.
 
 ```bash
+#Assuming you are still in monarch-ingest dir
+mkdir -p data
 cd data
 curl -OJ https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
 curl -OJ https://raw.githubusercontent.com/monarch-initiative/koza/main/tests/resources/source-files/string.tsv
