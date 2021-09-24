@@ -42,8 +42,6 @@ poetry run koza transform --global-table monarch_ingest/translation_table.yaml -
 poetry run kgx validate -i tsv output/PomBase.gene-to-phenotype_nodes.tsv output/PomBase.gene-to-phenotype_edges.tsv 
 ```
 
-(* it will complain vociferously about the FYPO prefix, but hopefully nothing else)
-
 ### 👍 You're ready for Kozathon
 
 In the meantime, [check out the tutorial](../tutorials/configure-ingest.md)
