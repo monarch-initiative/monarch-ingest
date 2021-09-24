@@ -1,0 +1,37 @@
+name: 'kegg-pathways'
+
+files:
+  - './data/kegg-pathways.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'ENTRY' 
+    - 'NAME'
+    -	'CLASS'
+    - 'MODULE'
+    - 'DISEASE'
+    - 'DBLINKS'
+    - 'REFERENCE'
+    - 'AUTHORS'
+    - 'TITLE'
+    - 'JOURNAL'
+    - 'KO_PATHWAY'
+    - 'DRUG'
+    - 'COMPOUND'
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'

@@ -1,0 +1,26 @@
+name: 'pathwayOrthologyLink'
+
+files:
+  - './data/pathwayOrthologyLink.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'pathway_id'
+    - 'orthology_id' 
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'

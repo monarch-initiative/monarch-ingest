@@ -1,0 +1,26 @@
+name: 'pathwayCompoundLink'
+
+files:
+  - './data/pathwayCompoundLink.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'pathway_id'
+    - 'compound_id' 
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'

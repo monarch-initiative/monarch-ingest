@@ -1,0 +1,38 @@
+name: 'kegg-orthology'
+
+files:
+  - './data/kegg-orthology.tsv'
+
+format: 'tsv'
+
+delimiter: '\t'
+
+columns:
+    - 'ENTRY' 
+    - 'NAME'
+    -	'DEFINITION'
+    - 'EQUATION'
+    - 'BRITE'
+    - 'DBLINKS'
+    -	'GENES'
+    - 'MODULE'
+    - 'REFERENCE'
+    - 'AUTHORS'
+    - 'TITLE'
+    - 'JOURNAL'
+    - 'SEQUENCE'
+    - 'DISEASE'
+
+node_properties:
+  - 'id'	
+  - 'name'	
+  - 'category'	
+  - 'exact_match'	
+  - 'close_match'	
+  - 'description'
+
+edge_properties:
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'relation'
