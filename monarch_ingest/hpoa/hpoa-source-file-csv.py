@@ -34,10 +34,8 @@ association = DiseaseToPhenotypicFeatureAssociation(
     relation=translation_table.resolve_term("has phenotype"),
     publications=[row["Reference"]],
     qualifiers=[row["Evidence"]],
-    
+
 )
-
-
 
 # gene = Gene(
 #     id='somethingbase:'+row['ID'],
