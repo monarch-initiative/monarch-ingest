@@ -39,7 +39,6 @@ association = DiseaseToPhenotypicFeatureAssociation(
 
 )
 
-#pdb.set_trace()
 
 # gene = Gene(
 #     id='somethingbase:'+row['ID'],
