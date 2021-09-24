@@ -47,11 +47,7 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, tt):
     rows = iter([rat_row])
 
     return mock_koza(
-        source_name,
-        rows,
-        script,
-        map_cache=map_cache,
-        translation_table=tt,
+        source_name, rows, script, map_cache=map_cache, translation_table=tt,
     )
 
 
@@ -99,11 +95,7 @@ def conditions_entities(conditions_row, mock_koza, source_name, script, map_cach
     rows = iter([conditions_row])
 
     return mock_koza(
-        source_name,
-        rows,
-        script,
-        map_cache=map_cache,
-        translation_table=tt,
+        source_name, rows, script, map_cache=map_cache, translation_table=tt,
     )
 
 

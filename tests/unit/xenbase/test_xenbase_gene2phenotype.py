@@ -7,9 +7,7 @@ from biolink_model_pydantic.model import (
 
 
 @pytest.fixture
-def entities(
-    mock_koza,
-):
+def entities(mock_koza,):
     row = iter(
         [
             {

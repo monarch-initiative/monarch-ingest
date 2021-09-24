@@ -24,9 +24,7 @@ def mock_koza():
         translation_table=None,
     ):
         mock_source_file_config = PrimaryFileConfig(
-            name=name,
-            files=[],
-            transform_code=transform_code,
+            name=name, files=[], transform_code=transform_code,
         )
         mock_source_file = SourceFile(mock_source_file_config)
         mock_source_file._reader = data
