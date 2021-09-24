@@ -7,6 +7,6 @@ dataset_description:
   rights: 'https://somethingbase.org/rights'
 
 source_files:
-  - 'source-file-template-csv.yaml'
+  - 'hpoa-source-file-csv.yaml'
   - 'source-file-template-json.yaml'
 

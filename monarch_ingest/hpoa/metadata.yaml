@@ -1,0 +1,11 @@
+name: 'HPOA'
+
+dataset_description:
+  ingest_title: 'HPOA'
+  ingest_url: 'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations.current/lastSuccessfulBuild/artifact/rare-diseases/current/phenotype.hpoa'
+  description: 'Ingest of HPOA data'
+  rights: 'https://hpo.jax.org/app/license'
+
+source_files:
+  - 'hpoa-source-file-csv.yaml'
+

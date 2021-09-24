@@ -1,0 +1,30 @@
+name: 'go2eco'
+
+file_metadata:
+  description: 'Mapping file from GO three letter evidence codes to Evidence and Conclusion ontology term identifiers'
+
+source: 'ECO'
+
+format: 'csv'
+
+delimiter: '\t'
+
+#  https://raw.githubusercontent.com/evidenceontology/evidenceontology/master/gaf-eco-mapping-derived.txt
+files:
+  - './data/gaf-eco-mapping-derived.txt'
+
+skip_lines: 26
+
+has_header: false
+
+columns:
+  - 'eco_id'
+  - 'three_letter_code'
+  - 'default'
+
+# makes a nested dictionary of the file here
+key: 'eco_id'
+
+values:
+  - 'three_letter_code'
+  - 'default'
