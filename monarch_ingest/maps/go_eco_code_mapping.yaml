@@ -1,4 +1,4 @@
-name: 'go2eco'
+name: 'eco2go'
 
 file_metadata:
   description: 'Mapping file from GO three letter evidence codes to Evidence and Conclusion ontology term identifiers'
@@ -24,6 +24,9 @@ columns:
 
 # makes a nested dictionary of the file here
 key: 'eco_id'
+
+# request 3-letter code to ECO mapping from Nico SSSOM
+# GAF eco mapping is a tuple, we just want flat 3-letter->ECO (perhaps 1:1)
 
 values:
   - 'three_letter_code'

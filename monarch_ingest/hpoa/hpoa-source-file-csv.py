@@ -2,6 +2,7 @@ from biolink_model_pydantic.model import Attribute, Disease, PhenotypicFeature, 
 from koza.manager.data_collector import write
 from koza.manager.data_provider import inject_curie_cleaner, inject_row, inject_map, inject_translation_table
 import uuid
+import pdb
 
 # You've got 'NCBI_Gene:' and you want 'NCBIGene:'? clean it up.
 curie_cleaner = inject_curie_cleaner()
@@ -25,17 +26,20 @@ disease = Disease(
 phenotypic_feature = PhenotypicFeature(
     id=row['HPO_ID']
 )
-
+# pdb.set_trace()
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
     predicate=Predicate.has_phenotype,
     object=phenotypic_feature.id,
-    relation=translation_table.resolve_term("has phenotype"),
-    publications=[row["Reference"]],
-    qualifiers=[row["Evidence"]],
+    relation=translation_table.resolve_term("has phenotype") #,
+    #publications=[row["Reference"]],
+    # should be evidence_code in Entity!
+    #qualifiers=[row["Evidence"]],
 
 )
+
+#pdb.set_trace()
 
 # gene = Gene(
 #     id='somethingbase:'+row['ID'],
