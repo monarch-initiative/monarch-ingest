@@ -1,7 +1,7 @@
 name: 'hpoa'
 
 dataset_description:
-  ingest_title: 'HPOA'
+  ingest_title: 'hpoa'
   ingest_url: 'http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa'
   description: 'Ingest of HPOA data - phenotypes only'
   rights: 'https://hpo.jax.org/app/license'

@@ -20,7 +20,7 @@ row = inject_row(source_name)
 
 # create your entities
 phenotype = PhenotypicFeature(id=row["HPO_ID"])
-disease = Disease(id=row["DatabaseID"])
+disease = Disease(id=row["DatabaseID"].rstrip())
 
 association = DiseaseToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
@@ -28,7 +28,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
         predicate=Predicate.has_phenotype,
         object=phenotype.id,
         relation=translation_table.resolve_term("has phenotype"),
-        publications=[row["Reference"]],
+        publications=row["Reference"].split(";"),
 #       evidence_type=[row["Evidence"]],
         onset_qualifier=[row["Onset"]],
     )
