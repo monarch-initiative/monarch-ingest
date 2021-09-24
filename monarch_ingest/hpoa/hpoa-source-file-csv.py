@@ -35,6 +35,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
     relation=translation_table.resolve_term("has phenotype") #,
     #publications=[row["Reference"]],
     # should be evidence_code in Entity!
+    #has_attribute=[row[Attribute.]] # is this what evidence code should be?  
     #qualifiers=[row["Evidence"]],
 
 )
