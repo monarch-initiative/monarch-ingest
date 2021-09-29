@@ -21,7 +21,8 @@ entities = []
 gene_pages = row["gene_pages"]
 
 publication = Publication(
-    id="PMID:" + row["pmid"], type=koza_app.translation_table.resolve_term("publication")
+    id="PMID:" + row["pmid"],
+    type=koza_app.translation_table.resolve_term("publication"),
 )
 
 entities.append(publication)

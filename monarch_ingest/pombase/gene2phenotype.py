@@ -6,7 +6,6 @@ from biolink_model_pydantic.model import (
     PhenotypicFeature,
     Predicate,
 )
-
 from koza.cli_runner import koza_app
 
 source_name = "gene-to-phenotype"
