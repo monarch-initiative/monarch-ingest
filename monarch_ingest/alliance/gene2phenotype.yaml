@@ -8,6 +8,8 @@ files:
   - './data/PHENOTYPE_WB.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz"
   - './data/PHENOTYPE_HUMAN.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_HUMAN.json.gz"
 
+metadata: './monarch_ingest/alliance/metadata.yaml'
+
 json_path:
   - 'data'
 
@@ -39,4 +41,5 @@ edge_properties:
   - 'publications'
   - 'provided_by'
 
+transform_mode: 'flat'
 

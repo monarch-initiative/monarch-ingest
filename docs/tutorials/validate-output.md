@@ -2,7 +2,7 @@
 
 Run the transform to produce KGX files
 ```bash
-poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/alliance/metadata.yaml --output-format tsv
+poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/alliance/gene2phenotype.yaml 
  ```
 
 Validate the output with kgx

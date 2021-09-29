@@ -9,6 +9,8 @@ files:
     - "./data/BGI_WB.json.gz"
     - "./data/BGI_ZFIN.json.gz"
 
+metadata: './monarch_ingest/alliance/metadata.yaml'
+
 format: 'json'
 
 compression: 'gzip'
@@ -45,3 +47,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+
+transform_mode: 'flat'

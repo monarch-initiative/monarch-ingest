@@ -50,7 +50,7 @@ download:
 
 .PHONY: transform
 transform:
-	find monarch_ingest -name metadata.yaml -exec poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source {} --output-format tsv \;
+	 find monarch_ingest -name "*.yaml" | grep -v "metadata.yaml" | xargs -L 1 poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source 
 
 .PHONY: merge
 merge:

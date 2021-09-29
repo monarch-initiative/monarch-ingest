@@ -9,6 +9,8 @@ skip_lines: 15
 files:
   - './data/DISEASE-ALLIANCE_COMBINED.tsv.gz' # "https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz"
 
+metadata: './monarch_ingest/alliance/metadata.yaml'
+
 columns:
   - 'Taxon'
   - 'SpeciesName'
@@ -45,3 +47,5 @@ edge_properties:
   - 'negated'
   - 'publications'
   - 'provided_by'
+
+transform_mode: 'flat'

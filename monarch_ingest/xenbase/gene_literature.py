@@ -7,23 +7,21 @@ from biolink_model_pydantic.model import (
     Predicate,
     Publication,
 )
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_map, inject_row, inject_translation_table
+from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
 source_name = "gene-literature"
 
-row = inject_row(source_name)
-translation_table = inject_translation_table()
-genepage2gene = inject_map("genepage-2-gene")
+row = koza_app.get_row(source_name)
+genepage2gene = koza_app.get_map("genepage-2-gene")
 
 entities = []
 
 gene_pages = row["gene_pages"]
 
 publication = Publication(
-    id="PMID:" + row["pmid"], type=translation_table.resolve_term("publication")
+    id="PMID:" + row["pmid"], type=koza_app.translation_table.resolve_term("publication")
 )
 
 entities.append(publication)
@@ -52,4 +50,4 @@ for gene_page in gene_pages.split(","):
 
         entities.append(association)
 
-write(source_name, *entities)
+koza_app.write(*entities)
