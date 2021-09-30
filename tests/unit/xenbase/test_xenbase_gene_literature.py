@@ -4,7 +4,7 @@ from biolink_model_pydantic.model import (
     NamedThingToInformationContentEntityAssociation,
     Publication,
 )
-from koza.koza_runner import get_translation_table
+from koza.cli_runner import get_translation_table
 
 
 @pytest.fixture

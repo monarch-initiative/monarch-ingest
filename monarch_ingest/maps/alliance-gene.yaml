@@ -1,8 +1,7 @@
 name: 'alliance-gene'
-file_metadata:
-  description: 'Mapping file to look up whether an Alliance ID is for a gene'
 
-source: 'Alliance'
+metadata:
+  description: 'Mapping file to look up whether an Alliance ID is for a gene'
 
 compression: 'gzip'
 

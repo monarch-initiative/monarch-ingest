@@ -3,6 +3,8 @@ name: 'gene-information'
 files:
   - './data/xenbase.gpi.gz'
 
+metadata: './monarch_ingest/xenbase/metadata.yaml'
+
 standard_format: 'gpi'
 
 skip_lines: 22
@@ -28,3 +30,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+
+transform_mode: 'flat'

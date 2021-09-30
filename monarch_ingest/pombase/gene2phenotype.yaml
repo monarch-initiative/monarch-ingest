@@ -3,6 +3,8 @@ name: 'gene-to-phenotype'
 files:
   - './data/phenotype_annotations.pombase.phaf.gz'
 
+metadata: './monarch_ingest/pombase/metadata.yaml'
+
 format: 'csv'
 
 delimiter: '\t'
@@ -46,3 +48,5 @@ edge_properties:
   - 'qualifiers'
   - 'publications'
   - 'provided_by'
+
+transform_mode: 'flat'

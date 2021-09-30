@@ -1,9 +1,7 @@
 name: 'eqe2zp'
 
-file_metadata:
+metadata:
   description: 'Mapping file from ZFIN EQE to ZP Terms'
-
-source: 'OBO Phenotype'
 
 format: 'csv'
 

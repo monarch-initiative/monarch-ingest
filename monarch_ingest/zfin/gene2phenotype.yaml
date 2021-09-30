@@ -56,4 +56,5 @@ edge_properties:
   - 'publications'
   - 'provided_by'
 
+transform_mode: 'flat'
 

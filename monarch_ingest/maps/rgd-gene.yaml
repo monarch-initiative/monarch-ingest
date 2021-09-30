@@ -1,5 +1,5 @@
 name: 'rgd-gene'
-file_metadata:
+metadata:
   description: 'Mapping file to capture list of valid RGD gene IDs'
 
 source: 'RGD'

@@ -1,13 +1,9 @@
 from biolink_model_pydantic.model import Gene
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_curie_cleaner, inject_row
-
-curie_cleaner = inject_curie_cleaner()
+from koza.cli_runner import koza_app
 
 source_name = "gene-information"
 
-row = inject_row(source_name)
-
+row = koza_app.get_row(source_name)
 # curie prefix as source?
 source = row["basicGeneticEntity"]["primaryId"].split(":")[0]
 
@@ -25,10 +21,10 @@ gene = Gene(
 
 if row["basicGeneticEntity"]["crossReferences"]:
     gene.xrefs = [
-        curie_cleaner.clean(xref["id"])
+        koza_app.curie_cleaner.clean(xref["id"])
         for xref in row["basicGeneticEntity"]["crossReferences"]
     ]
 if "synonyms" in row["basicGeneticEntity"].keys():
     gene.synonym = row["basicGeneticEntity"]["synonyms"]
 
-write(source_name, gene)
+koza_app.write(gene)

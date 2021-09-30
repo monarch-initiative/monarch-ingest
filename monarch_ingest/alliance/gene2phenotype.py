@@ -7,15 +7,14 @@ from biolink_model_pydantic.model import (
     PhenotypicFeature,
     Predicate,
 )
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_map, inject_row, inject_translation_table
+from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
 source_name = "gene-to-phenotype"
-translation_table = inject_translation_table()
-row = inject_row(source_name)
-gene_ids = inject_map("alliance-gene")
+
+row = koza_app.get_row(source_name)
+gene_ids = koza_app.get_map("alliance-gene")
 
 
 if len(row["phenotypeTermIdentifiers"]) == 0:
@@ -38,7 +37,7 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         subject=gene.id,
         predicate=Predicate.has_phenotype,
         object=phenotypicFeature.id,
-        relation=translation_table.resolve_term("has phenotype"),
+        relation=koza_app.translation_table.resolve_term("has phenotype"),
         publications=[row["evidence"]["publicationId"]],
     )
 
@@ -50,4 +49,4 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
                     qualifiers.append(condition["conditionClassId"])
         association.qualifiers = qualifiers
 
-    write(source_name, gene, phenotypicFeature, association)
+    koza_app.write(gene, phenotypicFeature, association)

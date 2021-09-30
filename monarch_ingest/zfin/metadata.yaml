@@ -1,10 +1,4 @@
-name: 'ZFIN'
-
-dataset_description:
-  ingest_title: 'ZFIN'
-  ingest_url: 'https://zfin.org'
-  description: 'ZFIN: The Zebrafish Information Network'
-  rights: 'https://wiki.zfin.org/display/general/WARRANTY+AND+LIABILITY+DISCLAIMER%2C+OWNERSHIP%2C+AND+LIMITS+ON+USE'
-
-source_files:
-  - 'gene2phenotype.yaml'
+ingest_title: 'ZFIN'
+ingest_url: 'https://zfin.org'
+description: 'ZFIN: The Zebrafish Information Network'
+rights: 'https://wiki.zfin.org/display/general/WARRANTY+AND+LIABILITY+DISCLAIMER%2C+OWNERSHIP%2C+AND+LIMITS+ON+USE'

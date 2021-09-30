@@ -6,13 +6,11 @@ from biolink_model_pydantic.model import (
     PhenotypicFeature,
     Predicate,
 )
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_row
+from koza.cli_runner import koza_app
 
 source_name = "gene-to-phenotype"
 
-row = inject_row(source_name)
-
+row = koza_app.get_row(source_name)
 gene = Gene(id="Xenbase:" + row["SUBJECT"])
 
 phenotype = PhenotypicFeature(id=row["OBJECT"])
@@ -28,4 +26,4 @@ association = GeneToPhenotypicFeatureAssociation(
 if row["SOURCE"]:
     association.publications = [row["SOURCE"]]
 
-write(source_name, gene, association, phenotype)
+koza_app.write(gene, association, phenotype)

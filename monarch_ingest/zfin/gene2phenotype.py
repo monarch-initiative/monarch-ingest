@@ -7,16 +7,14 @@ from biolink_model_pydantic.model import (
     PhenotypicFeature,
     Predicate,
 )
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_map, inject_row, inject_translation_table
+from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
 source_name = "gene-to-phenotype"
 
-row = inject_row(source_name)
-eqe2zp = inject_map("eqe2zp")
-translation_table = inject_translation_table()
+row = koza_app.get_row(source_name)
+eqe2zp = koza_app.get_map("eqe2zp")
 
 if row["Phenotype Tag"] == "abnormal":
     zp_key_elements = [
@@ -43,8 +41,8 @@ if row["Phenotype Tag"] == "abnormal":
         subject=gene.id,
         predicate=Predicate.has_phenotype,
         object=phenotypicFeature.id,
-        relation=translation_table.resolve_term("has phenotype"),
+        relation=koza_app.translation_table.resolve_term("has phenotype"),
         publications="ZFIN:" + row["Publication ID"],
     )
 
-    write(source_name, gene, phenotypicFeature, association)
+    koza_app.write(gene, phenotypicFeature, association)

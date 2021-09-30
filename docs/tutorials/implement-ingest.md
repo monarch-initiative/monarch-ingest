@@ -8,8 +8,6 @@ Start with the imports, and make sure to set the source_name, which will be used
 
 ```python
 from biolink_model_pydantic.model import Gene
-from koza.manager.data_collector import write
-from koza.manager.data_provider import inject_curie_cleaner, inject_row
 
 # The source name is used for reading and writing
 source_name = "gene-information"
@@ -20,7 +18,7 @@ source_name = "gene-information"
 
 ```python
 # inject a single row from the source
-row = inject_row(source_name)
+row = koza_app.get_row(source_name)
 ```
 
 #### Extras
@@ -28,9 +26,9 @@ row = inject_row(source_name)
 Next up handle any additional set up for the ingest, such as including a map or bringing in the CURIE cleaning service
 
 ```python
-curie_cleaner = inject_curie_cleaner()
-eqe2zp = inject_map("eqe2zp")
-translation_table = inject_translation_table()
+curie_cleaner = koza_app.curie_cleaner
+eqe2zp = koza_app.get_map("eqe2zp")
+translation_table = koza_app.translation_table
 ```
 
 
@@ -58,7 +56,7 @@ At the end of the script, call the writer. The first argument must be the source
 
 ```python
 
-write(source_name, gene, phenotypicFeature, association)
+koza_app.write(gene, phenotypicFeature, association)
 
 ```
 
@@ -67,7 +65,7 @@ write(source_name, gene, phenotypicFeature, association)
 To execute the ingest from outside of a poetry shell:
 
 ```bash
-poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/<YOUR SOURCE>/metadata.yaml --output-format tsv
+poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/<YOUR SOURCE>/<YOUR INGEST>.yaml 
 ```
 
 ### Next
