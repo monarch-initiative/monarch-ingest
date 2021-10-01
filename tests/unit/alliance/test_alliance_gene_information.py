@@ -9,7 +9,7 @@ def tt():
 
 @pytest.fixture
 def source_name():
-    return "gene-information"
+    return "alliance_gene_information"
 
 
 @pytest.fixture
