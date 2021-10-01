@@ -5,7 +5,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "gene-information"
+source_name = "xenbase_gene_information"
 row = koza_app.get_row(source_name)
 row["DB_Object_ID"] = "Xenbase:" + row["DB_Object_ID"]
 

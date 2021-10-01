@@ -1,4 +1,4 @@
-name: 'gene-information'
+name: 'alliance_gene_information'
 
 files:
     - "./data/BGI_MGI.json.gz"

@@ -55,3 +55,8 @@ transform:
 .PHONY: merge
 merge:
 	poetry run kgx merge --merge-config merge.yaml
+
+.PHONY:
+generate-pipeline:
+	poetry run python generate_pipeline.py > pipeline.py
+

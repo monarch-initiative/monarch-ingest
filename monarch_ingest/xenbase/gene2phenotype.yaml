@@ -1,4 +1,4 @@
-name: 'gene-to-phenotype'
+name: 'xenbase_gene_to_phenotype'
 
 files:
   - './data/xb_xpo_spo_v20210511b.csv'

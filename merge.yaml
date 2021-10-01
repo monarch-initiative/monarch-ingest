@@ -20,48 +20,48 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-information_nodes.tsv
-    alliance-gene-to-phenotype:
+          - output/alliance_gene_information_nodes.tsv
+    alliance_gene_to_phenotype:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-to-phenotype_nodes.tsv
-          - output/Alliance.gene-to-phenotype_edges.tsv
-    alliance-gene-to-disease:
+          - output/alliance_gene_to_phenotype_nodes.tsv
+          - output/alliance_gene_to_phenotype_edges.tsv
+    alliance_gene-to-disease:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-to-disease_nodes.tsv
-          - output/Alliance.gene-to-disease_edges.tsv
-    pombase-gene-to-phenotype:
+          - output/alliance_gene_to_disease_nodes.tsv
+          - output/alliance_gene_to_disease_edges.tsv
+    pombase_gene_to_phenotype:
       input:
         format: tsv
         filename:
-          - output/PomBase.gene-to-phenotype_nodes.tsv
-          - output/PomBase.gene-to-phenotype_edges.tsv
-    xenbase-gene:
+          - output/pombase_gene_to_phenotype_nodes.tsv
+          - output/pombase_gene_to_phenotype_edges.tsv
+    xenbase_gene:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-information_nodes.tsv
-    xenbase-gene-to-phenotype:
+          - output/xenbase_gene_information_nodes.tsv
+    xenbase_gene_to_phenotype:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-to-phenotype_nodes.tsv
-          - output/Xenbase.gene-to-phenotype_edges.tsv
-    xenbase-gene-literature:
+          - output/xenbase_gene_to_phenotype_nodes.tsv
+          - output/xenbase_gene_to_phenotype_edges.tsv
+    xenbase_gene_literature:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-literature_nodes.tsv
-          - output/Xenbase.gene-literature_edges.tsv
-    zfin-gene-to-phenotype:
+          - output/xenbase_gene_literature_nodes.tsv
+          - output/xenbase_gene_literature_edges.tsv
+    zfin_gene_to_phenotype:
       input:
         format: tsv
         filename:
-          - output/ZFIN.gene-to-phenotype_nodes.tsv
-          - output/ZFIN.gene-to-phenotype_edges.tsv
+          - output/zfin_gene_to_phenotype_nodes.tsv
+          - output/zfin_gene_to_phenotype_edges.tsv
     fypo:
       input:
         format: owl
