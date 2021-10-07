@@ -5,7 +5,7 @@ description = ""
 authors = ["Kevin Schaper <kevinschaper@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.7, <=3.9"
+python = ">=3.7, <3.10"
 autoflake = "^1.4"
 flake8 = "^3.9.2"
 isort = "^5.9.1"
@@ -14,7 +14,9 @@ mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 kgx = "^1.5.3"
 koza = "0.1.1"
-Jinja2 = "^3.0.1"
+Jinja2 = "<3.0"
+dagster = "^0.12.13"
+dagit = "^0.12.13"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

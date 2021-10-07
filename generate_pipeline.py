@@ -1,3 +1,5 @@
+import os
+
 from jinja2 import Template
 from pathlib import Path
 
@@ -31,7 +33,7 @@ mode_defs = [
     )
 ]
 
-ingest_home = '/Users/kschaper/Documents/Monarch/monarch-ingest/'
+ingest_home = "{{ ingest_home }}" 
 
 {% for ingest in ingests %}
 
@@ -54,4 +56,4 @@ def monarch_ingest_pipeline():
 """
 
 
-print(Template(template).render(ingests=ingests, ingest_methods=ingest_methods))
+print(Template(template).render(ingests=ingests, ingest_methods=ingest_methods, ingest_home=os.getcwd()))
