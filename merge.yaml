@@ -134,10 +134,10 @@ merged_graph:
       format: tsv
       compression: tar.gz
       filename: monarch-kg
-#    merged-kg-nt:
-#      format: nt
-#      compression: tar.gz
-#      filename: monarch-kg.nt.gz
+    merged-kg-nt:
+      format: nt
+      compression: gz
+      filename: monarch-kg.nt.gz
 #    merged-kg-neo4j:
 #      format: neo4j
 #      uri: neo4j://localhost:7687
