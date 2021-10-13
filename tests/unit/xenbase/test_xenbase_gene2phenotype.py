@@ -13,7 +13,7 @@ def entities(
     row = iter(
         [
             {
-                "SUBJECT": "XB-GENE-1000632",
+                "SUBJECT": "Xenbase:XB-GENE-1000632",
                 "SUBJECT_LABEL": "dctn2",
                 "SUBJECT_TAXON": "NCBITaxon:8364",
                 "SUBJECT_TAXON_LABEL": "Xla",

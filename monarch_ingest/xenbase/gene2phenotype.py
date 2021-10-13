@@ -11,7 +11,13 @@ from koza.cli_runner import koza_app
 source_name = "gene-to-phenotype"
 
 row = koza_app.get_row(source_name)
-gene = Gene(id="Xenbase:" + row["SUBJECT"])
+
+# Not including qualifiers, as none are present in the input file. If they show up,
+# we'll want to examine the values before including them in the output of this transform
+if row["QUALIFIER"]:
+    raise ValueError("Didn't expect a qualifier value, found: " + row["QUALIFIER"])
+
+gene = Gene(id=row["SUBJECT"])
 
 phenotype = PhenotypicFeature(id=row["OBJECT"])
 
@@ -20,6 +26,7 @@ association = GeneToPhenotypicFeatureAssociation(
     subject=gene.id,
     predicate=Predicate.has_phenotype,
     object=phenotype.id,
+    publications=row["SOURCE"],
     relation=row["RELATION"].replace("_", ":"),
 )
 

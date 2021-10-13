@@ -20,7 +20,7 @@ Xenbase genes are ingested using Koza's built in support for the GPI format rath
 
 ### Gene to Phenotype
 
-This ingest is built against a one-off OBAN formatted file, which makes for a transformation which only requries adding a curie prefix and connecting column names to biolink attributes. 
+This ingest is built against a one-off OBAN formatted file, which makes for a transformation which only requries adding a curie prefix and connecting column names to biolink attributes. Evidence codes are provided as ECO terms but not yet captured in the output. 
 
 #### Biolink captured
 
