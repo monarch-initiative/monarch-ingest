@@ -36,7 +36,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'source'
   - 'provided_by'
 
 transform_mode: 'flat'
