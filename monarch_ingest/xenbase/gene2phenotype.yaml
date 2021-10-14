@@ -1,11 +1,28 @@
 name: 'gene-to-phenotype'
 
 files:
-  - './data/xb_xpo_spo_v20210511b.csv'
+  - './data/xb_xpo_spo_v_v1.tab'
 
 metadata: './monarch_ingest/xenbase/metadata.yaml'
 
-standard_format: 'oban'
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - 'SUBJECT'
+  - 'SUBJECT_LABEL'
+  - 'SUBJECT_TAXON'
+  - 'SUBJECT_TAXON_LABEL'
+  - 'OBJECT'
+  - 'OBJECT_LABEL'
+  - 'RELATION'
+  - 'RELATION_LABEL'
+  - 'EVIDENCE'
+  - 'EVIDENCE_LABEL'
+  - 'SOURCE'
+  - 'IS_DEFINED_BY'
+  - 'QUALIFIER'
 
 node_properties:
   - 'id'

@@ -20,48 +20,48 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-information_nodes.tsv
+          - output/alliance_gene_information_nodes.tsv
     alliance-gene-to-phenotype:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-to-phenotype_nodes.tsv
-          - output/Alliance.gene-to-phenotype_edges.tsv
+          - output/alliance_gene_to_phenotype_nodes.tsv
+          - output/alliance_gene_to_phenotype_edges.tsv
     alliance-gene-to-disease:
       input:
         format: tsv
         filename:
-          - output/Alliance.gene-to-disease_nodes.tsv
-          - output/Alliance.gene-to-disease_edges.tsv
+          - output/alliance_gene_to_disease_nodes.tsv
+          - output/alliance_gene_to_disease_edges.tsv
     pombase-gene-to-phenotype:
       input:
         format: tsv
         filename:
-          - output/PomBase.gene-to-phenotype_nodes.tsv
-          - output/PomBase.gene-to-phenotype_edges.tsv
+          - output/pombase_gene_to_phenotype_nodes.tsv
+          - output/pombase_gene_to_phenotype_edges.tsv
     xenbase-gene:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-information_nodes.tsv
+          - output/xenbase_gene_information_nodes.tsv
     xenbase-gene-to-phenotype:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-to-phenotype_nodes.tsv
-          - output/Xenbase.gene-to-phenotype_edges.tsv
+          - output/xenbase_gene_to_phenotype_nodes.tsv
+          - output/xenbase_gene_to_phenotype_edges.tsv
     xenbase-gene-literature:
       input:
         format: tsv
         filename:
-          - output/Xenbase.gene-literature_nodes.tsv
-          - output/Xenbase.gene-literature_edges.tsv
+          - output/xenbase_gene_literature_nodes.tsv
+          - output/xenbase_gene_literature_edges.tsv
     zfin-gene-to-phenotype:
       input:
         format: tsv
         filename:
-          - output/ZFIN.gene-to-phenotype_nodes.tsv
-          - output/ZFIN.gene-to-phenotype_edges.tsv
+          - output/zfin_gene_to_phenotype_nodes.tsv
+          - output/zfin_gene_to_phenotype_edges.tsv
     fypo:
       input:
         format: owl
@@ -123,10 +123,10 @@ merged_graph:
       format: tsv
       compression: tar.gz
       filename: monarch-kg
-#    merged-kg-nt:
-#      format: nt
-#      compression: tar.gz
-#      filename: monarch-kg.nt.gz
+    merged-kg-nt:
+      format: nt
+      compression: gz
+      filename: monarch-kg.nt.gz
 #    merged-kg-neo4j:
 #      format: neo4j
 #      uri: http://localhost:7474
