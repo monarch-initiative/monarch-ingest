@@ -556,8 +556,8 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.1.1"
-description = "Koza, an ETL framework for the Biolink model"
+version = "0.1.2"
+description = "Koza, an ETL framework for LinkML data models"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -1668,7 +1668,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7, <=3.9"
-content-hash = "e3954e50294c838c2089f71b791eaab4f59b6bdc3e47bde165348e8c5d2083b0"
+content-hash = "28e4968286835c9011f5243bf0b62b536ffd3c38bc5d85dabaf0ca941e67e6d1"
 
 [metadata.files]
 alabaster = [
@@ -1957,8 +1957,8 @@ kgx = [
     {file = "kgx-1.5.4.tar.gz", hash = "sha256:45707bb8803249876ff82514054156818901a1290a2ca25b1a64e92f5712d51b"},
 ]
 koza = [
-    {file = "koza-0.1.1-py3-none-any.whl", hash = "sha256:a82c2352cccc96cf878afc3a650f5ad18d17029a66674ed08d2eb8b1e1b454c7"},
-    {file = "koza-0.1.1.tar.gz", hash = "sha256:be3575955493483ac0466123402d3741fddf462d8c3a1f48eb18c4024f12b36b"},
+    {file = "koza-0.1.2-py3-none-any.whl", hash = "sha256:8b071aa6a64bd60c972d697abf6aea50a50af9f0db86f0fd3da200b88b862f7f"},
+    {file = "koza-0.1.2.tar.gz", hash = "sha256:bc991c4038afacb2c8785e7094092278e4c30e6f82abf1b648281f0d6d424f6a"},
 ]
 linkml = [
     {file = "linkml-1.0.6-py3-none-any.whl", hash = "sha256:8248ed02086fa5af59dea4fdbb9dca87897223f9122cb98c30aea74f6cdd4cfe"},
