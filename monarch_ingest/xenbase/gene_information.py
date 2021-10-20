@@ -1,7 +1,7 @@
 import logging
 
-from koza.converter.biolink_converter import gpi2gene
 from koza.cli_runner import koza_app
+from koza.converter.biolink_converter import gpi2gene
 
 LOG = logging.getLogger(__name__)
 
