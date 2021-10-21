@@ -19,7 +19,7 @@ def script():
 
 
 @pytest.fixture
-def research_article_row():
+def row():
     return {
         "allianceCategory": "Research Article",
         "abstract": "Cytoplasmic dynein and kinesin are both microtubule-based molecular motors but are structurally and evolutionarily unrelated. Under standard conditions, both move with comparable unloaded velocities toward either the microtubule minus (dynein) or plus (most kinesins) end. This similarity is important because it is often implicitly incorporated into models that examine the balance of cargo fluxes in cells and into models of the bidirectional motility of individual cargos. We examined whether this similarity is a robust feature, and specifically whether it persists across the biologically relevant temperature range. The velocity of mammalian cytoplasmic dynein, but not of mammalian kinesin-1, exhibited a break from simple Arrhenius behavior below 15 degrees C-just above the restrictive temperature of mammalian fast axonal transport. In contrast, the velocity of yeast cytoplasmic dynein showed a break from Arrhenius behavior at a lower temperature ( approximately 8 degrees C). Our studies implicate cytoplasmic dynein as a more thermally tunable motor and therefore a potential thermal regulator of microtubule-based transport. Our theoretical analysis further suggests that motor velocity changes can lead to qualitative changes in individual cargo motion and hence net intracellular cargo fluxes. We propose that temperature can potentially be used as a noninvasive probe of intracellular transport.",
@@ -52,17 +52,15 @@ def research_article_row():
     }
 
 
-def test_research_article(mock_koza, source_name, research_article_row, script, tt):
-    row = iter([research_article_row])
-    entities = mock_koza(source_name, row, script, translation_table=tt)
+def test_research_article(mock_koza, source_name, row, script, tt):
+    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
     pub = entities[0]
     assert pub
     assert pub.id == "PMID:27653487"
 
 
 @pytest.mark.parametrize("mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"])
-def test_mesh_terms(mock_koza, source_name, research_article_row, script, tt, mesh_term):
-    row = research_article_row
+def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
     row["meshTerms"] = [
         {
             "meshQualfierTerm": "Q000502",
@@ -82,3 +80,10 @@ def test_mesh_terms(mock_koza, source_name, research_article_row, script, tt, me
     pub = entities[0]
     assert pub
     assert mesh_term in pub.mesh_terms
+
+
+@pytest.mark.parametrize("author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"])
+def test_research_authors(mock_koza, source_name, row, script, tt, author):
+    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+    pub = entities[0]
+    assert(author in pub.authors)

@@ -21,7 +21,7 @@ pub = Publication(
 )
 
 if "authors" in row.keys():
-    pub.authors = ", ".join([author["name"] for author in row["authors"]])
+    pub.authors = [author["name"] for author in row["authors"]]
 
 if "meshTerms" in row.keys():
     mesh_terms = []
