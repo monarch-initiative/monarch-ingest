@@ -23,4 +23,21 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
     * publication
 
 
+### Gene to Publication
 
+This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. 
+
+#### Biolink captured
+
+* biolink:Gene
+    * id
+
+* biolink:Publication
+    * id
+
+* biolink:NamedThingToInformationContentEntityAssociation
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (mentions)
+    * object (publication.id)
+    * relation (mentions)
