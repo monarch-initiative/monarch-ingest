@@ -25,7 +25,7 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
 
 ### Gene to Publication
 
-This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. 
+This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. We have also opted to use the ZDB-ID for the publication node rather than a pubmed ID, on the assumption that kgx will clique merge them later.
 
 #### Biolink captured
 
