@@ -7,7 +7,9 @@ row = koza_app.get_row(source_name)
 
 
 # TODO: remove DOI exclusion once curie regex can handle them
-xrefs = [xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")]
+xrefs = [
+    xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")
+]
 
 pub = Publication(
     id=row["primaryId"],
@@ -22,9 +24,17 @@ if "authors" in row.keys():
     pub.authors = ", ".join([author["name"] for author in row["authors"]])
 
 if "meshTerms" in row.keys():
-    pub.mesh_terms = []
-    pub.mesh_terms += [term.get("meshQualifierTerm") for term in row["meshTerms"] if term.get("meshQualifierTerm")]
-    pub.mesh_terms += [term.get("meshHeadingTerm") for term in row["meshTerms"] if term.get("meshHeadingTerm")]
+    mesh_terms = []
+    for term in row["meshTerms"]:
+        # yes, meshQualifierTerm is spelled as meshQualfierTerm
+        if term.get("meshQualfierTerm"):
+            mesh_terms.append("MESH:" + term.get("meshQualfierTerm"))
+        # include support for the correct spelling, so this keeps working once it's fixed upstream
+        if term.get("meshQualifierTerm"):
+            mesh_terms.append("MESH:" + term.get("meshQualifierTerm"))
+        if term.get("meshHeadingTerm"):
+            mesh_terms.append("MESH:" + term.get("meshHeadingTerm"))
+    pub.mesh_terms = list(set(mesh_terms))  # Make the list unique
 
 if "keywords" in row.keys():
     pub.keywords = row["keywords"]

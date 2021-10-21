@@ -1,4 +1,5 @@
 import pytest
+import copy
 from koza.cli_runner import get_translation_table
 
 
@@ -51,14 +52,33 @@ def research_article_row():
     }
 
 
-@pytest.fixture
-def research_article(mock_koza, source_name, research_article_row, script, tt):
-#    research_article_row['crossReferences'] = [research_article_row['crossReferences'][2]]
+def test_research_article(mock_koza, source_name, research_article_row, script, tt):
     row = iter([research_article_row])
-    return mock_koza(source_name, row, script, translation_table=tt)
+    entities = mock_koza(source_name, row, script, translation_table=tt)
+    pub = entities[0]
+    assert pub
+    assert pub.id == "PMID:27653487"
 
 
-def test_research_article(research_article):
-    pub = research_article[0]
-    assert(pub)
-    assert(pub.id == 'PMID:27653487')
+@pytest.mark.parametrize("mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"])
+def test_mesh_terms(mock_koza, source_name, research_article_row, script, tt, mesh_term):
+    row = research_article_row
+    row["meshTerms"] = [
+        {
+            "meshQualfierTerm": "Q000502",
+            "referenceId": "PMID:23576957",
+        },
+        {
+            "meshHeadingTerm": "D002940",
+            "referenceId": "PMID:23576957",
+        },
+        {
+            "meshQualfierTerm": "Q000502",
+            "meshHeadingTerm": "D012890",
+            "referenceId": "PMID:23576957",
+        },
+    ]
+    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+    pub = entities[0]
+    assert pub
+    assert mesh_term in pub.mesh_terms
