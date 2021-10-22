@@ -21,7 +21,7 @@ def basic_row():
 @pytest.fixture
 def basic_entities(mock_koza, basic_row):
     return mock_koza(
-        "gene-to-publication",
+        "zfin_gene_to_publication",
         iter([basic_row]),
         "./monarch_ingest/zfin/gene2publication.py",
         translation_table=get_translation_table("monarch_ingest/translation_table.yaml", None),
