@@ -1,4 +1,4 @@
-name: 'gene-to-phenotype'
+name: 'pombase_gene_to_phenotype'
 
 files:
   - './data/phenotype_annotations.pombase.phaf.gz'

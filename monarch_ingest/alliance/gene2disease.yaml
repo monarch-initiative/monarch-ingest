@@ -1,4 +1,4 @@
-name: 'gene-to-disease'
+name: 'alliance_gene_to_disease'
 
 format: 'csv'
 

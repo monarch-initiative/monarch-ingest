@@ -62,27 +62,40 @@ merged_graph:
         filename:
           - output/zfin_gene_to_phenotype_nodes.tsv
           - output/zfin_gene_to_phenotype_edges.tsv
+    zfin-gene-to-publication:
+        input:
+          format: tsv
+          filename:
+            - output/zfin_gene_to_publication_nodes.tsv
+            - output/zfin_gene_to_publication_edges.tsv
     fypo:
       input:
         format: owl
         filename:
           - data/fypo.owl
-# TODO: This fails with kgx 1.3.0, but looks like it will be ok when kgx 1.4.0 is released
     hp:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/hp.owl
+          - data/hp_kgx_tsv.tar.gz
+    mondo:
+      input:
+        format: json
+        filename:
+          - data/mondo.json
     mp:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/mp.owl
+          - data/mp_kgx_tsv.tar.gz
     pato:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/pato.owl
+          - data/pato_kgx_tsv.tar.gz
     peco:
       input:
         format: owl
@@ -90,24 +103,29 @@ merged_graph:
           - data/peco.owl
     wbphenotype:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/wbphenotype.owl
+          - data/wbphenotype_kgx_tsv.tar.gz
     xpo:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/xpo.owl
+          - data/xpo_kgx_tsv.tar.gz
     zp:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/zp.owl
+          - data/zp_kgx_tsv.tar.gz
     zfa:
       input:
-        format: owl
+        format: tsv
+        compression: tar.gz
         filename:
-          - data/zfa.owl
+          - data/zfa_kgx_tsv.tar.gz
+
 
   operations:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats

@@ -11,7 +11,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "gene-to-publication"
+source_name = "zfin_gene_to_publication"
 
 row = koza_app.get_row(source_name)
 
