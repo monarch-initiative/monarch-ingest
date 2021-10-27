@@ -4,11 +4,10 @@ from biolink_model_pydantic.model import (
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,
 )
-from koza.cli_runner import get_translation_table
 
 
 @pytest.fixture
-def entities(mock_koza):
+def entities(mock_koza, global_table):
     row = iter(
         [
             {
@@ -35,13 +34,12 @@ def entities(mock_koza):
             }
         ]
     )
-    tt = get_translation_table("monarch_ingest/translation_table.yaml", None)
 
     return mock_koza(
-        "gene-to-phenotype",
-        row,
-        "./monarch_ingest/pombase/gene2phenotype.py",
-        translation_table=tt,
+        name="gene-to-phenotype",
+        data=row,
+        transform_code="./monarch_ingest/pombase/gene2phenotype.py",
+        global_table=global_table,
     )
 
 
