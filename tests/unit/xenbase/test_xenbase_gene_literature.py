@@ -8,7 +8,7 @@ from koza.cli_runner import get_translation_table
 
 
 @pytest.fixture
-def gene_literature_entities(mock_koza):
+def gene_literature_entities(mock_koza, global_table):
     row = iter(
         [
             {
@@ -57,14 +57,14 @@ def gene_literature_entities(mock_koza):
             },
         }
     }
-    tt = get_translation_table("monarch_ingest/translation_table.yaml", None)
+    get_translation_table("monarch_ingest/translation_table.yaml", None)
 
     return mock_koza(
-        "xenbase_gene_literature",
-        row,
-        "./monarch_ingest/xenbase/gene_literature.py",
+        name="xenbase_gene_literature",
+        data=row,
+        transform_code="./monarch_ingest/xenbase/gene_literature.py",
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 

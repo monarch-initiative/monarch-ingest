@@ -4,7 +4,6 @@ from biolink_model_pydantic.model import (
     NamedThingToInformationContentEntityAssociation,
     Publication,
 )
-from koza.cli_runner import get_translation_table
 
 
 @pytest.fixture
@@ -19,12 +18,12 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_entities(mock_koza, basic_row):
+def basic_entities(mock_koza, basic_row, global_table):
     return mock_koza(
         "zfin_gene_to_publication",
         iter([basic_row]),
         "./monarch_ingest/zfin/gene2publication.py",
-        translation_table=get_translation_table("monarch_ingest/translation_table.yaml", None),
+        global_table=global_table,
     )
 
 

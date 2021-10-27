@@ -4,12 +4,6 @@ from biolink_model_pydantic.model import (
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,
 )
-from koza.cli_runner import get_translation_table
-
-
-@pytest.fixture
-def tt():
-    return get_translation_table("./monarch_ingest/translation_table.yaml", None)
 
 
 @pytest.fixture
@@ -42,7 +36,7 @@ def rat_row():
 
 
 @pytest.fixture
-def rat(rat_row, mock_koza, source_name, script, map_cache, tt):
+def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
     # First row is a gene, second is a feature and should get ignored
     rows = iter([rat_row])
 
@@ -51,7 +45,7 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, tt):
         rows,
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 
@@ -64,7 +58,7 @@ def test_phenotypic_feature_id(rat):
     phenotypes = [
         phenotype for phenotype in rat if isinstance(phenotype, PhenotypicFeature)
     ]
-    phenotypes[0].id == "MP:0001625"
+    assert phenotypes[0].id == "MP:0001625"
 
 
 def test_association_publication(rat):
@@ -95,7 +89,9 @@ def conditions_row(rat_row):
 
 
 @pytest.fixture
-def conditions_entities(conditions_row, mock_koza, source_name, script, map_cache, tt):
+def conditions_entities(
+    conditions_row, mock_koza, source_name, script, map_cache, global_table
+):
     rows = iter([conditions_row])
 
     return mock_koza(
@@ -103,7 +99,7 @@ def conditions_entities(conditions_row, mock_koza, source_name, script, map_cach
         rows,
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 
