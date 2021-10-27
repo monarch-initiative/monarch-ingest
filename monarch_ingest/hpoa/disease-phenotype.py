@@ -32,7 +32,7 @@ from biolink_model_pydantic.model import (
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
     Predicate,
-    Publication
+    Publication,
 )
 from koza.cli_runner import koza_app
 
@@ -46,51 +46,62 @@ row = koza_app.get_row(source_name)
 # Skipping NOTs for now but we'll want to come back and add them
 # Could also add this to the yaml filters but leaving here as the
 # intention is to bring these in
-if row['Qualifier'] == 'NOT':
+if row["Qualifier"] == "NOT":
     koza_app.next_row()
 
-# Nodes global to all aspect types
-disease = Disease(
-    id=row['DatabaseID']
-)
 
 # Translations to curies
-evidence_curie = koza_app.translation_table.resolve_term(row['Evidence'])
-sex_qualifier = koza_app.translation_table.resolve_term(row['Sex'])
+# Three letter ECO code to ECO class based on hpo documentation
+evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
 
+# female -> PATO:0000383
+# male -> PATO:0000384
+sex_qualifier = (
+    koza_app.translation_table.resolve_term(row["Sex"]) if row["Sex"] else None
+)
+
+# Nodes
+disease = Disease(
+    id=row["DatabaseID"],
+)
+
+phenotypic_feature = PhenotypicFeature(
+    id=row["HPO_ID"],
+)
 
 # Publications
-publications: List[str] = row['Reference'].split(';')
+publications: List[str] = row["Reference"].split(";")
 for pub in publications:
 
-    publication = Publication(id=pub)
+    publication = Publication(
+        id=pub,
+        type=koza_app.translation_table.global_table["publication"],
+    )
 
-    if pub.startswith('PMID:'):
-        publication.type = koza_app.translation_table.global_table['journal article']
+    if pub.startswith("PMID:"):
+        # journal article -> IAO:0000013
+        publication.type = koza_app.translation_table.global_table["journal article"]
 
-    elif pub.startswith('ISBN'):
-        publication.type = koza_app.translation_table.global_table['publication']
+    elif pub.startswith("ISBN"):
+        # publication -> IAO:0000311
+        publication.type = koza_app.translation_table.global_table["publication"]
 
-    elif pub.startswith('OMIM:'):
-        publication.type = koza_app.translation_table.global_table['web page']
+    elif pub.startswith("OMIM:"):
+        # web page -> SIO:000302
+        publication.type = koza_app.translation_table.global_table["web page"]
 
-    elif pub.startswith('DECIPHER:'):
-        publication.type = koza_app.translation_table.global_table['web page']
+    elif pub.startswith("DECIPHER:"):
+        publication.type = koza_app.translation_table.global_table["web page"]
 
-    elif pub.startswith('ORPHA:'):
-        publication.type = koza_app.translation_table.global_table['web page']
+    elif pub.startswith("ORPHA:"):
+        publication.type = koza_app.translation_table.global_table["web page"]
 
-    elif pub.startswith('http'):
-        publication.type = koza_app.translation_table.global_table['web page']
+    elif pub.startswith("http"):
+        publication.type = koza_app.translation_table.global_table["web page"]
 
     koza_app.write(publication)
 
-# Associations
-
-phenotypic_feature = PhenotypicFeature(
-    id=row['HPO_ID']
-)
-
+# Associations/Edges
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
@@ -100,9 +111,8 @@ association = DiseaseToPhenotypicFeatureAssociation(
     publications=publications,
     has_evidence=evidence_curie,
     sex_qualifier=sex_qualifier,
-    onset_qualifier=row['Onset'],
-    # Sometimes frequency is a proportion or a percent
-    frequency_qualifier=row['Frequency']
+    onset_qualifier=row["Onset"],
+    frequency_qualifier=row["Frequency"],
 )
 
-koza_app.write(association)
+koza_app.write(disease, phenotypic_feature, association)
