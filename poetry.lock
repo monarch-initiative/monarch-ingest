@@ -83,7 +83,7 @@ testing = ["pytest (>=4.6)", "pytest-flake8", "pytest-cov", "pytest-black (>=0.3
 
 [[package]]
 name = "biolink-model-pydantic"
-version = "0.0.7"
+version = "0.1.2"
 description = "Pydantic dataclasses for the Biolink model"
 category = "main"
 optional = false
@@ -93,7 +93,7 @@ python-versions = ">=3.7"
 pydantic = ">=1.0.0,<2.0.0"
 
 [package.extras]
-dev = ["autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "black (==20.8b1)", "isort (>=5.0.6,<6.0.0)", "linkml (>=1.0.0,<2.0.0)", "click (<8.0)", "typer (>=0.3)"]
+dev = ["autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "black (==20.8b1)", "isort (>=5.0.6,<6.0.0)", "linkml (>=1.1.4,<2.0.0)", "click (<8.0)", "typer (>=0.3)"]
 test = ["pytest (>=6.0.0)"]
 
 [[package]]
@@ -555,14 +555,13 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.1.2"
+version = "0.1.3"
 description = "Koza, an ETL framework for LinkML data models"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-biolink_model_pydantic = ">=0.0.5,<0.1.0"
 kgx = ">=1.0.0"
 pydantic = ">=1.0.0,<2.0.0"
 pyyaml = ">=5.3.1,<6.0.0"
@@ -570,7 +569,7 @@ requests = ">=2.24.0,<3.0.0"
 typer = ">=0.3"
 
 [package.extras]
-dev = ["autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "black (==20.8b1)", "isort (>=5.0.6,<6.0.0)"]
+dev = ["biolink-model-pydantic (>=0.1.1,<1.0.0)", "autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "black (==20.8b1)", "isort (>=5.0.6,<6.0.0)"]
 doc = ["mkdocs (>=1.1.2,<2.0.0)"]
 test = ["pytest (>=6.0.0)"]
 
@@ -1031,7 +1030,7 @@ Markdown = ">=3.2"
 
 [[package]]
 name = "pyparsing"
-version = "3.0.1"
+version = "3.0.2"
 description = "Python parsing module"
 category = "main"
 optional = false
@@ -1671,7 +1670,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7, <=3.9"
-content-hash = "28e4968286835c9011f5243bf0b62b536ffd3c38bc5d85dabaf0ca941e67e6d1"
+content-hash = "629eefef3fd7ebd31209879bdd5eb4a28765a04ec578b989773144eb000ff337"
 
 [metadata.files]
 alabaster = [
@@ -1705,8 +1704,8 @@ babel = [
     {file = "backports.entry_points_selectable-1.1.0.tar.gz", hash = "sha256:988468260ec1c196dab6ae1149260e2f5472c9110334e5d51adcb77867361f6a"},
 ]
 biolink-model-pydantic = [
-    {file = "biolink_model_pydantic-0.0.7-py3-none-any.whl", hash = "sha256:986cc199bae3da229f66420b076ef8f6e5992b732100cf57d0a14c7627c6e951"},
-    {file = "biolink_model_pydantic-0.0.7.tar.gz", hash = "sha256:4a306136d695b54ddff5db596f4ad6cde22269f52a92ebd05661cc373ab3fb40"},
+    {file = "biolink_model_pydantic-0.1.2-py3-none-any.whl", hash = "sha256:d64a94086c419455938bed1cae8954b4533d3a3c9f9d5d4ef994ed9df905b85f"},
+    {file = "biolink_model_pydantic-0.1.2.tar.gz", hash = "sha256:6d9d6a821ac276dbb1aa71b7ab916368beedabb473eed5ead43d09fdd3dd51d0"},
 ]
 black = [
     {file = "black-21.9b0-py3-none-any.whl", hash = "sha256:380f1b5da05e5a1429225676655dddb96f5ae8c75bdf91e53d798871b902a115"},
@@ -1960,8 +1959,8 @@ kgx = [
     {file = "kgx-1.5.4.tar.gz", hash = "sha256:45707bb8803249876ff82514054156818901a1290a2ca25b1a64e92f5712d51b"},
 ]
 koza = [
-    {file = "koza-0.1.2-py3-none-any.whl", hash = "sha256:8b071aa6a64bd60c972d697abf6aea50a50af9f0db86f0fd3da200b88b862f7f"},
-    {file = "koza-0.1.2.tar.gz", hash = "sha256:bc991c4038afacb2c8785e7094092278e4c30e6f82abf1b648281f0d6d424f6a"},
+    {file = "koza-0.1.3-py3-none-any.whl", hash = "sha256:915d2c00c35adf095f102ce63a24afed3b3aa1a587cab32be24a980657010e36"},
+    {file = "koza-0.1.3.tar.gz", hash = "sha256:e23c6b9e198835ef865356206e12f505aadd983651591c61bd9eb323cfcf0b45"},
 ]
 linkml = [
     {file = "linkml-1.0.6-py3-none-any.whl", hash = "sha256:8248ed02086fa5af59dea4fdbb9dca87897223f9122cb98c30aea74f6cdd4cfe"},
@@ -2315,8 +2314,8 @@ pymdown-extensions = [
     {file = "pymdown_extensions-9.0-py3-none-any.whl", hash = "sha256:430cc2fbb30cef2df70edac0b4f62614a6a4d2b06462e32da4ca96098b7c1dfb"},
 ]
 pyparsing = [
-    {file = "pyparsing-3.0.1-py3-none-any.whl", hash = "sha256:fd93fc45c47893c300bd98f5dd1b41c0e783eaeb727e7cea210dcc09d64ce7c3"},
-    {file = "pyparsing-3.0.1.tar.gz", hash = "sha256:84196357aa3566d64ad123d7a3c67b0e597a115c4934b097580e5ce220b91531"},
+    {file = "pyparsing-3.0.2-py3-none-any.whl", hash = "sha256:09fa60a2e3bc3c6a23c2ed23332199d0e57b2c676b9193750cfc22a4358b69c2"},
+    {file = "pyparsing-3.0.2.tar.gz", hash = "sha256:9366e57ad2d2faa8dd89775ef284ecae0fc4012c24717f3705613b262d712090"},
 ]
 pyrsistent = [
     {file = "pyrsistent-0.18.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f4c8cabb46ff8e5d61f56a037974228e978f26bfefce4f61a4b1ac0ba7a2ab72"},
