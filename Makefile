@@ -60,3 +60,4 @@ merge:
 upload:
 	gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/
 	gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/
+	gsutil cp merged_graph_stats.yaml gs://monarch-ingest/

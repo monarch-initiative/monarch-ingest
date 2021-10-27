@@ -60,7 +60,7 @@ def gene_literature_entities(mock_koza, global_table):
     get_translation_table("monarch_ingest/translation_table.yaml", None)
 
     return mock_koza(
-        name="gene-literature",
+        name="xenbase_gene_literature",
         data=row,
         transform_code="./monarch_ingest/xenbase/gene_literature.py",
         map_cache=map_cache,

@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture
 def source_name():
-    return "gene-to-phenotype"
+    return "zfin_gene_to_phenotype"
 
 
 @pytest.fixture

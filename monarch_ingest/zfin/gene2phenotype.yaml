@@ -1,6 +1,6 @@
 
 
-name: 'gene-to-phenotype'
+name: 'zfin_gene_to_phenotype'
 
 format: 'csv'
 

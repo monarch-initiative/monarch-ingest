@@ -11,7 +11,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "gene-to-phenotype"
+source_name = "alliance_gene_to_phenotype"
 
 row = koza_app.get_row(source_name)
 gene_ids = koza_app.get_map("alliance-gene")

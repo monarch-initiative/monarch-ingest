@@ -20,7 +20,7 @@ def basic_row():
 @pytest.fixture
 def basic_entities(mock_koza, basic_row, global_table):
     return mock_koza(
-        "gene-to-publication",
+        "zfin_gene_to_publication",
         iter([basic_row]),
         "./monarch_ingest/zfin/gene2publication.py",
         global_table=global_table,

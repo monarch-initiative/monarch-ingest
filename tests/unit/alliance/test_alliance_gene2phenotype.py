@@ -8,7 +8,7 @@ from biolink_model_pydantic.model import (
 
 @pytest.fixture
 def source_name():
-    return "gene-to-phenotype"
+    return "alliance_gene_to_phenotype"
 
 
 @pytest.fixture
