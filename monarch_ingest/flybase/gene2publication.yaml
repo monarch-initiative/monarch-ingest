@@ -1,0 +1,37 @@
+name: 'flybase_gene_to_publication'
+
+files:
+  - './data/entity_publication_fb_2021_05.tsv.gz'
+
+compression: 'gzip'
+
+format: 'csv'
+
+delimiter: '\t'
+
+skip_lines: 5
+
+columns:
+  - 'entity_id'
+  - 'entity_name'
+  - 'FlyBase_publication_id'
+  - 'PubMed_id'
+
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+
+transform_mode: 'flat'
