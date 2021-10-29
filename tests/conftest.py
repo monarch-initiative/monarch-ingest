@@ -3,9 +3,14 @@ from typing import Iterable
 
 import pytest
 from koza.app import KozaApp
-from koza.cli_runner import set_koza
+from koza.cli_runner import get_translation_table, set_koza
 from koza.model.config.source_config import PrimaryFileConfig
 from koza.model.source import Source
+
+
+@pytest.fixture(scope="package")
+def global_table():
+    return "monarch_ingest/translation_table.yaml"
 
 
 @pytest.fixture(scope="package")
@@ -25,7 +30,8 @@ def mock_koza():
         transform_code: str,
         map_cache=None,
         filters=None,
-        translation_table=None,
+        global_table=None,
+        local_table=None,
     ):
         mock_source_file_config = PrimaryFileConfig(
             name=name,
@@ -37,7 +43,7 @@ def mock_koza():
 
         koza = KozaApp(mock_source_file)
         # TODO filter mocks
-        koza.translation_table = translation_table
+        koza.translation_table = get_translation_table(global_table, local_table)
         koza._map_cache = map_cache
         koza.write = types.MethodType(_mock_write, koza)
 
@@ -49,7 +55,8 @@ def mock_koza():
         transform_code: str,
         map_cache=None,
         filters=None,
-        translation_table=None,
+        global_table=None,
+        local_table=None,
     ):
         koza_app = _make_mock_koza_app(
             name,
@@ -57,7 +64,8 @@ def mock_koza():
             transform_code,
             map_cache=map_cache,
             filters=filters,
-            translation_table=translation_table,
+            global_table=global_table,
+            local_table=local_table,
         )
         set_koza(koza_app)
         koza_app.process_sources()

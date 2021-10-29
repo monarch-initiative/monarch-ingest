@@ -131,9 +131,12 @@ dmypy.json
 # data input and ouptut
 data/
 output/
+test-output/
 
 #IDE stuff
 .idea/
 
 #MacOS DS Store
 .DS_STORE
+
+

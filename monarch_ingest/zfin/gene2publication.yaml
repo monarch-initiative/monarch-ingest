@@ -1,6 +1,6 @@
 
 
-name: 'gene-to-publication'
+name: 'zfin_gene_to_publication'
 
 format: 'csv'
 

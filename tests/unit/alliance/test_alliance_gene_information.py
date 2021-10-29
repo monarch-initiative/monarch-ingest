@@ -1,15 +1,9 @@
 import pytest
-from koza.cli_runner import get_translation_table
-
-
-@pytest.fixture
-def tt():
-    get_translation_table("monarch_ingest/translation_table.yaml", None)
 
 
 @pytest.fixture
 def source_name():
-    return "gene-information"
+    return "alliance_gene_information"
 
 
 @pytest.fixture
@@ -154,21 +148,36 @@ def no_name_row():
 
 
 @pytest.fixture
-def pax2a(mock_koza, source_name, pax2a_row, script, tt):
+def pax2a(mock_koza, source_name, pax2a_row, script, global_table):
     row = iter([pax2a_row])
-    return mock_koza(source_name, row, script, translation_table=tt)
+    return mock_koza(
+        source_name,
+        row,
+        script,
+        global_table=global_table,
+    )
 
 
 @pytest.fixture
-def no_synonym_gene(mock_koza, source_name, no_synonym_row, script, tt):
+def no_synonym_gene(mock_koza, source_name, no_synonym_row, script, global_table):
     row = iter([no_synonym_row])
-    return mock_koza(source_name, row, script, translation_table=tt)
+    return mock_koza(
+        source_name,
+        row,
+        script,
+        global_table=global_table,
+    )
 
 
 @pytest.fixture
-def no_name_gene(mock_koza, source_name, no_name_row, script, tt):
+def no_name_gene(mock_koza, source_name, no_name_row, script, global_table):
     row = iter([no_name_row])
-    return mock_koza(source_name, row, script, translation_table=tt)
+    return mock_koza(
+        source_name,
+        row,
+        script,
+        global_table=global_table,
+    )
 
 
 def test_gene_information_gene(pax2a):

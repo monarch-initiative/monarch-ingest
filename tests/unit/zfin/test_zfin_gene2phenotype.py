@@ -1,15 +1,9 @@
 import pytest
-from koza.cli_runner import get_translation_table
-
-
-@pytest.fixture
-def tt():
-    return get_translation_table("monarch_ingest/translation_table.yaml", None)
 
 
 @pytest.fixture
 def source_name():
-    return "gene-to-phenotype"
+    return "zfin_gene_to_phenotype"
 
 
 @pytest.fixture
@@ -21,9 +15,7 @@ def script():
 def map_cache():
     eqe2zp = {
         "0-0-ZFA:0000042-PATO:0000638-0-0-0": {"iri": "ZP:0004225"},
-        "BSPO:0000112-BFO:0000050-ZFA:0000042-PATO:0000638-0-0-0": {
-            "iri": "ZP:0011243"
-        },
+        "BSPO:0000112-BFO:0000050-ZFA:0000042-PATO:0000638-0-0-0": {"iri": "ZP:0011243"},
         "BSPO:0000000-BFO:0000050-ZFA:0000823-PATO:0000642-BSPO:0000007-BFO:0000050-ZFA:0000823": {
             "iri": "ZP:0000157"
         },
@@ -63,13 +55,13 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, tt):
+def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, global_table):
     return mock_koza(
         source_name,
         iter([basic_row]),
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 
@@ -95,7 +87,7 @@ def test_association(basic_g2p):
 
 
 @pytest.fixture
-def postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt):
+def postcomposed(mock_koza, source_name, basic_row, script, map_cache, global_table):
 
     basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000112"
     basic_row["Post-composed Relationship ID"] = "BFO:0000050"
@@ -106,7 +98,7 @@ def postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt):
         iter([basic_row]),
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 
@@ -116,7 +108,9 @@ def test_postcomposed(postcomposed):
 
 
 @pytest.fixture
-def double_postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt):
+def double_postcomposed(
+    mock_koza, source_name, basic_row, script, map_cache, global_table
+):
 
     basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000000"
     basic_row["Post-composed Relationship ID"] = "BFO:0000050"
@@ -131,7 +125,7 @@ def double_postcomposed(mock_koza, source_name, basic_row, script, map_cache, tt
         iter([basic_row]),
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
 
 
@@ -141,26 +135,30 @@ def test_double_postcomposed(double_postcomposed):
 
 
 @pytest.mark.parametrize("tag", ["normal", "exacerbated", "ameliorated"])
-def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tt, tag):
+def test_excluded_tags(
+    mock_koza, source_name, basic_row, script, map_cache, tag, global_table
+):
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,
         iter([basic_row]),
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
     assert len(entities) == 0
 
 
 @pytest.mark.parametrize("tag", ["abnormal"])
-def test_included_tags(mock_koza, source_name, basic_row, script, map_cache, tt, tag):
+def test_included_tags(
+    mock_koza, source_name, basic_row, script, map_cache, tag, global_table
+):
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,
         iter([basic_row]),
         script,
         map_cache=map_cache,
-        translation_table=tt,
+        global_table=global_table,
     )
     assert len(entities) == 3
