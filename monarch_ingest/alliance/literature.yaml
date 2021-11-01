@@ -1,4 +1,4 @@
-name: 'literature'
+name: 'alliance_literature'
 
 files:
   - './data/REFERENCE_FB.json.gz'

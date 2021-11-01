@@ -10,7 +10,7 @@ def tt():
 
 @pytest.fixture
 def source_name():
-    return "literature"
+    return "alliance_literature"
 
 
 @pytest.fixture
@@ -87,3 +87,10 @@ def test_research_authors(mock_koza, source_name, row, script, tt, author):
     entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
     pub = entities[0]
     assert(author in pub.authors)
+
+
+def test_single_xref(mock_koza, source_name, row, script, tt):
+    row["crossReferences"] = [row["crossReferences"][0]]
+    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+    pub = entities[0]
+    assert(pub.xref == ["SGD:S000185012"])
