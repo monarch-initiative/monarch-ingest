@@ -1,5 +1,4 @@
 import pytest
-import copy
 from koza.cli_runner import get_translation_table
 
 
@@ -59,7 +58,9 @@ def test_research_article(mock_koza, source_name, row, script, tt):
     assert pub.id == "PMID:27653487"
 
 
-@pytest.mark.parametrize("mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"])
+@pytest.mark.parametrize(
+    "mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"]
+)
 def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
     row["meshTerms"] = [
         {
@@ -82,15 +83,17 @@ def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
     assert mesh_term in pub.mesh_terms
 
 
-@pytest.mark.parametrize("author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"])
+@pytest.mark.parametrize(
+    "author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"]
+)
 def test_research_authors(mock_koza, source_name, row, script, tt, author):
     entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
     pub = entities[0]
-    assert(author in pub.authors)
+    assert author in pub.authors
 
 
 def test_single_xref(mock_koza, source_name, row, script, tt):
     row["crossReferences"] = [row["crossReferences"][0]]
     entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
     pub = entities[0]
-    assert(pub.xref == ["SGD:S000185012"])
+    assert pub.xref == ["SGD:S000185012"]
