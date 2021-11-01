@@ -1,4 +1,4 @@
-name: 'gene-information'
+name: 'xenbase_gene_information'
 
 files:
   - './data/xenbase.gpi.gz'

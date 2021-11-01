@@ -1,28 +1,27 @@
-name: 'xenbase_gene_literature'
+
+
+name: 'zfin_gene_to_publication'
+
+format: 'csv'
 
 delimiter: '\t'
 
 has_header: False
 
 files:
-  - './data/LiteratureMatchedGenesByPaper.txt'
-
-metadata: './monarch_ingest/xenbase/metadata.yaml'
+  - './data/gene_publication.txt'  # "https://zfin.org/downloads/gene_publication.txt"
 
 columns:
-  - 'xb_article'
-  - 'pmid'
-  - 'gene_pages'
-
-depends_on:
-  - './monarch_ingest/maps/genepage-2-gene.yaml'
+  - 'Gene Symbol'
+  - 'Gene ID'
+  - 'Publication ID'
+  - 'Publication Type'
+  - 'PubMed ID'
 
 node_properties:
   - 'id'
   - 'category'
   - 'provided_by'
-  - 'type'
-
 
 edge_properties:
   - 'id'
@@ -32,5 +31,7 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+ # - 'source'
 
 transform_mode: 'flat'
+

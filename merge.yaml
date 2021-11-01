@@ -62,52 +62,12 @@ merged_graph:
         filename:
           - output/zfin_gene_to_phenotype_nodes.tsv
           - output/zfin_gene_to_phenotype_edges.tsv
-    fypo:
-      input:
-        format: owl
-        filename:
-          - data/fypo.owl
-# TODO: This fails with kgx 1.3.0, but looks like it will be ok when kgx 1.4.0 is released
-    hp:
-      input:
-        format: owl
-        filename:
-          - data/hp.owl
-    mp:
-      input:
-        format: owl
-        filename:
-          - data/mp.owl
-    pato:
-      input:
-        format: owl
-        filename:
-          - data/pato.owl
-    peco:
-      input:
-        format: owl
-        filename:
-          - data/peco.owl
-    wbphenotype:
-      input:
-        format: owl
-        filename:
-          - data/wbphenotype.owl
-    xpo:
-      input:
-        format: owl
-        filename:
-          - data/xpo.owl
-    zp:
-      input:
-        format: owl
-        filename:
-          - data/zp.owl
-    zfa:
-      input:
-        format: owl
-        filename:
-          - data/zfa.owl
+    zfin-gene-to-publication:
+        input:
+          format: tsv
+          filename:
+            - output/zfin_gene_to_publication_nodes.tsv
+            - output/zfin_gene_to_publication_edges.tsv
 
   operations:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats
