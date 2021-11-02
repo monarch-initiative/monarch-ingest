@@ -1,0 +1,11 @@
+name: 'FlyBase'
+
+dataset_description:
+  ingest_title: 'FlyBase'
+  ingest_url: 'http://flybase.org/downloads/bulkdata'
+  description: 'FlyBase is the model organism database providing integrated genetic, genomic, phenomic, and biological data for Drosophila melanogaster.'
+  rights: 'https://wiki.flybase.org/wiki/FlyBase:About#FlyBase_Copyright'
+
+source_files:
+  - 'gene2publication.yaml'
+
