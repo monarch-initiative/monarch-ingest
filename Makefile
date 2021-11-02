@@ -64,6 +64,10 @@ data/hpoa/:
 download:
 	gsutil -m cp -R gs://monarch-ingest/data .
 
+.PHONY: download-kozacache
+download:
+	gsutil -m cp -R gs://koza-cache/data .
+
 .PHONY: download-omim
 download-omim: data/omim/mimTitles.txt data/omim/morbidmap.txt data/omim/mim2gene.txt
 
@@ -72,11 +76,11 @@ download-hpoa: data/hpoa/phenotype.hpoa
 
 .PHONY: upload-omim
 upload-omim: data/omim/mimTitles.txt data/omim/morbidmap.txt data/omim/mim2gene.txt
-	gsutil -m cp $^ gs://koza-cache/$(<D)
+	gsutil -m cp $^ gs://koza-cache/$(<D)/
 
 .PHONY: upload-hpoa
 upload-hpoa: data/hpoa/phenotype.hpoa
-	gsutil -m cp $^ gs://koza-cache/$(<D)
+	gsutil -m cp $^ gs://koza-cache/$(<D)/
 
 # Mind the @ to not leak the key
 data/omim/mimTitles.txt: FORCE data/omim/
