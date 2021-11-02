@@ -2,8 +2,10 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-include .env
-export
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 
 WGET = /usr/bin/env wget --timestamping --no-verbose
 
@@ -65,7 +67,7 @@ download:
 	gsutil -m cp -R gs://monarch-ingest/data .
 
 .PHONY: download-kozacache
-download:
+download-kozacache:
 	gsutil -m cp -R gs://koza-cache/data .
 
 .PHONY: download-omim

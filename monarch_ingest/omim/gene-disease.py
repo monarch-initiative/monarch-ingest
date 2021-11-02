@@ -60,7 +60,6 @@ disorder_id = None
 disorder_label = None
 association_key = None
 gene_id = None
-skipped = 0
 
 if disorder_match is not None:
     disorder_parts = disorder_match.groups()
@@ -95,7 +94,7 @@ elif nogene_match is not None:
 else:
     # In dipper we created anonymous nodes for these cases, but for now we will skip these
     # It doesn't appear that anything falls into this category as of 1/11/2021
-    LOG.info(f"skipped {row}")
+    LOG.warning(f"skipped {row}")
     koza_app.next_row()
 
 
