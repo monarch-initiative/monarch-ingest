@@ -18,16 +18,25 @@ if not row["entity_id"].startswith('FBgn'):
 
 gene = Gene(id='FB:' + row["entity_id"])
 
-if row["PubMed_id"] != '':
-    publication = Publication(
-        id="PMID:" + row["PubMed_id"],
-        type=koza_app.translation_table.resolve_term("publication"),
-    )
+if row["PubMed_id"]:
+    publication_id = "PMID:" + row["PubMed_id"]
 else:
-    publication = Publication(
-        id="FB:" + row["FlyBase_publication_id"],
+    publication_id = "FB:" + row["FlyBase_publication_id"]
+
+publication = Publication(
+        id=publication_id,
         type=koza_app.translation_table.resolve_term("publication"),
-    )
+)
+# if row["PubMed_id"] != '':
+#     publication = Publication(
+#         id="PMID:" + row["PubMed_id"],
+#         type=koza_app.translation_table.resolve_term("publication"),
+#     )
+# else:
+#     publication = Publication(
+#         id="FB:" + row["FlyBase_publication_id"],
+#         type=koza_app.translation_table.resolve_term("publication"),
+#     )
 
 association = NamedThingToInformationContentEntityAssociation(
     id="uuid:" + str(uuid.uuid1()),
