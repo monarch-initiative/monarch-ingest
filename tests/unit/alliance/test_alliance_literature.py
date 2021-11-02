@@ -1,11 +1,4 @@
 import pytest
-from koza.cli_runner import get_translation_table
-
-
-@pytest.fixture
-def tt():
-    return get_translation_table("./monarch_ingest/translation_table.yaml", None)
-
 
 @pytest.fixture
 def source_name():
@@ -51,8 +44,8 @@ def row():
     }
 
 
-def test_research_article(mock_koza, source_name, row, script, tt):
-    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+def test_research_article(mock_koza, source_name, row, script, global_table):
+    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
     assert pub
     assert pub.id == "PMID:27653487"
@@ -61,7 +54,7 @@ def test_research_article(mock_koza, source_name, row, script, tt):
 @pytest.mark.parametrize(
     "mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"]
 )
-def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
+def test_mesh_terms(mock_koza, source_name, row, script, global_table, mesh_term):
     row["meshTerms"] = [
         {
             "meshQualfierTerm": "Q000502",
@@ -77,7 +70,7 @@ def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
             "referenceId": "PMID:23576957",
         },
     ]
-    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
     assert pub
     assert mesh_term in pub.mesh_terms
@@ -86,14 +79,14 @@ def test_mesh_terms(mock_koza, source_name, row, script, tt, mesh_term):
 @pytest.mark.parametrize(
     "author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"]
 )
-def test_research_authors(mock_koza, source_name, row, script, tt, author):
-    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+def test_research_authors(mock_koza, source_name, row, script, global_table, author):
+    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
     assert author in pub.authors
 
 
-def test_single_xref(mock_koza, source_name, row, script, tt):
+def test_single_xref(mock_koza, source_name, row, script, global_table):
     row["crossReferences"] = [row["crossReferences"][0]]
-    entities = mock_koza(source_name, iter([row]), script, translation_table=tt)
+    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
     assert pub.xref == ["SGD:S000185012"]
