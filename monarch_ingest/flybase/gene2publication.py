@@ -1,4 +1,3 @@
-import logging
 import uuid
 
 from biolink_model_pydantic.model import (
@@ -7,7 +6,6 @@ from biolink_model_pydantic.model import (
     Predicate,
     Publication,
 )
-
 from koza.cli_runner import koza_app
 
 source_name = "flybase_gene_to_publication"
@@ -18,9 +16,7 @@ if not row["entity_id"].startswith('FBgn'):
     koza_app.next_row()
 
 
-gene = Gene(
-    id='FB:' + row["entity_id"]
-)
+gene = Gene(id='FB:' + row["entity_id"])
 
 publication = Publication(
     id="FB:" + row["FlyBase_publication_id"],

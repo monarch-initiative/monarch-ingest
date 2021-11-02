@@ -1,15 +1,11 @@
 import pytest
-from koza.cli_runner import get_translation_table
 
-
-@pytest.fixture
-def tt():
-    return get_translation_table("monarch_ingest/translation_table.yaml", None)
 
 # This name must match the ingest name in the transform code
 @pytest.fixture
 def source_name():
     return "flybase_gene_to_publication"
+
 
 # This is the location of the transform code
 @pytest.fixture
@@ -28,14 +24,16 @@ def basic_row():
         "PubMed_id": "10199954",
     }
 
+
 @pytest.fixture
-def basic_g2p(mock_koza, source_name, basic_row, script, tt):
+def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
     return mock_koza(
         source_name,
         iter([basic_row]),
         script,
-        translation_table=tt,
+        global_table=global_table,
     )
+
 
 def test_gene(basic_g2p):
     gene = basic_g2p[0]
@@ -55,15 +53,17 @@ def test_association(basic_g2p):
     assert association.subject == "FB:FBgn0001098"
     assert association.object == "PMID:10199954"
 
+
 @pytest.fixture
-def basic_g2p_without_pmid(mock_koza, source_name, basic_row, script, tt):
+def basic_g2p_without_pmid(mock_koza, source_name, basic_row, script, global_table):
     basic_row['PubMed_id'] = None
     return mock_koza(
         source_name,
         iter([basic_row]),
         script,
-        translation_table=tt,
+        global_table=global_table,
     )
+
 
 def test_publication_withoutpmid(basic_g2p_without_pmid):
     publication = basic_g2p_without_pmid[1]
