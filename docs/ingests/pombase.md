@@ -40,3 +40,4 @@ PomBase genes are captured directly from the PomBase (names and identifiers)[htt
   * type (SO term ids mapped through the global translation table)
   * xref (UniProfKB curie if provided)
   * synonyms
+  * source 

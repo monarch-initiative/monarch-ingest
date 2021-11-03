@@ -24,8 +24,8 @@ else:
     publication_id = "FB:" + row["FlyBase_publication_id"]
 
 publication = Publication(
-        id=publication_id,
-        type=koza_app.translation_table.resolve_term("publication"),
+    id=publication_id,
+    type=koza_app.translation_table.resolve_term("publication"),
 )
 # if row["PubMed_id"] != '':
 #     publication = Publication(
