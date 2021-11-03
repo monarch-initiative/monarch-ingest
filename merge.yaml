@@ -33,6 +33,12 @@ merged_graph:
         filename:
           - output/alliance_gene_to_disease_nodes.tsv
           - output/alliance_gene_to_disease_edges.tsv
+    pombase-gene-information:
+      input:
+        format: tsv
+        filename:
+          - output/pombase_gene_information_nodes.tsv
+          - output/pombase_gene_information_edges.tsv
     pombase-gene-to-phenotype:
       input:
         format: tsv
