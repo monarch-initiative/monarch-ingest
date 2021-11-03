@@ -15,7 +15,7 @@ gene = Gene(
     id=row["curie"],
     symbol=row["primary gene name"],
     type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
-    source="infores:pombase",
+    source="PomBase",
 )
 
 if row["UniProtKB accession"]:
