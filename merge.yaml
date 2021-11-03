@@ -52,6 +52,11 @@ merged_graph:
         filename:
           - output/hgnc_gene_nodes.tsv
           - output/hgnc_gene_edges.tsv
+    pombase_gene:
+      input:
+        format: tsv
+        filename:
+          - output/pombase_gene_nodes.tsv
     pombase_gene_to_phenotype:
       input:
         format: tsv
