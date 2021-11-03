@@ -1,0 +1,45 @@
+name: 'pombase_gene_information'
+
+files:
+  - './data/gene_IDs_names_products.tsv' # url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
+
+format: 'csv'
+
+delimiter: '\t'
+
+metadata: './monarch_ingest/pombase/metadata.yaml'
+
+header: none
+
+columns:
+  - "systematic ID"
+  - "curie"
+  - "primary gene name"
+  - "chromosome"
+  - "product description"
+  - "UniProtKB accession"
+  - "product type"
+  - "synonyms"
+
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'name'
+  - 'symbol'
+  - 'in_taxon'
+  - 'xref'
+  - 'synonyms'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+
+transform_mode: 'flat'
