@@ -39,6 +39,7 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         object=phenotypicFeature.id,
         relation=koza_app.translation_table.resolve_term("has phenotype"),
         publications=[row["evidence"]["publicationId"]],
+        source="Alliance"  # More accurate source could come from which file, but mapping up to Alliance for simplicity
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:

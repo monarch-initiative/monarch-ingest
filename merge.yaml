@@ -33,6 +33,12 @@ merged_graph:
         filename:
           - output/alliance_gene_to_disease_nodes.tsv
           - output/alliance_gene_to_disease_edges.tsv
+    flybase:
+      input:
+        format: tsv
+        filename:
+          - output/flybase_gene_to_publication_nodes.tsv
+          - output/flybase_gene_to_publication_edges.tsv
     pombase-gene-to-phenotype:
       input:
         format: tsv
@@ -75,9 +81,9 @@ merged_graph:
         graph_name: Monarch Graph
         filename: merged_graph_stats.yaml
         node_facet_properties:
-          - provided_by
+          - source
         edge_facet_properties:
-          - provided_by
+          - source
   destination:
     merged-kg-tsv:
       format: tsv

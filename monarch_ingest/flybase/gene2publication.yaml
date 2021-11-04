@@ -9,7 +9,9 @@ format: 'csv'
 
 delimiter: '\t'
 
-skip_lines: 5
+comment_char: '#'
+
+header: 5
 
 columns:
   - 'entity_id'
@@ -24,6 +26,7 @@ node_properties:
   - 'symbol'
   - 'in_taxon'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -33,5 +36,6 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'

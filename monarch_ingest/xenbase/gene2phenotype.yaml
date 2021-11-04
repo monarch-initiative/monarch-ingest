@@ -5,6 +5,8 @@ files:
 
 metadata: './monarch_ingest/xenbase/metadata.yaml'
 
+header: 0
+
 format: 'csv'
 
 delimiter: '\t'
@@ -28,6 +30,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -37,5 +40,6 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'

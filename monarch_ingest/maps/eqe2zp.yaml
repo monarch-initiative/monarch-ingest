@@ -11,7 +11,7 @@ delimiter: '\t'
 files:
   - './data/id_map_zfin.tsv'
 
-has_header: true
+header: 0
 
 columns:
   - 'iri'

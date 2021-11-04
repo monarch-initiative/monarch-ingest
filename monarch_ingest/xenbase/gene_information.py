@@ -11,4 +11,6 @@ row["DB_Object_ID"] = "Xenbase:" + row["DB_Object_ID"]
 
 gene = gpi2gene(row)
 
+gene.source = "Xenbase"
+
 koza_app.write(gene)

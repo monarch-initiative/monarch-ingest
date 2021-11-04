@@ -40,8 +40,8 @@ elif associationType == "is_not_implicated_in":
 #    likely this should be contributes_to with some extra qualifier
 
 if row["DBobjectType"] == "gene" and predicate:
-    gene = Gene(id=row["DBObjectID"])
-    disease = Disease(id=row["DOID"])
+    gene = Gene(id=row["DBObjectID"], source=row["Source"])
+    disease = Disease(id=row["DOID"], source=row["Source"])
 
     association = GeneToDiseaseAssociation(
         id="uuid:" + str(uuid.uuid1()),

@@ -12,7 +12,7 @@ delimiter: '\t'
 files:
   - './data/alliance_gene_ids.txt.gz'
 
-has_header: false
+header: 'none'
 
 columns:
   - 'gene_id'

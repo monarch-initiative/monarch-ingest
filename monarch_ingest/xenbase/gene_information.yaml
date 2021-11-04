@@ -7,7 +7,7 @@ metadata: './monarch_ingest/xenbase/metadata.yaml'
 
 standard_format: 'gpi'
 
-skip_lines: 22
+header: 22
 
 compression: 'gzip'
 

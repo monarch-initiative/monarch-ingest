@@ -5,6 +5,8 @@ files:
 
 metadata: './monarch_ingest/pombase/metadata.yaml'
 
+header: 0
+
 format: 'csv'
 
 delimiter: '\t'
@@ -37,6 +39,7 @@ node_properties:
   - 'symbol'
   - 'in_taxon'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -48,5 +51,6 @@ edge_properties:
   - 'qualifiers'
   - 'publications'
   - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'
