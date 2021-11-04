@@ -90,6 +90,7 @@ elif nogene_match is not None:
         id=gene_id,
         type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
     )
+    koza_app.write(genomic_entity)
 
 else:
     # In dipper we created anonymous nodes for these cases, but for now we will skip these
@@ -158,4 +159,4 @@ association = GeneToDiseaseAssociation(
     has_evidence=evidence,
 )
 
-koza_app.write(association)
+koza_app.write(disease, association)

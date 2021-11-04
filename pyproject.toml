@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "monarch-ingest"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
-authors = ["Kevin Schaper <kevinschaper@gmail.com>"]
+authors = ["Kevin Schaper <kevinschaper@gmail.com>", "The Monarch Initiative <info@monarchinitiative.org>"]
 
 [tool.poetry.dependencies]
 python = ">=3.7, <=3.9"
@@ -13,7 +13,7 @@ importlib-metadata = "^4.6.1"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 kgx = "^1.5.3"
-koza = "0.1.4"
+koza = "0.1.5"
 biolink_model_pydantic = "0.1.2"
 
 [tool.poetry.dev-dependencies]
