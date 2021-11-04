@@ -2,7 +2,12 @@
 name = "monarch-ingest"
 version = "0.1.1"
 description = ""
-authors = ["Kevin Schaper <kevinschaper@gmail.com>", "The Monarch Initiative <info@monarchinitiative.org>"]
+authors = [
+    "Kevin Schaper <kevinschaper@gmail.com>",
+    "Victoria Soesanto <victoria.soesanto@cuanschutz.edu>",
+    "Kent Shefchek <kent@tislab.org>",
+    "The Monarch Initiative <info@monarchinitiative.org>"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7, <=3.9"
