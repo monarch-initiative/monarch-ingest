@@ -123,18 +123,20 @@ else:
 #   (4) the disorder is a chromosome deletion or duplication syndrome.
 # reference: https://omim.org/help/faq#1_6
 
-predicate = Predicate.causes
+predicate = Predicate.gene_associated_with_condition
 relation = koza_app.translation_table.global_table['causes condition']
 
 if disorder_label.startswith('['):
-    predicate = Predicate.related_to
-    relation = koza_app.translation_table.global_table['is marker for']
+    # predicate = Predicate.related_condition
+    # relation = koza_app.translation_table.global_table['is marker for']
+    koza_app.next_row()
 elif disorder_label.startswith('{'):
-    predicate = Predicate.contributes_to
-    relation = koza_app.translation_table.global_table['contributes to']
+    # predicate = Predicate.risk_affected_by
+    # relation = koza_app.translation_table.global_table['contributes to']
+    koza_app.next_row()
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
-    # predicate = Predicate.contributed_to
+    # predicate = Predicate.related_condition
     # relation = koza_app.translation_table.global_table['contributes to']
     koza_app.next_row()
 
