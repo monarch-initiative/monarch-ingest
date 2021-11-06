@@ -159,6 +159,7 @@ association = GeneToDiseaseAssociation(
     object=disorder_id,
     relation=relation,
     has_evidence=evidence,
+    source='infores:omim'
 )
 
 koza_app.write(disease, association)
