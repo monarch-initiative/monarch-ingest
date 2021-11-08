@@ -12,6 +12,9 @@ source_name = "rgd_gene_to_publication"
 
 row = koza_app.get_row(source_name)
 
+if not row["CURATED_REF_PUBMED_ID"]:
+    koza_app.next_row()
+
 gene = Gene(id='RGD:' + row["GENE_RGD_ID"])
 
 id_list = row["CURATED_REF_PUBMED_ID"].split(';')
