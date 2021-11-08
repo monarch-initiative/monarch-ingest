@@ -28,7 +28,7 @@ association = NamedThingToInformationContentEntityAssociation(
     predicate=Predicate.mentions,
     object=publication.id,
     relation=koza_app.translation_table.resolve_term("mentions"),
-    source="ZFIN"
+    source="infores:zfin"
 )
 
 koza_app.write(gene, publication, association)
