@@ -13,7 +13,7 @@ nav:
     - XenBase: ingests/xenbase.md
     - ZFIN: ingests/zfin.md
     - SGD: ingests/sgd.md
-    - Flybase: ingests/flybase.md
+    - FlyBase: ingests/flybase.md
     - RGD: ingests/rgd.md
   - Kozathon:
       - Setup: kozathon/setup.md
