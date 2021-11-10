@@ -11,6 +11,20 @@ files:
 
 metadata: './monarch_ingest/alliance/metadata.yaml'
 
+filters:
+  - inclusion: 'exclude'
+    column: 'Source'
+    filter_code: 'eq'
+    value: 'OMIM Via RGD'
+  - inclusion: 'exclude'
+    column: 'AssociationType'
+    filter_code: 'eq'
+    value: 'biomarker_via_orthology'
+  - inclusion: 'exclude'
+    column: 'AssociationType'
+    filter_code: 'eq'
+    value: 'implicated_via_orthology'
+
 columns:
   - 'Taxon'
   - 'SpeciesName'

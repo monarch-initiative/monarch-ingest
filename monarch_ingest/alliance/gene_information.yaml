@@ -4,7 +4,6 @@ files:
     - "./data/BGI_MGI.json.gz"
     - "./data/BGI_FB.json.gz"
     - "./data/BGI_SGD.json.gz"
-    - "./data/BGI_HUMAN.json.gz"
     - "./data/BGI_RGD.json.gz"
     - "./data/BGI_WB.json.gz"
     - "./data/BGI_ZFIN.json.gz"

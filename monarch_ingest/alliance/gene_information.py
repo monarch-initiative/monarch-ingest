@@ -1,11 +1,12 @@
 from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
+from source_translation import source_map
 
 source_name = "alliance_gene_information"
 
 row = koza_app.get_row(source_name)
 # curie prefix as source?
-source = row["basicGeneticEntity"]["primaryId"].split(":")[0]
+source = source_map[row["basicGeneticEntity"]["primaryId"].split(":")[0]]
 
 if "name" not in row.keys():
     row["name"] = row["symbol"]

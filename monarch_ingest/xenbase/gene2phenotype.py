@@ -28,7 +28,7 @@ association = GeneToPhenotypicFeatureAssociation(
     object=phenotype.id,
     publications=row["SOURCE"],
     relation=row["RELATION"].replace("_", ":"),
-    source="Xenbase",
+    source="infores:xenbase",
 )
 
 if row["SOURCE"]:

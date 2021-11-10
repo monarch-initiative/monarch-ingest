@@ -23,7 +23,7 @@ gene_pages = row["gene_pages"]
 publication = Publication(
     id="PMID:" + row["pmid"],
     type=koza_app.translation_table.resolve_term("publication"),
-    source="Xenbase"
+    source="infores:xenbase"
 )
 
 entities.append(publication)
@@ -38,7 +38,7 @@ for gene_page in gene_pages.split(","):
         LOG.debug(f"Could not locate genepage_id: {gene_page_id} in row {row}")
         continue
     for gene_id in gene_ids:
-        gene = Gene(id=gene_id)
+        gene = Gene(id=gene_id, source="infores:xenbase")
 
         entities.append(gene)
 
@@ -48,7 +48,7 @@ for gene_page in gene_pages.split(","):
             predicate=Predicate.mentions,
             object=publication.id,
             relation="IAO:0000142",  # Mentions
-            source="Xenbase"
+            source="infores:xenbase"
         )
 
         entities.append(association)
