@@ -12,6 +12,8 @@ nav:
     - PomBase: ingests/pombase.md
     - XenBase: ingests/xenbase.md
     - ZFIN: ingests/zfin.md
+    - Flybase: ingests/flybase.md
+    - RGD: ingests/rgd.md
   - Kozathon:
       - Setup: kozathon/setup.md
 theme:
