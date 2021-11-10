@@ -43,7 +43,7 @@ if row["Phenotype Tag"] == "abnormal":
         object=phenotypicFeature.id,
         relation=koza_app.translation_table.resolve_term("has phenotype"),
         publications="ZFIN:" + row["Publication ID"],
-        source="infores:zfin"
+        source="infores:zfin",
     )
 
     koza_app.write(gene, phenotypicFeature, association)

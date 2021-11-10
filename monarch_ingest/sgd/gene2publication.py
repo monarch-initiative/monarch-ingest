@@ -17,7 +17,7 @@ gene = Gene(id='SGD:' + row["gene name"], source="infores:sgd")
 publication = Publication(
     id="PMID:" + row["PubMed ID"],
     type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:sgd"
+    source="infores:sgd",
 )
 
 association = NamedThingToInformationContentEntityAssociation(

@@ -24,9 +24,9 @@ else:
     publication_id = "FB:" + row["FlyBase_publication_id"]
 
 publication = Publication(
-        id=publication_id,
-        type=koza_app.translation_table.resolve_term("publication"),
-        source="infores:flybase",
+    id=publication_id,
+    type=koza_app.translation_table.resolve_term("publication"),
+    source="infores:flybase",
 )
 
 association = NamedThingToInformationContentEntityAssociation(
@@ -35,7 +35,7 @@ association = NamedThingToInformationContentEntityAssociation(
     predicate=Predicate.mentions,
     object=publication.id,
     relation=koza_app.translation_table.resolve_term("mentions"),
-    source="infores:flybase"
+    source="infores:flybase",
 )
 
 koza_app.write(gene, publication, association)

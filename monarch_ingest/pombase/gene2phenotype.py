@@ -21,7 +21,7 @@ association = GeneToPhenotypicFeatureAssociation(
     object=phenotype.id,
     relation=koza_app.translation_table.resolve_term("has phenotype"),
     publications=[row["Reference"]],
-    source="infores:pombase"
+    source="infores:pombase",
 )
 
 if row["Condition"]:

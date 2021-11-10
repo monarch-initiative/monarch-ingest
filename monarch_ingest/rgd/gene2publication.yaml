@@ -4,7 +4,7 @@ format: 'csv'
 
 delimiter: '\t'
 
-skip_lines: 82
+header: 82
 
 files:
   - './data/GENES_RAT.txt'

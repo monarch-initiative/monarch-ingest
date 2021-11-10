@@ -23,7 +23,7 @@ gene_pages = row["gene_pages"]
 publication = Publication(
     id="PMID:" + row["pmid"],
     type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:xenbase"
+    source="infores:xenbase",
 )
 
 entities.append(publication)
@@ -48,7 +48,7 @@ for gene_page in gene_pages.split(","):
             predicate=Predicate.mentions,
             object=publication.id,
             relation="IAO:0000142",  # Mentions
-            source="infores:xenbase"
+            source="infores:xenbase",
         )
 
         entities.append(association)

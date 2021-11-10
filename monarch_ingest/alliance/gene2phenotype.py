@@ -41,7 +41,7 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         object=phenotypicFeature.id,
         relation=koza_app.translation_table.resolve_term("has phenotype"),
         publications=[row["evidence"]["publicationId"]],
-        source=source
+        source=source,
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
