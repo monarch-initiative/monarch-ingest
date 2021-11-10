@@ -16,7 +16,7 @@ if not row["entity_id"].startswith('FBgn'):
     koza_app.next_row()
 
 
-gene = Gene(id='FB:' + row["entity_id"])
+gene = Gene(id='FB:' + row["entity_id"], source="infores:flybase")
 
 if row["PubMed_id"]:
     publication_id = "PMID:" + row["PubMed_id"]
@@ -26,7 +26,7 @@ else:
 publication = Publication(
         id=publication_id,
         type=koza_app.translation_table.resolve_term("publication"),
-        source="FB",
+        source="infores:flybase",
 )
 
 association = NamedThingToInformationContentEntityAssociation(
@@ -35,7 +35,7 @@ association = NamedThingToInformationContentEntityAssociation(
     predicate=Predicate.mentions,
     object=publication.id,
     relation=koza_app.translation_table.resolve_term("mentions"),
-    source="FB"
+    source="infores:flybase"
 )
 
 koza_app.write(gene, publication, association)

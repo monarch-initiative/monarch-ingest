@@ -34,8 +34,8 @@ if row["Phenotype Tag"] == "abnormal":
     if not zp_term:
         LOG.warning("ZP concatenation " + zp_key + " did not match a ZP term")
 
-    gene = Gene(id="ZFIN:" + row["Gene ID"], source="ZFIN")
-    phenotypicFeature = PhenotypicFeature(id=zp_term, source="ZFIN")  # ...or?
+    gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
+    phenotypicFeature = PhenotypicFeature(id=zp_term, source="infores:zfin")  # ...or?
     association = GeneToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene.id,

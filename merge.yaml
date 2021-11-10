@@ -27,12 +27,14 @@ merged_graph:
         filename:
           - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
-    alliance-gene-to-disease:
-      input:
-        format: tsv
-        filename:
-          - output/alliance_gene_to_disease_nodes.tsv
-          - output/alliance_gene_to_disease_edges.tsv
+# Excluded while we sort out gene to disease requirements
+#
+#    alliance-gene-to-disease:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/alliance_gene_to_disease_nodes.tsv
+#          - output/alliance_gene_to_disease_edges.tsv
     flybase-gene-to-publication:
       input:
         format: tsv
