@@ -47,6 +47,18 @@ merged_graph:
         filename:
           - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
+    rgd-gene-to-publication:
+      input:
+        format: tsv
+        filename:
+          - output/rgd_gene_to_publication_nodes.tsv
+          - output/rgd_gene_to_publication_edges.tsv
+    sgd-gene-to-publication:
+      input:
+        format: tsv
+        filename:
+          - output/sgd_gene_to_publication_nodes.tsv
+          - output/sgd_gene_to_publication_edges.tsv
     xenbase-gene:
       input:
         format: tsv
