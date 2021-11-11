@@ -1,4 +1,4 @@
-name: 'hgnc_gene_to_publication'
+name: 'hgnc_gene_information'
 
 files:
   - './data/hgnc_complete_set.txt'
@@ -66,9 +66,14 @@ columns:
 node_properties:
   - 'id'
   - 'category'
+  - 'provided_by'
+  - 'name'
   - 'symbol'
   - 'in_taxon'
-  - 'provided_by'
+  - 'xref'
+  - 'synonym'
+  - 'source'
+
 
 edge_properties:
   - 'id'

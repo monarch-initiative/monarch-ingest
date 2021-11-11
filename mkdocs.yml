@@ -12,6 +12,7 @@ nav:
     - PomBase: ingests/pombase.md
     - XenBase: ingests/xenbase.md
     - ZFIN: ingests/zfin.md
+    - HGNC: ingests/hgnc.md
   - Kozathon:
       - Setup: kozathon/setup.md
 theme:
