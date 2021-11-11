@@ -1,0 +1,10 @@
+name: 'RGD'
+
+dataset_description:
+  ingest_title: 'RGD'
+  ingest_url: 'https://rgd.mcw.edu/wg/data-menu/'
+  description: 'The Rat Genome Database (RGD) was established in 1999 and is the premier site for genetic, genomic, phenotype, and disease data generated from rat research. In addition, it provides easy access to corresponding human and mouse data for cross-species comparisons.'
+  rights: 'https://rgd.mcw.edu/wg/citing-rgd/'
+
+source_files:
+  - 'gene2publication.yaml'

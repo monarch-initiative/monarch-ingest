@@ -1,0 +1,34 @@
+name: 'sgd_gene_to_publication'
+
+files:
+  - './data/gene2pmid.tab'
+
+format: 'csv'
+
+delimiter: '\t'
+
+has_header: False
+
+columns:
+  - 'gene name'
+  - 'PubMed ID'
+  - 'feature'
+
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+
+transform_mode: 'flat'
