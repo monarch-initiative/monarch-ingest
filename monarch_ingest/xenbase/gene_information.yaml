@@ -5,22 +5,10 @@ files:
 
 metadata: './monarch_ingest/xenbase/metadata.yaml'
 
-columns:
-  - "DB"
-  - "DB_Object_ID"
-  - "DB_Object_Symbol"
-  - "DB_Object_Name"
-  - "DB_Object_Synonym(s)"
-  - "DB_Object_Type"
-  - "Taxon"
-  - "Parent_Object_ID"
-  - "DB_Xref(s)"
-  - "Properties"
+standard_format: 'gpi'
 
-format: csv
-delimiter: '\t'
-comment_char: '!!'
 header: 22
+
 compression: 'gzip'
 
 node_properties:

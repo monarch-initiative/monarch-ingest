@@ -16,11 +16,11 @@ source_name = "zfin_gene_to_publication"
 row = koza_app.get_row(source_name)
 
 
-gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
+gene = Gene(id="ZFIN:" + row["Gene ID"], source="ZFIN")
 publication = Publication(
     id="ZFIN:" + row["Publication ID"],
     type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:zfin"
+    source="ZFIN"
 )
 association = NamedThingToInformationContentEntityAssociation(
     id="uuid:" + str(uuid.uuid1()),
@@ -28,7 +28,7 @@ association = NamedThingToInformationContentEntityAssociation(
     predicate=Predicate.mentions,
     object=publication.id,
     relation=koza_app.translation_table.resolve_term("mentions"),
-    source="infores:zfin"
+    source="ZFIN"
 )
 
 koza_app.write(gene, publication, association)

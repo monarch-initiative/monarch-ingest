@@ -27,14 +27,12 @@ merged_graph:
         filename:
           - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
-# Excluded while we sort out gene to disease requirements
-#
-#    alliance-gene-to-disease:
-#      input:
-#        format: tsv
-#        filename:
-#          - output/alliance_gene_to_disease_nodes.tsv
-#          - output/alliance_gene_to_disease_edges.tsv
+    alliance-gene-to-disease:
+      input:
+        format: tsv
+        filename:
+          - output/alliance_gene_to_disease_nodes.tsv
+          - output/alliance_gene_to_disease_edges.tsv
     flybase:
       input:
         format: tsv
@@ -47,18 +45,6 @@ merged_graph:
         filename:
           - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
-    rgd-gene-to-publication:
-      input:
-        format: tsv
-        filename:
-          - output/rgd_gene_to_publication_nodes.tsv
-          - output/rgd_gene_to_publication_edges.tsv
-    sgd-gene-to-publication:
-      input:
-        format: tsv
-        filename:
-          - output/sgd_gene_to_publication_nodes.tsv
-          - output/sgd_gene_to_publication_edges.tsv
     xenbase-gene:
       input:
         format: tsv

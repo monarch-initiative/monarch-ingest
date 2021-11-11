@@ -18,7 +18,7 @@ pub = Publication(
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
     creation_date=row["datePublished"],
-    source="infores:alliance-of-genome-resources"
+    source="Alliance"
 )
 
 if "authors" in row.keys():

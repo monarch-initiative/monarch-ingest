@@ -13,7 +13,7 @@ importlib-metadata = "^4.6.1"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 kgx = "^1.5.3"
-koza = "0.1.6"
+koza = "0.1.5"
 biolink_model_pydantic = "0.1.2"
 
 [tool.poetry.dev-dependencies]

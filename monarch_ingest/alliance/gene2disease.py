@@ -8,7 +8,6 @@ from biolink_model_pydantic.model import (
     Predicate,
 )
 from koza.cli_runner import koza_app
-from source_translation import source_map
 
 LOG = logging.getLogger(__name__)
 
@@ -16,8 +15,6 @@ source_name = "alliance_gene_to_disease"
 
 row = koza_app.get_row(source_name)
 associationType = row["AssociationType"]
-
-source = source_map[row["Source"]]
 
 predicate = None
 relation = None
@@ -43,8 +40,8 @@ elif associationType == "is_not_implicated_in":
 #    likely this should be contributes_to with some extra qualifier
 
 if row["DBobjectType"] == "gene" and predicate:
-    gene = Gene(id=row["DBObjectID"], source=source)
-    disease = Disease(id=row["DOID"], source=source)
+    gene = Gene(id=row["DBObjectID"], source=row["Source"])
+    disease = Disease(id=row["DOID"], source=row["Source"])
 
     association = GeneToDiseaseAssociation(
         id="uuid:" + str(uuid.uuid1()),
@@ -53,12 +50,10 @@ if row["DBobjectType"] == "gene" and predicate:
         object=disease.id,
         publications=[row["Reference"]],
         relation=relation,
-        source=source,
+        source=row["Source"],
     )
 
     if negated:
         association.negated = True
-
-    # TODO: Handle ECO terms in row["EvidenceCode"]
 
     koza_app.write(gene, disease, association)
