@@ -29,6 +29,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'

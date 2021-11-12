@@ -17,9 +17,9 @@ row = koza_app.get_row(source_name)
 if row["QUALIFIER"]:
     raise ValueError("Didn't expect a qualifier value, found: " + row["QUALIFIER"])
 
-gene = Gene(id=row["SUBJECT"])
+gene = Gene(id=row["SUBJECT"], source="Xenbase")
 
-phenotype = PhenotypicFeature(id=row["OBJECT"])
+phenotype = PhenotypicFeature(id=row["OBJECT"], source="Xenbase")
 
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
@@ -28,6 +28,7 @@ association = GeneToPhenotypicFeatureAssociation(
     object=phenotype.id,
     publications=row["SOURCE"],
     relation=row["RELATION"].replace("_", ":"),
+    source="infores:xenbase",
 )
 
 if row["SOURCE"]:

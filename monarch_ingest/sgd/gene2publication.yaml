@@ -7,7 +7,7 @@ format: 'csv'
 
 delimiter: '\t'
 
-has_header: False
+header: 'none'
 
 columns:
   - 'gene name'

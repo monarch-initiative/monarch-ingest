@@ -6,7 +6,7 @@ format: 'csv'
 
 delimiter: '\t'
 
-has_header: False
+header: 'none'
 
 files:
   - './data/gene_publication.txt'  # "https://zfin.org/downloads/gene_publication.txt"
@@ -22,6 +22,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -31,7 +32,7 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
- # - 'source'
+  - 'source'
 
 transform_mode: 'flat'
 

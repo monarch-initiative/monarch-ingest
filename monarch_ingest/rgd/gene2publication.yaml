@@ -4,11 +4,12 @@ format: 'csv'
 
 delimiter: '\t'
 
-skip_lines: 82
+header: 82
 
 files:
   - './data/GENES_RAT.txt'
 
+# Note, there will be a column mismatch warning on this transform because there are two (UNUSED) columns
 columns:
   - 'GENE_RGD_ID'
   - 'SYMBOL'

@@ -11,9 +11,7 @@ files:
 
 standard_format: gpi
 
-has_header: False
-
-skip_lines: 1
+header: 1
 
 key: 'DB_Object_ID'
 
