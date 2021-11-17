@@ -11,6 +11,8 @@ format: 'csv'
 
 delimiter: '\t'
 
+global_table: './monarch_ingest/translation_table.yaml'
+
 columns:
   - 'SUBJECT'
   - 'SUBJECT_LABEL'

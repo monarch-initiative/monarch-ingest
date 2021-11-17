@@ -7,6 +7,8 @@ format: 'csv'
 
 delimiter: '\t'
 
+global_table: './monarch_ingest/translation_table.yaml'
+
 columns:
   - 'hgnc_id'
   - 'symbol'

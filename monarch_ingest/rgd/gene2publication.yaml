@@ -9,6 +9,8 @@ header: 82
 files:
   - './data/GENES_RAT.txt'
 
+global_table: './monarch_ingest/translation_table.yaml'
+
 # Note, there will be a column mismatch warning on this transform because there are two (UNUSED) columns
 columns:
   - 'GENE_RGD_ID'
