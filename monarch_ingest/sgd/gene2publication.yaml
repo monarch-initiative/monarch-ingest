@@ -9,6 +9,8 @@ delimiter: '\t'
 
 header: 'none'
 
+global_table: './monarch_ingest/translation_table.yaml'
+
 columns:
   - 'gene name'
   - 'PubMed ID'

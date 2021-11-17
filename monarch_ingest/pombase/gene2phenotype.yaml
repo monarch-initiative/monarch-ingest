@@ -4,6 +4,7 @@ files:
   - './data/phenotype_annotations.pombase.phaf.gz'
 
 metadata: './monarch_ingest/pombase/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
 
 header: 0
 
