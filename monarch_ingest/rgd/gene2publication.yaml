@@ -1,0 +1,85 @@
+name: 'rgd_gene_to_publication'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: 82
+
+files:
+  - './data/GENES_RAT.txt'
+
+# Note, there will be a column mismatch warning on this transform because there are two (UNUSED) columns
+columns:
+  - 'GENE_RGD_ID'
+  - 'SYMBOL'
+  - 'NAME'
+  - 'GENE_DESC'
+  - 'CHROMOSOME_CELERA'
+  - 'CHROMOSOME_mRatBN7.2'
+  - 'CHROMOSOME_RGSC_v3.4'
+  - 'FISH_BAND'
+  - 'START_POS_CELERA'
+  - 'STOP_POS_CELERA'
+  - 'STRAND_CELERA'
+  - 'START_POS_mRatBN7.2'
+  - 'STOP_POS_mRatBN7.2'
+  - 'STRAND_mRatBN7.2'
+  - 'START_POS_RGSC_v3.4'
+  - 'STOP_POS_RGSC_v3.4'
+  - 'STRAND_RGSC_v3.4'
+  - 'CURATED_REF_RGD_ID'
+  - 'CURATED_REF_PUBMED_ID'
+  - 'UNCURATED_PUBMED_ID'
+  - 'NCBI_GENE_ID'
+  - 'UNIPROT_ID'
+  - 'GENE_REFSEQ_STATUS'
+  - 'GENBANK_NUCLEOTIDE'
+  - 'TIGR_ID'
+  - 'GENBANK_PROTEIN'
+  - '(UNUSED)'
+  - 'MARKER_RGD_ID'
+  - 'MARKER_SYMBOL'
+  - 'OLD_SYMBOL'
+  - 'OLD_NAME'
+  - 'QTL_RGD_ID'
+  - 'QTL_SYMBOL'
+  - 'NOMENCLATURE_STATUS'
+  - 'SPLICE_RGD_ID'
+  - 'SPLICE_SYMBOL'
+  - 'GENE_TYPE'
+  - 'ENSEMBL_ID'
+  - '(UNUSED)'
+  - 'CHROMOSOME_Rnor_5.0'
+  - 'START_POS_Rnor_5.0'
+  - 'STOP_POS_Rnor_5.0'
+  - 'STRAND_Rnor_5.0'
+  - 'CHROMOSOME_Rnor_6.0'
+  - 'START_POS_Rnor_6.0'
+  - 'STOP_POS_Rnor_6.0'
+  - 'STRAND_Rnor_6.0'
+  - 'CHROMOSOME_ENSEMBL'
+  - 'START_POS_ENSEMBL'
+  - 'STOP_POS_ENSEMBL'
+  - 'STRAND_ENSEMBL'
+
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+
+
+transform_mode: 'flat'
+

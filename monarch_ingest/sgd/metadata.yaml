@@ -1,0 +1,10 @@
+name: 'SGD'
+
+dataset_description:
+  ingest_title: 'SGD'
+  ingest_url: 'http://sgd-archive.yeastgenome.org/'
+  description: 'The Saccharomyces Genome Database (SGD) provides comprehensive integrated biological information for the budding yeast Saccharomyces cerevisiae along with search and analysis tools to explore these data, enabling the discovery of functional relationships between sequence and gene products in fungi and higher organisms.'
+  rights: 'https://sites.google.com/view/yeastgenome-help/about/how-to-cite-sgd?authuser=0'
+
+source_files:
+  - 'gene2publication.yaml'

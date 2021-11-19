@@ -33,6 +33,7 @@ node_properties:
   - 'type'
   - 'creation_date'
   - 'keywords'
+  - 'source'
 
 edge_properties:
   - 'id'

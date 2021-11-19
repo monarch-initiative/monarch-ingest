@@ -6,7 +6,7 @@ format: 'csv'
 
 delimiter: '\t'
 
-has_header: False
+header: none
 
 files:
   - './data/phenoGeneCleanData_fish.txt'  # "https://zfin.org/downloads/phenoGeneCleanData_fish.txt"
@@ -45,6 +45,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'provided_by'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -55,6 +56,7 @@ edge_properties:
   - 'relation'
   - 'publications'
   - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'
 

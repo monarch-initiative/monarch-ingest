@@ -27,18 +27,32 @@ merged_graph:
         filename:
           - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
-    alliance-gene-to-disease:
+# Excluded while we sort out gene to disease requirements
+#
+#    alliance-gene-to-disease:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/alliance_gene_to_disease_nodes.tsv
+#          - output/alliance_gene_to_disease_edges.tsv
+    flybase-gene-to-publication:
       input:
         format: tsv
         filename:
-          - output/alliance_gene_to_disease_nodes.tsv
-          - output/alliance_gene_to_disease_edges.tsv
+          - output/flybase_gene_to_publication_nodes.tsv
+          - output/flybase_gene_to_publication_edges.tsv
     pombase-gene-information:
       input:
         format: tsv
         filename:
           - output/pombase_gene_information_nodes.tsv
           - output/pombase_gene_information_edges.tsv
+    hgnc-gene-information:
+      input:
+        format: tsv
+        filename:
+          - output/hgnc_gene_information_nodes.tsv
+          - output/hgnc_gene_information_edges.tsv
     pombase-gene-to-phenotype:
       input:
         format: tsv
@@ -81,9 +95,9 @@ merged_graph:
         graph_name: Monarch Graph
         filename: merged_graph_stats.yaml
         node_facet_properties:
-          - provided_by
+          - source
         edge_facet_properties:
-          - provided_by
+          - source
   destination:
     merged-kg-tsv:
       format: tsv
