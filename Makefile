@@ -61,3 +61,7 @@ upload:
 	gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/
 	gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/
 	gsutil cp merged_graph_stats.yaml gs://monarch-ingest/
+
+.PHONY: run_dagster
+run_dagster:
+	poetry run dagit -d . -f pipeline.py
