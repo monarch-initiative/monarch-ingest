@@ -50,7 +50,7 @@ download:
 
 .PHONY: transform
 transform:
-	 find monarch_ingest -name "*.yaml" | grep -v "maps\|translation_table\|metadata" | xargs -L 1 poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source
+	poetry run dagster job execute -f pipeline.py
 
 .PHONY: merge
 merge:
@@ -64,4 +64,4 @@ upload:
 
 .PHONY: run_dagster
 run_dagster:
-	poetry run dagit -d . -f pipeline.py
+	 poetry run dagit -f pipeline.py

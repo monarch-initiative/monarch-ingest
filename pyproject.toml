@@ -15,8 +15,8 @@ mkdocs-material = "^7.2.4"
 kgx = "^1.5.3"
 koza = "0.1.6"
 biolink_model_pydantic = "0.1.2"
-dagster = "^0.12.13"
-dagit = "^0.12.13"
+dagster = ">0.13,<0.14"
+dagit = ">0.13,<0.14"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
