@@ -1,109 +1,88 @@
 import os
-from dagster import op, job
+from os.path import exists
+from typing import List
+import dagster
 from koza.cli_runner import transform_source
-
-@op
-def ingest_xenbase_gene_literature():
-    transform_source("./monarch_ingest/xenbase/gene_literature.yaml",
-                     "output", "tsv", None, None)
+from kgx.cli import cli_utils
 
 
-@op
-def ingest_xenbase_gene_information():
-    transform_source("./monarch_ingest/xenbase/gene_information.yaml",
-                     "output", "tsv", None, None)
+@dagster.usable_as_dagster_type
+class ValidatedKozaOutput:
+    def __init__(self, nodes_file, edges_file):
+        self.nodes_file = nodes_file
+        self.edges_file = edges_file
+        assert exists(nodes_file)
+        assert exists(edges_file)
 
+@dagster.usable_as_dagster_type
+class Ingest:
+    def __init__(self, source, transform):
+        self.source = source
+        self.transform = transform
 
-@op
-def ingest_xenbase_gene2phenotype():
-    transform_source("./monarch_ingest/xenbase/gene2phenotype.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_alliance_literature():
-    transform_source("./monarch_ingest/alliance/literature.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_alliance_gene_information():
-    transform_source("./monarch_ingest/alliance/gene_information.yaml",
-                     "output", "tsv", None, None)
-
-
-# @op
-# def ingest_alliance_gene2disease():
-#     transform_source("./monarch_ingest/alliance/gene2disease.yaml",
-#                      "output", "tsv", None, None)
+        assert self.source
+        assert self.transform
+        assert exists(f"./monarch_ingest/{source}/{transform}.yaml")
 
 
 
-@op
-def ingest_alliance_gene2phenotype():
-    transform_source("./monarch_ingest/alliance/gene2phenotype.yaml",
-                     "output", "tsv", None, None)
+@dagster.op
+def pombase_gene_to_phenotype() -> Ingest:
+    return Ingest("pombase", "gene_to_phenotype")
+
+@dagster.op
+def xenbase_gene_information() -> Ingest:
+    return Ingest("xenbase", "gene_information")
+
+@dagster.op
+def xenbase_gene_to_phenotype() -> Ingest:
+    return Ingest("xenbase", "gene_to_phenotype")
+
+#TODO: the rest:
+# ingest_xenbase_gene_literature(),
+# ingest_alliance_literature(),
+# ingest_alliance_gene_information(),
+# ingest_alliance_gene2phenotype(),
+# ingest_rgd_gene2publication(),
+# ingest_hgnc_gene_information(),
+# ingest_flybase_gene2publication(),
+# ingest_sgd_gene2publication(),
+# ingest_pombase_gene2phenotype(),
+# ingest_zfin_gene2publication(),
+# ingest_zfin_gene2phenotype()
 
 
-@op
-def ingest_rgd_gene2publication():
-    transform_source("./monarch_ingest/rgd/gene2publication.yaml",
-                     "output", "tsv", None, None)
 
+@dagster.op
+def transform(ingest: Ingest) -> ValidatedKozaOutput:
+   transform_source(f"./monarch_ingest/{ingest.source}/{ingest.transform}.yaml", "output", "tsv", None, None)
+   return ValidatedKozaOutput(f"output/{ingest.source}_{ingest.transform}_nodes.tsv", f"output/{ingest.source}_{ingest.transform}_edges.tsv")
 
-@op
-def ingest_hgnc_gene_information():
-    transform_source("./monarch_ingest/hgnc/gene_information.yaml",
-                     "output", "tsv", None, None)
+@dagster.op
+def validate(kgx: ValidatedKozaOutput) -> ValidatedKozaOutput:
+    cli_utils.validate([kgx.nodes_file, kgx.edges_file], "tsv", None, None, True, None)
+    return kgx
 
-
-@op
-def ingest_flybase_gene2publication():
-    transform_source("./monarch_ingest/flybase/gene2publication.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_sgd_gene2publication():
-    transform_source("./monarch_ingest/sgd/gene2publication.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_pombase_gene2phenotype():
-    transform_source("./monarch_ingest/pombase/gene2phenotype.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_zfin_gene2publication():
-    transform_source("./monarch_ingest/zfin/gene2publication.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def ingest_zfin_gene2phenotype():
-    transform_source("./monarch_ingest/zfin/gene2phenotype.yaml",
-                     "output", "tsv", None, None)
-
-
-@op
-def merge(placeholder_input):
+@dagster.op
+def merge(merge_files: List[ValidatedKozaOutput]):
+    # TODO: call merge from python directly, only including sources defined here?
     os.system("kgx merge --merge-config merge.yaml --processes 4")
 
-@job()
+@dagster.job
 def monarch_ingest_pipeline():
-    merge([ingest_xenbase_gene_literature(),
-           ingest_xenbase_gene_information(),
-           ingest_xenbase_gene2phenotype(),
-           ingest_alliance_literature(),
-           ingest_alliance_gene_information(),
-           ingest_alliance_gene2phenotype(),
-           ingest_rgd_gene2publication(),
-           ingest_hgnc_gene_information(),
-           ingest_flybase_gene2publication(),
-           ingest_sgd_gene2publication(),
-           ingest_pombase_gene2phenotype(),
-           ingest_zfin_gene2publication(),
-           ingest_zfin_gene2phenotype()])
+    # TODO:
+    #  Rather than exhaustively enumerating with biolerplate code, this should be coming
+    #  from configuration https://docs.dagster.io/concepts/configuration/config-schema
+    merge([
+        validate.alias("validate_pombase_gene_to_phenotype")(
+            transform.alias("transform_pombase_gene_to_phenotype")(pombase_gene_to_phenotype())),
+        validate.alias("validate_xenbase_gene_information")(
+            transform.alias("transform_xenbase_gene_information")(xenbase_gene_information())),
+        validate.alias("validate_xenbase_gene_to_phenotype")(
+            transform.alias("transform_xenbase_gene_to_phenotype")(xenbase_gene_to_phenotype()))
+    ])
+
+
+
+
 
