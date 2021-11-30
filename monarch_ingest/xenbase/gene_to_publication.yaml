@@ -1,4 +1,4 @@
-name: 'xenbase_gene_literature'
+name: 'xenbase_gene_to_publication'
 
 delimiter: '\t'
 

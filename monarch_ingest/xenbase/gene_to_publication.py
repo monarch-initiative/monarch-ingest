@@ -11,7 +11,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "xenbase_gene_literature"
+source_name = "xenbase_gene_to_publication"
 
 row = koza_app.get_row(source_name)
 genepage2gene = koza_app.get_map("genepage-2-gene")
