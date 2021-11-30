@@ -70,12 +70,12 @@ merged_graph:
         filename:
           - output/xenbase_gene_to_phenotype_nodes.tsv
           - output/xenbase_gene_to_phenotype_edges.tsv
-    xenbase-gene-literature:
+    xenbase-gene-to-publication:
       input:
         format: tsv
         filename:
-          - output/xenbase_gene_literature_nodes.tsv
-          - output/xenbase_gene_literature_edges.tsv
+          - output/xenbase_gene_to_publication_nodes.tsv
+          - output/xenbase_gene_to_publication_edges.tsv
     zfin-gene-to-phenotype:
       input:
         format: tsv
