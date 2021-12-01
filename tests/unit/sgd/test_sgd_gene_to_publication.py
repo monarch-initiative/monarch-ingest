@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/sgd/gene2publication.py"
+    return "./monarch_ingest/sgd/gene_to_publication.py"
 
 
 @pytest.fixture

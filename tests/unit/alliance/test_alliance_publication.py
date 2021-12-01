@@ -3,12 +3,12 @@ import pytest
 
 @pytest.fixture
 def source_name():
-    return "alliance_literature"
+    return "alliance_publication"
 
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/alliance/literature.py"
+    return "./monarch_ingest/alliance/publication.py"
 
 
 @pytest.fixture

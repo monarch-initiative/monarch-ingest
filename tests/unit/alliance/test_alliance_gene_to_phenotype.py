@@ -13,7 +13,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/alliance/gene2phenotype.py"
+    return "./monarch_ingest/alliance/gene_to_phenotype.py"
 
 
 @pytest.fixture

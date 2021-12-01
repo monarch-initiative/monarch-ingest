@@ -24,15 +24,20 @@ else:
     xref_list.append('OMIM:' + row['omim_id'])
 
 
-synonyms_list = row["alias_symbol"].split("|") + row["alias_name"].split("|") + \
-                row["prev_symbol"].split("|") + row["prev_name"].split("|")
+synonyms_list = (
+    row["alias_symbol"].split("|")
+    + row["alias_name"].split("|")
+    + row["prev_symbol"].split("|")
+    + row["prev_name"].split("|")
+)
 
-gene = Gene(id=row["hgnc_id"],
-            symbol=row["symbol"],
-            name=row["name"],
-            xref=xref_list,
-            synonym=synonyms_list
-            )
+gene = Gene(
+    id=row["hgnc_id"],
+    symbol=row["symbol"],
+    name=row["name"],
+    xref=xref_list,
+    synonym=synonyms_list,
+)
 
 pubmed_id_list = row["pubmed_id"].split('|')
 for each_id in pubmed_id_list:
