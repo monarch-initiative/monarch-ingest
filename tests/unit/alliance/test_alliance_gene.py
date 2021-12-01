@@ -3,12 +3,12 @@ import pytest
 
 @pytest.fixture
 def source_name():
-    return "alliance_gene_information"
+    return "alliance_gene"
 
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/alliance/gene_information.py"
+    return "./monarch_ingest/alliance/gene.py"
 
 
 @pytest.fixture

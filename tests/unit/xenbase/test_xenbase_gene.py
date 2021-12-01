@@ -20,9 +20,7 @@ def gene_information_entities(mock_koza):
         ]
     )
 
-    return mock_koza(
-        "xenbase_gene_information", row, "./monarch_ingest/xenbase/gene_information.py"
-    )
+    return mock_koza("xenbase_gene", row, "./monarch_ingest/xenbase/gene.py")
 
 
 def test_gene_information_gene(gene_information_entities):
