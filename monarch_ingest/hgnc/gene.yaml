@@ -1,4 +1,4 @@
-name: 'hgnc_gene_information'
+name: 'hgnc_gene'
 
 files:
   - './data/hgnc_complete_set.txt'
