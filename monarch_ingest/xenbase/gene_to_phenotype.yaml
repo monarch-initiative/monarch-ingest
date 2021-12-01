@@ -1,0 +1,47 @@
+name: 'xenbase_gene_to_phenotype'
+
+files:
+  - './data/xb_xpo_spo_v_v1.tab'
+
+metadata: './monarch_ingest/xenbase/metadata.yaml'
+
+header: 0
+
+format: 'csv'
+
+delimiter: '\t'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'SUBJECT'
+  - 'SUBJECT_LABEL'
+  - 'SUBJECT_TAXON'
+  - 'SUBJECT_TAXON_LABEL'
+  - 'OBJECT'
+  - 'OBJECT_LABEL'
+  - 'RELATION'
+  - 'RELATION_LABEL'
+  - 'EVIDENCE'
+  - 'EVIDENCE_LABEL'
+  - 'SOURCE'
+  - 'IS_DEFINED_BY'
+  - 'QUALIFIER'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'

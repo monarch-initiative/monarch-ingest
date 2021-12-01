@@ -1,0 +1,64 @@
+
+
+name: 'zfin_gene_to_phenotype'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: none
+
+files:
+  - './data/phenoGeneCleanData_fish.txt'  # "https://zfin.org/downloads/phenoGeneCleanData_fish.txt"
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'ID'
+  - 'Gene Symbol'
+  - 'Gene ID'
+  - 'Affected Structure or Process 1 subterm ID'
+  - 'Affected Structure or Process 1 subterm Name'
+  - 'Post-composed Relationship ID'
+  - 'Post-composed Relationship Name'
+  - 'Affected Structure or Process 1 superterm ID'
+  - 'Affected Structure or Process 1 superterm Name'
+  - 'Phenotype Keyword ID'
+  - 'Phenotype Keyword Name'
+  - 'Phenotype Tag'
+  - 'Affected Structure or Process 2 subterm ID'
+  - 'Affected Structure or Process 2 subterm name'
+  - 'Post-composed Relationship (rel) ID'
+  - 'Post-composed Relationship (rel) Name'
+  - 'Affected Structure or Process 2 superterm ID'
+  - 'Affected Structure or Process 2 superterm name'
+  - 'Fish ID'
+  - 'Fish Display Name'
+  - 'Start Stage ID'
+  - 'End Stage ID'
+  - 'Fish Environment ID'
+  - 'Publication ID'
+  - 'Figure ID'
+
+depends_on:
+  - './monarch_ingest/maps/eqe2zp.yaml'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'publications'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'
+

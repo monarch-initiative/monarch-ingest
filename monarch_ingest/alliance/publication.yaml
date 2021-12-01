@@ -1,0 +1,48 @@
+name: 'alliance_publication'
+
+files:
+  - './data/REFERENCE_FB.json.gz'
+  - './data/REFERENCE_RGD.json.gz'
+  - './data/REFERENCE_WB.json.gz'
+  - './data/REFERENCE_ZFIN.json.gz'
+  - './data/REFERENCE_MGI.json.gz'
+  - './data/REFERENCE_SGD.json.gz'
+
+metadata: './monarch_ingest/alliance/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+format: 'json'
+
+compression: 'gzip'
+
+json_path:
+  - 'data'
+
+required_properties:
+  - 'primaryId'
+  - 'title'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'name'
+  - 'summary'
+  - 'authors'
+  - 'xref'
+  - 'mesh_terms'
+  - 'type'
+  - 'creation_date'
+  - 'keywords'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+
+transform_mode: 'flat'
