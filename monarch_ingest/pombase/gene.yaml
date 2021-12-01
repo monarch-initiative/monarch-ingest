@@ -1,4 +1,4 @@
-name: 'pombase_gene_information'
+name: 'pombase_gene'
 
 files:
   - './data/gene_IDs_names_products.tsv' # url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
@@ -8,6 +8,7 @@ format: 'csv'
 delimiter: '\t'
 
 metadata: './monarch_ingest/pombase/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
 
 header: none
 
