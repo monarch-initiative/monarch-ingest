@@ -5,7 +5,7 @@ from koza.converter.biolink_converter import gpi2gene
 
 LOG = logging.getLogger(__name__)
 
-source_name = "xenbase_gene_information"
+source_name = "xenbase_gene"
 row = koza_app.get_row(source_name)
 row["DB_Object_ID"] = "Xenbase:" + row["DB_Object_ID"]
 

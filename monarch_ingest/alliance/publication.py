@@ -1,7 +1,7 @@
 from biolink_model_pydantic.model import Publication
 from koza.cli_runner import koza_app
 
-source_name = "alliance_literature"
+source_name = "alliance_publication"
 
 row = koza_app.get_row(source_name)
 

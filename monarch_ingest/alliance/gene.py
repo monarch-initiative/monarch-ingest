@@ -2,7 +2,7 @@ from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-source_name = "alliance_gene_information"
+source_name = "alliance_gene"
 
 row = koza_app.get_row(source_name)
 # curie prefix as source?

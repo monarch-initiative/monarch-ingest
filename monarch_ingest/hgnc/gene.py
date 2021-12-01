@@ -8,7 +8,7 @@ from biolink_model_pydantic.model import (
 )
 from koza.cli_runner import koza_app
 
-source_name = "hgnc_gene_information"
+source_name = "hgnc_gene"
 
 row = koza_app.get_row(source_name)
 
