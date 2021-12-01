@@ -50,7 +50,7 @@ download:
 
 .PHONY: transform
 transform:
-	poetry run dagster job execute -f pipeline.py
+	poetry run dagster job execute
 
 .PHONY: merge
 merge:
@@ -64,4 +64,4 @@ upload:
 
 .PHONY: run_dagster
 run_dagster:
-	 poetry run dagit -f pipeline.py
+	 poetry run dagit
