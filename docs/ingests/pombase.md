@@ -27,3 +27,17 @@ Penetrance and Severity columns are available, but not captured as a part of thi
     * relation (has phenotype)
     * publications
     * qualifers (optionally included from condition row)
+
+### Gene Information
+
+PomBase genes are captured directly from the PomBase (names and identifiers)[https://www.pombase.org/downloads/names-and-identifiers] set, with synonyms being populated as available and UniProtKB accessions captured as xrefs if available.   
+
+#### Biolink Captured
+
+* biolink:Gene
+  * id
+  * symbol
+  * type (SO term ids mapped through the global translation table)
+  * xref (UniProfKB curie if provided)
+  * synonyms
+  * source 
