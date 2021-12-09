@@ -1,12 +1,12 @@
 name: 'alliance_gene'
 
 files:
-    - "./data/BGI_MGI.json.gz"
-    - "./data/BGI_FB.json.gz"
-    - "./data/BGI_SGD.json.gz"
-    - "./data/BGI_RGD.json.gz"
-    - "./data/BGI_WB.json.gz"
-    - "./data/BGI_ZFIN.json.gz"
+    - "./data/alliance/BGI_MGI.json.gz"
+    - "./data/alliance/BGI_FB.json.gz"
+    - "./data/alliance/BGI_SGD.json.gz"
+    - "./data/alliance/BGI_RGD.json.gz"
+    - "./data/alliance/BGI_WB.json.gz"
+    - "./data/alliance/BGI_ZFIN.json.gz"
 
 metadata: './monarch_ingest/alliance/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'

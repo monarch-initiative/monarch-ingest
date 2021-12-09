@@ -1,7 +1,7 @@
 name: 'sgd_gene_to_publication'
 
 files:
-  - './data/gene2pmid.tab'
+  - './data/sgd/gene2pmid.tab'
 
 format: 'csv'
 

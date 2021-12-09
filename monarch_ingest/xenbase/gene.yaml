@@ -1,7 +1,7 @@
 name: 'xenbase_gene'
 
 files:
-  - './data/xenbase.gpi.gz'
+  - './data/xenbase/xenbase.gpi.gz'
 
 metadata: './monarch_ingest/xenbase/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'

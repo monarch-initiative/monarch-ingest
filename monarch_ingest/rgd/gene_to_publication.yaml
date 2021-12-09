@@ -7,7 +7,7 @@ delimiter: '\t'
 header: 82
 
 files:
-  - './data/GENES_RAT.txt'
+  - './data/rgd/GENES_RAT.txt'
 
 global_table: './monarch_ingest/translation_table.yaml'
 

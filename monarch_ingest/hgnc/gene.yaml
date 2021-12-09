@@ -1,7 +1,7 @@
 name: 'hgnc_gene'
 
 files:
-  - './data/hgnc_complete_set.txt'
+  - './data/hgnc/hgnc_complete_set.txt'
 
 format: 'csv'
 
