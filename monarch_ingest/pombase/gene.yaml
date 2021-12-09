@@ -1,7 +1,7 @@
 name: 'pombase_gene'
 
 files:
-  - './data/gene_IDs_names_products.tsv' # url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
+  - './data/pombase/gene_IDs_names_products.tsv' # url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
 
 format: 'csv'
 

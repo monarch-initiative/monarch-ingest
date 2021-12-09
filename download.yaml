@@ -66,6 +66,9 @@
 -
   url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
   local_name: pombase/phenotype_annotations.pombase.phaf.gz
+-
+  url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
+  local_name: pombase/gene_IDs_names_products.tsv
 
 # rgd
 -
