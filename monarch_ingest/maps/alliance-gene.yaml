@@ -10,7 +10,7 @@ delimiter: '\t'
 # This is generated from Alliance BGI files using:
 # gzcat BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > alliance_gene_ids.txt.gz
 files:
-  - './data/alliance_gene_ids.txt.gz'
+  - './data/alliance/alliance_gene_ids.txt.gz'
 
 header: 'none'
 

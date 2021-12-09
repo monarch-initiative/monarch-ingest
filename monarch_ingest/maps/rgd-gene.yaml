@@ -7,7 +7,7 @@ source: 'RGD'
 compression: 'gzip'
 
 files:
-  - './data/rgd.gpi.gz' #  http://current.geneontology.org/annotations/rgd.gpi.gz
+  - './data/rgd/rgd.gpi.gz' #  http://current.geneontology.org/annotations/rgd.gpi.gz
 
 standard_format: gpi
 

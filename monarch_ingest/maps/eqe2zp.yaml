@@ -9,7 +9,7 @@ delimiter: '\t'
 
 #  https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
 files:
-  - './data/id_map_zfin.tsv'
+  - './data/zfin/id_map_zfin.tsv'
 
 header: 0
 

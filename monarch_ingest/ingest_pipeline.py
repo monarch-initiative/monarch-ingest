@@ -4,7 +4,7 @@ from typing import List
 import dagster
 from koza.cli_runner import transform_source
 from kgx.cli import cli_utils
-
+from monarch_ingest.utils.download_utils import download_from_yaml
 
 @dagster.usable_as_dagster_type
 class KgxGraph:
@@ -58,6 +58,7 @@ def process(ingest: Ingest) -> KgxGraph:
     return summarize(validate(transform(ingest)))
 
 @dagster.op(
+    ins={"start": dagster.In(dagster.Nothing)},
     out=dagster.DynamicOut(Ingest),
 )
 def ingests(context):
@@ -80,11 +81,20 @@ def ingests(context):
     for ingest in ingests:
         yield dagster.DynamicOutput(ingest, mapping_key=ingest.name)
 
+
+@dagster.op()
+def download():
+    download_from_yaml(yaml_file="download.yaml", output_dir="data")
+
+    # Until we have an explicit place for pre-ETL steps, they can go here.
+    if not os.path.exists("./data/alliance/alliance_gene_ids.txt.gz"):
+        os.system("gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz")
+
+
 @dagster.job
 def monarch_ingest_pipline():
-    processed_ingests = ingests().map(process)
+    processed_ingests = ingests(start=download()).map(process)
     merge(processed_ingests.collect())
-
 
 
 

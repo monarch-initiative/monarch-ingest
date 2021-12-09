@@ -1,2 +1,3 @@
 load_from:
- - python_file: pipeline.py
+ - python_file: monarch_ingest/ingest_pipeline.py
+

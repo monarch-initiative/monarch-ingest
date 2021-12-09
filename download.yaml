@@ -1,0 +1,107 @@
+---
+# alliance:
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz
+  local_name: alliance/PHENOTYPE_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz
+  local_name: alliance/PHENOTYPE_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz
+  local_name: alliance/PHENOTYPE_WB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_HUMAN.json.gz
+  local_name: alliance/PHENOTYPE_HUMAN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz
+  local_name: alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_FB.json.gz
+  local_name: alliance/REFERENCE_FB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_RGD.json.gz
+  local_name: alliance/REFERENCE_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_WB.json.gz
+  local_name: alliance/REFERENCE_WB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_ZFIN.json.gz
+  local_name: alliance/REFERENCE_ZFIN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_MGI.json.gz
+  local_name: alliance/REFERENCE_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_SGD.json.gz
+  local_name: alliance/REFERENCE_SGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
+  local_name: alliance/BGI_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_RGD.json.gz
+  local_name: alliance/BGI_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_ZFIN.json.gz
+  local_name: alliance/BGI_ZFIN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_FB.json.gz
+  local_name: alliance/BGI_FB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_SGD.json.gz
+  local_name: alliance/BGI_SGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
+  local_name: alliance/BGI_WB.json.gz
+
+# flybase
+-
+  url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
+  local_name: flybase/entity_publication_fb.tsv.gz
+
+# hgnc
+-
+  url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
+  local_name: hgnc/hgnc_complete_set.txt
+
+# pombase
+-
+  url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
+  local_name: pombase/phenotype_annotations.pombase.phaf.gz
+
+# rgd
+-
+  url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
+  local_name: rgd/GENES_RAT.txt
+-
+  url: http://current.geneontology.org/annotations/rgd.gpi.gz
+  local_name: rgd/rgd.gpi.gz
+
+# sgd
+-
+  url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
+  local_name: sgd/gene2pmid.tab
+
+# Xenbase
+-
+  url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
+  local_name: xenbase/xenbase.gpi.gz
+-
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+  local_name: xenbase/XenbaseGenepageToGeneIdMapping.txt
+-
+  url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
+  local_name: xenbase/LiteratureMatchedGenesByPaper.txt
+-
+  url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
+  local_name: xenbase/xb_xpo_spo_v_v1.tab
+
+# zfin
+-
+  url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt
+  local_name: zfin/phenoGeneCleanData_fish.txt
+-
+  url: https://zfin.org/downloads/gene_publication.txt
+  local_name: zfin/gene_publication.txt
+-
+  url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
+  local_name: zfin/id_map_zfin.tsv
+

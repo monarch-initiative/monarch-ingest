@@ -7,7 +7,7 @@ delimiter: '\t'
 header: 'none'
 
 files:
-  - './data/XenbaseGenepageToGeneIdMapping.txt'
+  - './data/xenbase/XenbaseGenepageToGeneIdMapping.txt'
 
 columns:
   - 'gene_page_id'
