@@ -108,3 +108,8 @@
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: zfin/id_map_zfin.tsv
 
+
+# monarch
+-
+  url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/479/artifact/build/monarch-ontology-final.json
+  local_name: monarch/monarch.json

@@ -16,6 +16,11 @@ configuration:
 merged_graph:
   name: Monarch Graph
   source:
+    monarch_ontology:
+      input:
+        format: obojson
+        filename: # awkwardly merging out of the data directory here
+          - data/monarch/monarch.json
     alliance_gene:
       input:
         format: tsv
