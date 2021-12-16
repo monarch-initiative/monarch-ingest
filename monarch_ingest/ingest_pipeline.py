@@ -69,11 +69,7 @@ def summarize(kgx: KgxGraph) -> KgxGraph:
 def merge(context, merge_files: List[KgxGraph]):
     # TODO:
     #  Consider writing a merge.yaml using a jinja template
-    #  This is successfuly filtering what goes into the merge, but it has to exist in the merge.yaml
-    #  which limits the benefit.
-
-    sources_to_include = [kgx_graph.name for kgx_graph in merge_files]
-    cli_utils.merge("merge.yaml", sources_to_include, processes=4)
+    cli_utils.merge("merge.yaml", processes=4)
 
 
 @dagster.graph
