@@ -6,8 +6,7 @@ import dagster
 from kgx.cli import cli_utils
 from koza.cli_runner import transform_source
 
-from monarch_ingest.utils.download_utils import download_from_yaml
-
+from kghub_downloader.download_utils import download_from_yaml
 
 @dagster.usable_as_dagster_type
 class KgxGraph:
@@ -105,7 +104,7 @@ def ingests(context):
 
 @dagster.op()
 def download():
-    download_from_yaml(yaml_file="download.yaml", output_dir="data")
+    download_from_yaml(yaml_file="download.yaml", output_dir=".")
 
     # Until we have an explicit place for pre-ETL steps, they can go here.
     if not os.path.exists("./data/alliance/alliance_gene_ids.txt.gz"):
