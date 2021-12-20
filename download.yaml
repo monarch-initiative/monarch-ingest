@@ -38,7 +38,7 @@
   local_name: data/alliance/BGI_MGI.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_RGD.json.gz
-  local_name: alliance/BGI_RGD.json.gz
+  local_name: data/alliance/BGI_RGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_ZFIN.json.gz
   local_name: data/alliance/BGI_ZFIN.json.gz
