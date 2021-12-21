@@ -1,6 +1,7 @@
 import os
 from os.path import exists
 from typing import List
+import multiprocessing
 
 import dagster
 from kgx.cli import cli_utils
@@ -68,7 +69,8 @@ def summarize(kgx: KgxGraph) -> KgxGraph:
 def merge(context, merge_files: List[KgxGraph]):
     # TODO:
     #  Consider writing a merge.yaml using a jinja template
-    cli_utils.merge("merge.yaml", processes=4)
+    #  This multiprocessing statement may not be meaningful longer term
+    cli_utils.merge("merge.yaml", processes=multiprocessing.cpu_count())
 
 
 @dagster.graph
