@@ -51,10 +51,10 @@ gene_num = row['MIM Number']
 # (not genes though), the omim id is only listed as the gene
 # when there's a gene and disease
 disorder_regex = re.compile(r'(.*), (\d{6})\s*(?:\((\d+)\))?')
-nogene_regex = re.compile(r'(.*)\s+\((\d+)\)')
+no_disease_id_regex = re.compile(r'(.*)\s+\((\d+)\)')
 
 disorder_match = disorder_regex.match(disorder)
-nogene_match = nogene_regex.match(disorder)
+no_disease_id_match = no_disease_id_regex.match(disorder)
 
 disorder_id = None
 disorder_label = None
@@ -72,11 +72,11 @@ if disorder_match is not None:
     gene = Gene(id=gene_id)
     koza_app.write(gene)
 
-elif nogene_match is not None:
+elif no_disease_id_match is not None:
     # this is a case where the disorder
     # a blended gene/phenotype
     # we lookup the NCBIGene feature and make the association
-    disorder_label, association_key = nogene_match.groups()
+    disorder_label, association_key = no_disease_id_match.groups()
     # make what's in the gene column the disease
     disorder_id = 'OMIM:' + gene_num
     ncbi_id = ''
