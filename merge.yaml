@@ -16,53 +16,94 @@ configuration:
 merged_graph:
   name: Monarch Graph
   source:
-    alliance-gene:
+    monarch_ontology:
+      input:
+        format: obojson
+        filename: # awkwardly merging out of the data directory here
+          - data/monarch/monarch.json
+    alliance_gene:
       input:
         format: tsv
         filename:
-          - output/alliance_gene_information_nodes.tsv
-    alliance-gene-to-phenotype:
+          - output/alliance_gene_nodes.tsv
+    alliance_gene_to_phenotype:
       input:
         format: tsv
         filename:
           - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
-    alliance-gene-to-disease:
+    alliance_publication:
       input:
         format: tsv
         filename:
-          - output/alliance_gene_to_disease_nodes.tsv
-          - output/alliance_gene_to_disease_edges.tsv
-    pombase-gene-to-phenotype:
+          - output/alliance_publication_nodes.tsv
+# Excluded while we sort out gene to disease requirements
+#
+#    alliance_gene_to_disease:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/alliance_gene_to_disease_nodes.tsv
+#          - output/alliance_gene_to_disease_edges.tsv
+    flybase_gene_to_publication:
+      input:
+        format: tsv
+        filename:
+          - output/flybase_gene_to_publication_nodes.tsv
+          - output/flybase_gene_to_publication_edges.tsv
+    hgnc_gene:
+      input:
+        format: tsv
+        filename:
+          - output/hgnc_gene_nodes.tsv
+          - output/hgnc_gene_edges.tsv
+    pombase_gene:
+      input:
+        format: tsv
+        filename:
+          - output/pombase_gene_nodes.tsv
+    pombase_gene_to_phenotype:
       input:
         format: tsv
         filename:
           - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
-    xenbase-gene:
+    rgd_gene_to_publication:
       input:
         format: tsv
         filename:
-          - output/xenbase_gene_information_nodes.tsv
-    xenbase-gene-to-phenotype:
+          - output/rgd_gene_to_publication_nodes.tsv
+          - output/rgd_gene_to_publication_edges.tsv
+    sgd_gene_to_publication:
+      input:
+        format: tsv
+        filename:
+          - output/sgd_gene_to_publication_nodes.tsv
+          - output/sgd_gene_to_publication_edges.tsv
+    xenbase_gene:
+      input:
+        format: tsv
+        filename:
+          - output/xenbase_gene_nodes.tsv
+    xenbase_gene_to_phenotype:
       input:
         format: tsv
         filename:
           - output/xenbase_gene_to_phenotype_nodes.tsv
           - output/xenbase_gene_to_phenotype_edges.tsv
-    xenbase-gene-literature:
+    xenbase_gene_to_publication:
       input:
         format: tsv
         filename:
-          - output/xenbase_gene_literature_nodes.tsv
-          - output/xenbase_gene_literature_edges.tsv
-    zfin-gene-to-phenotype:
+          - output/xenbase_gene_to_publication_nodes.tsv
+          - output/xenbase_gene_to_publication_edges.tsv
+    zfin_gene_to_phenotype:
       input:
         format: tsv
         filename:
           - output/zfin_gene_to_phenotype_nodes.tsv
           - output/zfin_gene_to_phenotype_edges.tsv
-    zfin-gene-to-publication:
+    zfin_gene_to_publication:
         input:
           format: tsv
           filename:
@@ -75,9 +116,9 @@ merged_graph:
         graph_name: Monarch Graph
         filename: merged_graph_stats.yaml
         node_facet_properties:
-          - provided_by
+          - source
         edge_facet_properties:
-          - provided_by
+          - source
   destination:
     merged-kg-tsv:
       format: tsv

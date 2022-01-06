@@ -1,0 +1,43 @@
+name: 'flybase_gene_to_publication'
+
+files:
+  - './data/flybase/entity_publication_fb.tsv.gz'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+compression: 'gzip'
+
+format: 'csv'
+
+delimiter: '\t'
+
+comment_char: '#'
+
+header: 5
+
+columns:
+  - 'entity_id'
+  - 'entity_name'
+  - 'FlyBase_publication_id'
+  - 'PubMed_id'
+
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'

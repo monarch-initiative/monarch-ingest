@@ -1,0 +1,46 @@
+name: 'alliance_gene_to_phenotype'
+
+format: 'json'
+
+files:
+  - './data/alliance/PHENOTYPE_RGD.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz"
+  - './data/alliance/PHENOTYPE_MGI.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz"
+  - './data/alliance/PHENOTYPE_WB.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz"
+  - './data/alliance/PHENOTYPE_HUMAN.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_HUMAN.json.gz"
+
+metadata: './monarch_ingest/alliance/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+json_path:
+  - 'data'
+
+required_properties:
+  - 'objectId'
+  - 'phenotypeTermIdentifiers'
+  - 'evidence'
+  # Nested properties that are also required, but can't be specified yet
+  # - 'phenotypeTermIdentifiers[0]['termId']
+  # - 'evidence.publicationId'
+
+
+depends_on:
+  - './monarch_ingest/maps/alliance-gene.yaml'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'qualifiers'
+  - 'publications'
+  - 'provided_by'
+
+transform_mode: 'flat'

@@ -1,0 +1,39 @@
+name: 'xenbase_gene_to_publication'
+
+delimiter: '\t'
+
+header: 'none'
+
+files:
+  - './data/xenbase/LiteratureMatchedGenesByPaper.txt'
+
+metadata: './monarch_ingest/xenbase/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'xb_article'
+  - 'pmid'
+  - 'gene_pages'
+
+depends_on:
+  - './monarch_ingest/maps/genepage-2-gene.yaml'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'type'
+  - 'source'
+
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'

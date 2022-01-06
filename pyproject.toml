@@ -10,16 +10,19 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7, <=3.9"
+python = ">=3.7, <3.10"
 autoflake = "^1.4"
 flake8 = "^3.9.2"
 isort = "^5.9.1"
 importlib-metadata = "^4.6.1"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
-kgx = "^1.5.3"
-koza = "0.1.5"
+kgx = ">=1.5.3, <1.6"
+koza = "0.1.6"
 biolink_model_pydantic = "0.1.2"
+dagit = ">0.13, <0.14"
+dagster = ">0.13, <0.14"
+kghub_downloader = ">=0.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

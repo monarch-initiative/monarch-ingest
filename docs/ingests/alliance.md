@@ -77,3 +77,38 @@ Need a predicate for each kind of relationship:
     * relation (see predicate table above? )
     * publications (row['Reference'])
     * source (row['source'])
+
+### Literature
+
+The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/resourcesAndReferences) literature ingest format that aligns publications from MOD members. 
+
+Mapping of Alliance publication category to biolink category
+| Alliance category | Biolink publication type |
+------------------| -------------- | 
+| Research Article | IAO:0000013 |
+| Review Article   | IAO:0000013 |
+| Thesis | IAO:0000311 |
+| Book | IAO:0000311 |
+| Other | IAO:0000311 |
+| Preprint | IAO:0000013 |
+| Conference Publication | IAO:0000311 |
+| Personal Communication | IAO:0000311 |
+| Direct Data Submission | IAO:0000311 |
+| Internal Process Reference | IAO:0000311 |
+| Unknown | IAO:0000311 |
+| Retraction | IAO:0000311 |
+
+This ingest doesn't make an effort to sort these publication categories into more specific classes than biolink:Publication, but does set the type.
+
+#### Biolink Captured
+
+* biolink:Publication
+    * id (primaryId) 
+    * name (title)
+    * summary (abstract)
+    * authors (authors.name flattened as a comma separated string)
+    * xref (crossReferences.id)
+    * mesh terms (meshTerms.meshHeadingTerm , meshTerms.meshQualifierTerm)
+    * type (IAO:0000311 for publication, IAO:0000013 for article)
+    * creation date (datePublished)
+    * keywords (keywords)
