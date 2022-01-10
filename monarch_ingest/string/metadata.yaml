@@ -1,7 +1,7 @@
 name: 'STRING'
 
 dataset_description:
-  ingest_title: 'STRING'
-  ingest_url: 'https://stringdb-static.org/download'
-  description: 'Ingest of STRING database data'
-  rights: 'https://string-db.org/cgi/access?footer_active_subpage=licensing'
+  ingest_title: 'String DB'
+  ingest_url: 'https://string-db.org'
+  description: 'STRING: functional protein association networks'
+  rights: 'https://string-db.org/cgi/access.pl?footer_active_subpage=licensing'
