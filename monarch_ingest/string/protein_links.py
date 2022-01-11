@@ -32,9 +32,9 @@ ens_b = 'ENSEMBL:' + re.sub(r'\d+\.', '', pid_b)
 ncbitaxon_match_b = re.match(r'\d+', pid_b)
 if ncbitaxon_match_b:
     ncbitaxon_b = "NCBITaxon:" + ncbitaxon_match_b.group(0)
-    protein_b = Protein(id=ens_a, in_taxon=ncbitaxon_b, source="ENSEMBL")
+    protein_b = Protein(id=ens_b, in_taxon=ncbitaxon_b, source="ENSEMBL")
 else:
-    protein_b = Protein(id=ens_a, source="ENSEMBL")
+    protein_b = Protein(id=ens_b, source="ENSEMBL")
 
 pairwise_gene_to_gene_interaction = PairwiseGeneToGeneInteraction(
     id="uuid:" + str(uuid.uuid1()),
@@ -42,7 +42,7 @@ pairwise_gene_to_gene_interaction = PairwiseGeneToGeneInteraction(
     object=protein_b.id,
     predicate=Predicate.interacts_with,
     relation=koza_app.translation_table.global_table['interacts with'],
-    provided_by="infores:stringdb"
+    provided_by="infores:string"
 )
 
 koza_app.write(protein_a, protein_b, pairwise_gene_to_gene_interaction)

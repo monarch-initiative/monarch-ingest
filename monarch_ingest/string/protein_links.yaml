@@ -61,6 +61,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'aggregating_knowledge_source'
+  - 'provided_by'
 
 transform_mode: 'flat'
