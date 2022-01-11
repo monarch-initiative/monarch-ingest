@@ -36,7 +36,7 @@ if ncbitaxon_match_b:
 else:
     protein_b = Protein(id=ens_b, source="ENSEMBL")
 
-pairwise_gene_to_gene_interaction = PairwiseGeneToGeneInteraction(
+association = PairwiseGeneToGeneInteraction(
     id="uuid:" + str(uuid.uuid1()),
     subject=protein_a.id,
     object=protein_b.id,
@@ -45,4 +45,4 @@ pairwise_gene_to_gene_interaction = PairwiseGeneToGeneInteraction(
     provided_by="infores:string"
 )
 
-koza_app.write(protein_a, protein_b, pairwise_gene_to_gene_interaction)
+koza_app.write(protein_a, protein_b, association)
