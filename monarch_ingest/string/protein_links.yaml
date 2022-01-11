@@ -1,0 +1,66 @@
+name: 'string_protein_links'
+
+delimiter: ' '
+
+format: 'csv'
+
+compression: 'gzip'
+
+files:
+  # - 10090.protein.links.detailed.v11.5.txt.gz
+  # - 10116.protein.links.detailed.v11.5.txt.gz
+  # - 4932.protein.links.detailed.v11.5.txt.gz
+  # - 6239.protein.links.detailed.v11.5.txt.gz
+  # - 7227.protein.links.detailed.v11.5.txt.gz
+  # - 7955.protein.links.detailed.v11.5.txt.gz
+  # - 9606.protein.links.detailed.v11.5.txt.gz
+  - './data/string/test_protein_links.txt.gz'
+
+metadata:
+  ingest_title: 'String DB'
+  ingest_url: 'https://string-db.org'
+  description: 'STRING: functional protein association networks'
+  rights: 'https://string-db.org/cgi/access.pl?footer_active_subpage=licensing'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'protein1'
+  - 'protein2'
+  - 'neighborhood'
+  - 'fusion'
+  - 'cooccurence'
+  - 'coexpression'
+  - 'experimental'
+  - 'database'
+  - 'textmining'
+  - 'combined_score' : 'int'
+
+# TODO: could this be preprocessed (e.g. using 'awk' etc.) in the pipeline, perhaps in the download step?
+filters:
+  - inclusion: 'include'
+    column: 'combined_score'
+    filter_code: 'gt'
+    value: 200
+
+node_properties:
+  - 'id'
+  - 'category'
+  #  - 'provided_by'  # not emphasized in Biolink
+  #  - 'name'
+  #  - 'symbol'
+  - 'in_taxon'
+  #  - 'xref'
+  #  - 'synonym'
+  - 'source'  # is this still needed?
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'aggregating_knowledge_source'
+
+transform_mode: 'flat'

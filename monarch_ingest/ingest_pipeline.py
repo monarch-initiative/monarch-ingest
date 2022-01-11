@@ -93,6 +93,7 @@ def ingests(context):
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("sgd", "gene_to_publication"),
+        Ingest("string", "protein_links"),
         Ingest("xenbase", "gene"),
         Ingest("xenbase", "gene_to_phenotype"),
         Ingest("xenbase", "gene_to_publication"),
@@ -116,6 +117,6 @@ def download():
 
 
 @dagster.job
-def monarch_ingest_pipline():
+def monarch_ingest_pipeline():
     processed_ingests = ingests(start=download()).map(process)
     merge(processed_ingests.collect())

@@ -1,4 +1,4 @@
-name: 'STRING'
+name: 'string'
 
 dataset_description:
   ingest_title: 'String DB'

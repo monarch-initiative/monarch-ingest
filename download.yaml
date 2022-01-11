@@ -83,6 +83,28 @@
   url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
   local_name: data/sgd/gene2pmid.tab
 
+# STRING db
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
+  local_name: 9606.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10090.protein.links.detailed.v11.5.txt.gz
+  local_name: 10090.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7955.protein.links.detailed.v11.5.txt.gz
+  local_name: 7955.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7227.protein.links.detailed.v11.5.txt.gz
+  local_name: 7227.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/6239.protein.links.detailed.v11.5.txt.gz
+  local_name: 6239.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4932.protein.links.detailed.v11.5.txt.gz
+  local_name: 4932.protein.links.detailed.v11.5.txt.gz
+
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
+  local_name: 10116.protein.links.detailed.v11.5.txt.gz
+
 # Xenbase
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
