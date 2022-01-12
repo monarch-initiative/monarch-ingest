@@ -84,24 +84,32 @@
   local_name: data/sgd/gene2pmid.tab
 
 # STRING db
+
+# Homo sapiens (human)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
   local_name: 9606.protein.links.detailed.v11.5.txt.gz
 
+# Mus musculus (house mouse)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10090.protein.links.detailed.v11.5.txt.gz
   local_name: 10090.protein.links.detailed.v11.5.txt.gz
 
+# Danio rerio (Zebrafish)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7955.protein.links.detailed.v11.5.txt.gz
   local_name: 7955.protein.links.detailed.v11.5.txt.gz
 
+# Drosophila melanogaster (fruit fly)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7227.protein.links.detailed.v11.5.txt.gz
   local_name: 7227.protein.links.detailed.v11.5.txt.gz
 
+# Caenorhabditis elegans (nematodes)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/6239.protein.links.detailed.v11.5.txt.gz
   local_name: 6239.protein.links.detailed.v11.5.txt.gz
 
+# Saccharomyces cerevisiae (baker's yeast)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4932.protein.links.detailed.v11.5.txt.gz
   local_name: 4932.protein.links.detailed.v11.5.txt.gz
 
+# Rattus norvegicus (Norway rat)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
   local_name: 10116.protein.links.detailed.v11.5.txt.gz
 
