@@ -13,7 +13,7 @@ def script():
     return "./monarch_ingest/string/protein_links.py"
 
 
-# @pytest.fixture
+@pytest.fixture
 def map_cache():
     """
     :return: Multi-level mock map_cache STRING to entrez dictionary.
@@ -45,12 +45,12 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_pl(mock_koza, source_name, basic_row, script, global_table):
+def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache):
     return mock_koza(
         name=source_name,
         data=iter([basic_row]),
         transform_code=script,
-        map_cache=map_cache(),
+        map_cache=map_cache,
         global_table=global_table
     )
 
