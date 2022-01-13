@@ -6,7 +6,12 @@
 
 ### Protein Links (Source File)
 
-This ingest uses a given version (currently, **11.5**) of the STRING's <taxon>.protein.links.detailed.<version>.txt.gz files, for a subset of NCBI <taxon> ID designated species. We filter the input data on the **combined_score** field (currently with the threshhold recorded in the **protein_links.yaml** file)
+This ingest uses a given version (currently, **11.5**) of the STRING's <taxon>.protein.links.detailed.<version>.txt.gz files, for a subset of NCBI <taxon> ID designated species. We filter the input data on the **combined_score** field (currently with the threshhold recorded in the **protein_links.yaml** file). The various [taxon specific entrez_2_string mapping files](https://string-db.org/mapping_files/entrez) are used to map protein subject and concept nodes onto Entrez gene id's.
+
+#### Special note about Entrez mapping files
+
+A separate Entrez to String identifier mapping file is not available for _Rattus norvegicus_ (Norway rat, NCBI taxon ID 10116) but the mappings are (less conveniently) available inside the aggregated ['all_organisms' entrez_2_string file](https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz). See notes in the STRING section of the _download.yaml_ configuration file for (self explanatory) guidance on how to prepare the required mapping file for use in a local running of the digest.
+
 
 ### Source File
 
@@ -25,17 +30,17 @@ This ingest uses a given version (currently, **11.5**) of the STRING's <taxon>.p
 
 #### Concept Nodes
 
-* **biolink:Protein**
-  * id
+* **biolink:Gene**
+  * id (NCBIGene Entrez ID)
   * in taxon (NCBITaxon ID)
-  * source (ENSEMBL)
+  * source (entrez)
 
 #### Associations
 
 * **biolink:PairwiseGeneToGeneInteraction**:
     * id (random uuid)
-    * subject (protein.id)
+    * subject (gene.id)
     * predicate (interacts_with)
-    * object (protein.id)
+    * object (gene.id)
     * relation (RO:0002434)
     * provided_by (infores:string)

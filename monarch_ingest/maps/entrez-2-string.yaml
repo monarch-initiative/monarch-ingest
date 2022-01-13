@@ -13,16 +13,26 @@ compression: 'gzip'
 # Assumes that no identifiers in multiple files are overlapping
 # otherwise these should go into separate configs
 files:
-  # - './data/string/10090.entrez_2_string.tsv.gz'
-  # - './data/string/10116.entrez_2_string.tsv.gz'
-  # - './data/string/4932.entrez_2_string.tsv.gz'
-  # - './data/string/6239.entrez_2_string.tsv.gz'
-  # - './data/string/7227.entrez_2_string.tsv.gz'
-  # - './data/string/7955.entrez_2_string.tsv.gz'
-  # - './data/string/9606.entrez_2_string.tsv.gz'
+  # Development phase test data, originally from
+  #       https://github.com/monarch-initiative/koza/tree/main/examples/data,
+  # is now deprecated in the project?
   #
-  - './data/string/test_entrez_2_string.tsv.gz'
-  - './data/string/additional_test_entrez_2_string.tsv.gz'
+  #  - './data/string/test_entrez_2_string.tsv.gz'
+  #  - './data/string/additional_test_entrez_2_string.tsv.gz'
+  #
+  # Full sets of STRING taxon-specific mapping data
+  #
+  - './data/string/10090.entrez_2_string.tsv.gz'
+  - './data/string/4932.entrez_2_string.tsv.gz'
+  - './data/string/6239.entrez_2_string.tsv.gz'
+  - './data/string/7227.entrez_2_string.tsv.gz'
+  - './data/string/7955.entrez_2_string.tsv.gz'
+  - './data/string/9606.entrez_2_string.tsv.gz'
+  #
+  # NOTE: see the special case in the download.yaml file, to prepare
+  # the file for Rattus norvegicus (Norway rat, NCBI taxon ID 10116)
+  #
+  - './data/string/10116.entrez_2_string.tsv.gz'
 
 columns:
   - 'NCBI taxid'
