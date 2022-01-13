@@ -1,7 +1,8 @@
 name: 'flybase_gene_to_publication'
 
 files:
-  - './data/flybase/entity_publication_fb.tsv.gz'
+#  - './data/flybase/entity_publication_fb.tsv.gz'
+  - './data/flybase/gene_publication_fb.tsv.gz'
 
 global_table: './monarch_ingest/translation_table.yaml'
 

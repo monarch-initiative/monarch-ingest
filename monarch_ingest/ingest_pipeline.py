@@ -89,6 +89,7 @@ def ingests(context):
         Ingest("rgd", "gene_to_publication"),
         Ingest("hgnc", "gene"),
         Ingest("flybase", "gene_to_publication"),
+        Ingest("omim", "gene_to_disease"),
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("sgd", "gene_to_publication"),

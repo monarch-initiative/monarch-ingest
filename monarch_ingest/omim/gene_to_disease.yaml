@@ -1,4 +1,4 @@
-name: 'omim-gene-disease'
+name: 'omim_gene_to_disease'
 
 files:
   - './data/omim/morbidmap.txt'
@@ -16,6 +16,9 @@ depends_on:
 on_map_failure: 'error'
 
 delimiter: '\t'
+
+global_table: './monarch_ingest/translation_table.yaml'
+local_table: './monarch_ingest/omim/omim-translation.yaml'
 
 header: 3
 

@@ -3,10 +3,7 @@ OMIM Gene to Disease Ingest
 
 Usage:
 poetry run koza transform \
-  --global-table monarch_ingest/translation_table.yaml \
-  --local-table monarch_ingest/omim/omim-translation.yaml \
-  --source monarch_ingest/omim/gene-disease.yaml \
-  --output-format tsv
+  --source monarch_ingest/omim/gene_to_disease.yaml \
 """
 
 import logging
@@ -25,7 +22,7 @@ from koza.cli_runner import koza_app
 LOG = logging.getLogger(__name__)
 
 
-source_name = "omim-gene-disease"
+source_name = "omim_gene_to_disease"
 row = koza_app.get_row(source_name)
 omim_to_gene = koza_app.get_map('mim2gene')
 
@@ -159,7 +156,7 @@ association = GeneToDiseaseAssociation(
     object=disorder_id,
     relation=relation,
     has_evidence=evidence,
-    source='infores:omim'
+    source='infores:omim',
 )
 
 koza_app.write(disease, association)
