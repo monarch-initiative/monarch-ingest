@@ -91,8 +91,7 @@ def test_association(basic_pl):
     assert association.predicate == "biolink:interacts_with"
     assert association.relation == "RO:0002434"
 
-    # 'provided_by' is multivalued (an array)
-    assert "infores:string" in association.provided_by
+    assert "infores:string" in association.source
 
 
 @pytest.fixture
