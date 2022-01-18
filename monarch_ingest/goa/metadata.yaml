@@ -1,0 +1,7 @@
+name: 'goa'
+
+dataset_description:
+  ingest_title: 'GOA DB'
+  ingest_url: 'https://www.ebi.ac.uk/GOA'
+  description: 'Gene Ontology Annotations Database'
+  rights: 'https://www.ebi.ac.uk/licencing'
