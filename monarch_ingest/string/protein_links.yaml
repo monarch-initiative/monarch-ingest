@@ -7,13 +7,6 @@ format: 'csv'
 compression: 'gzip'
 
 files:
-  # Development-phase test data - a small set of STRING-sourced
-  # Mouse protein-protein interactions - is now deprecated in the project?
-  #
-  # - './data/string/test_protein_links.txt.gz'
-  #
-  # Full sets of STRING taxon-specific protein-protein interaction data
-  #
   - './data/string/10090.protein_links.txt.gz'
   - './data/string/10116.protein_links.txt.gz'
   - './data/string/4932.protein_links.txt.gz'
@@ -50,18 +43,13 @@ filters:
   - inclusion: 'include'
     column: 'combined_score'
     filter_code: 'gt'
-    value: 200
+    value: 700
 
 node_properties:
   - 'id'
   - 'category'
-  #  - 'provided_by'  # not emphasized in Biolink
-  #  - 'name'
-  #  - 'symbol'
   - 'in_taxon'
-  #  - 'xref'
-  #  - 'synonym'
-  - 'source'  # is this still needed?
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -70,6 +58,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'

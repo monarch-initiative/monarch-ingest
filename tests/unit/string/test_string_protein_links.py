@@ -1,7 +1,5 @@
-from typing import Dict
-
 import pytest
-
+from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
 @pytest.fixture
 def source_name():
@@ -21,6 +19,8 @@ def map_cache():
     entrez_2_string = {
         "10090.ENSMUSP00000000001": {"entrez": "14679"},
         "10090.ENSMUSP00000020316": {"entrez": "56480"},
+        "9606.ENSP00000349467": {'entrez': '801|805|808'},
+        "9606.ENSP00000000233": {'entrez': '123|381'}
     }
     return {"entrez_2_string": entrez_2_string}
 
@@ -40,7 +40,7 @@ def basic_row():
         "experimental": "90",
         "database": "0",
         "textmining": "67",
-        "combined_score": "183"
+        "combined_score": "183",
     }
 
 
@@ -51,7 +51,7 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
         data=iter([basic_row]),
         transform_code=script,
         map_cache=map_cache,
-        global_table=global_table
+        global_table=global_table,
     )
 
 
@@ -66,7 +66,7 @@ def test_proteins(basic_pl):
 
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_a.in_taxon
-    
+
     assert gene_a.source == "entrez"
 
     gene_b = basic_pl[1]
@@ -79,7 +79,7 @@ def test_proteins(basic_pl):
 
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_b.in_taxon
-    
+
     assert gene_b.source == "entrez"
 
 
@@ -90,6 +90,37 @@ def test_association(basic_pl):
     assert association.object == "NCBIGene:56480"
     assert association.predicate == "biolink:interacts_with"
     assert association.relation == "RO:0002434"
-    
-    # 'provided_by' is multivalued (an array)
-    assert "infores:string" in association.provided_by
+
+    assert "infores:string" in association.source
+
+
+@pytest.fixture
+def multigene_row():
+    return {
+        'protein1': '9606.ENSP00000000233',
+        'protein2': '9606.ENSP00000349467',
+        'neighborhood': '0',
+        'fusion': '0',
+        'cooccurence': '332',
+        'coexpression': '62',
+        'experimental': '77',
+        'database': '0',
+        'textmining': '101',
+        'combined_score': 410,
+    }
+
+
+@pytest.fixture
+def multigene_entities(mock_koza, source_name, multigene_row, script, global_table, map_cache):
+    return mock_koza(
+        name=source_name,
+        data=iter([multigene_row]),
+        transform_code=script,
+        map_cache=map_cache,
+        global_table=global_table,
+    )
+
+
+def test_multigene_associations(multigene_entities):
+    associations = [association for association in multigene_entities if isinstance(association, PairwiseGeneToGeneInteraction)]
+    assert len(associations) == 6

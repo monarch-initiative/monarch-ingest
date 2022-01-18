@@ -1,13 +1,13 @@
+import multiprocessing
 import os
 from os.path import exists
 from typing import List
-import multiprocessing
 
 import dagster
+from kghub_downloader.download_utils import download_from_yaml
 from kgx.cli import cli_utils
 from koza.cli_runner import transform_source
 
-from kghub_downloader.download_utils import download_from_yaml
 
 @dagster.usable_as_dagster_type
 class KgxGraph:
