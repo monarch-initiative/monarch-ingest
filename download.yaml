@@ -71,11 +71,21 @@
 - url: http://current.geneontology.org/annotations/rgd.gaf.gz
   local_name: data/goa/10116.go_annotations.gaf.gz
 
-# Not sure about including these vertebrate species just yet (from Dipper)
-# http://current.geneontology.org/annotations/goa_dog.gaf.gz
-# http://current.geneontology.org/annotations/goa_cow.gaf.gz
-# http://current.geneontology.org/annotations/goa_pig.gaf.gz
-# http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+# Canis lupus familiaris (dog)
+- url: http://current.geneontology.org/annotations/goa_dog.gaf.gz
+  local_name: data/goa/9615.go_annotations.gaf.gz
+
+# Bos taurus (cow)
+- url: http://current.geneontology.org/annotations/goa_cow.gaf.gz
+  local_name: data/goa/9913.go_annotations.gaf.gz
+
+# Sus scrofa (pig)
+- url: http://current.geneontology.org/annotations/goa_pig.gaf.gz
+  local_name: data/goa/9823.go_annotations.gaf.gz
+
+# Gallus gallus (chicken)
+- url: http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+  local_name: data/goa/9031.go_annotations.gaf.gz
 
 # Danio rerio (Zebrafish)
 - url: http://current.geneontology.org/annotations/zfin.gaf.gz
