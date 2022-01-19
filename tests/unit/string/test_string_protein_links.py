@@ -1,6 +1,7 @@
 import pytest
 from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
+
 @pytest.fixture
 def source_name():
     return "string_protein_links"
@@ -122,5 +123,8 @@ def multigene_entities(mock_koza, source_name, multigene_row, script, global_tab
 
 
 def test_multigene_associations(multigene_entities):
-    associations = [association for association in multigene_entities if isinstance(association, PairwiseGeneToGeneInteraction)]
+    associations = [
+        association for association in multigene_entities
+        if isinstance(association, PairwiseGeneToGeneInteraction)
+    ]
     assert len(associations) == 6

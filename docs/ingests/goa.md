@@ -31,7 +31,7 @@ There is a ReadMe.txt file that explains the different annotation files availabl
   * id (GO ID)
   * source (go)
 
-##### Possible Additional Gene Ontology Term Concept Nodes?
+##### Additional Gene Ontology Term Concept Nodes for possible use?
 
 * **biolink:Pathway**
   * id (GO ID)
