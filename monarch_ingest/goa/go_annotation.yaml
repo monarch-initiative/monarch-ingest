@@ -3,27 +3,32 @@ name: 'go_annotation'
 compression: 'gzip'
 
 format: 'csv'  # is 'gaf' specifically recognized, or does it need to be specifically recognized?
-
 delimiter: '\t'
+header: none
+comment_char: '!'
 
 files:
-  - './data/goa/9606.go_annotations.gaf.gz'
-  - './data/goa/10090.go_annotations.gaf.gz'
-  - './data/goa/10116.go_annotations.gaf.gz'
-  - './data/goa/9615.go_annotations.gaf.gz'
-  - './data/goa/9913.go_annotations.gaf.gz'
-  - './data/goa/9823.go_annotations.gaf.gz'
-  - './data/goa/9031.go_annotations.gaf.gz'
-  - './data/goa/7955.go_annotations.gaf.gz'
-  - './data/goa/7227.go_annotations.gaf.gz'
-  - './data/goa/6239.go_annotations.gaf.gz'
-  - './data/goa/44689.go_annotations.gaf.gz'
-  - './data/goa/162425.go_annotations.gaf.gz'
-  - './data/goa/4932.go_annotations.gaf.gz'
-  - './data/goa/4896.go_annotations.gaf.gz'
-
+  #  - './data/goa/9606.go_annotations.gaf.gz'
+  #  - './data/goa/10090.go_annotations.gaf.gz'
+  #  - './data/goa/10116.go_annotations.gaf.gz'
+  #  - './data/goa/9615.go_annotations.gaf.gz'
+  #  - './data/goa/9913.go_annotations.gaf.gz'
+  #  - './data/goa/9823.go_annotations.gaf.gz'
+  #  - './data/goa/9031.go_annotations.gaf.gz'
+  #  - './data/goa/7955.go_annotations.gaf.gz'
+  #  - './data/goa/7227.go_annotations.gaf.gz'
+  #  - './data/goa/6239.go_annotations.gaf.gz'
+  #  - './data/goa/44689.go_annotations.gaf.gz'
+  #  - './data/goa/162425.go_annotations.gaf.gz'
+  #  - './data/goa/4932.go_annotations.gaf.gz'
+  #  - './data/goa/4896.go_annotations.gaf.gz'
+  - './data/goa/test.go_annotations.gaf.gz'
+#
+# Not yet sure what mapping files one will need for GO annotations
+#
 #depends_on:
-#  - './monarch_ingest/maps/entrez-2-string.yaml'
+#  - 'https://archive.monarchinitiative.org/DipperCache/go/gaf-eco-mapping.yaml'
+#  - ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
 
 metadata:
   ingest_title: 'GOA DB'
@@ -33,24 +38,25 @@ metadata:
 
 global_table: './monarch_ingest/translation_table.yaml'
 
-#columns:
-#  - 'protein1'
-#  - 'protein2'
-#  - 'neighborhood'
-#  - 'fusion'
-#  - 'cooccurence'
-#  - 'coexpression'
-#  - 'experimental'
-#  - 'database'
-#  - 'textmining'
-#  - 'combined_score' : 'int'
-#
-## TODO: could this be preprocessed (e.g. using 'awk' etc.) in the pipeline, perhaps in the download step?
-#filters:
-#  - inclusion: 'include'
-#    column: 'combined_score'
-#    filter_code: 'gt'
-#    value: 200
+# http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/
+columns:
+  - DB
+  - DB_Object_ID
+  - DB_Object_Symbol
+  - Qualifier
+  - GO_ID
+  - DB_Reference
+  - Evidence_Code
+  - With_or_From
+  - Aspect
+  - DB_Object_Name
+  - DB_Object_Synonym
+  - DB_Object_Type
+  - Taxon
+  - Date
+  - Assigned_By
+  - Annotation_Extension
+  - Gene_Product_Form_ID
 
 node_properties:
   - 'id'
