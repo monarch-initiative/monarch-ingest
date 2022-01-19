@@ -128,9 +128,8 @@ if disorder_label.startswith('['):
     # relation = koza_app.translation_table.global_table['is marker for']
     koza_app.next_row()
 elif disorder_label.startswith('{'):
-    # predicate = Predicate.risk_affected_by
-    # relation = koza_app.translation_table.global_table['contributes to']
-    koza_app.next_row()
+    predicate = Predicate.risk_affected_by
+    relation = koza_app.translation_table.global_table['confers susceptibility to condition']
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
     # predicate = Predicate.related_condition
