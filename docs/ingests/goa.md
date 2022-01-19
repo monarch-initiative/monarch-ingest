@@ -43,6 +43,16 @@ There is a ReadMe.txt file that explains the different annotation files availabl
 
 #### Associations
 
+* **biolink:FunctionalAssociation**
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (related_to)
+    * object (go_term.id)
+    * relation (RO:0002434)
+    * provided_by (infores:goa)
+
+OR
+
 * **biolink:MacromolecularMachineToMolecularActivityAssociation**:
     * id (random uuid)
     * subject (gene.id)

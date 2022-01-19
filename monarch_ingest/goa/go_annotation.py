@@ -1,58 +1,105 @@
-import re
 import uuid
+from typing import Optional
 
-from biolink_model_pydantic.model import Gene, PairwiseGeneToGeneInteraction, Predicate
+from biolink_model_pydantic.model import (
+    Gene,
+    Predicate,
+    MolecularActivity,
+    BiologicalProcess,
+    CellularComponent,
+    MacromolecularMachineToMolecularActivityAssociation,
+    MacromolecularMachineToBiologicalProcessAssociation,
+    MacromolecularMachineToCellularComponentAssociation
+)
 
 from koza.cli_runner import koza_app
 
+
+def molecular_function(go_id: str) -> Optional[MolecularActivity]:
+    """
+
+    :param go_id:
+    :return:
+    """
+    return None
+
+
+def biological_process(go_id: str) -> Optional[BiologicalProcess]:
+    """
+
+    :param go_id:
+    :return:
+    """
+    return None
+
+
+def cellular_component(go_id: str)-> Optional[CellularComponent]:
+    """
+
+    :param go_id:
+    :return:
+    """
+    return None
+
+
 row = koza_app.get_row()
 
-raise NotImplemented
+db = row['DB']
+db_object_id = row['DB_Object_ID']
+db_id = f"{db}:{db_object_id}"
 
-#
-# entrez_2_string = koza_app.get_map('entrez_2_string')
-#
-#
-# pid_a = row['protein1']
-# gene_ids_a = entrez_2_string[pid_a]['entrez']
-# pid_b = row['protein2']
-# gene_ids_b = entrez_2_string[pid_b]['entrez']
-#
-# # Some genes may not be found in the mapping, only process the record if both are found
-# if gene_ids_a and gene_ids_b:
-#
-#     entities = []
-#
-#     for gid_a in gene_ids_a.split("|"):
-#         for gid_b in gene_ids_b.split("|"):
-#             gid_a = 'NCBIGene:' + gid_a
-#             gid_b = 'NCBIGene:' + gid_b
-#
-#             ncbitaxon_match_a = re.match(r'\d+', pid_a)
-#             if ncbitaxon_match_a:
-#                 ncbitaxon_a = "NCBITaxon:" + ncbitaxon_match_a.group(0)
-#                 gene_a = Gene(id=gid_a, in_taxon=ncbitaxon_a, source="entrez")
-#             else:
-#                 gene_a = Gene(id=gid_a, source="entrez")
-#
-#             ncbitaxon_match_b = re.match(r'\d+', pid_b)
-#             if ncbitaxon_match_b:
-#                 ncbitaxon_b = "NCBITaxon:" + ncbitaxon_match_b.group(0)
-#                 gene_b = Gene(id=gid_b, in_taxon=ncbitaxon_b, source="entrez")
-#             else:
-#                 gene_b = Gene(id=gid_b, source="entrez")
-#
-#             association = PairwiseGeneToGeneInteraction(
-#                 id="uuid:" + str(uuid.uuid1()),
-#                 subject=gene_a.id,
-#                 object=gene_b.id,
-#                 predicate=Predicate.interacts_with,
-#                 relation=koza_app.translation_table.global_table['interacts with'],
-#                 source="infores:string",
-#             )
-#
-#             entities.append(gene_a)
-#             entities.append(gene_b)
-#             entities.append(association)
-#
-#     koza_app.write(*entities)
+# TODO: need to remap this DB id onto a proper gene id (db_id is probably probably a uniprot id?)
+gene_id = db_id
+
+ncbitaxon = row['Taxon']
+
+# TODO: probably wrong right now.. not an Entrez ID?
+gene= Gene(id=gene_id, in_taxon=ncbitaxon, source="entrez")
+
+association = None  # in case of a go_id which doesn't hit anything?
+
+go_id = row['GO_ID']
+# TODO: need to figure out which GO identifier space this term belongs to:
+#       molecular_function - child of GO:0003674,
+#       biological_process - child of GO:0008150 OR
+#       cellular_component - child of GO:0005575
+#       Note that since GO is a DAG, these terms can have multiple parents...how do we handle this?
+
+# First naive iteration... probably wrong! TODO: every 'go_term' may be an array of terms(?)
+go_term = molecular_function(go_id)
+if go_term:
+    association = MacromolecularMachineToMolecularActivityAssociation(
+        id="uuid:" + str(uuid.uuid1()),
+        subject=gene.id,
+        object=go_term.id,
+        predicate=Predicate.related_to,
+        relation=koza_app.translation_table.global_table['related to'],
+        source="infores:goa",
+    )
+else:
+    go_term = biological_process(go_id)
+    if go_term:
+        association = MacromolecularMachineToBiologicalProcessAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gene.id,
+            object=go_term.id,
+            predicate=Predicate.participates_in,
+            relation=koza_app.translation_table.global_table['participates in'],
+            source="infores:goa",
+        )
+    else:
+        go_term = cellular_component(go_id)
+        if go_term:
+            association = MacromolecularMachineToCellularComponentAssociation(
+                id="uuid:" + str(uuid.uuid1()),
+                subject=gene.id,
+                object=go_term.id,
+                predicate=Predicate.located_in,
+                relation=koza_app.translation_table.global_table['located in'],
+                source="infores:goa",
+            )
+        else:
+            pass  # no hit? not sure what error condition to trigger here... maybe nothing?
+
+if association:
+    koza_app.write(gene_id, go_id, association)
