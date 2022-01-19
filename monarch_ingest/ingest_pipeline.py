@@ -1,13 +1,13 @@
+import multiprocessing
 import os
 from os.path import exists
 from typing import List
-import multiprocessing
 
 import dagster
+from kghub_downloader.download_utils import download_from_yaml
 from kgx.cli import cli_utils
 from koza.cli_runner import transform_source
 
-from kghub_downloader.download_utils import download_from_yaml
 
 @dagster.usable_as_dagster_type
 class KgxGraph:
@@ -93,6 +93,7 @@ def ingests(context):
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("sgd", "gene_to_publication"),
+        Ingest("string", "protein_links"),
         Ingest("xenbase", "gene"),
         Ingest("xenbase", "gene_to_phenotype"),
         Ingest("xenbase", "gene_to_publication"),
@@ -116,6 +117,6 @@ def download():
 
 
 @dagster.job
-def monarch_ingest_pipline():
+def monarch_ingest_pipeline():
     processed_ingests = ingests(start=download()).map(process)
     merge(processed_ingests.collect())
