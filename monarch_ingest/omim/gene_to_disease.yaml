@@ -33,6 +33,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'type'
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -42,3 +43,4 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'has_evidence'
+  - 'source'

@@ -66,7 +66,7 @@ if disorder_match is not None:
     gene_id = 'OMIM:' + str(gene_num)
     disorder_id = 'OMIM:' + disorder_num
 
-    gene = Gene(id=gene_id)
+    gene = Gene(id=gene_id, source='infores:omim')
     koza_app.write(gene)
 
 elif no_disease_id_match is not None:
@@ -86,6 +86,7 @@ elif no_disease_id_match is not None:
     genomic_entity = NucleicAcidEntity(
         id=gene_id,
         type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
+        source='infores:omim'
     )
     koza_app.write(genomic_entity)
 
@@ -145,6 +146,7 @@ if association_key is not None:
 
 disease = Disease(
     id=disorder_id,
+    source='infores:omim'
 )
 
 # Association
