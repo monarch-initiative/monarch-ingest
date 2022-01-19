@@ -24,7 +24,7 @@ files:
 
 #depends_on:
 #  - './monarch_ingest/maps/entrez-2-string.yaml'
-#
+
 metadata:
   ingest_title: 'GOA DB'
   ingest_url: 'http://geneontology.org/'
@@ -51,17 +51,12 @@ global_table: './monarch_ingest/translation_table.yaml'
 #    column: 'combined_score'
 #    filter_code: 'gt'
 #    value: 200
-#
+
 node_properties:
   - 'id'
   - 'category'
-#  #  - 'provided_by'  # not emphasized in Biolink
-#  #  - 'name'
-#  #  - 'symbol'
   - 'in_taxon'
-#  #  - 'xref'
-#  #  - 'synonym'
-  - 'source'  # is this still needed?
+  - 'source'
 
 edge_properties:
   - 'id'
@@ -70,6 +65,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'
