@@ -43,7 +43,7 @@ def basic_row():
         "DB_Object_ID": "A0A024RBG1",
         "DB_Object_Symbol": "NUDT4B",
         "Qualifier": "enables",
-        "GO_ID": "GO:0003723",
+        "GO_ID": "GO:0003723",  # molecular_function: RNA binding
         "DB_Reference": "GO_REF:0000043",
         "Evidence_Code": "IEA",
         "With_or_From": "UniProtKB-KW:KW-0694",
@@ -80,32 +80,40 @@ def basic_goa(mock_koza, source_name, basic_row, script, global_table, map_cache
     )
 
 
-def test_genes(basic_goa):
+def test_gene(basic_goa):
+    
     gene = basic_goa[0]
+    
     assert gene
     assert gene.id == "NCBIGene:14679"
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene.category
+    assert "biolink:BiologicalEntity" in gene.category
     assert "biolink:NamedThing" in gene.category
 
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene.in_taxon
 
-    assert gene.source == "entrez"
+    assert gene.source == "infores:entrez"
 
-    gene_b = basic_goa[1]
-    assert gene_b
-    assert gene_b.id == "NCBIGene:56480"
+
+def test_go_term(basic_goa):
+    
+    go_term = basic_goa[1]
+    
+    assert go_term
+    assert go_term.id == "GO:0003723"
 
     # 'category' is multivalued (an array)
-    assert "biolink:Gene" in gene_b.category
-    assert "biolink:NamedThing" in gene_b.category
+    # TODO: Are the mixins 'biolink:Occurrent' and 'biolink:OntologyClass' also here?
+    # TODO: Should 'biolink:GeneOntologyClass' be lurking somewhere in here too?
+    assert "biolink:MolecularActivity" in go_term.category
+    assert "biolink:BiologicalProcessOrActivity" in go_term.category
+    assert "biolink:BiologicalEntity" in go_term.category
+    assert "biolink:NamedThing" in go_term.category
 
-    # 'in_taxon' is multivalued (an array)
-    assert "NCBITaxon:10090" in gene_b.in_taxon
-
-    assert gene_b.source == "entrez"
+    assert go_term.source == "infores:go"
 
 
 def test_association(basic_goa):

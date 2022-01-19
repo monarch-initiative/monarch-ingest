@@ -1,3 +1,10 @@
+"""
+Gene Ontology Annotations Ingest module.
+
+Gene to GO term Associations
+(to MolecularActivity, BiologicalProcess and CellularComponent)
+"""
+import re
 import uuid
 from typing import Optional
 
@@ -52,9 +59,11 @@ db_id = f"{db}:{db_object_id}"
 gene_id = db_id
 
 ncbitaxon = row['Taxon']
+if ncbitaxon:
+    ncbitaxon = re.sub(r"^taxon", "NCBITaxon", ncbitaxon, flags=re.IGNORECASE)
 
-# TODO: probably wrong right now.. not an Entrez ID?
-gene= Gene(id=gene_id, in_taxon=ncbitaxon, source="entrez")
+# TODO: probably wrong right now.. not yet translate to an Entrez ID?
+gene= Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:entrez")
 
 association = None  # in case of a go_id which doesn't hit anything?
 

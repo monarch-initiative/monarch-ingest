@@ -23,8 +23,9 @@ files:
   #  - './data/goa/4932.go_annotations.gaf.gz'
   #  - './data/goa/4896.go_annotations.gaf.gz'
   - './data/goa/test.go_annotations.gaf.gz'
+
 #
-# Not yet sure what mapping files one will need for GO annotations
+# Not yet sure about what mapping file(s) one will need for GO annotations; check Dipper implementation?
 #
 #depends_on:
 #  - 'https://archive.monarchinitiative.org/DipperCache/go/gaf-eco-mapping.yaml'
