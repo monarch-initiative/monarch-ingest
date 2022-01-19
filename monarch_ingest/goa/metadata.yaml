@@ -2,6 +2,6 @@ name: 'goa'
 
 dataset_description:
   ingest_title: 'GOA DB'
-  ingest_url: 'https://www.ebi.ac.uk/GOA'
+  ingest_url: 'http://geneontology.org/'
   description: 'Gene Ontology Annotations Database'
-  rights: 'https://www.ebi.ac.uk/licencing'
+  rights: 'http://geneontology.org/docs/go-citation-policy/'
