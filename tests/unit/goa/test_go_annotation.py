@@ -4,19 +4,25 @@ from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
 @pytest.fixture
 def source_name():
+    """
+    :return: string source name of GO Annotations ingest
+    """
     return "go_annotation"
 
 
 @pytest.fixture
 def script():
+    """
+    :return: string path to GO Annotations ingest script
+    """
     return "./monarch_ingest/goa/go_annotation.py"
 
 
 @pytest.fixture
 def map_cache():
-    # """
-    # :return: Multi-level mock map_cache GO Annotation to entrez dictionary.
-    # """
+    """
+    :return: Multi-level mock map_cache GO Annotation protein ids to entrez gene ids.
+    """
     # entrez_2_goa = {
     #     "10090.ENSMUSP00000000001": {"entrez": "14679"},
     #     "10090.ENSMUSP00000020316": {"entrez": "56480"},
@@ -29,48 +35,64 @@ def map_cache():
 
 @pytest.fixture
 def basic_row():
-    # """
-    # :return: Test GO Annotation protein links data row.
-    # """
-    # return {
-    #     "protein1": "10090.ENSMUSP00000000001",
-    #     "protein2": "10090.ENSMUSP00000020316",
-    #     "neighborhood": "0",
-    #     "fusion": "0",
-    #     "cooccurence": "0",
-    #     "coexpression": "116",
-    #     "experimental": "90",
-    #     "database": "0",
-    #     "textmining": "67",
-    #     "combined_score": "183",
-    # }
-    raise NotImplemented
+    """
+    :return: Test GO Annotation data row.
+    """
+    return {
+        "DB": "UniProtKB",
+        "DB_Object_ID": "A0A024RBG1",
+        "DB_Object_Symbol": "NUDT4B",
+        "Qualifier": "enables",
+        "GO_ID": "GO:0003723",
+        "DB_Reference": "GO_REF:0000043",
+        "Evidence_Code": "IEA",
+        "With_or_From": "UniProtKB-KW:KW-0694",
+        "Aspect": "F",
+        "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
+        "DB_Object_Synonym": "NUDT4B",
+        "DB_Object_Type": "protein",
+        "Taxon": "taxon:9606",
+        "Date": "20211010",
+        "Assigned_By": "UniProt",
+        "Annotation_Extension": "",
+        "Gene_Product_Form_ID": ""
+    }
 
 
 @pytest.fixture
 def basic_goa(mock_koza, source_name, basic_row, script, global_table, map_cache):
+    """
+    Mock Koza run for GO annotation ingest.
+    :param mock_koza:
+    :param source_name:
+    :param basic_row:
+    :param script:
+    :param global_table:
+    :param map_cache:
+    :return:
+    """
     return mock_koza(
         name=source_name,
         data=iter([basic_row]),
         transform_code=script,
         map_cache=map_cache,
-        global_table=global_table,
+        global_table=global_table
     )
 
 
 def test_genes(basic_goa):
-    gene_a = basic_goa[0]
-    assert gene_a
-    assert gene_a.id == "NCBIGene:14679"
+    gene = basic_goa[0]
+    assert gene
+    assert gene.id == "NCBIGene:14679"
 
     # 'category' is multivalued (an array)
-    assert "biolink:Gene" in gene_a.category
-    assert "biolink:NamedThing" in gene_a.category
+    assert "biolink:Gene" in gene.category
+    assert "biolink:NamedThing" in gene.category
 
     # 'in_taxon' is multivalued (an array)
-    assert "NCBITaxon:10090" in gene_a.in_taxon
+    assert "NCBITaxon:10090" in gene.in_taxon
 
-    assert gene_a.source == "entrez"
+    assert gene.source == "entrez"
 
     gene_b = basic_goa[1]
     assert gene_b
