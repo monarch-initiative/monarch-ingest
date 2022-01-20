@@ -18,8 +18,14 @@ from biolink_model_pydantic.model import (
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.goa.goa_utils import DEFAULT_RELATIONSHIP, lookup_predicate, molecular_function, biological_process, \
-    cellular_component, infer_cellular_component_predicate
+from monarch_ingest.goa.goa_utils import (
+    molecular_function,
+    biological_process,
+    cellular_component,
+    lookup_predicate,
+    DEFAULT_RELATIONSHIP,
+    infer_cellular_component_predicate
+)
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -52,10 +58,10 @@ if qualifier:
     # check for piped negation prefix (hopefully, well behaved!)
     qualifier_parts = qualifier.split("|")
     if qualifier_parts[0] == "NOT":
-        predicate_mapping, relation = lookup_predicate(qualifier_parts[1])
+        predicate, relation = lookup_predicate(qualifier_parts[1])
         negated = True
     else:
-        predicate_mapping, relation = lookup_predicate(qualifier_parts[0])
+        predicate, relation = lookup_predicate(qualifier_parts[0])
 
 # The GO Evidence Code is useful ...
 evidence_code = row['Evidence_Code']
