@@ -6,14 +6,11 @@ Gene to GO term Associations
 """
 import re
 import uuid
-from typing import Optional
+import logging
 
 from biolink_model_pydantic.model import (
     Gene,
     Predicate,
-    MolecularActivity,
-    BiologicalProcess,
-    CellularComponent,
     MacromolecularMachineToMolecularActivityAssociation,
     MacromolecularMachineToBiologicalProcessAssociation,
     MacromolecularMachineToCellularComponentAssociation
@@ -21,33 +18,11 @@ from biolink_model_pydantic.model import (
 
 from koza.cli_runner import koza_app
 
+from monarch_ingest.goa.goa_utils import DEFAULT_RELATIONSHIP, lookup_predicate, molecular_function, biological_process, \
+    cellular_component, infer_cellular_component_predicate
 
-def molecular_function(go_id: str) -> Optional[MolecularActivity]:
-    """
-
-    :param go_id:
-    :return:
-    """
-    return None
-
-
-def biological_process(go_id: str) -> Optional[BiologicalProcess]:
-    """
-
-    :param go_id:
-    :return:
-    """
-    return None
-
-
-def cellular_component(go_id: str)-> Optional[CellularComponent]:
-    """
-
-    :param go_id:
-    :return:
-    """
-    return None
-
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
 
@@ -62,53 +37,95 @@ ncbitaxon = row['Taxon']
 if ncbitaxon:
     ncbitaxon = re.sub(r"^taxon", "NCBITaxon", ncbitaxon, flags=re.IGNORECASE)
 
-# TODO: probably wrong right now.. not yet translate to an Entrez ID?
-gene= Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:entrez")
+# TODO: wrong.. gene_id is likely a protein identifier right now... not yet translated to an Entrez ID?
+gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:entrez")
 
 association = None  # in case of a go_id which doesn't hit anything?
 
+# The Association Predicate and Relation are
+# inferred from the GAF 'Qualifier' used.
+# Note that this qualifier may be negated (i.e. "NOT|<qualifier>").
+predicate, relation = DEFAULT_RELATIONSHIP
+negated = False
+qualifier = row['Qualifier']
+if qualifier:
+    # check for piped negation prefix (hopefully, well behaved!)
+    qualifier_parts = qualifier.split("|")
+    if qualifier_parts[0] == "NOT":
+        predicate_mapping, relation = lookup_predicate(qualifier_parts[1])
+        negated = True
+    else:
+        predicate_mapping, relation = lookup_predicate(qualifier_parts[0])
+
+# The GO Evidence Code is useful ...
+evidence_code = row['Evidence_Code']
+
+# TODO: could any of the GAF rows have multiple GO_ID entries? check the spec...
 go_id = row['GO_ID']
+
 # TODO: need to figure out which GO identifier space this term belongs to:
 #       molecular_function - child of GO:0003674,
 #       biological_process - child of GO:0008150 OR
 #       cellular_component - child of GO:0005575
 #       Note that since GO is a DAG, these terms can have multiple parents...how do we handle this?
+#
+# TODO: For root node annotations that use the ND evidence code, the following relations should be used:
+#       biological_process (GO:0008150) involved_in (RO:0002331)
+#       molecular_function (GO:0003674) enables (RO:0002327)
+#       cellular_component (GO:0005575) is_active_in (RO:0002432)
 
-# First naive iteration... probably wrong! TODO: every 'go_term' may be an array of terms(?)
+# First naive iteration... probably wrong!
 go_term = molecular_function(go_id)
 if go_term:
+    
+    if not predicate:
+        # use a reasonable predicate default, if necessary
+        predicate = Predicate.enables
+    
     association = MacromolecularMachineToMolecularActivityAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene.id,
         object=go_term.id,
-        predicate=Predicate.related_to,
-        relation=koza_app.translation_table.global_table['related to'],
+        predicate=predicate,
+        relation=relation,
+        has_evidence=evidence_code,
         source="infores:goa",
     )
 else:
     go_term = biological_process(go_id)
     if go_term:
+    
+        if not predicate:
+            # use a reasonable predicate default, if necessary
+            predicate = Predicate.acts_upstream_of_or_within
+    
         association = MacromolecularMachineToBiologicalProcessAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene.id,
             object=go_term.id,
-            predicate=Predicate.participates_in,
-            relation=koza_app.translation_table.global_table['participates in'],
+            predicate=predicate,
+            relation=relation,
+            has_evidence=evidence_code,
             source="infores:goa",
         )
     else:
         go_term = cellular_component(go_id)
         if go_term:
+    
+            if not predicate:
+                predicate = infer_cellular_component_predicate(go_term)
+    
             association = MacromolecularMachineToCellularComponentAssociation(
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene.id,
                 object=go_term.id,
-                predicate=Predicate.located_in,
-                relation=koza_app.translation_table.global_table['located in'],
+                predicate=predicate,
+                relation=relation,
+                has_evidence=evidence_code,
                 source="infores:goa",
             )
         else:
-            pass  # no hit? not sure what error condition to trigger here... maybe nothing?
+            logger.warning(f"go_annotation(): Unresolved go_term: {str(go_id)}? Ignored...")
 
 if association:
     koza_app.write(gene_id, go_id, association)

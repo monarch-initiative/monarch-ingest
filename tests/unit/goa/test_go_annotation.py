@@ -121,45 +121,8 @@ def test_association(basic_goa):
     assert association
     assert association.subject == "NCBIGene:14679"
     assert association.object == "NCBIGene:56480"
-    # assert association.predicate == "biolink:interacts_with"
-    # assert association.relation == "RO:0002434"
+    assert association.predicate == "biolink:related_to"
+    assert association.relation == "skos:relatedMatch"
 
     assert "infores:goa" in association.source
-    raise NotImplemented
-
-@pytest.fixture
-def multigene_row():
-    # return {
-    #     'protein1': '9606.ENSP00000000233',
-    #     'protein2': '9606.ENSP00000349467',
-    #     'neighborhood': '0',
-    #     'fusion': '0',
-    #     'cooccurence': '332',
-    #     'coexpression': '62',
-    #     'experimental': '77',
-    #     'database': '0',
-    #     'textmining': '101',
-    #     'combined_score': 410,
-    # }
-    raise NotImplemented
-
-
-@pytest.fixture
-def multigene_entities(mock_koza, source_name, multigene_row, script, global_table, map_cache):
-    # return mock_koza(
-    #     name=source_name,
-    #     data=iter([multigene_row]),
-    #     transform_code=script,
-    #     map_cache=map_cache,
-    #     global_table=global_table,
-    # )
-    raise NotImplemented
-
-
-def test_multigene_associations(multigene_entities):
-    # associations = [
-    #     association for association in multigene_entities 
-    #     if isinstance(association, PairwiseGeneToGeneInteraction)
-    # ]
-    # assert len(associations) == 6
     raise NotImplemented
