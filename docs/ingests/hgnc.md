@@ -4,7 +4,7 @@ The HGNC is responsible for approving unique symbols and names for human loci, i
 
 ### Gene Information
 
-This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. 
+This ingest uses HGNC's "complete set" download file, which only contains associations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. 
 
 #### Biolink captured
 

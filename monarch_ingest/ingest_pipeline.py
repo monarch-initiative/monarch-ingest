@@ -1,12 +1,12 @@
+import multiprocessing
 import os
 from os.path import exists
 from typing import List
 
 import dagster
+from kghub_downloader.download_utils import download_from_yaml
 from kgx.cli import cli_utils
 from koza.cli_runner import transform_source
-
-from monarch_ingest.utils.download_utils import download_from_yaml
 
 
 @dagster.usable_as_dagster_type
@@ -69,7 +69,8 @@ def summarize(kgx: KgxGraph) -> KgxGraph:
 def merge(context, merge_files: List[KgxGraph]):
     # TODO:
     #  Consider writing a merge.yaml using a jinja template
-    cli_utils.merge("merge.yaml", processes=4)
+    #  This multiprocessing statement may not be meaningful longer term
+    cli_utils.merge("merge.yaml", processes=multiprocessing.cpu_count())
 
 
 @dagster.graph
@@ -93,6 +94,7 @@ def ingests(context):
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("sgd", "gene_to_publication"),
+        Ingest("string", "protein_links"),
         Ingest("xenbase", "gene"),
         Ingest("xenbase", "gene_to_phenotype"),
         Ingest("xenbase", "gene_to_publication"),
@@ -106,7 +108,7 @@ def ingests(context):
 
 @dagster.op()
 def download():
-    download_from_yaml(yaml_file="download.yaml", output_dir="data")
+    download_from_yaml(yaml_file="download.yaml", output_dir=".")
 
     # Until we have an explicit place for pre-ETL steps, they can go here.
     if not os.path.exists("./data/alliance/alliance_gene_ids.txt.gz"):
@@ -116,6 +118,6 @@ def download():
 
 
 @dagster.job
-def monarch_ingest_pipline():
+def monarch_ingest_pipeline():
     processed_ingests = ingests(start=download()).map(process)
     merge(processed_ingests.collect())

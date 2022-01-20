@@ -2,65 +2,65 @@
 # alliance:
 -
   url: https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz
-  local_name: alliance/PHENOTYPE_RGD.json.gz
+  local_name: data/alliance/PHENOTYPE_RGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz
-  local_name: alliance/PHENOTYPE_MGI.json.gz
+  local_name: data/alliance/PHENOTYPE_MGI.json.gz
 -
   url: https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz
-  local_name: alliance/PHENOTYPE_WB.json.gz
+  local_name: data/alliance/PHENOTYPE_WB.json.gz
 -
   url: https://fms.alliancegenome.org/download/PHENOTYPE_HUMAN.json.gz
-  local_name: alliance/PHENOTYPE_HUMAN.json.gz
+  local_name: data/alliance/PHENOTYPE_HUMAN.json.gz
 -
   url: https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz
-  local_name: alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz
+  local_name: data/alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_FB.json.gz
-  local_name: alliance/REFERENCE_FB.json.gz
+  local_name: data/alliance/REFERENCE_FB.json.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_RGD.json.gz
-  local_name: alliance/REFERENCE_RGD.json.gz
+  local_name: data/alliance/REFERENCE_RGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_WB.json.gz
-  local_name: alliance/REFERENCE_WB.json.gz
+  local_name: data/alliance/REFERENCE_WB.json.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_ZFIN.json.gz
-  local_name: alliance/REFERENCE_ZFIN.json.gz
+  local_name: data/alliance/REFERENCE_ZFIN.json.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_MGI.json.gz
-  local_name: alliance/REFERENCE_MGI.json.gz
+  local_name: data/alliance/REFERENCE_MGI.json.gz
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_SGD.json.gz
-  local_name: alliance/REFERENCE_SGD.json.gz
+  local_name: data/alliance/REFERENCE_SGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
-  local_name: alliance/BGI_MGI.json.gz
+  local_name: data/alliance/BGI_MGI.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_RGD.json.gz
-  local_name: alliance/BGI_RGD.json.gz
+  local_name: data/alliance/BGI_RGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_ZFIN.json.gz
-  local_name: alliance/BGI_ZFIN.json.gz
+  local_name: data/alliance/BGI_ZFIN.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_FB.json.gz
-  local_name: alliance/BGI_FB.json.gz
+  local_name: data/alliance/BGI_FB.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_SGD.json.gz
-  local_name: alliance/BGI_SGD.json.gz
+  local_name: data/alliance/BGI_SGD.json.gz
 -
   url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
-  local_name: alliance/BGI_WB.json.gz
+  local_name: data/alliance/BGI_WB.json.gz
 
 # flybase
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
-  local_name: flybase/entity_publication_fb.tsv.gz
+  local_name: data/flybase/entity_publication_fb.tsv.gz
 
 # hgnc
 -
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
-  local_name: hgnc/hgnc_complete_set.txt
+  local_name: data/hgnc/hgnc_complete_set.txt
 
 # omim
 #  This should eventually pull from the source using the API key
@@ -74,51 +74,99 @@
 # pombase
 -
   url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
-  local_name: pombase/phenotype_annotations.pombase.phaf.gz
+  local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
 -
   url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
-  local_name: pombase/gene_IDs_names_products.tsv
+  local_name: data/pombase/gene_IDs_names_products.tsv
 
 # rgd
 -
   url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
-  local_name: rgd/GENES_RAT.txt
+  local_name: data/rgd/GENES_RAT.txt
 -
   url: http://current.geneontology.org/annotations/rgd.gpi.gz
-  local_name: rgd/rgd.gpi.gz
+  local_name: data/rgd/rgd.gpi.gz
 
 # sgd
 -
   url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
-  local_name: sgd/gene2pmid.tab
+  local_name: data/sgd/gene2pmid.tab
+
+# STRING db
+
+# For the '<taxon>.protein.links.detailed.v<version>.txt.gz' file names, we remove the <version> and simplify
+# For the entrez_2_string mapping files, we remove file versioning and map the common taxon name onto the NCBITaxon ID
+
+# Homo sapiens (human)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/9606.protein_links.txt.gz
+
+# Mus musculus (house mouse)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10090.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/10090.protein_links.txt.gz
+
+# Danio rerio (Zebrafish)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7955.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/7955.protein_links.txt.gz
+
+# Drosophila melanogaster (fruit fly)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7227.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/7227.protein_links.txt.gz
+
+# Caenorhabditis elegans (nematodes)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/6239.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/6239.protein_links.txt.gz
+
+# Saccharomyces cerevisiae (baker's yeast)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4932.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/4932.protein_links.txt.gz
+
+# Rattus norvegicus (Norway rat)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/10116.protein_links.txt.gz
+
+# All species mapping file (Since the rat mapping file isn't available, use the cross species set)
+- url: https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
+  local_name: data/string/entrez_2_string.tsv.gz
+
+# TODO: The main web site doesn't seem to directly have the Rat Entrez mappings?
+#       Rather, we can extract this manually (including the header line)
+#       with something like the following sequence of *nix OS commands:
+#
+#    cd data/string
+#    wget https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
+#    gunzip all_organisms.entrez_2_string.2018.tsv.gz
+#    head -1 all_organisms.entrez_2_string.2018.tsv >10116.entrez_2_string.tsv
+#    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
+#    gzip 10116.entrez_2_string.tsv
 
 # Xenbase
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
-  local_name: xenbase/xenbase.gpi.gz
+  local_name: data/xenbase/xenbase.gpi.gz
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
-  local_name: xenbase/XenbaseGenepageToGeneIdMapping.txt
+  local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
-  local_name: xenbase/LiteratureMatchedGenesByPaper.txt
+  local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
 -
   url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
-  local_name: xenbase/xb_xpo_spo_v_v1.tab
+  local_name: data/xenbase/xb_xpo_spo_v_v1.tab
 
 # zfin
 -
   url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt
-  local_name: zfin/phenoGeneCleanData_fish.txt
+  local_name: data/zfin/phenoGeneCleanData_fish.txt
 -
   url: https://zfin.org/downloads/gene_publication.txt
-  local_name: zfin/gene_publication.txt
+  local_name: data/zfin/gene_publication.txt
 -
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
-  local_name: zfin/id_map_zfin.tsv
+  local_name: data/zfin/id_map_zfin.tsv
 
 
 # monarch
 -
-  url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/479/artifact/build/monarch-ontology-final.json
-  local_name: monarch/monarch.json
+  url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
+  local_name: output/monarch/monarch.json
