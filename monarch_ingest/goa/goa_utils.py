@@ -3,12 +3,17 @@ Some Gene Ontology Annotation ingest utility functions.
 """
 from typing import Optional, Tuple, Any
 
+# https://ontobio.readthedocs.io/en/latest/api.html
+from ontobio.ontol_factory import OntologyFactory
+
 from biolink_model_pydantic.model import (
     Predicate,
     MolecularActivity,
     BiologicalProcess,
     CellularComponent
 )
+
+gene_ontology = OntologyFactory().create("go")
 
 
 def molecular_function(go_id: str) -> Optional[MolecularActivity]:
