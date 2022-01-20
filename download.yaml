@@ -62,6 +62,15 @@
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
   local_name: hgnc/hgnc_complete_set.txt
 
+# omim
+#  This should eventually pull from the source using the API key
+-
+  url: gs://koza-cache/morbidmap.txt
+  local_name: omim/morbidmap.txt
+-
+  url: gs://koza-cache/mim2gene.txt
+  local_name: omim/mim2gene.txt
+
 # pombase
 -
   url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
