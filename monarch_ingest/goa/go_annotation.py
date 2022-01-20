@@ -32,6 +32,8 @@ logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
 
+gec_2_et = koza_app.get_map('gaf_evidence_code_2_eco_term')
+
 db = row['DB']
 db_object_id = row['DB_Object_ID']
 db_id = f"{db}:{db_object_id}"
@@ -65,6 +67,7 @@ if qualifier:
 
 # The GO Evidence Code is useful ...
 evidence_code = row['Evidence_Code']
+eco_term = gec_2_et[evidence_code]
 
 # TODO: could any of the GAF rows have multiple GO_ID entries? check the spec...
 go_id = row['GO_ID']
@@ -94,7 +97,7 @@ if go_term:
         object=go_term.id,
         predicate=predicate,
         relation=relation,
-        has_evidence=evidence_code,
+        has_evidence=eco_term,
         source="infores:goa",
     )
 else:
@@ -111,7 +114,7 @@ else:
             object=go_term.id,
             predicate=predicate,
             relation=relation,
-            has_evidence=evidence_code,
+            has_evidence=eco_term,
             source="infores:goa",
         )
     else:
@@ -127,7 +130,7 @@ else:
                 object=go_term.id,
                 predicate=predicate,
                 relation=relation,
-                has_evidence=evidence_code,
+                has_evidence=eco_term,
                 source="infores:goa",
             )
         else:

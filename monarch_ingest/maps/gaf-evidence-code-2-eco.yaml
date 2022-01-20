@@ -1,0 +1,19 @@
+name: 'gaf_evidence_code_2_eco_term'
+
+metadata:
+  description: 'Mapping file provided by the Monarch Initiative that contains GO GAF to ECO term mappings'
+
+format: 'yaml'
+
+files:
+  - './data/goa/gaf-eco-mapping.yaml'
+
+#  columns:
+#    - 'NCBI taxid'
+#    - 'entrez'
+#    - 'STRING'
+#
+#  key: 'evidence_type'
+#
+#  values:
+#    - 'eco_term'
