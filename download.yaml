@@ -59,6 +59,14 @@
 
 # goa
 
+# Uniprot ID mapping file
+- url: ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+  local_name: idmapping_selected.tab.gz
+
+# Evidence Code Mappings file
+- url: https://archive.monarchinitiative.org/DipperCache/go/gaf-eco-mapping.yaml
+  local_name: data/goa/gaf-eco-mapping.yaml
+
 # Homo sapiens (human)
 - url: http://current.geneontology.org/annotations/goa_human.gaf.gz
   local_name: data/goa/9606.go_annotations.gaf.gz
