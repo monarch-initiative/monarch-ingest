@@ -17,13 +17,14 @@ logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
+uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
 
 db = row['DB']
 db_object_id = row['DB_Object_ID']
 db_id = f"{db}:{db_object_id}"
 
-# TODO: need to remap this DB id onto a proper gene id (db_id is probably probably a uniprot id?)
-gene_id = db_id
+# TODO: need to align this mapping with the actual uniprot_2_gene mapping
+gene_id = uniprot_2_gene[db_id]['entrez']
 
 ncbitaxon = row['Taxon']
 if ncbitaxon:

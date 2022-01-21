@@ -1,0 +1,28 @@
+name: 'uniprot_2_gene'
+
+metadata:
+  description: >-
+    Mapping file provided by Uniprot that contains protein ID to gene ID mappings
+    ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+
+# TODO: need to review the actual format and fix all of this here below!
+
+delimiter: '\t'
+header_delimiter: '/'
+header: 0
+comment_char: '#'
+
+compression: 'gzip'
+
+files:
+  - './data/goa/idmapping_selected.tab.gz'
+
+columns:
+  - 'NCBI taxid'
+  - 'entrez'
+  - 'STRING'
+
+key: 'STRING'
+
+values:
+  - 'entrez'
