@@ -66,10 +66,10 @@
 #  This should eventually pull from the source using the API key
 -
   url: gs://koza-cache/data/omim/morbidmap.txt
-  local_name: omim/data/omim/morbidmap.txt
+  local_name: data/omim/morbidmap.txt
 -
   url: gs://koza-cache/data/omim/mim2gene.txt
-  local_name: omim/mim2gene.txt
+  local_name: data/omim/mim2gene.txt
 
 # pombase
 -
