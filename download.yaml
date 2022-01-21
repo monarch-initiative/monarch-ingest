@@ -142,7 +142,9 @@
 
 # Xenbase
 -
-  url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
+#  temporarily commenting due to some Xenbase downtime
+#  url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
+  url: gs://koza-cache/data/xenbase/xenbase.gpi.gz
   local_name: data/xenbase/xenbase.gpi.gz
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
