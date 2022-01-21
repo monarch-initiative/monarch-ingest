@@ -148,7 +148,7 @@
   local_name: data/xenbase/xenbase.gpi.gz
 -
 #  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
-  url: gs://koza-cache/data/xenbase/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+  url: gs://koza-cache/data/xenbase/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
 -
 # url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
