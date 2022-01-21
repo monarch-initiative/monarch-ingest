@@ -59,10 +59,6 @@
 
 # goa
 
-# Uniprot ID mapping file
-- url: ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
-  local_name: data/goa/idmapping_selected.tab.gz
-
 # Homo sapiens (human)
 - url: http://current.geneontology.org/annotations/goa_human.gaf.gz
   local_name: data/goa/9606.go_annotations.gaf.gz
@@ -118,6 +114,10 @@
 # Schizosaccharomyces pombe
 - url: http://current.geneontology.org/annotations/pombase.gaf.gz
   local_name: data/goa/4896.go_annotations.gaf.gz
+
+# Uniprot ID to Gene mapping file
+- url: ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+  local_name: data/goa/uniprot_2_gene.tab.gz
 
 
 # hgnc

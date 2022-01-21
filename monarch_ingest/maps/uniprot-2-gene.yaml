@@ -15,7 +15,7 @@ comment_char: '#'
 compression: 'gzip'
 
 files:
-  - './data/goa/idmapping_selected.tab.gz'
+  - './data/goa/uniprot_2_gene.tab.gz'
 
 columns:
   - 'NCBI taxid'
