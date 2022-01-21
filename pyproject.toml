@@ -18,7 +18,6 @@ biolink_model_pydantic = "0.1.2"
 dagit = ">0.13, <0.14"
 dagster = ">0.13, <0.14"
 kghub_downloader = ">=0.1.0"
-ontobio = "^2.7.14"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

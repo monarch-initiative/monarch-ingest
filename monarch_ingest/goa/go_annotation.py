@@ -8,24 +8,9 @@ import re
 import uuid
 import logging
 
-from biolink_model_pydantic.model import (
-    Gene,
-    Predicate,
-    MacromolecularMachineToMolecularActivityAssociation,
-    MacromolecularMachineToBiologicalProcessAssociation,
-    MacromolecularMachineToCellularComponentAssociation
-)
-
 from koza.cli_runner import koza_app
-
-from monarch_ingest.goa.goa_utils import (
-    molecular_function,
-    biological_process,
-    cellular_component,
-    lookup_predicate,
-    DEFAULT_RELATIONSHIP,
-    infer_cellular_component_predicate
-)
+from biolink_model_pydantic.model import Gene
+from monarch_ingest.goa.goa_utils import lookup_predicate, get_biolink_classes
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -46,95 +31,83 @@ if ncbitaxon:
     ncbitaxon = re.sub(r"^taxon", "NCBITaxon", ncbitaxon, flags=re.IGNORECASE)
 
 # TODO: wrong.. gene_id is likely a protein identifier right now... not yet translated to an Entrez ID?
-gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:entrez")
+gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:uniprot")
 
-association = None  # in case of a go_id which doesn't hit anything?
+# Grab the Gene Ontology ID
+go_id = row['GO_ID']
 
-# The Association Predicate and Relation are
-# inferred from the GAF 'Qualifier' used.
-# Note that this qualifier may be negated (i.e. "NOT|<qualifier>").
-predicate, relation = DEFAULT_RELATIONSHIP
+# Discern GO identifier 'aspect'' this term belongs to:
+#      'F' == molecular_function - child of GO:0003674
+#      'P' == biological_process - child of GO:0008150
+#      'C' == cellular_component - child of GO:0005575
+go_aspect = row['Aspect']
+
+# Decipher the GO Evidence Code
+evidence_code = row['Evidence_Code']
+if evidence_code and evidence_code in gec_2_et:
+    eco_term = gec_2_et[evidence_code]
+else:
+    logger.warning(f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'")
+    eco_term = "ECO:0000307"
+
+# Association predicate is normally NOT negated
+# except as noted below in the GAF qualifier field
 negated = False
-qualifier = row['Qualifier']
-if qualifier:
+
+# For root node annotations that use the ND evidence code,
+# the following relations should be used:
+#
+#     molecular_function (GO:0003674) enables (RO:0002327)
+#     biological_process (GO:0008150) involved_in (RO:0002331)
+#     cellular_component (GO:0005575) is_active_in (RO:0002432)
+#
+if go_id == "GO:0003674" and eco_term == "ECO:0000307":
+    qualifier = "enables"
+elif go_id == "GO:0008150" and eco_term == "ECO:0000307":
+    qualifier = "involved_in"
+elif go_id == "GO:0005575" and eco_term == "ECO:0000307":
+    qualifier = "is_active_in"
+else:
+    # The Association Predicate and Relation are otherwise inferred from the GAF 'Qualifier' used.
+    # Note that this qualifier may be negated (i.e. "NOT|<qualifier>").
+    qualifier = row['Qualifier']
+
+if not qualifier:
+    # Can't process this record without a GAF qualifier? Shouldn't usually happen...
+    logger.error("GAF record is missing its qualifier...skipping")
+else:
     # check for piped negation prefix (hopefully, well behaved!)
     qualifier_parts = qualifier.split("|")
     if qualifier_parts[0] == "NOT":
-        predicate, relation = lookup_predicate(qualifier_parts[1])
+        predicate_mapping = lookup_predicate(qualifier_parts[1])
         negated = True
     else:
-        predicate, relation = lookup_predicate(qualifier_parts[0])
-
-# The GO Evidence Code is useful ...
-evidence_code = row['Evidence_Code']
-eco_term = gec_2_et[evidence_code]
-
-# TODO: could any of the GAF rows have multiple GO_ID entries? check the spec...
-go_id = row['GO_ID']
-
-# TODO: need to figure out which GO identifier space this term belongs to:
-#       molecular_function - child of GO:0003674,
-#       biological_process - child of GO:0008150 OR
-#       cellular_component - child of GO:0005575
-#       Note that since GO is a DAG, these terms can have multiple parents...how do we handle this?
-#
-# TODO: For root node annotations that use the ND evidence code, the following relations should be used:
-#       biological_process (GO:0008150) involved_in (RO:0002331)
-#       molecular_function (GO:0003674) enables (RO:0002327)
-#       cellular_component (GO:0005575) is_active_in (RO:0002432)
-
-# First naive iteration... probably wrong!
-go_term = molecular_function(go_id)
-if go_term:
+        predicate_mapping = lookup_predicate(qualifier_parts[0])
     
-    if not predicate:
-        # use a reasonable predicate default, if necessary
-        predicate = Predicate.enables
-    
-    association = MacromolecularMachineToMolecularActivityAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
-        object=go_term.id,
-        predicate=predicate,
-        relation=relation,
-        has_evidence=eco_term,
-        source="infores:goa",
-    )
-else:
-    go_term = biological_process(go_id)
-    if go_term:
-    
-        if not predicate:
-            # use a reasonable predicate default, if necessary
-            predicate = Predicate.acts_upstream_of_or_within
-    
-        association = MacromolecularMachineToBiologicalProcessAssociation(
+    if not predicate_mapping:
+        logger.error(f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record...")
+
+    else:
+        # extract the predicate Pydantic class and RO'relation' mapping
+        # TODO: the Biolink Model may soon deprecate the 'relation' field?
+        predicate, relation = predicate_mapping
+
+        # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
+        go_concept_node_class, gene_go_term_association_class = get_biolink_classes(go_aspect)
+
+        # Instantiate the GO term instance
+        go_term = go_concept_node_class(id=go_id)
+
+        # Instantiate the appropriate Gene-to-GO Term instance
+        association = gene_go_term_association_class(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene.id,
             object=go_term.id,
             predicate=predicate,
             relation=relation,
             has_evidence=eco_term,
-            source="infores:goa",
+            source="infores:goa"
         )
-    else:
-        go_term = cellular_component(go_id)
-        if go_term:
-    
-            if not predicate:
-                predicate = infer_cellular_component_predicate(go_term)
-    
-            association = MacromolecularMachineToCellularComponentAssociation(
-                id="uuid:" + str(uuid.uuid1()),
-                subject=gene.id,
-                object=go_term.id,
-                predicate=predicate,
-                relation=relation,
-                has_evidence=eco_term,
-                source="infores:goa",
-            )
-        else:
-            logger.warning(f"go_annotation(): Unresolved go_term: {str(go_id)}? Ignored...")
-
-if association:
-    koza_app.write(gene_id, go_id, association)
+        
+        # Write the captured Association out
+        koza_app.write(gene, go_term, association)
