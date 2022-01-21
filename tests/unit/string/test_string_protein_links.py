@@ -51,8 +51,8 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
         name=source_name,
         data=iter([basic_row]),
         transform_code=script,
-        map_cache=map_cache,
         global_table=global_table,
+        map_cache=map_cache
     )
 
 

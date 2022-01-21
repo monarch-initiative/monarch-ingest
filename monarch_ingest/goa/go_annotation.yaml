@@ -39,6 +39,9 @@ metadata:
 
 global_table: './monarch_ingest/translation_table.yaml'
 
+# Evidence Code to ECO term mappings file
+local_table: './monarch_ingest/goa/gaf-eco-mapping.yaml'
+
 # http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/
 columns:
   - DB

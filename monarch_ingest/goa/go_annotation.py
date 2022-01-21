@@ -8,16 +8,15 @@ import re
 import uuid
 import logging
 
-from koza.cli_runner import koza_app
 from biolink_model_pydantic.model import Gene
+from koza.cli_runner import koza_app
+
 from monarch_ingest.goa.goa_utils import lookup_predicate, get_biolink_classes
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
-
-gec_2_et = koza_app.get_map('gaf_evidence_code_2_eco_term')
 
 db = row['DB']
 db_object_id = row['DB_Object_ID']
@@ -47,9 +46,12 @@ if not (go_aspect and go_aspect.upper() in ["F", "P", "C"]):
 else:
     # Decipher the GO Evidence Code
     evidence_code = row['Evidence_Code']
-    if evidence_code and evidence_code in gec_2_et:
-        eco_term = gec_2_et[evidence_code]
-    else:
+    eco_term = None
+    
+    if evidence_code:
+        eco_term = koza_app.translation_table.local_table[evidence_code]
+        
+    if not eco_term:
         logger.warning(f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'")
         eco_term = "ECO:0000307"
     
@@ -99,7 +101,7 @@ else:
             go_concept_node_class, gene_go_term_association_class = get_biolink_classes(go_aspect)
     
             # Instantiate the GO term instance
-            go_term = go_concept_node_class(id=go_id)
+            go_term = go_concept_node_class(id=go_id, source="infores:go")
     
             # Instantiate the appropriate Gene-to-GO Term instance
             association = gene_go_term_association_class(

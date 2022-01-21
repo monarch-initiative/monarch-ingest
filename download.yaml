@@ -63,10 +63,6 @@
 - url: ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
   local_name: data/goa/idmapping_selected.tab.gz
 
-# Evidence Code Mappings file
-- url: https://archive.monarchinitiative.org/DipperCache/go/gaf-eco-mapping.yaml
-  local_name: data/goa/gaf-eco-mapping.yaml
-
 # Homo sapiens (human)
 - url: http://current.geneontology.org/annotations/goa_human.gaf.gz
   local_name: data/goa/9606.go_annotations.gaf.gz
@@ -152,9 +148,6 @@
 
 # STRING db
 
-# For the '<taxon>.protein.links.detailed.v<version>.txt.gz' file names, we remove the <version> and simplify
-# For the entrez_2_string mapping files, we remove file versioning and map the common taxon name onto the NCBITaxon ID
-
 # Homo sapiens (human)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
   local_name: data/string/9606.protein_links.txt.gz
@@ -186,17 +179,6 @@
 # All species mapping file (Since the rat mapping file isn't available, use the cross species set)
 - url: https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
   local_name: data/string/entrez_2_string.tsv.gz
-
-# TODO: The main web site doesn't seem to directly have the Rat Entrez mappings?
-#       Rather, we can extract this manually (including the header line)
-#       with something like the following sequence of *nix OS commands:
-#
-#    cd data/string
-#    wget https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
-#    gunzip all_organisms.entrez_2_string.2018.tsv.gz
-#    head -1 all_organisms.entrez_2_string.2018.tsv >10116.entrez_2_string.tsv
-#    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
-#    gzip 10116.entrez_2_string.tsv
 
 # Xenbase
 -
