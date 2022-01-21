@@ -147,10 +147,12 @@
   url: gs://koza-cache/data/xenbase/xenbase.gpi.gz
   local_name: data/xenbase/xenbase.gpi.gz
 -
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+#  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+  url: gs://koza-cache/data/xenbase/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
 -
-  url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
+# url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
+  url: gs://koza-cache/data/xenbase/GenePageReports/LiteratureMatchedGenesByPaper.txt
   local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
 -
   url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
