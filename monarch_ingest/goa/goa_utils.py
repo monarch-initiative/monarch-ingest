@@ -108,5 +108,5 @@ def get_biolink_classes(go_aspect: str) -> Tuple:
     :param go_aspect: single character code of GO aspect
     :return: (category, association) tuple of Biolink Model Pydantic classes associated with the given GO aspect
     """
-    return _biolink_class_by_go_aspect[go_aspect]
+    return _biolink_class_by_go_aspect[go_aspect.upper()]
     
