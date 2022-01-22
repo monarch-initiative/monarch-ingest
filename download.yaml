@@ -116,7 +116,7 @@
   local_name: data/goa/4896.go_annotations.gaf.gz
 
 # Uniprot ID to Gene mapping file
-- url: ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+- url: https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
   local_name: data/goa/uniprot_2_gene.tab.gz
 
 
