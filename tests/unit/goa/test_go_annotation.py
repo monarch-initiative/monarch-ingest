@@ -18,6 +18,17 @@ def script():
     return "./monarch_ingest/goa/go_annotation.py"
 
 
+@pytest.fixture
+def map_cache():
+    """
+    :return: Multi-level mock map_cache Uniprot to Entrez GeneID dictionary.
+    """
+    uniprot_2_gene = {
+        "A0A024RBG1": {"Entrez": "440672"}
+    }
+    return {"uniprot_2_gene": uniprot_2_gene}
+
+
 @pytest.fixture(scope="package")
 def local_table():
     """
@@ -53,7 +64,7 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_goa(mock_koza, source_name, basic_row, script, global_table, local_table):
+def basic_goa(mock_koza, source_name, basic_row, script, global_table, local_table, map_cache):
     """
     Mock Koza run for GO annotation ingest.
 
@@ -63,6 +74,8 @@ def basic_goa(mock_koza, source_name, basic_row, script, global_table, local_tab
     :param script:
     :param global_table:
     :param local_table:
+    :param map_cache:
+    
     :return: mock_koza application
     """
     return mock_koza(
@@ -70,7 +83,8 @@ def basic_goa(mock_koza, source_name, basic_row, script, global_table, local_tab
         data=iter([basic_row]),
         transform_code=script,
         global_table=global_table,
-        local_table=local_table
+        local_table=local_table,
+        map_cache=map_cache
     )
 
 
@@ -79,7 +93,7 @@ def test_gene(basic_goa):
     gene = basic_goa[0]
     
     assert gene
-    assert gene.id == "UniProtKB:A0A024RBG1"
+    assert gene.id == "NCBIGene:440672"
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene.category
@@ -119,7 +133,7 @@ def test_go_term(basic_goa):
 def test_association(basic_goa):
     association = basic_goa[2]
     assert association
-    assert association.subject == "UniProtKB:A0A024RBG1"
+    assert association.subject == "NCBIGene:440672"
     assert association.object == "GO:0003723"
     assert association.predicate == "biolink:enables"
     assert association.relation == "RO:0002327"
