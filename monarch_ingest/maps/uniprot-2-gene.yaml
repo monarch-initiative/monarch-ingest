@@ -6,7 +6,7 @@ metadata:
     (See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README)
 
 delimiter: '\t'
-header: 0
+header: 'none'
 compression: 'gzip'
 
 files:

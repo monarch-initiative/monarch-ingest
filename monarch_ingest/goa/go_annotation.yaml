@@ -24,12 +24,8 @@ files:
   #  - './data/goa/4896.go_annotations.gaf.gz'
   - './data/goa/test.go_annotations.gaf.gz'
 
-#
-# Not yet sure about what mapping file(s) one will need for GO annotations; check Dipper implementation?
-#
-#depends_on:
-#  - 'https://archive.monarchinitiative.org/DipperCache/go/gaf-eco-mapping.yaml'
-#  - ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+depends_on:
+  - './monarch_ingest/maps/uniprot-2-gene.yaml'
 
 metadata:
   ingest_title: 'GOA DB'
