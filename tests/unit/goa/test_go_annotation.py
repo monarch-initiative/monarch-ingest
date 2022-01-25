@@ -1,5 +1,4 @@
 import pytest
-from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
 
 @pytest.fixture
@@ -29,7 +28,8 @@ def map_cache():
         "A0A024RBG3": {"Entrez": "440674"},
         "Q6GZX3": {"Entrez": "440675"},
         "Q6GZX0": {"Entrez": "440676"},
-        "A0A024RBG9": {"Entrez": "440677"}
+        "A0A024RBG8": {"Entrez": "440678"},
+        "A0A024RBG9": {"Entrez": "440679"}
     }
     return {"uniprot_2_gene": uniprot_2_gene}
 
@@ -194,7 +194,7 @@ def test_rows():
            "DB": "UniProtKB",
            "DB_Object_ID": "Q6GZX0",
            "DB_Object_Symbol": "NUDT4B",
-           "Qualifier": "NOT|acts_upstream_of_or_within",
+           "Qualifier": "acts_upstream_of_or_within",
            "GO_ID": "GO:0045759",
            "DB_Reference": "GO_REF:0045759",
            "Evidence_Code": "IEA",
@@ -204,6 +204,26 @@ def test_rows():
            "DB_Object_Synonym": "NUDT4B",
            "DB_Object_Type": "protein",
            "Taxon": "taxon:1000",
+           "Date": "20211010",
+           "Assigned_By": "UniProt",
+           "Annotation_Extension": "",
+           "Gene_Product_Form_ID": ""
+        },
+        # Missing (empty) qualifier - assign GO Aspect associated default
+        {
+           "DB": "UniProtKB",
+           "DB_Object_ID": "A0A024RBG8",
+           "DB_Object_Symbol": "NUDT4B",
+           "Qualifier": "",
+           "GO_ID": "GO:0005575",  # cellular compartment
+           "DB_Reference": "GO_REF:0005575",
+           "Evidence_Code": "IEA-GO_REF:0000041",
+           "With_or_From": "UniProtKB-KW:KW-0694",
+           "Aspect": "C",
+           "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
+           "DB_Object_Synonym": "NUDT4B",
+           "DB_Object_Type": "protein",
+           "Taxon": "taxon:4932",
            "Date": "20211010",
            "Assigned_By": "UniProt",
            "Annotation_Extension": "",
@@ -343,8 +363,20 @@ result_expected = {
         True,
         "ECO:0000307"
     ],
+    # Missing (empty) qualifier - assign GO Aspect associated default
+    "NCBIGene:440678": [
+        "biolink:Gene",
+        "NCBITaxon:4932",
+        "GO:0005575",
+        "biolink:CellularComponent",
+        "biolink:AnatomicalEntity",
+        "biolink:located_in",
+        "RO:0002432",
+        False,
+        "ECO:0000307"
+    ],
     # Invalid Evidence Code - coerced into 'ND' -> "ECO:0000307"
-    "NCBIGene:440677": [
+    "NCBIGene:440679": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",

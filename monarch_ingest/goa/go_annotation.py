@@ -79,6 +79,7 @@ else:
     #     biological_process (GO:0008150) involved_in (RO:0002331)
     #     cellular_component (GO:0005575) is_active_in (RO:0002432)
     #
+    relation = predicate = predicate_mapping = qualifier = None
     if go_id == "GO:0003674" and eco_term == "ECO:0000307":
         qualifier = "enables"
     elif go_id == "GO:0008150" and eco_term == "ECO:0000307":
@@ -91,8 +92,15 @@ else:
         qualifier = row['Qualifier']
     
     if not qualifier:
-        # Can't process this record without a GAF qualifier? Shouldn't usually happen...
-        logger.error("GAF record is missing its qualifier...skipping")
+        # If missing, assign a default qualifier a.k.a. predicate based on specified GO Aspect type
+        logger.error("GAF record is missing its qualifier...assigning default qualifier as per GO term Aspect")
+        if go_aspect == "F":
+            qualifier = "enables"
+        elif go_aspect == "P":
+            qualifier = "involved_in"
+        elif go_aspect == "C":
+            qualifier = "located_in"
+
     else:
         # check for piped negation prefix (hopefully, well behaved!)
         qualifier_parts = qualifier.split("|")
