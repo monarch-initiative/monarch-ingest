@@ -43,7 +43,6 @@ ncbitaxon = row['Taxon']
 if ncbitaxon:
     ncbitaxon = re.sub(r"^taxon", "NCBITaxon", ncbitaxon, flags=re.IGNORECASE)
 
-# TODO: wrong.. gene_id is likely a protein identifier right now... not yet translated to an Entrez ID?
 gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:uniprot")
 
 # Grab the Gene Ontology ID
@@ -62,7 +61,7 @@ else:
     evidence_code = row['Evidence_Code']
     eco_term = None
     
-    if evidence_code:
+    if evidence_code and evidence_code in koza_app.translation_table.local_table:
         eco_term = koza_app.translation_table.local_table[evidence_code]
         
     if not eco_term:
@@ -123,6 +122,7 @@ else:
                 subject=gene.id,
                 object=go_term.id,
                 predicate=predicate,
+                negated=negated,
                 relation=relation,
                 has_evidence=eco_term,
                 source="infores:goa"

@@ -68,6 +68,7 @@ edge_properties:
   - 'id'
   - 'subject'
   - 'predicate'
+  - 'negated'
   - 'object'
   - 'category'
   - 'relation'
