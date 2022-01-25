@@ -51,8 +51,8 @@ _predicate_by_name = {
         "mapping": "RO:0004034"
     },
     "is_active_in": {
-        "mapping": "RO:0002432",
-        "predicate": Predicate.actively_involved_in
+        "predicate": Predicate.active_in,
+        "mapping": "RO:0002432"
     },
     "acts_upstream_of_negative_effect": {
         "predicate": Predicate.acts_upstream_of_negative_effect,
