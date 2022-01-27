@@ -1,46 +1,102 @@
 ## Gene Orthology: functional protein association networks
 
-[Gene Orthology is a database of known and predicted protein-protein interactions](https://string-db.org/cgi/about). The interactions include direct (physical) and indirect (functional) associations; they stem from computational prediction, from knowledge transfer between organisms, and from interactions aggregated from other (primary) databases.
+Gene orthology analyses generate testable hypothesis about gene function and biological processes using experimental results from other (especially highly studied so-called 'model' species) using protein (and sometimes, simply nucleic acid level) alignments of genomic sequences.  As an (initial?) cornerstone of gene orthology data, datasets available from the Panther database are ingested into Monarch.
 
-* [Gene Orthology bulk downloads](https://stringdb-static.org/download)
+The [PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System](http://www.pantherdb.org/) was designed to classify proteins (and their genes) in order to facilitate high-throughput analysis. Proteins have been classified according to:
+- Family and subfamily: families are groups of evolutionarily related proteins; subfamilies are related proteins that also have the same function
+- Molecular function: the function of the protein by itself or with directly interacting proteins at a biochemical level, e.g. a protein kinase
+- Biological process: the function of the protein in the context of a larger network of proteins that interact to accomplish a process at the level of the cell or organism, e.g. mitosis.
+- Pathway: similar to biological process, but a pathway also explicitly specifies the relationships between the interacting molecules.
 
-### Protein Links (Source File)
+The PANTHER Classifications are the result of human curation as well as sophisticated bioinformatics algorithms. Details of the methods can be found in [Mi et al. NAR 2013; Thomas et al., Genome Research 2003](http://www.genome.org/cgi/content/full/13/9/2129).
 
-This ingest uses a given version (currently, **11.5**) of the Gene Orthology's <taxon>.protein.links.detailed.<version>.txt.gz files, for a subset of NCBI <taxon> ID designated species. We filter the input data on the **combined_score** field (currently with the threshhold recorded in the **protein_links.yaml** file). The various [taxon specific entrez_2_string mapping files](https://string-db.org/mapping_files/entrez) are used to map protein subject and concept nodes onto Entrez gene id's.
+This ingest uses data derived form the current version of Panther 16.0 HMM.
 
-#### Special note about Entrez mapping files
+* [Panther Gene Orthology bulk data downloads](http://data.pantherdb.org/ftp/pathway/current_release/)
 
-A separate Entrez to String identifier mapping file is not available for _Rattus norvegicus_ (Norway rat, NCBI taxon ID 10116) but the mappings are (less conveniently) available inside the aggregated ['all_organisms' entrez_2_string file](https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz). See notes in the Gene Orthology section of the _download.yaml_ configuration file for (self explanatory) guidance on how to prepare the required mapping file for use in a local running of the digest.
+### Source Files
 
+#### Classifications
 
-### Source File
+Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library.
 
-  * protein1
-  * protein2
-  * neighborhood
-  * fusion
-  * cooccurence
-  * coexpression
-  * experimental
-  * database
-  * textmining
-  * combined_score
+* field 1...
+
+#### Pathways
+
+Contains regulatory and metabolic pathways, each with subfamilies and protein sequences mapped to individual pathway components.
+
+* field 1...
+
+#### Sequence Classifications
+
+Contain the PANTHER family, subfamily, molecular function, biological process, and pathway classifications for the complete proteomes derived from the various genomes, indexed by species (one source file per species).  Refer to the [Sequence Classification README](http://data.pantherdb.org/ftp/sequence_classifications/current_release/README) for details.
+
+* field 1...
+
+#### Identifier mappings
+
+We use the [UniProt ID mapping data data](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz) to map Panther protein nodes onto gene nodes with Entrez (GeneID) identifiers.
 
 ### Biolink classes and properties captured
 
 #### Concept Nodes
 
+* **biolink:GeneFamily**
+  * id (PANTHER.FAMILY ID)
+  * source (infores:panther)
+
+* **biolink:Pathway**
+  * id (PANTHER.PATHWAY)
+  * source (infores:panther)
+
 * **biolink:Gene**
   * id (NCBIGene Entrez ID)
   * in taxon (NCBITaxon ID)
-  * source (entrez)
+  * source (infores:entrez)
 
-#### Associations
+#### Possible Associations
 
-* **biolink:PairwiseGeneToGeneInteraction**:
+##### Gene to Pathway
+
+* **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
     * id (random uuid)
     * subject (gene.id)
-    * predicate (interacts_with)
+    * predicate (participates_in)
+    * object (pathway.id)
+    * relation (RO:0000056)
+    * provided_by (infores:panther)
+
+##### Gene to Gene Family
+
+* **biolink:GeneToGeneFamilyAssociation**:
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (member_of)
+    * object (gene_family.id)
+    * relation (RO:0002350)
+    * provided_by (infores:panther)
+
+##### Gene to Gene Homology
+
+* **biolink:GeneToGeneHomologyAssociation**:
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (homologous_to)
     * object (gene.id)
+    * relation (RO:HOM0000001)
+    * provided_by (infores:panther)
+
+This relationship can be inferred from common PANTHER.FAMILY membership?
+
+##### Gene to Gene Ontology Term (also available in Panther)?
+
+* **biolink:GeneToGoTermAssociation**:
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (*)
+    * object (go_term.id)
     * relation (RO:0002434)
-    * provided_by (infores:string)
+    * provided_by (infores:goa)
+
+(*) Note that the specific predicate used here should depend on GO Annotation qualifier for the given gene.
