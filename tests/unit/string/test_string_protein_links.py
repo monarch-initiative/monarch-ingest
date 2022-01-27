@@ -68,7 +68,7 @@ def test_proteins(basic_pl):
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_a.in_taxon
 
-    assert gene_a.source == "entrez"
+    assert gene_a.source == "infores:entrez"
 
     gene_b = basic_pl[1]
     assert gene_b
@@ -81,7 +81,7 @@ def test_proteins(basic_pl):
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_b.in_taxon
 
-    assert gene_b.source == "entrez"
+    assert gene_b.source == "infores:entrez"
 
 
 def test_association(basic_pl):
