@@ -64,6 +64,9 @@
 
 # orthology (from panther.org)
 
+- url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
+  local_name: data/orthology/RefGenomeOrthologs.tsv.gz
+
 # Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and
 # pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library
 - url: http://data.pantherdb.org/ftp/hmm_classifications/current_release/PANTHER16.0_HMM_classifications

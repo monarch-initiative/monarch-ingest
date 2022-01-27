@@ -82,9 +82,9 @@ We use the [UniProt ID mapping data data](ftp://ftp.uniprot.org/pub/databases/un
 * **biolink:GeneToGeneHomologyAssociation**:
     * id (random uuid)
     * subject (gene.id)
-    * predicate (homologous_to)
+    * predicate (orthologous to)
     * object (gene.id)
-    * relation (RO:HOM0000001)
+    * relation (RO:HOM0000017)
     * provided_by (infores:panther)
 
 This relationship can be inferred from common PANTHER.FAMILY membership?
