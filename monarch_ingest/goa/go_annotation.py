@@ -22,7 +22,7 @@ uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
 db = row['DB']
 db_object_id = row['DB_Object_ID']
 
-# Map DB_Object_ID onto Entrez (attempted interpretion as an 'UniProtKB-AC' ID?)
+# Map DB_Object_ID onto Entrez (attempted interpretation as an 'UniProtKB-AC' ID?)
 try:
     gene_id = uniprot_2_gene[db_object_id]['Entrez']
 except KeyError:
@@ -31,9 +31,7 @@ except KeyError:
 if gene_id:
     gene_id = 'NCBIGene:' + gene_id
 else:
-    # temporary workaround which likely won't work?
-    # TODO: do I need to generalize this lookup using the DB field
-    #       mapped onto other specified uniprot_2_gene fields as keys?
+    # temporary workaround which may not work?
     logger.warning(
         f"Could not map DB_Object_ID '{db_object_id}' onto an Entrez Gene Id. Using {db}:{db_object_id} instead?"
     )
