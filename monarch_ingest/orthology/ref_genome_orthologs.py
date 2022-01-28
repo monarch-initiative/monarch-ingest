@@ -9,7 +9,7 @@ from koza.cli_runner import koza_app
 
 from biolink_model_pydantic.model import Gene, Predicate, GeneToGeneHomologyAssociation
 
-from monarch_ingest.orthology.orthology_utils import parse_gene, lookup_predicate
+from monarch_ingest.orthology.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -34,7 +34,7 @@ else:
         ortholog_id, ortholog_ncbitaxon = ortholog_id
 
         # TODO: how do I discriminate between LDO and O?
-        # ortholog_type = row['Type of ortholog']
+        # ortholog_type = row["Type of ortholog"]
         predicate = Predicate.orthologous_to
         relation = koza_app.translation_table.global_table['in orthology relationship with']
 
@@ -44,7 +44,7 @@ else:
         
         # Instantiate the instance of Gene-to-Gene Homology Association
         association = GeneToGeneHomologyAssociation(
-            id="uuid:" + str(uuid.uuid1()),
+            id=f"uuid:{str(uuid.uuid1())}",
             subject=gene.id,
             object=ortholog.id,
             predicate=predicate,
