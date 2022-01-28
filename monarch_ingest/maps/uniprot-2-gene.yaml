@@ -1,0 +1,42 @@
+name: 'uniprot_2_gene'
+
+metadata:
+  description: >-
+    Mapping file provided by Uniprot that contains protein ID to gene ID mappings
+    (See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README)
+
+delimiter: '\t'
+header: 'none'
+compression: 'gzip'
+
+files:
+  - './data/goa/uniprot_2_gene.tab.gz'
+
+columns:
+  - 'UniProtKB-AC'
+  - 'UniProtKB-ID'
+  - 'Entrez'
+  - 'RefSeq'
+  - 'GI'
+  - 'PDB'
+  - 'GO'
+  - 'UniRef100'
+  - 'UniRef90'
+  - 'UniRef50'
+  - 'UniParc'
+  - 'PIR'
+  - 'NCBI-taxon'
+  - 'MIM'
+  - 'UniGene'
+  - 'PubMed'
+  - 'EMBL'
+  - 'EMBL-CDS'
+  - 'Ensembl'
+  - 'Ensembl_TRS'
+  - 'Ensembl_PRO'
+  - 'Additional PubMed'
+
+key: 'UniProtKB-AC'
+
+values:
+  - 'Entrez'
