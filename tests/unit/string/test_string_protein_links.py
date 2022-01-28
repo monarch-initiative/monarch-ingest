@@ -1,13 +1,23 @@
+"""
+Unit tests for STRING protein links ingest
+"""
 import pytest
 from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
+
 @pytest.fixture
 def source_name():
+    """
+    :return: string source name of STRING protein links ingest
+    """
     return "string_protein_links"
 
 
 @pytest.fixture
 def script():
+    """
+    :return: string path to STRING protein links ingest script
+    """
     return "./monarch_ingest/string/protein_links.py"
 
 
@@ -62,6 +72,8 @@ def test_proteins(basic_pl):
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene_a.category
+    # This ancestral category appears to be missing? Pydantic model error?
+    # assert "biolink:BiologicalEntity" in gene_a.category
     assert "biolink:NamedThing" in gene_a.category
 
     # 'in_taxon' is multivalued (an array)
@@ -75,6 +87,8 @@ def test_proteins(basic_pl):
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene_b.category
+    # This ancestral category appears to be missing? Pydantic model error?
+    # assert "biolink:BiologicalEntity" in gene_b.category
     assert "biolink:NamedThing" in gene_b.category
 
     # 'in_taxon' is multivalued (an array)
