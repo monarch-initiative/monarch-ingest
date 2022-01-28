@@ -7,7 +7,7 @@ delimiter: '\t'
 header: none
 
 files:
-  - './data/orthology/RefGenomeOrthologs.tar.gz'
+  - './data/orthology/RefGenomeOrthologs.tsv.gz'
 
 depends_on:
   - './monarch_ingest/maps/uniprot-2-gene.yaml'
