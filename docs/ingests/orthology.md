@@ -12,89 +12,177 @@ This ingest uses data derived form the current version (release 16.0) of the Pan
 
 * [Panther Gene Orthology bulk data downloads](http://data.pantherdb.org/ftp/pathway/current_release/)
 
-### Source Files
+There are various cross-sections of the Panther database which remain be covered by this ingest (Note: **T.B.D** means "To Be Done")
 
-#### Classifications
+### Reference Genome Gene-to-Gene Orthology Relationships
 
-Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library.
+Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther analyses.
 
-* field 1...
+- _Source File:_ [RefGenomeOrthologs.tar.gz](http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz)
 
-#### Pathways
+- _Biolink classes and properties captured:_
+
+    - **biolink:Gene**
+      * id (NCBIGene Entrez ID)
+      * in taxon (NCBITaxon ID)
+      * source (infores:entrez)
+
+    - **biolink:GeneToGeneHomologyAssociation**
+      * id (random uuid)
+      * subject (gene.id)
+      * predicate (orthologous to)
+      * object (gene.id)
+      * relation (RO:HOM0000017)
+      * provided_by (infores:panther)
+
+### Protein Family and Subfamily Classifications - T.B.D.
+
+Contains the PANTHER 16.0 family/subfamily name, with molecular function, biological process, and pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library.
+
+- _Source File:_ http://data.pantherdb.org/ftp/hmm_classifications/current_release/PANTHER16.0_HMM_classifications
+
+- _Biolink classes and properties captured:_
+
+   - **biolink:GeneFamily**
+     * id (PANTHER.FAMILY ID)
+     * source (infores:panther)
+
+   - **biolink:MolecularActivity**
+     * id (GO ID)
+     * source (go)
+
+   - **biolink:BiologicalProcess**
+     * id (GO ID)
+     * source (go)
+
+   - **biolink:Pathway**
+     * id (PANTHER.PATHWAY)
+     * source (infores:panther)
+
+   - **biolink:GeneFamilyToMolecularFunctionAssociation**
+     * id (random uuid)
+     * subject (gene_family.id)
+     * predicate (enables)
+     * object (go_term.id)
+     * relation (RO:0002327)
+     * provided_by (infores:panther)
+
+     - **biolink:GeneFamilyToBiologicalProcessAssociation**
+       * id (random uuid)
+       * subject (gene_family.id)
+       * predicate (involved_in)
+       * object (go_term.id)
+       * relation (RO:0002331)
+       * provided_by (infores:panther)
+
+     - **biolink:GeneFamilyToPathwayAssociation**
+       * id (random uuid)
+       * subject (gene_family.id)
+       * predicate (involved_in)
+       * object (pathway.id)
+       * relation (RO:0002331)
+       * provided_by (infores:panther)
+
+### Pathways - T.B.D.
 
 Contains regulatory and metabolic pathways, each with subfamilies and protein sequences mapped to individual pathway components.
 
-* field 1...
+- _Source File:_ http://data.pantherdb.org/ftp/pathway/current_release/SequenceAssociationPathway3.6.5.txt
+  local_name: data/orthology/pathways.tsv
 
-#### Sequence Classifications
+- _Biolink classes and properties captured:_
 
-Contain the PANTHER family, subfamily, molecular function, biological process, and pathway classifications for the complete proteomes derived from the various genomes, indexed by species (one source file per species).  Refer to the [Sequence Classification README](http://data.pantherdb.org/ftp/sequence_classifications/current_release/README) for details.
+    - **biolink:GeneFamily**
+      * id (PANTHER.FAMILY ID)
+      * source (infores:panther)
 
-* field 1...
+    - **biolink:Gene**
+      * id (NCBIGene Entrez ID)
+      * in taxon (NCBITaxon ID)
+      * source (infores:entrez)
 
-#### Identifier mappings
+    - **biolink:Pathway**
+      * id (PANTHER.PATHWAY)
+      * source (infores:panther)
+
+    - **biolink:GeneToPathwayAssociation**
+      * id (random uuid)
+      * subject (gene.id)
+      * predicate (involved_in)
+      * object (pathway.id)
+      * relation (RO:0002331)
+      * provided_by (infores:panther)
+
+    - **biolink:GeneFamilyToPathwayAssociation**
+      * id (random uuid)
+      * subject (gene_family.id)
+      * predicate (involved_in)
+      * object (pathway.id)
+      * relation (RO:0002331)
+      * provided_by (infores:panther)
+
+### Sequence Classifications - T.B.D.
+
+Sequence Classifications files contain the PANTHER family, subfamily, molecular function, biological process, and pathway classifications for the complete proteomes derived from the various genomes, indexed by species (one source file per species).  Refer to the [Sequence Classification README](http://data.pantherdb.org/ftp/sequence_classifications/current_release/README) for details. 
+
+Only a subset of the available species will be ingested into Monarch at this time, currently: human, mouse, rat, zebrafish, fruit fly, nematode, fission yeast and budding ("baker's") yeast.
+
+- _Source File Directory:_ http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/
+
+- _Biolink classes and properties captured:_
+
+   - **biolink:Gene**
+     * id (PANTHER.FAMILY ID)
+     * source (infores:panther)
+
+   - **biolink:GeneFamily**
+     * id (PANTHER.FAMILY ID)
+     * source (infores:panther)
+
+   - **biolink:MolecularActivity**
+     * id (GO ID)
+     * source (go)
+
+   - **biolink:BiologicalProcess**
+     * id (GO ID)
+     * source (go)
+
+   - **biolink:Pathway**
+     * id (PANTHER.PATHWAY)
+     * source (infores:panther)
+
+   - **biolink:GeneToGeneFamilyAssociation**:
+     * id (random uuid)
+     * subject (gene.id)
+     * predicate (member_of)
+     * object (gene_family.id)
+     * relation (RO:0002350)
+     * provided_by (infores:panther)
+
+   - **biolink:MacromolecularMachineToMolecularActivityAssociation**:
+     * id (random uuid)
+     * subject (gene.id)
+     * predicate (enables)
+     * object (go_term.id)
+     * relation (RO:0002327)
+     * provided_by (infores:panther)
+    
+   - **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
+     * id (random uuid)
+     * subject (gene.id)
+     * predicate (involved_in)
+     * object (go_term.id)
+     * relation (RO:0002331)
+     * provided_by (infores:panther)
+
+   - **biolink:GeneToPathwayAssociation**
+     * id (random uuid)
+     * subject (gene.id)
+     * predicate (involved_in)
+     * object (pathway.id)
+     * relation (RO:0002331)
+     * provided_by (infores:panther)
+
+### Identifier mappings
 
 We use the [UniProt ID mapping data data](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz) to map Panther protein nodes onto gene nodes with Entrez (GeneID) identifiers.
-
-### Biolink classes and properties captured
-
-#### Concept Nodes
-
-* **biolink:GeneFamily**
-  * id (PANTHER.FAMILY ID)
-  * source (infores:panther)
-
-* **biolink:Pathway**
-  * id (PANTHER.PATHWAY)
-  * source (infores:panther)
-
-* **biolink:Gene**
-  * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (infores:entrez)
-
-#### Possible Associations
-
-##### Gene to Pathway
-
-* **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
-    * id (random uuid)
-    * subject (gene.id)
-    * predicate (participates_in)
-    * object (pathway.id)
-    * relation (RO:0000056)
-    * provided_by (infores:panther)
-
-##### Gene to Gene Family
-
-* **biolink:GeneToGeneFamilyAssociation**:
-    * id (random uuid)
-    * subject (gene.id)
-    * predicate (member_of)
-    * object (gene_family.id)
-    * relation (RO:0002350)
-    * provided_by (infores:panther)
-
-##### Gene to Gene Homology
-
-* **biolink:GeneToGeneHomologyAssociation**:
-    * id (random uuid)
-    * subject (gene.id)
-    * predicate (orthologous to)
-    * object (gene.id)
-    * relation (RO:HOM0000017)
-    * provided_by (infores:panther)
-
-This relationship can be inferred from common PANTHER.FAMILY membership?
-
-##### Gene to Gene Ontology Term (also available in Panther)?
-
-* **biolink:GeneToGoTermAssociation**:
-    * id (random uuid)
-    * subject (gene.id)
-    * predicate (*)
-    * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
-
-(*) Note that the specific predicate used here should depend on GO Annotation qualifier for the given gene.

@@ -64,6 +64,7 @@
 
 # orthology (from panther.org)
 
+# Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
   local_name: data/orthology/RefGenomeOrthologs.tsv.gz
 
