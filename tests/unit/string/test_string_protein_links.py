@@ -56,6 +56,17 @@ def basic_row():
 
 @pytest.fixture
 def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache):
+    """
+    Mock Koza run for STRING protein links ingest.
+
+    :param mock_koza:
+    :param source_name:
+    :param basic_row:
+    :param script:
+    :param global_table:
+    :param map_cache:
+    :return:
+    """
     return mock_koza(
         name=source_name,
         data=iter([basic_row]),
