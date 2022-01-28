@@ -21,11 +21,11 @@ metadata:
 global_table: './monarch_ingest/translation_table.yaml'
 
 columns:
-  - 'Gene',                                 # species1|DB=id1|protdb=pdbid1
-  - 'Ortholog',                             # species2|DB=id2|protdb=pdbid2
-  - 'Type of ortholog',                     # [LDO, O, P, X ,LDX]  see: localtt
-  - 'Common ancestor for the orthologs',    # unused
-  - 'Panther Ortholog ID'                   # panther_id
+  - 'Gene'                                 # species1|DB=id1|protdb=pdbid1
+  - 'Ortholog'                             # species2|DB=id2|protdb=pdbid2
+  - 'Type of ortholog'                     # [LDO, O, P, X ,LDX]  see: localtt
+  - 'Common ancestor for the orthologs'    # unused
+  - 'Panther Ortholog ID'                  # panther_id
 
 node_properties:
   - 'id'
@@ -42,4 +42,4 @@ edge_properties:
   - 'relation'
   - 'source'
 
-#transform_mode: 'flat'
+transform_mode: 'flat'
