@@ -80,7 +80,7 @@ def test_genes(basic_pl):
     assert "biolink:NamedThing" in gene.category
 
     # 'in_taxon' is multivalued (an array)
-    assert "NCBITaxon:9600" in gene.in_taxon
+    assert "NCBITaxon:9606" in gene.in_taxon
 
     assert gene.source == "infores:entrez"
 

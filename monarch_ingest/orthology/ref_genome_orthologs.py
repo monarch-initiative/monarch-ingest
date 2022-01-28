@@ -19,19 +19,19 @@ row = koza_app.get_row()
 
 uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
 
-gene_id = parse_gene(row['Gene'], uniprot_2_gene)
-if not gene_id:
+species_and_gene_id = parse_gene(row['Gene'], uniprot_2_gene)
+if not species_and_gene_id:
     logger.warning(f"Gene lacking Entrez Gene Id. Ignoring?")
 else:
-    # unpack the gene id and its species
-    gene_id, gene_ncbitaxon = gene_id
+    # unpack the species and gene id
+    gene_ncbitaxon, gene_id = species_and_gene_id
     
-    ortholog_id = parse_gene(row['Ortholog'], uniprot_2_gene)
-    if not ortholog_id:
+    species_and_ortholog_id = parse_gene(row['Ortholog'], uniprot_2_gene)
+    if not species_and_ortholog_id:
         logger.warning(f"Ortholog gene lacking Entrez Gene Id. Ignoring?")
     else:
         # unpack the orthogous gene id and its species
-        ortholog_id, ortholog_ncbitaxon = ortholog_id
+        ortholog_ncbitaxon, ortholog_id = species_and_ortholog_id
 
         # TODO: how do I discriminate between LDO and O?
         # ortholog_type = row["Type of ortholog"]
