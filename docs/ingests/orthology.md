@@ -1,16 +1,14 @@
-## Gene Orthology: functional protein association networks
+## Gene Orthology
 
-Gene orthology analyses generate testable hypothesis about gene function and biological processes using experimental results from other (especially highly studied so-called 'model' species) using protein (and sometimes, simply nucleic acid level) alignments of genomic sequences.  As an (initial?) cornerstone of gene orthology data, datasets available from the Panther database are ingested into Monarch.
-
-The [PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System](http://www.pantherdb.org/) was designed to classify proteins (and their genes) in order to facilitate high-throughput analysis. Proteins have been classified according to:
-- Family and subfamily: families are groups of evolutionarily related proteins; subfamilies are related proteins that also have the same function
-- Molecular function: the function of the protein by itself or with directly interacting proteins at a biochemical level, e.g. a protein kinase
-- Biological process: the function of the protein in the context of a larger network of proteins that interact to accomplish a process at the level of the cell or organism, e.g. mitosis.
-- Pathway: similar to biological process, but a pathway also explicitly specifies the relationships between the interacting molecules.
+Gene orthology analyses generate testable hypothesis about gene function and biological processes using experimental results from other (especially highly studied so-called 'model' species) using protein (and sometimes, simply nucleic acid level) alignments of genomic sequences.  The source of gene orthology data for this ingest is from the  [PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System](http://www.pantherdb.org/). Panther was designed to classify proteins (and their genes) in order to facilitate high-throughput analysis. Proteins have been classified according to:
+- _Family and subfamily:_ families are groups of evolutionarily related proteins; subfamilies are related proteins that also have the same function
+- _Molecular function:_ the function of the protein by itself or with directly interacting proteins at a biochemical level, e.g. a protein kinase
+- _Biological process:_ the function of the protein in the context of a larger network of proteins that interact to accomplish a process at the level of the cell or organism, e.g. mitosis.
+- _Pathway:_ similar to biological process, but a pathway also explicitly specifies the relationships between the interacting molecules.
 
 The PANTHER Classifications are the result of human curation as well as sophisticated bioinformatics algorithms. Details of the methods can be found in [Mi et al. NAR 2013; Thomas et al., Genome Research 2003](http://www.genome.org/cgi/content/full/13/9/2129).
 
-This ingest uses data derived form the current version of Panther 16.0 HMM.
+This ingest uses data derived form the current version (release 16.0) of the Panther Hidden Markov Model (HMM).
 
 * [Panther Gene Orthology bulk data downloads](http://data.pantherdb.org/ftp/pathway/current_release/)
 
