@@ -7,6 +7,7 @@ Gene to GO term Associations
 import re
 import uuid
 import logging
+from typing import List
 
 from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
@@ -39,9 +40,16 @@ else:
 
 ncbitaxon = row['Taxon']
 if ncbitaxon:
-    ncbitaxon = re.sub(r"^taxon", "NCBITaxon", ncbitaxon, flags=re.IGNORECASE)
-
-gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:uniprot")
+    # in rare circumstances, multiple taxa may be given as a piped list...
+    taxa = ncbitaxon.split("|")
+    ncbitaxon: List[str] = list()
+    for taxon in taxa:
+        ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
+    gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:uniprot")
+else:
+    # Unlikely to happen, but...
+    logger.warning(f"Missing taxon for Gene '{db_object_id}'?")
+    gene = Gene(id=gene_id, source="infores:uniprot")
 
 # Grab the Gene Ontology ID
 go_id = row['GO_ID']

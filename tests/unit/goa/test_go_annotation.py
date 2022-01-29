@@ -1,4 +1,11 @@
+"""
+Unit tests for GO Annotations ingest
+"""
 import pytest
+from sys import stderr
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -23,11 +30,13 @@ def map_cache():
     :return: Multi-level mock map_cache Uniprot to Entrez GeneID dictionary (realistic looking but synthetic data)
     """
     uniprot_2_gene = {
-        "A0A024RBG1": {"Entrez": "440672"},
+        "A0A024RBG1": {"Entrez": "440671"},
+        "WBGene00000013": {"Entrez": "440672"},
         "A0A024RBG2": {"Entrez": "440673"},
         "A0A024RBG3": {"Entrez": "440674"},
-        "Q6GZX3": {"Entrez": "440675"},
-        "Q6GZX0": {"Entrez": "440676"},
+        "A0A024RBG4": {"Entrez": "440675"},
+        "Q6GZX3": {"Entrez": "440676"},
+        "Q6GZX0": {"Entrez": "440677"},
         "A0A024RBG8": {"Entrez": "440678"},
         "A0A024RBG9": {"Entrez": "440679"}
     }
@@ -48,6 +57,7 @@ def test_rows():
     :return: List of test GO Annotation data rows (realistic looking but synthetic data).
     """
     return [
+        # Core data test: a completely normal record
         {
             "DB": "UniProtKB",
             "DB_Object_ID": "A0A024RBG1",
@@ -67,10 +77,30 @@ def test_rows():
             "Annotation_Extension": "",
             "Gene_Product_Form_ID": ""
         },
+        # Multiple taxa
+        {
+            'DB': 'WB',
+            'DB_Object_ID': 'WBGene00000013',
+            'DB_Object_Symbol': 'abf-2',
+            'Qualifier': 'involved_in',
+            'GO_ID': 'GO:0050830',
+            'DB_Reference': 'WB_REF:WBPaper00045314|PMID:24882217',
+            'Evidence_Code': 'IEP',
+            'With_or_From': '',
+            'Aspect': 'P',
+            'DB_Object_Name': '',
+            'DB_Object_Synonym': 'C50F2.10|C50F2.e',
+            'DB_Object_Type': 'gene',
+            'Taxon': 'taxon:6239|taxon:46170',
+            'Date': '20140827',
+            'Assigned_By': 'WB',
+            'Annotation_Extension': '',
+            'Gene_Product_Form_ID': ''
+        },
         # Test default qualifier override for molecular function
         {
             "DB": "UniProtKB",
-            "DB_Object_ID": "A0A024RBG1",
+            "DB_Object_ID": "A0A024RBG2",
             "DB_Object_Symbol": "NUDT4B",
             "Qualifier": "contributes_to",
             "GO_ID": "GO:0003674",  # molecular_function root
@@ -90,7 +120,7 @@ def test_rows():
         # Test default qualifier override for biological process
         {
             "DB": "UniProtKB",
-            "DB_Object_ID": "A0A024RBG2",
+            "DB_Object_ID": "A0A024RBG3",
             "DB_Object_Symbol": "NUDT4B",
             "Qualifier": "acts_upstream_of_negative_effect",
             "GO_ID": "GO:0008150",  # biological_process
@@ -110,7 +140,7 @@ def test_rows():
         # Test default qualifier override for cellular compartment
         {
             "DB": "UniProtKB",
-            "DB_Object_ID": "A0A024RBG3",
+            "DB_Object_ID": "A0A024RBG4",
             "DB_Object_Symbol": "NUDT4B",
             "Qualifier": "colocalizes_with",
             "GO_ID": "GO:0005575",  # cellular compartment
@@ -279,7 +309,7 @@ def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_tab
 
 result_expected = {
     # Test regular MolecularActivity go term
-    "NCBIGene:440672": [
+    "NCBIGene:440671": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",
@@ -290,11 +320,23 @@ result_expected = {
         False,
         "ECO:0000501"
     ],
+    # Multiple Taxa
+    "NCBIGene:440672": [
+        "biolink:Gene",
+        "NCBITaxon:46170",   # test for presence of the second one?
+        "GO:0050830",
+        "biolink:BiologicalProcess",
+        "biolink:BiologicalProcessOrActivity",
+        "biolink:actively_involved_in",
+        "RO:0002331",
+        False,
+        "ECO:0000270"
+    ],
     # Test default qualifier override for Molecular Activity go term
-    "NCBIGene:440672B": [
+    "NCBIGene:440673": [
         "biolink:Gene",
         "NCBITaxon:9606",
-        "GO:0003723",
+        "GO:0003674",
         "biolink:MolecularActivity",
         "biolink:BiologicalProcessOrActivity",
         "biolink:enables",
@@ -303,7 +345,7 @@ result_expected = {
         "ECO:0000307"
     ],
     # Test default qualifier override for Biological Process go term
-    "NCBIGene:440673": [
+    "NCBIGene:440674": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0008150",
@@ -315,7 +357,7 @@ result_expected = {
         "ECO:0000307"
     ],
     # Test default qualifier override for Cellular Component go term
-    "NCBIGene:440674": [
+    "NCBIGene:440675": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0005575",
@@ -327,7 +369,7 @@ result_expected = {
         "ECO:0000307"
     ],
     # Test non-default Biological Process and non-default qualifier
-    "NCBIGene:440675": [
+    "NCBIGene:440676": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -352,7 +394,7 @@ result_expected = {
         "ECO:0007001"
     ],
     # Test non-default Biological Process with negated qualifier
-    "NCBIGene:440676": [
+    "NCBIGene:440677": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -391,12 +433,18 @@ result_expected = {
 
 
 def test_nodes(basic_goa):
+
+    if not len(basic_goa):
+        logger.warning("test_nodes() null test result?")
+        return
     
     gene = basic_goa[0]
     go_term = basic_goa[1]
     
     assert gene
     assert gene.id in result_expected.keys()
+    
+    print(f"\nTesting gene node '{gene.id}'", file=stderr)
 
     # 'category' is multivalued (an array)
     assert result_expected[gene.id][0] in gene.category
@@ -425,6 +473,11 @@ def test_nodes(basic_goa):
 
 
 def test_association(basic_goa):
+    
+    if not len(basic_goa):
+        logger.warning("test_association() null test?")
+        return
+    
     association = basic_goa[2]
     assert association
     assert association.subject in result_expected.keys()
