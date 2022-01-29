@@ -7,7 +7,7 @@ import logging
 from biolink_model_pydantic.model import Predicate
 
 logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
+logger.setLevel("INFO")
 
 _ncbitaxon_catalog = {
     # TODO: may need to further build up this catalog
@@ -40,6 +40,7 @@ def parse_protein_id(protein_id_spec: str) -> Optional[str]:
     :param protein_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
     """
     if not protein_id_spec:
+        logger.error(f"parse_protein_id(): Empty 'protein_id_spec'? Ignoring...")
         return None
     
     try:
@@ -49,11 +50,10 @@ def parse_protein_id(protein_id_spec: str) -> Optional[str]:
             # then just return the bare uniprot identifier
             return spec_part[1]
         else:
-            # unexpected spec?
-            return None
+            raise RuntimeError
     
     except RuntimeError:
-        logger.error(f"parse_protein_id(): Error parsing {str(protein_id_spec)}? Returning an empty string...")
+        logger.error(f"parse_protein_id(): Error parsing '{str(protein_id_spec)}'? Ignoring...")
         return None
 
 
@@ -65,13 +65,29 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
     :param gene_entry: string "species1|DB=id1|protdb=pdbid1" of descriptors describing the target gene
     :param uniprot_2_gene: koza_app managed identifier map
     """
-    species, gene_spec, protein_spec = gene_entry.split("|")
+    
+    if not gene_entry:
+        logger.error(
+            f"parse_gene(): Empty 'gene_entry' argument?. Ignoring..."
+        )
+        return None
+    
+    try:
+        species, gene_spec, protein_spec = gene_entry.split("|")
+    except ValueError:
+        logger.error(
+            f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring..."
+        )
+        return None
     
     # get the NCBI Taxonomic identifier
     ncbitaxon_id = ncbitaxon_by_name(species)
     
-    # Quietly ignore a species we don't know about?
+    # Quietly ignore a species we don't know about? Only complain in debug mode though (otherwise...)
     if not ncbitaxon_id:
+        logger.debug(
+            f"parse_gene(): Taxon '{str(species)}' in gene entry '{str(gene_entry)}' is not in target list. Ignoring..."
+        )
         return None
     
     # get the protein id, to resolve it directly to an Entrez Gene Identifier
@@ -84,7 +100,8 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
     
     except KeyError:
         logger.warning(
-            f"Could not map Uniprot identifier '{str(uniprot_id)}' onto an Entrez Gene Id. Ignoring?"
+            f"parse_gene(): Could not map Uniprot identifier '{str(uniprot_id)}'  "
+            f"in gene entry '{str(gene_entry)}'  onto an Entrez Gene Id. Ignoring..."
         )
         return None
 

@@ -3,16 +3,9 @@ Ingest of Reference Genome Orthologs from Panther
 """
 import uuid
 
-import logging
-
 from koza.cli_runner import koza_app
-
 from biolink_model_pydantic.model import Gene, Predicate, GeneToGeneHomologyAssociation
-
 from monarch_ingest.orthology.orthology_utils import parse_gene
-
-logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
 
 
 row = koza_app.get_row()
@@ -20,16 +13,14 @@ row = koza_app.get_row()
 uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
 
 species_and_gene_id = parse_gene(row['Gene'], uniprot_2_gene)
-if not species_and_gene_id:
-    logger.warning(f"Gene lacking Entrez Gene Id. Ignoring?")
-else:
+if species_and_gene_id:
+    
     # unpack the species and gene id
     gene_ncbitaxon, gene_id = species_and_gene_id
-    
+
     species_and_ortholog_id = parse_gene(row['Ortholog'], uniprot_2_gene)
-    if not species_and_ortholog_id:
-        logger.warning(f"Ortholog gene lacking Entrez Gene Id. Ignoring?")
-    else:
+    if species_and_ortholog_id:
+        
         # unpack the orthogous gene id and its species
         ortholog_ncbitaxon, ortholog_id = species_and_ortholog_id
 
