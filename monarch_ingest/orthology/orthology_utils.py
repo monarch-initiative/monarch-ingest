@@ -1,13 +1,11 @@
 """
 Utility functions for Panther Orthology data processing
 """
-from typing import Optional, Tuple, Any, Dict
+from typing import Optional, Tuple, Dict
 import logging
 
-from biolink_model_pydantic.model import Predicate
 
 logger = logging.getLogger(__name__)
-logger.setLevel("INFO")
 
 _ncbitaxon_catalog = {
     # TODO: may need to further build up this catalog
@@ -31,6 +29,7 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
     if species_name in _ncbitaxon_catalog:
         return f"NCBITaxon:{_ncbitaxon_catalog[species_name]}"
     else:
+        logger.error(f"parse_protein_id(): Taxon '{species_name}' is not a unknown? Ignoring...")
         return None
 
 
@@ -67,17 +66,13 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
     """
     
     if not gene_entry:
-        logger.error(
-            f"parse_gene(): Empty 'gene_entry' argument?. Ignoring..."
-        )
+        logger.error("parse_gene(): Empty 'gene_entry' argument?. Ignoring...")
         return None
     
     try:
         species, gene_spec, protein_spec = gene_entry.split("|")
     except ValueError:
-        logger.error(
-            f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring..."
-        )
+        logger.error(f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring...")
         return None
     
     # get the NCBI Taxonomic identifier
@@ -86,7 +81,8 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
     # Quietly ignore a species we don't know about? Only complain in debug mode though (otherwise...)
     if not ncbitaxon_id:
         logger.debug(
-            f"parse_gene(): Taxon '{str(species)}' in gene entry '{str(gene_entry)}' is not in target list. Ignoring..."
+            f"parse_gene(): Taxon '{str(species)}' in gene entry "
+            f"'{str(gene_entry)}' is not in target list. Ignoring..."
         )
         return None
     
@@ -107,44 +103,44 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
 
 
 # TODO: probably overkill... how do I discriminate between LDO and O?
-_predicate_by_orthology_type = {
-    "LDO": {  # least diverged ortholog
-        "predicate": Predicate.orthologous_to,
-        "mapping": "RO:HOM0000017"
-    },
-    "O": {
-        "predicate": Predicate.orthologous_to,
-        "mapping": "RO:HOM0000017"
-    },
-    # Starting PANTHER 15.0, paralogs (P), horizontal gene transfer (X) and
-    # least diverged horizontal gene transfer (LDX) are no longer included in the file.
-    
-    # "P": {
-    #     "predicate": Predicate.paralogous_to,
-    #     "mapping": "RO:0001025"
-    # },
-    # "X": {
-    #     "predicate": Predicate.xenologous_to,
-    #     "mapping": "RO:0002326"
-    # },
-    # "LDX": {
-    #     "predicate": Predicate.acts_upstream_of,
-    #     "mapping": "RO:0002263"
-    # }
-}
+# _predicate_by_orthology_type = {
+#     "LDO": {  # least diverged ortholog
+#         "predicate": Predicate.orthologous_to,
+#         "mapping": "RO:HOM0000017"
+#     },
+#     "O": {
+#         "predicate": Predicate.orthologous_to,
+#         "mapping": "RO:HOM0000017"
+#     },
+#     # Starting PANTHER 15.0, paralogs (P), horizontal gene transfer (X) and
+#     # least diverged horizontal gene transfer (LDX) are no longer included in the file.
+#
+#     # "P": {
+#     #     "predicate": Predicate.paralogous_to,
+#     #     "mapping": "RO:0001025"
+#     # },
+#     # "X": {
+#     #     "predicate": Predicate.xenologous_to,
+#     #     "mapping": "RO:0002326"
+#     # },
+#     # "LDX": {
+#     #     "predicate": Predicate.acts_upstream_of,
+#     #     "mapping": "RO:0002263"
+#     # }
+# }
 
 
-def lookup_predicate(orthology_type: str = None) -> Optional[Tuple[str, Any]]:
-    """
-    Maps an orthology_type onto an appropriate predicate and relation term.
-    
-    :param orthology_type: string code of orthology_type to be mapped { LDO, O, P, X, LDX }
-    :return: tuple(Predicate.name, mapping to relation) if available; None otherwise
-    """
-    if orthology_type and orthology_type in _predicate_by_orthology_type:
-        entry = _predicate_by_orthology_type[orthology_type]
-    else:
-        logger.error(f"Encountered unknown type of orthology '{str(orthology_type)}'?")
-        return None
-    
-    return entry["predicate"], entry["mapping"]
+# def lookup_predicate(orthology_type: str = None) -> Optional[Tuple[str, Any]]:
+#     """
+#     Maps an orthology_type onto an appropriate predicate and relation term.
+#
+#     :param orthology_type: string code of orthology_type to be mapped { LDO, O, P, X, LDX }
+#     :return: tuple(Predicate.name, mapping to relation) if available; None otherwise
+#     """
+#     if orthology_type and orthology_type in _predicate_by_orthology_type:
+#         entry = _predicate_by_orthology_type[orthology_type]
+#     else:
+#         logger.error(f"Encountered unknown type of orthology '{str(orthology_type)}'?")
+#         return None
+#
+#     return entry["predicate"], entry["mapping"]
