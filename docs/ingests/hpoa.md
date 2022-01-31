@@ -69,9 +69,9 @@ ORPHA:447788	Cerebral visual impairment		HP:0025315	ORPHA:447788	TAS		HP:0040283
     * id
     * type
 
-* biolink:GeneToPhenotypicFeatureAssociation
+* biolink:DiseaseToPhenotypicFeatureAssociation
     * id (random uuid)
-    * subject (gene.id)
+    * subject (disease.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
     * relation (RO:0002200)
