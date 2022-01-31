@@ -1,13 +1,23 @@
+"""
+Unit tests for STRING protein links ingest
+"""
 import pytest
 from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
 
+
 @pytest.fixture
 def source_name():
+    """
+    :return: string source name of STRING protein links ingest
+    """
     return "string_protein_links"
 
 
 @pytest.fixture
 def script():
+    """
+    :return: string path to STRING protein links ingest script
+    """
     return "./monarch_ingest/string/protein_links.py"
 
 
@@ -46,6 +56,17 @@ def basic_row():
 
 @pytest.fixture
 def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache):
+    """
+    Mock Koza run for STRING protein links ingest.
+
+    :param mock_koza:
+    :param source_name:
+    :param basic_row:
+    :param script:
+    :param global_table:
+    :param map_cache:
+    :return:
+    """
     return mock_koza(
         name=source_name,
         data=iter([basic_row]),
@@ -62,12 +83,14 @@ def test_proteins(basic_pl):
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene_a.category
+    # This ancestral category appears to be missing? Pydantic model error?
+    # assert "biolink:BiologicalEntity" in gene_a.category
     assert "biolink:NamedThing" in gene_a.category
 
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_a.in_taxon
 
-    assert gene_a.source == "entrez"
+    assert gene_a.source == "infores:entrez"
 
     gene_b = basic_pl[1]
     assert gene_b
@@ -75,12 +98,14 @@ def test_proteins(basic_pl):
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in gene_b.category
+    # This ancestral category appears to be missing? Pydantic model error?
+    # assert "biolink:BiologicalEntity" in gene_b.category
     assert "biolink:NamedThing" in gene_b.category
 
     # 'in_taxon' is multivalued (an array)
     assert "NCBITaxon:10090" in gene_b.in_taxon
 
-    assert gene_b.source == "entrez"
+    assert gene_b.source == "infores:entrez"
 
 
 def test_association(basic_pl):
