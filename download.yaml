@@ -57,6 +57,70 @@
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
   local_name: data/flybase/entity_publication_fb.tsv.gz
 
+# goa
+
+# Homo sapiens (human)
+- url: http://current.geneontology.org/annotations/goa_human.gaf.gz
+  local_name: data/goa/9606.go_annotations.gaf.gz
+
+# Mus musculus (house mouse)
+- url: http://current.geneontology.org/annotations/mgi.gaf.gz
+  local_name: data/goa/10090.go_annotations.gaf.gz
+
+# Rattus norvegicus (Norway rat)
+- url: http://current.geneontology.org/annotations/rgd.gaf.gz
+  local_name: data/goa/10116.go_annotations.gaf.gz
+
+# Canis lupus familiaris (dog)
+- url: http://current.geneontology.org/annotations/goa_dog.gaf.gz
+  local_name: data/goa/9615.go_annotations.gaf.gz
+
+# Bos taurus (cow)
+- url: http://current.geneontology.org/annotations/goa_cow.gaf.gz
+  local_name: data/goa/9913.go_annotations.gaf.gz
+
+# Sus scrofa (pig)
+- url: http://current.geneontology.org/annotations/goa_pig.gaf.gz
+  local_name: data/goa/9823.go_annotations.gaf.gz
+
+# Gallus gallus (chicken)
+- url: http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+  local_name: data/goa/9031.go_annotations.gaf.gz
+
+# Danio rerio (Zebrafish)
+- url: http://current.geneontology.org/annotations/zfin.gaf.gz
+  local_name: data/goa/7955.go_annotations.gaf.gz
+
+# Drosophila melanogaster (fruit fly)
+- url: http://current.geneontology.org/annotations/fb.gaf.gz
+  local_name: data/goa/7227.go_annotations.gaf.gz
+
+# Caenorhabditis elegans (nematodes)
+- url: http://current.geneontology.org/annotations/wb.gaf.gz
+  local_name: data/goa/6239.go_annotations.gaf.gz
+
+# Dictyostelium discoideum
+- url: http://current.geneontology.org/annotations/dictybase.gaf.gz
+  local_name: data/goa/44689.go_annotations.gaf.gz
+
+# Aspergillus nidulans
+- url: http://current.geneontology.org/annotations/aspgd.gaf.gz
+  local_name: data/goa/162425.go_annotations.gaf.gz
+
+# Saccharomyces cerevisiae (baker's yeast)
+- url: http://current.geneontology.org/annotations/sgd.gaf.gz
+  local_name: data/goa/4932.go_annotations.gaf.gz
+
+# Schizosaccharomyces pombe
+- url: http://current.geneontology.org/annotations/pombase.gaf.gz
+  local_name: data/goa/4896.go_annotations.gaf.gz
+
+# Uniprot ID to Gene mapping file
+# See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README
+- url: https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+  local_name: data/goa/uniprot_2_gene.tab.gz
+
+
 # hgnc
 -
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
@@ -94,9 +158,6 @@
 
 # STRING db
 
-# For the '<taxon>.protein.links.detailed.v<version>.txt.gz' file names, we remove the <version> and simplify
-# For the entrez_2_string mapping files, we remove file versioning and map the common taxon name onto the NCBITaxon ID
-
 # Homo sapiens (human)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
   local_name: data/string/9606.protein_links.txt.gz
@@ -128,17 +189,6 @@
 # All species mapping file (Since the rat mapping file isn't available, use the cross species set)
 - url: https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
   local_name: data/string/entrez_2_string.tsv.gz
-
-# TODO: The main web site doesn't seem to directly have the Rat Entrez mappings?
-#       Rather, we can extract this manually (including the header line)
-#       with something like the following sequence of *nix OS commands:
-#
-#    cd data/string
-#    wget https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
-#    gunzip all_organisms.entrez_2_string.2018.tsv.gz
-#    head -1 all_organisms.entrez_2_string.2018.tsv >10116.entrez_2_string.tsv
-#    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
-#    gzip 10116.entrez_2_string.tsv
 
 # Xenbase
 -
