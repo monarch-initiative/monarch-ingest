@@ -32,10 +32,6 @@ except KeyError:
 if gene_id:
     gene_id = 'NCBIGene:' + gene_id
 else:
-    # temporary workaround which may not work?
-    logger.warning(
-        f"Could not map DB_Object_ID '{db_object_id}' onto an Entrez Gene Id. Using {db}:{db_object_id} instead?"
-    )
     gene_id = f"{db}:{db_object_id}"
 
 ncbitaxon = row['Taxon']
