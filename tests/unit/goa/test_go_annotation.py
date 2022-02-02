@@ -13,7 +13,7 @@ def source_name():
     """
     :return: string source name of GO Annotations ingest
     """
-    return "go_annotation"
+    return "goa_go_annotation"
 
 
 @pytest.fixture
@@ -294,7 +294,7 @@ def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_tab
     :param global_table:
     :param local_table:
     :param map_cache:
-    
+
     :return: mock_koza application
     """
     return mock_koza(
@@ -437,13 +437,13 @@ def test_nodes(basic_goa):
     if not len(basic_goa):
         logger.warning("test_nodes() null test result?")
         return
-    
+
     gene = basic_goa[0]
     go_term = basic_goa[1]
-    
+
     assert gene
     assert gene.id in result_expected.keys()
-    
+
     print(f"\nTesting gene node '{gene.id}'", file=stderr)
 
     # 'category' is multivalued (an array)
@@ -451,15 +451,15 @@ def test_nodes(basic_goa):
     # Pydantic or equivalent bug: doesn't emit this intermediary category... yet?
     # assert "biolink:BiologicalEntity" in gene.category
     assert "biolink:NamedThing" in gene.category
-    
+
     # 'in_taxon' is multivalued (an array)
     assert result_expected[gene.id][1] in gene.in_taxon
 
     assert "infores:uniprot" in gene.source
-    
+
     assert go_term
     assert go_term.id == result_expected[gene.id][2]
-    
+
     # 'category' should be multivalued (an array)
     # TODO: some of the intermediate concrete classes here in between
     #       NamedThing and MolecularActivity appear to be missing?
@@ -473,15 +473,15 @@ def test_nodes(basic_goa):
 
 
 def test_association(basic_goa):
-    
+
     if not len(basic_goa):
         logger.warning("test_association() null test?")
         return
-    
+
     association = basic_goa[2]
     assert association
     assert association.subject in result_expected.keys()
-    
+
     assert association.object == result_expected[association.subject][2]
     assert association.predicate == result_expected[association.subject][5]
     assert association.relation == result_expected[association.subject][6]
