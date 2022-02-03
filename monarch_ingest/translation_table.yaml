@@ -543,6 +543,7 @@
 "is model of": "RO:0003301",
 "causes_or_contributes": "RO:0003302",
 "causes condition": "RO:0003303",
+"confers susceptibility to condition": "RO:0019501",
 "contributes to condition": "RO:0003304",
 "protective_for_condition": "RO:0003307",
 "is causal gain of function germline mutation of in": "RO:0004011",
