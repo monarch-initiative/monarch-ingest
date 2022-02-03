@@ -496,6 +496,7 @@
 "in ohnology relationship with": "RO:HOM0000022",
 "in in-paralogy relationship with": "RO:HOM0000023",
 "has_participant": "RO:0000057",
+"participates_in": "RO:0000056",
 "has_quality": "RO:0000086",
 "has disposition": "RO:0000091",
 "derives_from": "RO:0001000",

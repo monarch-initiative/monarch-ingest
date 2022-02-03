@@ -161,3 +161,11 @@
 -
   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
   local_name: output/monarch/monarch.json
+
+# reactome
+-
+  url: https://reactome.org/download/current/Ensembl2Reactome.txt
+  local_name: data/reactome/Ensembl2Reactome.txt
+-
+  url: https://reactome.org/download/current/ChEBI2Reactome.txt
+  local_name: data/reactome/ChEBI2Reactome.txt

@@ -99,6 +99,8 @@ def ingests(context):
         Ingest("xenbase", "gene_to_publication"),
         Ingest("zfin", "gene_to_phenotype"),
         Ingest("zfin", "gene_to_publication"),
+        Ingest("reactome", "gene_to_pathway"),
+        Ingest("reactome", "chemical_to_pathway")
     ]
 
     for ingest in ingests:
