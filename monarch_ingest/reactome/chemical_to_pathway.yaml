@@ -1,7 +1,7 @@
 name: 'reactome_chemical_to_pathway'
 
 files:
-  - './data/ChEBI2Reactome.txt'
+  - './data/reactome/ChEBI2Reactome.txt'
 
 metadata: './monarch_ingest/reactome/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'
