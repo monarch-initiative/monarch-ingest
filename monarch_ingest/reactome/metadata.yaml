@@ -1,0 +1,10 @@
+name: 'REACT'
+
+dataset_description:
+  ingest_title: 'REACT'
+  ingest_url: 'http://www.reactome.org/download/current/'
+  description: 'Reactome is a free, open-source, curated and peer reviewed pathway database. Our goal is to provide intuitive bioinformatics tools for the visualization, interpretation and analysis of pathway knowledge to support basic research, genome analysis, modeling, systems biology and education.'
+  rights: 'https://reactome.org/license'
+
+source_files:
+  - 'gene_to_pathway.yaml'
