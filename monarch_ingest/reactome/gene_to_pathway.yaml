@@ -1,7 +1,7 @@
 name: 'reactome_gene_to_pathway'
 
 files:
-  - './data/Ensembl2Reactome.txt'
+  - './data/reactome/Ensembl2Reactome.txt'
 
 metadata: './monarch_ingest/reactome/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'
