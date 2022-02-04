@@ -139,7 +139,7 @@
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
-  local_name: data/orthology/RefGenomeOrthologs.tsv.gz
+  local_name: data/panther/RefGenomeOrthologs.tsv.gz
 
 ##
 ## This orthology data ingest is not yet implemented
@@ -147,7 +147,7 @@
 ## Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and
 ## pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library
 #- url: http://data.pantherdb.org/ftp/hmm_classifications/current_release/PANTHER16.0_HMM_classifications
-#  local_name: data/orthology/classifications.tsv
+#  local_name: data/panther/classifications.tsv
 
 ##
 ## This orthology data ingest is not yet implemented
@@ -155,7 +155,7 @@
 ## Contains regulatory and metabolic pathways, each with subfamilies and
 ## protein sequences mapped to individual pathway components.
 #- url: http://data.pantherdb.org/ftp/pathway/current_release/SequenceAssociationPathway3.6.5.txt
-#  local_name: data/orthology/pathways.tsv
+#  local_name: data/panther/pathways.tsv
 
 ##
 ## This orthology data ingest is not yet implemented
@@ -167,35 +167,35 @@
 ##
 ## Homo sapiens (human)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_human
-#  local_name: data/orthology/9606.sequence_classifications.tsv
+#  local_name: data/panther/9606.sequence_classifications.tsv
 #
 ## Mus musculus (house mouse)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_mouse
-#  local_name: data/orthology/10090.sequence_classifications.tsv
+#  local_name: data/panther/10090.sequence_classifications.tsv
 #
 ## Rattus norvegicus (Norway rat)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_rat
-#  local_name: data/orthology/10116.sequence_classifications.tsv
+#  local_name: data/panther/10116.sequence_classifications.tsv
 #
 ## Danio rerio (Zebrafish)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_zebrafish
-#  local_name: data/orthology/7955.sequence_classifications.tsv
+#  local_name: data/panther/7955.sequence_classifications.tsv
 #
 ## Drosophila melanogaster (fruit fly)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_fruit_fly
-#  local_name: data/orthology/7227.sequence_classifications.tsv
+#  local_name: data/panther/7227.sequence_classifications.tsv
 #
 ## Caenorhabditis elegans (nematodes)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_nematode_worm
-#  local_name: data/orthology/6239.sequence_classifications.tsv
+#  local_name: data/panther/6239.sequence_classifications.tsv
 #
 ## Schizosaccharomyces pombe ("fission" yeast)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_fission_yeast
-#  local_name: data/orthology/4896.sequence_classifications.tsv
+#  local_name: data/panther/4896.sequence_classifications.tsv
 #
 ## Saccharomyces cerevisiae (baker's "budding" yeast)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_budding_yeast
-#  local_name: data/orthology/4932.sequence_classifications.tsv
+#  local_name: data/panther/4932.sequence_classifications.tsv
 
 
 # pombase
