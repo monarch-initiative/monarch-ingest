@@ -1,0 +1,7 @@
+name: 'goa'
+
+dataset_description:
+  ingest_title: 'GOA DB'
+  ingest_url: 'http://geneontology.org/'
+  description: 'Gene Ontology Annotations Database'
+  rights: 'http://geneontology.org/docs/go-citation-policy/'

@@ -17,12 +17,11 @@ def global_table():
 def mock_koza():
 
     # This should be extracted out but for quick prototyping
-    def _mock_write(self, source_name, *entities):
-        self._entities = list(*entities)
-
-    # This should be extracted out but for quick prototyping
     def _mock_write(self, *entities):
-        self._entities = list(entities)
+        if hasattr(self, '_entities'):
+            self._entities.extend(list(entities))
+        else:
+            self._entities = list(entities)
 
     def _make_mock_koza_app(
         name: str,

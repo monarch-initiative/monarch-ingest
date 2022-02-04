@@ -7,7 +7,6 @@ from koza.cli_runner import koza_app
 row = koza_app.get_row()
 entrez_2_string = koza_app.get_map('entrez_2_string')
 
-
 pid_a = row['protein1']
 gene_ids_a = entrez_2_string[pid_a]['entrez']
 pid_b = row['protein2']

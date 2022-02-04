@@ -1,10 +1,10 @@
 name: 'string_protein_links'
 
-delimiter: ' '
+compression: 'gzip'
 
 format: 'csv'
 
-compression: 'gzip'
+delimiter: ' '
 
 files:
   - './data/string/10090.protein_links.txt.gz'
