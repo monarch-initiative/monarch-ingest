@@ -1,0 +1,43 @@
+name: 'reactome_chemical_to_pathway'
+
+files:
+  - './data/reactome/ChEBI2Reactome.txt'
+
+metadata: './monarch_ingest/reactome/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+header: none
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+    - 'component'
+    - 'pathway_id'
+    - 'pathway_iri'
+    - 'pathway_label'
+    - 'go_ecode'
+    - 'species_nam'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'pathway'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'
+
