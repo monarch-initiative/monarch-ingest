@@ -30,7 +30,7 @@ def map_cache():
         "10090.ENSMUSP00000000001": {"entrez": "14679"},
         "10090.ENSMUSP00000020316": {"entrez": "56480"},
         "9606.ENSP00000349467": {'entrez': '801|805|808'},
-        "9606.ENSP00000000233": {'entrez': '123|381'}
+        "9606.ENSP00000000233": {'entrez': '123|381'},
     }
     return {"entrez_2_string": entrez_2_string}
 
@@ -72,7 +72,7 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
         data=iter([basic_row]),
         transform_code=script,
         global_table=global_table,
-        map_cache=map_cache
+        map_cache=map_cache,
     )
 
 
@@ -136,7 +136,9 @@ def multigene_row():
 
 
 @pytest.fixture
-def multigene_entities(mock_koza, source_name, multigene_row, script, global_table, map_cache):
+def multigene_entities(
+    mock_koza, source_name, multigene_row, script, global_table, map_cache
+):
     return mock_koza(
         name=source_name,
         data=iter([multigene_row]),
@@ -148,7 +150,8 @@ def multigene_entities(mock_koza, source_name, multigene_row, script, global_tab
 
 def test_multigene_associations(multigene_entities):
     associations = [
-        association for association in multigene_entities
+        association
+        for association in multigene_entities
         if isinstance(association, PairwiseGeneToGeneInteraction)
     ]
     assert len(associations) == 6
