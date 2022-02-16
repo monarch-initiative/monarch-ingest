@@ -89,6 +89,7 @@ def ingests(context):
         Ingest("alliance", "gene_to_phenotype"),
         Ingest("rgd", "gene_to_publication"),
         Ingest("hgnc", "gene"),
+        Ingest("hpoa", "disease_phenotype"),
         Ingest("goa", "go_annotation"),
         Ingest("flybase", "gene_to_publication"),
         Ingest("omim", "gene_to_disease"),
@@ -102,7 +103,7 @@ def ingests(context):
         Ingest("zfin", "gene_to_phenotype"),
         Ingest("zfin", "gene_to_publication"),
         Ingest("reactome", "gene_to_pathway"),
-        Ingest("reactome", "chemical_to_pathway")
+        Ingest("reactome", "chemical_to_pathway"),
     ]
 
     for ingest in ingests:

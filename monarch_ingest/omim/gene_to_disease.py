@@ -86,7 +86,7 @@ elif no_disease_id_match is not None:
     genomic_entity = NucleicAcidEntity(
         id=gene_id,
         type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
-        source='infores:omim'
+        source='infores:omim',
     )
     koza_app.write(genomic_entity)
 
@@ -130,7 +130,9 @@ if disorder_label.startswith('['):
     koza_app.next_row()
 elif disorder_label.startswith('{'):
     predicate = Predicate.risk_affected_by
-    relation = koza_app.translation_table.global_table['confers susceptibility to condition']
+    relation = koza_app.translation_table.global_table[
+        'confers susceptibility to condition'
+    ]
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
     # predicate = Predicate.related_condition
@@ -144,10 +146,7 @@ if association_key is not None:
     if evidence == association_key:
         evidence = None
 
-disease = Disease(
-    id=disorder_id,
-    source='infores:omim'
-)
+disease = Disease(id=disorder_id, source='infores:omim')
 
 # Association
 association = GeneToDiseaseAssociation(

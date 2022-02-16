@@ -1,9 +1,10 @@
 """
 Unit tests for GO Annotations ingest
 """
-import pytest
-from sys import stderr
 import logging
+from sys import stderr
+
+import pytest
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ def map_cache():
         "Q6GZX3": {"Entrez": "440676"},
         "Q6GZX0": {"Entrez": "440677"},
         "A0A024RBG8": {"Entrez": "440678"},
-        "A0A024RBG9": {"Entrez": "440679"}
+        "A0A024RBG9": {"Entrez": "440679"},
     }
     return {"uniprot_2_gene": uniprot_2_gene}
 
@@ -75,7 +76,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Multiple taxa
         {
@@ -95,7 +96,7 @@ def test_rows():
             'Date': '20140827',
             'Assigned_By': 'WB',
             'Annotation_Extension': '',
-            'Gene_Product_Form_ID': ''
+            'Gene_Product_Form_ID': '',
         },
         # Test default qualifier override for molecular function
         {
@@ -115,7 +116,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Test default qualifier override for biological process
         {
@@ -135,7 +136,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Test default qualifier override for cellular compartment
         {
@@ -155,7 +156,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Test non-default Biological Process and non-default qualifier
         {
@@ -175,7 +176,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Test outcome of unknown UniProt idmapping: uniprot id
         # is returned as gene id? Also try another evidence code
@@ -196,7 +197,7 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Test non-default Biological Process with negated qualifier
         {
@@ -216,48 +217,48 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
+            "Gene_Product_Form_ID": "",
         },
         # Missing (or wrong) GO term Aspect value - the record will be skipped?
         # So no entry is needed in the result_expected dictionary below
         {
-           "DB": "UniProtKB",
-           "DB_Object_ID": "Q6GZX0",
-           "DB_Object_Symbol": "NUDT4B",
-           "Qualifier": "acts_upstream_of_or_within",
-           "GO_ID": "GO:0045759",
-           "DB_Reference": "GO_REF:0045759",
-           "Evidence_Code": "IEA",
-           "With_or_From": "UniProtKB-KW:KW-0694",
-           "Aspect": "",
-           "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
-           "DB_Object_Synonym": "NUDT4B",
-           "DB_Object_Type": "protein",
-           "Taxon": "taxon:1000",
-           "Date": "20211010",
-           "Assigned_By": "UniProt",
-           "Annotation_Extension": "",
-           "Gene_Product_Form_ID": ""
+            "DB": "UniProtKB",
+            "DB_Object_ID": "Q6GZX0",
+            "DB_Object_Symbol": "NUDT4B",
+            "Qualifier": "acts_upstream_of_or_within",
+            "GO_ID": "GO:0045759",
+            "DB_Reference": "GO_REF:0045759",
+            "Evidence_Code": "IEA",
+            "With_or_From": "UniProtKB-KW:KW-0694",
+            "Aspect": "",
+            "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
+            "DB_Object_Synonym": "NUDT4B",
+            "DB_Object_Type": "protein",
+            "Taxon": "taxon:1000",
+            "Date": "20211010",
+            "Assigned_By": "UniProt",
+            "Annotation_Extension": "",
+            "Gene_Product_Form_ID": "",
         },
         # Missing (empty) qualifier - assign GO Aspect associated default
         {
-           "DB": "UniProtKB",
-           "DB_Object_ID": "A0A024RBG8",
-           "DB_Object_Symbol": "NUDT4B",
-           "Qualifier": "",
-           "GO_ID": "GO:0005575",  # cellular compartment
-           "DB_Reference": "GO_REF:0005575",
-           "Evidence_Code": "IEA-GO_REF:0000041",
-           "With_or_From": "UniProtKB-KW:KW-0694",
-           "Aspect": "C",
-           "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
-           "DB_Object_Synonym": "NUDT4B",
-           "DB_Object_Type": "protein",
-           "Taxon": "taxon:4932",
-           "Date": "20211010",
-           "Assigned_By": "UniProt",
-           "Annotation_Extension": "",
-           "Gene_Product_Form_ID": ""
+            "DB": "UniProtKB",
+            "DB_Object_ID": "A0A024RBG8",
+            "DB_Object_Symbol": "NUDT4B",
+            "Qualifier": "",
+            "GO_ID": "GO:0005575",  # cellular compartment
+            "DB_Reference": "GO_REF:0005575",
+            "Evidence_Code": "IEA-GO_REF:0000041",
+            "With_or_From": "UniProtKB-KW:KW-0694",
+            "Aspect": "C",
+            "DB_Object_Name": "Diphosphoinositol polyphosphate phosphohydrolase",
+            "DB_Object_Synonym": "NUDT4B",
+            "DB_Object_Type": "protein",
+            "Taxon": "taxon:4932",
+            "Date": "20211010",
+            "Assigned_By": "UniProt",
+            "Annotation_Extension": "",
+            "Gene_Product_Form_ID": "",
         },
         # Invalid Evidence Code - coerced into 'ND' -> "ECO:0000307"
         {
@@ -277,13 +278,15 @@ def test_rows():
             "Date": "20211010",
             "Assigned_By": "UniProt",
             "Annotation_Extension": "",
-            "Gene_Product_Form_ID": ""
-        }
+            "Gene_Product_Form_ID": "",
+        },
     ]
 
 
 @pytest.fixture
-def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_table, map_cache):
+def basic_goa(
+    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
+):
     """
     Mock Koza run for GO annotation ingest.
 
@@ -303,7 +306,7 @@ def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_tab
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
-        map_cache=map_cache
+        map_cache=map_cache,
     )
 
 
@@ -318,19 +321,19 @@ result_expected = {
         "biolink:enables",
         "RO:0002327",
         False,
-        "ECO:0000501"
+        "ECO:0000501",
     ],
     # Multiple Taxa
     "NCBIGene:440672": [
         "biolink:Gene",
-        "NCBITaxon:46170",   # test for presence of the second one?
+        "NCBITaxon:46170",  # test for presence of the second one?
         "GO:0050830",
         "biolink:BiologicalProcess",
         "biolink:BiologicalProcessOrActivity",
         "biolink:actively_involved_in",
         "RO:0002331",
         False,
-        "ECO:0000270"
+        "ECO:0000270",
     ],
     # Test default qualifier override for Molecular Activity go term
     "NCBIGene:440673": [
@@ -342,7 +345,7 @@ result_expected = {
         "biolink:enables",
         "RO:0002327",
         False,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Test default qualifier override for Biological Process go term
     "NCBIGene:440674": [
@@ -354,7 +357,7 @@ result_expected = {
         "biolink:actively_involved_in",
         "RO:0002331",
         False,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Test default qualifier override for Cellular Component go term
     "NCBIGene:440675": [
@@ -366,7 +369,7 @@ result_expected = {
         "biolink:active_in",
         "RO:0002432",
         False,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Test non-default Biological Process and non-default qualifier
     "NCBIGene:440676": [
@@ -378,7 +381,7 @@ result_expected = {
         "biolink:acts_upstream_of_or_within",
         "RO:0002264",
         False,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Test outcome of unknown UniProt idmapping: uniprot id
     # is returned as gene id? Also try another evidence code
@@ -391,7 +394,7 @@ result_expected = {
         "biolink:enables",
         "RO:0002327",
         False,
-        "ECO:0007001"
+        "ECO:0007001",
     ],
     # Test non-default Biological Process with negated qualifier
     "NCBIGene:440677": [
@@ -403,7 +406,7 @@ result_expected = {
         "biolink:acts_upstream_of_or_within",
         "RO:0002264",
         True,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Missing (empty) qualifier - assign GO Aspect associated default
     "NCBIGene:440678": [
@@ -415,7 +418,7 @@ result_expected = {
         "biolink:located_in",
         "RO:0002432",
         False,
-        "ECO:0000307"
+        "ECO:0000307",
     ],
     # Invalid Evidence Code - coerced into 'ND' -> "ECO:0000307"
     "NCBIGene:440679": [
@@ -427,8 +430,8 @@ result_expected = {
         "biolink:enables",
         "RO:0002327",
         False,
-        "ECO:0000307"
-    ]
+        "ECO:0000307",
+    ],
 }
 
 
