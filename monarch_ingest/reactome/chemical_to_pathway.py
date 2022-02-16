@@ -31,4 +31,3 @@ association = MacromolecularMachineToBiologicalProcessAssociation(
 )
 
 koza_app.write(chemical, pathway, association)
-

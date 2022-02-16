@@ -19,7 +19,7 @@ Usage:
 poetry run koza transform \
   --global-table monarch_ingest/translation_table.yaml \
   --local-table monarch_ingest/hpoa/hpoa-translation.yaml \
-  --source monarch_ingest/hpoa/disease-phenotype.yaml \
+  --source monarch_ingest/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
 
@@ -38,7 +38,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "hpo-disease-phenotype"
+source_name = "hpoa_disease_phenotype"
 row = koza_app.get_row(source_name)
 
 # Filters

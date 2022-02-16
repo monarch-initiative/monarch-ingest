@@ -126,6 +126,11 @@
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
   local_name: data/hgnc/hgnc_complete_set.txt
 
+# hpoa
+-
+  url: http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
+  local_name: data/hpoa/phenotype.hpoa
+
 # omim
 #  This should eventually pull from the source using the API key
 -

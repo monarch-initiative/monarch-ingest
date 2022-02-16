@@ -3,6 +3,7 @@ from biolink_model_pydantic.model import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
+    Publication,
 )
 
 
@@ -27,9 +28,9 @@ def entities(mock_koza, global_table):
         ]
     )
     return mock_koza(
-        name="disease-phenotype",
+        name="hpoa_disease_phenotype",
         data=row,
-        transform_code="./monarch_ingest/hpoa/disease-phenotype.py",
+        transform_code="./monarch_ingest/hpoa/disease_phenotype.py",
         global_table=global_table,
         local_table="./monarch_ingest/hpoa/hpoa-translation.yaml",
     )
@@ -37,9 +38,10 @@ def entities(mock_koza, global_table):
 
 def test_gene2_phenotype_transform(entities):
     assert entities
-    assert len(entities) == 3
+    assert len(entities) == 4
     diseases = [entity for entity in entities if isinstance(entity, Disease)]
     phenotypes = [entity for entity in entities if isinstance(entity, PhenotypicFeature)]
+    publications = [entity for entity in entities if isinstance(entity, Publication)]
     associations = [
         entity
         for entity in entities
@@ -47,18 +49,8 @@ def test_gene2_phenotype_transform(entities):
     ]
     assert len(diseases) == 1
     assert len(phenotypes) == 1
+    assert len(publications) == 1
     assert len(associations) == 1
-
-
-# TODO: can this test be shared across all g2p loads?
-@pytest.mark.parametrize(
-    "cls", [Disease, PhenotypicFeature, DiseaseToPhenotypicFeatureAssociation]
-)
-def confirm_one_of_each_classes(cls, entities):
-    class_entities = [entity for entity in entities if isinstance(entity, cls)]
-    assert class_entities
-    assert len(class_entities) == 1
-    assert class_entities[0]
 
 
 def test_disease_phenotype_transform_publications(entities):

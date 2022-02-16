@@ -1,4 +1,4 @@
-name: 'hpo-disease-phenotype'
+name: 'hpoa_disease_phenotype'
 
 metadata:
   ingest_title: 'Human Phenotype Ontology Annotations'
@@ -18,6 +18,9 @@ delimiter: '\t'
 
 # If the source_file has metadata lines to skip, use
 header: 4
+
+global_table: './monarch_ingest/translation_table.yaml'
+local_table: './monarch_ingest/hpoa/hpoa-translation.yaml'
 
 filters:
   - inclusion: 'include'
