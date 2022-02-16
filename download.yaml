@@ -1,0 +1,234 @@
+---
+# alliance:
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz
+  local_name: data/alliance/PHENOTYPE_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz
+  local_name: data/alliance/PHENOTYPE_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz
+  local_name: data/alliance/PHENOTYPE_WB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/PHENOTYPE_HUMAN.json.gz
+  local_name: data/alliance/PHENOTYPE_HUMAN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz
+  local_name: data/alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_FB.json.gz
+  local_name: data/alliance/REFERENCE_FB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_RGD.json.gz
+  local_name: data/alliance/REFERENCE_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_WB.json.gz
+  local_name: data/alliance/REFERENCE_WB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_ZFIN.json.gz
+  local_name: data/alliance/REFERENCE_ZFIN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_MGI.json.gz
+  local_name: data/alliance/REFERENCE_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/REFERENCE_SGD.json.gz
+  local_name: data/alliance/REFERENCE_SGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
+  local_name: data/alliance/BGI_MGI.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_RGD.json.gz
+  local_name: data/alliance/BGI_RGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_ZFIN.json.gz
+  local_name: data/alliance/BGI_ZFIN.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_FB.json.gz
+  local_name: data/alliance/BGI_FB.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_SGD.json.gz
+  local_name: data/alliance/BGI_SGD.json.gz
+-
+  url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
+  local_name: data/alliance/BGI_WB.json.gz
+
+# flybase
+-
+  url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
+  local_name: data/flybase/entity_publication_fb.tsv.gz
+
+# goa
+
+# Homo sapiens (human)
+- url: http://current.geneontology.org/annotations/goa_human.gaf.gz
+  local_name: data/goa/9606.go_annotations.gaf.gz
+
+# Mus musculus (house mouse)
+- url: http://current.geneontology.org/annotations/mgi.gaf.gz
+  local_name: data/goa/10090.go_annotations.gaf.gz
+
+# Rattus norvegicus (Norway rat)
+- url: http://current.geneontology.org/annotations/rgd.gaf.gz
+  local_name: data/goa/10116.go_annotations.gaf.gz
+
+# Canis lupus familiaris (dog)
+- url: http://current.geneontology.org/annotations/goa_dog.gaf.gz
+  local_name: data/goa/9615.go_annotations.gaf.gz
+
+# Bos taurus (cow)
+- url: http://current.geneontology.org/annotations/goa_cow.gaf.gz
+  local_name: data/goa/9913.go_annotations.gaf.gz
+
+# Sus scrofa (pig)
+- url: http://current.geneontology.org/annotations/goa_pig.gaf.gz
+  local_name: data/goa/9823.go_annotations.gaf.gz
+
+# Gallus gallus (chicken)
+- url: http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+  local_name: data/goa/9031.go_annotations.gaf.gz
+
+# Danio rerio (Zebrafish)
+- url: http://current.geneontology.org/annotations/zfin.gaf.gz
+  local_name: data/goa/7955.go_annotations.gaf.gz
+
+# Drosophila melanogaster (fruit fly)
+- url: http://current.geneontology.org/annotations/fb.gaf.gz
+  local_name: data/goa/7227.go_annotations.gaf.gz
+
+# Caenorhabditis elegans (nematodes)
+- url: http://current.geneontology.org/annotations/wb.gaf.gz
+  local_name: data/goa/6239.go_annotations.gaf.gz
+
+# Dictyostelium discoideum
+- url: http://current.geneontology.org/annotations/dictybase.gaf.gz
+  local_name: data/goa/44689.go_annotations.gaf.gz
+
+# Aspergillus nidulans
+- url: http://current.geneontology.org/annotations/aspgd.gaf.gz
+  local_name: data/goa/162425.go_annotations.gaf.gz
+
+# Saccharomyces cerevisiae (baker's yeast)
+- url: http://current.geneontology.org/annotations/sgd.gaf.gz
+  local_name: data/goa/4932.go_annotations.gaf.gz
+
+# Schizosaccharomyces pombe
+- url: http://current.geneontology.org/annotations/pombase.gaf.gz
+  local_name: data/goa/4896.go_annotations.gaf.gz
+
+# Uniprot ID to Gene mapping file
+# See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README
+- url: https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+  local_name: data/goa/uniprot_2_gene.tab.gz
+
+
+# hgnc
+-
+  url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
+  local_name: data/hgnc/hgnc_complete_set.txt
+
+# omim
+#  This should eventually pull from the source using the API key
+-
+  url: gs://koza-cache/data/omim/morbidmap.txt
+  local_name: data/omim/morbidmap.txt
+-
+  url: gs://koza-cache/data/omim/mim2gene.txt
+  local_name: data/omim/mim2gene.txt
+
+# pombase
+-
+  url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
+  local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
+-
+  url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
+  local_name: data/pombase/gene_IDs_names_products.tsv
+
+# rgd
+-
+  url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
+  local_name: data/rgd/GENES_RAT.txt
+-
+  url: http://current.geneontology.org/annotations/rgd.gpi.gz
+  local_name: data/rgd/rgd.gpi.gz
+
+# sgd
+-
+  url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
+  local_name: data/sgd/gene2pmid.tab
+
+# STRING db
+
+# Homo sapiens (human)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/9606.protein_links.txt.gz
+
+# Mus musculus (house mouse)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10090.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/10090.protein_links.txt.gz
+
+# Danio rerio (Zebrafish)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7955.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/7955.protein_links.txt.gz
+
+# Drosophila melanogaster (fruit fly)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/7227.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/7227.protein_links.txt.gz
+
+# Caenorhabditis elegans (nematodes)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/6239.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/6239.protein_links.txt.gz
+
+# Saccharomyces cerevisiae (baker's yeast)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4932.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/4932.protein_links.txt.gz
+
+# Rattus norvegicus (Norway rat)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/10116.protein_links.txt.gz
+
+# All species mapping file (Since the rat mapping file isn't available, use the cross species set)
+- url: https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
+  local_name: data/string/entrez_2_string.tsv.gz
+
+# Xenbase
+-
+#  temporarily commenting due to some Xenbase downtime
+#  url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
+  url: gs://koza-cache/data/xenbase/xenbase.gpi.gz
+  local_name: data/xenbase/xenbase.gpi.gz
+-
+#  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+  url: gs://koza-cache/data/xenbase/XenbaseGenepageToGeneIdMapping.txt
+  local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
+-
+# url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
+  url: gs://koza-cache/data/xenbase/LiteratureMatchedGenesByPaper.txt
+  local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
+-
+  url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
+  local_name: data/xenbase/xb_xpo_spo_v_v1.tab
+
+# zfin
+-
+  url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt
+  local_name: data/zfin/phenoGeneCleanData_fish.txt
+-
+  url: https://zfin.org/downloads/gene_publication.txt
+  local_name: data/zfin/gene_publication.txt
+-
+  url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
+  local_name: data/zfin/id_map_zfin.tsv
+
+
+# monarch
+-
+  url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
+  local_name: output/monarch/monarch.json
+
+# reactome
+-
+  url: https://reactome.org/download/current/Ensembl2Reactome.txt
+  local_name: data/reactome/Ensembl2Reactome.txt
+-
+  url: https://reactome.org/download/current/ChEBI2Reactome.txt
+  local_name: data/reactome/ChEBI2Reactome.txt

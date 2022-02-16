@@ -4,10 +4,10 @@ metadata:
 
 delimiter: '\t'
 
-has_header: 'False'
+header: 'none'
 
 files:
-  - './data/XenbaseGenepageToGeneIdMapping.txt'
+  - './data/xenbase/XenbaseGenepageToGeneIdMapping.txt'
 
 columns:
   - 'gene_page_id'

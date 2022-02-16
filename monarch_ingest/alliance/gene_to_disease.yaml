@@ -1,0 +1,67 @@
+name: 'alliance_gene_to_disease'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: 15
+
+files:
+  - './data/alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz' # "https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz"
+
+metadata: './monarch_ingest/alliance/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+filters:
+  - inclusion: 'exclude'
+    column: 'Source'
+    filter_code: 'eq'
+    value: 'OMIM Via RGD'
+  - inclusion: 'exclude'
+    column: 'AssociationType'
+    filter_code: 'eq'
+    value: 'biomarker_via_orthology'
+  - inclusion: 'exclude'
+    column: 'AssociationType'
+    filter_code: 'eq'
+    value: 'implicated_via_orthology'
+
+columns:
+  - 'Taxon'
+  - 'SpeciesName'
+  - 'DBobjectType'
+  - 'DBObjectID'
+  - 'DBObjectSymbol'
+  - 'AssociationType'
+  - 'DOID'
+  - 'DOtermName'
+  - 'WithOrtholog'
+  - 'InferredFromID'
+  - 'InferredFromSymbol'
+  - 'ExperimentalCondition'
+  - 'Modifier'
+  - 'EvidenceCode'
+  - 'EvidenceCodeName'
+  - 'Reference'
+  - 'Date'
+  - 'Source'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'source'
+  - 'negated'
+  - 'publications'
+  - 'provided_by'
+
+transform_mode: 'flat'
