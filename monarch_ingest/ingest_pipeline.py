@@ -104,6 +104,7 @@ def ingests(context):
         Ingest("zfin", "gene_to_publication"),
         Ingest("reactome", "gene_to_pathway"),
         Ingest("reactome", "chemical_to_pathway"),
+        Ingest("mgi", "gene_to_publication")
     ]
 
     for ingest in ingests:
