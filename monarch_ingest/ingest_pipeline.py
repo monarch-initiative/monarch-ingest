@@ -84,27 +84,27 @@ def process(ingest: Ingest) -> KgxGraph:
 )
 def ingests(context):
     ingests = [
-        Ingest("alliance", "publication"),
         Ingest("alliance", "gene"),
         Ingest("alliance", "gene_to_phenotype"),
-        Ingest("rgd", "gene_to_publication"),
+        Ingest("alliance", "publication"),
+        Ingest("flybase", "gene_to_publication"),
+        Ingest("goa", "go_annotation"),
         Ingest("hgnc", "gene"),
         Ingest("hpoa", "disease_phenotype"),
-        Ingest("goa", "go_annotation"),
-        Ingest("flybase", "gene_to_publication"),
+        Ingest("mgi", "gene_to_publication"),
         Ingest("omim", "gene_to_disease"),
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
+        Ingest("reactome", "chemical_to_pathway"),
+        Ingest("reactome", "gene_to_pathway"),
+        Ingest("rgd", "gene_to_publication"),
         Ingest("sgd", "gene_to_publication"),
         Ingest("string", "protein_links"),
         Ingest("xenbase", "gene"),
         Ingest("xenbase", "gene_to_phenotype"),
         Ingest("xenbase", "gene_to_publication"),
         Ingest("zfin", "gene_to_phenotype"),
-        Ingest("zfin", "gene_to_publication"),
-        Ingest("reactome", "gene_to_pathway"),
-        Ingest("reactome", "chemical_to_pathway"),
-        Ingest("mgi", "gene_to_publication")
+        Ingest("zfin", "gene_to_publication")
     ]
 
     for ingest in ingests:
