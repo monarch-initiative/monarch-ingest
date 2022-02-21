@@ -10,15 +10,13 @@ from monarch_ingest.panther.orthology_utils import parse_gene
 
 row = koza_app.get_row()
 
-uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
-
-species_and_gene_id = parse_gene(row['Gene'], uniprot_2_gene)
+species_and_gene_id = parse_gene(row['Gene'])
 if species_and_gene_id:
 
     # unpack the species and gene id
     gene_ncbitaxon, gene_id = species_and_gene_id
 
-    species_and_ortholog_id = parse_gene(row['Ortholog'], uniprot_2_gene)
+    species_and_ortholog_id = parse_gene(row['Ortholog'])
     if species_and_ortholog_id:
 
         # unpack the orthogous gene id and its species

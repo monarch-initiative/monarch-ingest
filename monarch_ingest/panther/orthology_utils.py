@@ -29,40 +29,45 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
     if species_name in _ncbitaxon_catalog:
         return f"NCBITaxon:{_ncbitaxon_catalog[species_name]}"
     else:
-        logger.error(f"parse_protein_id(): Taxon '{species_name}' is not a unknown? Ignoring...")
+        logger.error(f"parse_gene_id(): Taxon '{species_name}' is not a unknown? Ignoring...")
         return None
 
 
-def parse_protein_id(protein_id_spec: str) -> Optional[str]:
+def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     """
     Parse out the Proting identifier
-    :param protein_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
+    :param gene_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
     """
-    if not protein_id_spec:
-        logger.error(f"parse_protein_id(): Empty 'protein_id_spec'? Ignoring...")
+    if not gene_id_spec:
+        logger.error(f"parse_gene_id(): Empty 'gene_id_spec'? Ignoring...")
         return None
-    
+    # gene_id = f"NCBIGene:{gene_id}"
     try:
-        spec_part = protein_id_spec.split("=")
+        spec_part = gene_id_spec.split("=")
         
-        if len(spec_part) == 2 and spec_part[0] == "UniProtKB":
-            # then just return the bare uniprot identifier
-            return spec_part[1]
+        if len(spec_part) == 2:
+            # first iteration: just take the DB namespace "raw"
+            # TODO: verify if the Panther assumed DB namespace are
+            #       the same as the Biolink Model CURIE prefixes
+            return f"{spec_part[0]}:{spec_part[1]}"
+        
+        elif len(spec_part) == 3 and spec_part[1] == "MGI":
+            # Odd special case of MGI (is this the only one like this? the RuntimeError below will reveal...)
+            return f"{spec_part[0]}:{spec_part[2]}"
+        
         else:
             raise RuntimeError
     
     except RuntimeError:
-        logger.error(f"parse_protein_id(): Error parsing '{str(protein_id_spec)}'? Ignoring...")
+        logger.error(f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring...")
         return None
 
 
-def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str]]:
+def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
     """
-    Maps a gene/ortholog column value of a
-    Panther ortholog record, onto an Entrez identifier.
+    Captures a gene identifier from the Panther ref_genome record.
 
     :param gene_entry: string "species1|DB=id1|protdb=pdbid1" of descriptors describing the target gene
-    :param uniprot_2_gene: koza_app managed identifier map
     """
     
     if not gene_entry:
@@ -70,7 +75,7 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
         return None
     
     try:
-        species, gene_spec, protein_spec = gene_entry.split("|")
+        species, gene_spec, _ = gene_entry.split("|")
     except ValueError:
         logger.error(f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring...")
         return None
@@ -85,21 +90,18 @@ def parse_gene(gene_entry: str, uniprot_2_gene: Dict) -> Optional[Tuple[str, str
             f"'{str(gene_entry)}' is not in target list. Ignoring..."
         )
         return None
+
+    # get the gene identifier
+    gene_id = parse_gene_id(gene_spec)
     
-    # get the protein id, to resolve it directly to an Entrez Gene Identifier
-    uniprot_id = parse_protein_id(protein_spec)
-    
-    # Attempt to remap the UniProt ID onto its Entrez ID
-    try:
-        entrez_id = f"NCBIGene:{uniprot_2_gene[uniprot_id]['Entrez']}"
-        return ncbitaxon_id, entrez_id
-    
-    except KeyError:
-        logger.warning(
-            f"parse_gene(): Could not map Uniprot identifier '{str(uniprot_id)}'  "
-            f"in gene entry '{str(gene_entry)}'  onto an Entrez Gene Id. Ignoring..."
+    # Quietly ignore a gene identifier we can't parse out? Only complain in debug mode though (otherwise...)
+    if not gene_id:
+        logger.debug(
+            f"parse_gene(): Gene identifier in gene entry '{str(gene_entry)}' cannot be parsed. Ignoring..."
         )
         return None
+    
+    return ncbitaxon_id, gene_id
 
 
 # TODO: probably overkill... how do I discriminate between LDO and O?
