@@ -135,35 +135,40 @@ result_expected = {
         "NCBITaxon:9606",
         "NCBITaxon:10116",
         "biolink:orthologous_to",
-        "RO:HOM0000017"
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR12434"
     ],
     "ZFIN:ZDB-GENE-040625-156": [
         "HGNC:11477",
         "NCBITaxon:9606",
         "NCBITaxon:7955",
         "biolink:orthologous_to",
-        "RO:HOM0000017"
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR12434"
     ],
     "WormBase:WBGene00007022": [
         "HGNC:11477",
         "NCBITaxon:9606",
         "NCBITaxon:6239",
         "biolink:orthologous_to",
-        "RO:HOM0000017"
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR12434"
     ],
-    "FlyBase:FBgn0052971": [
+    "FB:FBgn0052971": [
         "HGNC:11477",
         "NCBITaxon:9606",
         "NCBITaxon:7227",
         "biolink:orthologous_to",
-        "RO:HOM0000017"
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR12434"
     ],
     "MGI:98446": [
         "HGNC:11477",
         "NCBITaxon:9606",
         "NCBITaxon:10090",
         "biolink:orthologous_to",
-        "RO:HOM0000017"
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR12434"
     ]
 }
 
@@ -218,5 +223,8 @@ def test_association(basic_pl):
     assert association.subject == result_expected[association.object][0]
     assert association.predicate == result_expected[association.object][3]
     assert association.relation == result_expected[association.object][4]
+    
+    # Evidence is a list
+    assert result_expected[association.object][5] in association.has_evidence
 
     assert "infores:panther" in association.source

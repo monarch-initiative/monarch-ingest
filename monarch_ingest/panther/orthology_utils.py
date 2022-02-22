@@ -33,6 +33,24 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
         return None
 
 
+_db_to_curie = {
+    "FlyBase": "FB",
+    "Ensembl": "ENSEMBL",
+    
+}
+
+
+def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
+    """
+    :param db_prefix: original database namespace identifier
+    :return: Biolink Model compliant canonical CURIE namespace prefix
+    """
+    if db_prefix in _db_to_curie:
+        return _db_to_curie[db_prefix]
+    else:
+        return db_prefix
+
+
 def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     """
     Parse out the Proting identifier
@@ -41,19 +59,20 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     if not gene_id_spec:
         logger.error(f"parse_gene_id(): Empty 'gene_id_spec'? Ignoring...")
         return None
-    # gene_id = f"NCBIGene:{gene_id}"
+
     try:
         spec_part = gene_id_spec.split("=")
         
         if len(spec_part) == 2:
-            # first iteration: just take the DB namespace "raw"
-            # TODO: verify if the Panther assumed DB namespace are
-            #       the same as the Biolink Model CURIE prefixes
-            return f"{spec_part[0]}:{spec_part[1]}"
+            # Map DB to Biolink Model canonical CURIE namespace
+            prefix = get_biolink_curie_prefix(spec_part[0])
+            return f"{prefix}:{spec_part[1]}"
         
         elif len(spec_part) == 3 and spec_part[1] == "MGI":
-            # Odd special case of MGI (is this the only one like this? the RuntimeError below will reveal...)
-            return f"{spec_part[0]}:{spec_part[2]}"
+            # Odd special case of MGI
+            # (is this the only one like this? Logger errors
+            #  trapped by the RuntimeError below should answer this...)
+            return f"{spec_part[1]}:{spec_part[2]}"
         
         else:
             raise RuntimeError
