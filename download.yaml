@@ -126,6 +126,11 @@
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
   local_name: data/hgnc/hgnc_complete_set.txt
 
+# hpoa
+-
+  url: http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
+  local_name: data/hpoa/phenotype.hpoa
+
 # omim
 #  This should eventually pull from the source using the API key
 -
@@ -298,3 +303,11 @@
 -
   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
   local_name: output/monarch/monarch.json
+
+# reactome
+-
+  url: https://reactome.org/download/current/Ensembl2Reactome.txt
+  local_name: data/reactome/Ensembl2Reactome.txt
+-
+  url: https://reactome.org/download/current/ChEBI2Reactome.txt
+  local_name: data/reactome/ChEBI2Reactome.txt

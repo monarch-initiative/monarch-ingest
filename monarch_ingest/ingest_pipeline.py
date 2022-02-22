@@ -4,19 +4,28 @@ from os.path import exists
 from typing import List
 
 import dagster
+import yaml
 from kghub_downloader.download_utils import download_from_yaml
 from kgx.cli import cli_utils
 from koza.cli_runner import transform_source
+from koza.model.config.source_config import OutputFormat
 
 
 @dagster.usable_as_dagster_type
 class KgxGraph:
-    def __init__(self, name, nodes_file, edges_file):
+    def __init__(
+        self, name, nodes_file, edges_file, has_node_properties, has_edge_properties
+    ):
         self.name = name
         self.nodes_file = nodes_file
         self.edges_file = edges_file
-        assert exists(nodes_file)
-        assert exists(edges_file)
+        self.has_node_properties = has_node_properties
+        self.has_edge_properties = has_edge_properties
+        assert has_node_properties or has_node_properties
+        if has_node_properties:
+            assert exists(nodes_file)
+        if has_edge_properties:
+            assert exists(edges_file)
 
 
 @dagster.usable_as_dagster_type
@@ -25,42 +34,86 @@ class Ingest:
         self.source = source
         self.transform = transform
         self.name = f"{source}_{transform}"
+        self.source_file = f"./monarch_ingest/{source}/{transform}.yaml"
+
+        assert exists(self.source_file)
+
+        with open(self.source_file) as sfh:
+            self.source_config = yaml.load(sfh, yaml.FullLoader)
+        self.has_node_properties = "node_properties" in self.source_config
+        self.has_edge_properties = "edge_properties" in self.source_config
 
         assert self.source
         assert self.transform
-        assert exists(f"./monarch_ingest/{source}/{transform}.yaml")
+
+        assert self.has_edge_properties or self.has_node_properties
 
 
 @dagster.op
 def transform(ingest: Ingest) -> KgxGraph:
-    transform_source(
-        f"./monarch_ingest/{ingest.source}/{ingest.transform}.yaml",
-        "output",
-        "tsv",
-        None,
-        None,
-    )
+
+    nodes_file = f"output/{ingest.source}_{ingest.transform}_nodes.tsv"
+    edges_file = f"output/{ingest.source}_{ingest.transform}_edges.tsv"
+
+    # For efficiency, only run the transform if the files output kgx files aren't there
+    # This matches the current download behavior of only downloading files when they
+    # aren't present - which expects that when running on a server as a production
+    # job this happens in a fresh Docker container with no data.
+    if not os.path.exists(nodes_file) or not os.path.exists(edges_file):
+        transform_source(
+            source=f"./monarch_ingest/{ingest.source}/{ingest.transform}.yaml",
+            output_dir="output",
+            output_format=OutputFormat.tsv,
+            local_table=None,
+            global_table=None,
+            # row_limit=1000  # TODO: Ideally we can make this a part of running the pipeline in a developer mode
+        )
+
     return KgxGraph(
         ingest.name,
-        f"output/{ingest.source}_{ingest.transform}_nodes.tsv",
-        f"output/{ingest.source}_{ingest.transform}_edges.tsv",
+        nodes_file,
+        edges_file,
+        ingest.has_node_properties,
+        ingest.has_edge_properties,
     )
 
 
 @dagster.op
 def validate(kgx: KgxGraph) -> KgxGraph:
-    cli_utils.validate([kgx.nodes_file, kgx.edges_file], "tsv", None, None, True, None)
+
+    files = []
+    if kgx.has_node_properties:
+        files.append(kgx.nodes_file)
+    if kgx.has_edge_properties:
+        files.append(kgx.edges_file)
+
+    cli_utils.validate(
+        inputs=files,
+        input_format="tsv",
+        input_compression=None,
+        output=None,
+        stream=True,
+        biolink_release="2.2.13",
+    )  # TODO: we should put the biolink version in the model class
     return kgx
 
 
 @dagster.op
 def summarize(kgx: KgxGraph) -> KgxGraph:
+
+    files = []
+    if kgx.has_node_properties:
+        files.append(kgx.nodes_file)
+    if kgx.has_edge_properties:
+        files.append(kgx.edges_file)
+
     cli_utils.graph_summary(
-        [kgx.nodes_file, kgx.edges_file],
-        "tsv",
-        None,
-        f"output/{kgx.name}_graph_stats.yaml",
-        "kgx-map",
+        inputs=files,
+        input_format="tsv",
+        input_compression=None,
+        output=f"output/{kgx.name}_graph_stats.yaml",
+        report_type="kgx-map",
+        report_format="yaml",
     )
     return kgx
 
@@ -89,6 +142,7 @@ def ingests(context):
         Ingest("alliance", "gene_to_phenotype"),
         Ingest("rgd", "gene_to_publication"),
         Ingest("hgnc", "gene"),
+        Ingest("hpoa", "disease_phenotype"),
         Ingest("goa", "go_annotation"),
         Ingest("flybase", "gene_to_publication"),
         Ingest("omim", "gene_to_disease"),
@@ -102,6 +156,8 @@ def ingests(context):
         Ingest("xenbase", "gene_to_publication"),
         Ingest("zfin", "gene_to_phenotype"),
         Ingest("zfin", "gene_to_publication"),
+        Ingest("reactome", "gene_to_pathway"),
+        Ingest("reactome", "chemical_to_pathway"),
     ]
 
     for ingest in ingests:

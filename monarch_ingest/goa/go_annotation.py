@@ -4,15 +4,15 @@ Gene Ontology Annotations Ingest module.
 Gene to GO term Associations
 (to MolecularActivity, BiologicalProcess and CellularComponent)
 """
+import logging
 import re
 import uuid
-import logging
 from typing import List
 
 from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
 
-from monarch_ingest.goa.goa_utils import lookup_predicate, get_biolink_classes
+from monarch_ingest.goa.goa_utils import get_biolink_classes, lookup_predicate
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -56,7 +56,9 @@ go_id = row['GO_ID']
 #      'C' == cellular_component - child of GO:0005575
 go_aspect: str = row['Aspect']
 if not (go_aspect and go_aspect.upper() in ["F", "P", "C"]):
-    logger.warning(f"GAF Aspect '{str(go_aspect)}' is empty or unrecognized? Skipping record")
+    logger.warning(
+        f"GAF Aspect '{str(go_aspect)}' is empty or unrecognized? Skipping record"
+    )
 
 else:
     # Decipher the GO Evidence Code
@@ -67,7 +69,9 @@ else:
         eco_term = koza_app.translation_table.local_table[evidence_code]
 
     if not eco_term:
-        logger.warning(f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'")
+        logger.warning(
+            f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'"
+        )
         eco_term = "ECO:0000307"
 
     # Association predicate is normally NOT negated
@@ -95,7 +99,9 @@ else:
 
     if not qualifier:
         # If missing, assign a default qualifier a.k.a. predicate based on specified GO Aspect type
-        logger.error("GAF record is missing its qualifier...assigning default qualifier as per GO term Aspect")
+        logger.error(
+            "GAF record is missing its qualifier...assigning default qualifier as per GO term Aspect"
+        )
         if go_aspect == "F":
             qualifier = "enables"
         elif go_aspect == "P":
@@ -113,7 +119,9 @@ else:
             predicate_mapping = lookup_predicate(qualifier_parts[0])
 
         if not predicate_mapping:
-            logger.error(f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record...")
+            logger.error(
+                f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record..."
+            )
 
         else:
             # extract the predicate Pydantic class and RO'relation' mapping
@@ -121,7 +129,9 @@ else:
             predicate, relation = predicate_mapping
 
             # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
-            go_concept_node_class, gene_go_term_association_class = get_biolink_classes(go_aspect)
+            go_concept_node_class, gene_go_term_association_class = get_biolink_classes(
+                go_aspect
+            )
 
             # Instantiate the GO term instance
             go_term = go_concept_node_class(id=go_id, source="infores:go")
@@ -135,7 +145,7 @@ else:
                 negated=negated,
                 relation=relation,
                 has_evidence=eco_term,
-                source="infores:goa"
+                source="infores:goa",
             )
 
             # Write the captured Association out

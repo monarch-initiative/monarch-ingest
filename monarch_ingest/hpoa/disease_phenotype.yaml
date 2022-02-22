@@ -1,0 +1,64 @@
+name: 'hpoa_disease_phenotype'
+
+metadata:
+  ingest_title: 'Human Phenotype Ontology Annotations'
+  ingest_url: 'https://hpo.jax.org/app/'
+  description: 'Ingest of HPO disease to phenotype associations'
+  rights: 'https://hpo.jax.org/app/license'
+
+# List of files to be ingested
+files:
+  - './data/hpoa/phenotype.hpoa'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+# If the source_file has metadata lines to skip, use
+header: 4
+
+global_table: './monarch_ingest/translation_table.yaml'
+local_table: './monarch_ingest/hpoa/hpoa-translation.yaml'
+
+filters:
+  - inclusion: 'include'
+    column: 'Aspect'
+    filter_code: 'eq'
+    value: 'P'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - 'DatabaseID'
+  - 'DiseaseName'
+  - 'Qualifier'
+  - 'HPO_ID'
+  - 'Reference'
+  - 'Evidence'
+  - 'Onset'
+  - 'Frequency'
+  - 'Sex'
+  - 'Modifier'
+  - 'Aspect'
+  - 'Biocuration'
+
+# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+node_properties:
+  - 'id'
+  - 'category'
+  - 'type'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'publications'
+  - 'onset_qualifier'
+  - 'frequency_qualifier'
+  - 'sex_qualifier'
+  - 'has_evidence'
+  - 'provided_by'
