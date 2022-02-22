@@ -9,9 +9,6 @@ header: none
 files:
   - './data/panther/RefGenomeOrthologs.tsv.gz'
 
-depends_on:
-  - './monarch_ingest/maps/uniprot-2-gene.yaml'
-
 metadata:
   ingest_title: 'Orthology Ingest'
   ingest_url: 'http://www.pantherdb.org/'
