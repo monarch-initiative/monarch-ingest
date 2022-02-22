@@ -196,7 +196,7 @@ def test_genes(basic_pl):
     # 'in_taxon' is multivalued (an array)
     assert result_expected[ortholog.id][1] in gene.in_taxon
 
-    assert "infores:entrez" in gene.source
+    assert "infores:panther" in gene.source
 
     # 'category' is multivalued (an array)
     assert "biolink:Gene" in ortholog.category
@@ -207,7 +207,7 @@ def test_genes(basic_pl):
     # 'in_taxon' is multivalued (an array)
     assert result_expected[ortholog.id][2] in ortholog.in_taxon
 
-    assert "infores:entrez" in ortholog.source
+    assert "infores:panther" in ortholog.source
 
 
 def test_association(basic_pl):
