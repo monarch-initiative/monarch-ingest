@@ -237,3 +237,8 @@
 -
   url: https://reactome.org/download/current/ChEBI2Reactome.txt
   local_name: data/reactome/ChEBI2Reactome.txt
+
+# mgi
+-
+  url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
+  local_name: data/mgi/MRK_Reference.rpt
