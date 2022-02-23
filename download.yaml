@@ -291,3 +291,9 @@
   url: https://reactome.org/download/current/ChEBI2Reactome.txt
   local_name: data/reactome/ChEBI2Reactome.txt
   tag: reactome_chemical_to_pathway
+
+# mgi
+-
+  url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
+  local_name: data/mgi/MRK_Reference.rpt
+  tag: mgi_gene_to_publication

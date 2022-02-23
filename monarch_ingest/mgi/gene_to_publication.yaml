@@ -1,0 +1,40 @@
+name: 'mgi_gene_to_publication'
+
+format: 'csv'
+
+delimiter: '\t'
+
+# list_delimiter: '|'
+
+header: 'none'
+
+files:
+  - './data/mgi/MRK_Reference.rpt'  # "http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt"
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'MGI Marker Accession ID'
+  - 'Marker Symbol'
+  - 'Marker Name'
+  - 'Marker Synonyms'
+  - 'PubMed IDs'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'type'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'provided_by'
+  - 'source'
+
+transform_mode: 'flat'
+
