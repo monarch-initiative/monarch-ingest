@@ -157,7 +157,7 @@ def ingests(context):
         Ingest("xenbase", "gene_to_phenotype"),
         Ingest("xenbase", "gene_to_publication"),
         Ingest("zfin", "gene_to_phenotype"),
-        Ingest("zfin", "gene_to_publication")
+        Ingest("zfin", "gene_to_publication"),
     ]
 
     for ingest in ingests:

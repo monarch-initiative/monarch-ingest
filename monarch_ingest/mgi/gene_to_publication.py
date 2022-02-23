@@ -22,12 +22,10 @@ pub_ids = row["PubMed IDs"].split("|")
 pubs = []
 for pub_id in pub_ids:
     pmid = "PMID:" + pub_id
-    pubs.append(
-        Publication(
-            id=pmid,
-            type=koza_app.translation_table.resolve_term("publication"),
-            source="infores:mgi",
-        )
+    pub = Publication(
+        id=pmid,
+        type=koza_app.translation_table.resolve_term("publication"),
+        source="infores:mgi",
     )
 
     association = NamedThingToInformationContentEntityAssociation(
@@ -39,5 +37,4 @@ for pub_id in pub_ids:
         source="infores:mgi",
     )
 
-for pub in pubs:
-    koza_app.write(gene, pub, association)  # , row_limit=5)
+    koza_app.write(gene, pub, association)
