@@ -38,4 +38,3 @@ for pub_id in pub_ids:
     )
 
     koza_app.write(gene, pub, association)
-
