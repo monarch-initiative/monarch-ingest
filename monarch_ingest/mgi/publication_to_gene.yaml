@@ -1,4 +1,4 @@
-name: 'mgi_gene_to_publication'
+name: 'mgi_publication_to_gene'
 
 format: 'csv'
 

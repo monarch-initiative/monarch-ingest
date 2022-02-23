@@ -270,7 +270,7 @@
 -
   url: https://zfin.org/downloads/gene_publication.txt
   local_name: data/zfin/gene_publication.txt
-  tag: zfin_gene_to_publication
+  tag: zfin_publication_to_gene
 -
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: data/zfin/id_map_zfin.tsv

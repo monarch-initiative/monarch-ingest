@@ -102,7 +102,7 @@ testing = ["pytest", "pytest-flake8", "pytest-cov", "pytest-black (>=0.3.7)", "p
 
 [[package]]
 name = "biolink-model-pydantic"
-version = "0.1.2"
+version = "0.1.4"
 description = "Pydantic dataclasses for the Biolink model"
 category = "main"
 optional = false
@@ -2543,7 +2543,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0b994697e686ffdc4c78f0fcafe9ddc997106e782ed1b7df7549db4d87d7c52b"
+content-hash = "ef68ace985f0255d54a134b93b61c7333d58d8f7bcaef6724d212c20c10a4c6a"
 
 [metadata.files]
 alabaster = [
@@ -2585,8 +2585,8 @@ babel = [
     {file = "backports.entry_points_selectable-1.1.1.tar.gz", hash = "sha256:914b21a479fde881635f7af5adc7f6e38d6b274be32269070c53b698c60d5386"},
 ]
 biolink-model-pydantic = [
-    {file = "biolink_model_pydantic-0.1.2-py3-none-any.whl", hash = "sha256:d64a94086c419455938bed1cae8954b4533d3a3c9f9d5d4ef994ed9df905b85f"},
-    {file = "biolink_model_pydantic-0.1.2.tar.gz", hash = "sha256:6d9d6a821ac276dbb1aa71b7ab916368beedabb473eed5ead43d09fdd3dd51d0"},
+    {file = "biolink_model_pydantic-0.1.4-py3-none-any.whl", hash = "sha256:384cdc52c7688e8b38bae86c2d97847c52dcbed4e7a3b85cf9d4ff920b06e4bf"},
+    {file = "biolink_model_pydantic-0.1.4.tar.gz", hash = "sha256:f0548203cc06c6267b78dc8ee799e71a1af1d5b7dacfe277207b1659cab09c43"},
 ]
 black = [
     {file = "black-21.12b0-py3-none-any.whl", hash = "sha256:a615e69ae185e08fdd73e4715e260e2479c861b5740057fde6e8b4e3b7dd589f"},
@@ -3036,6 +3036,7 @@ ijson = [
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:fa10a1d88473303ec97aae23169d77c5b92657b7fb189f9c584974c00a79f383"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:9a5bf5b9d8f2ceaca131ee21fc7875d0f34b95762f4f32e4d65109ca46472147"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:81cc8cee590c8a70cca3c9aefae06dd7cb8e9f75f3a7dc12b340c2e332d33a2a"},
+    {file = "ijson-3.1.4-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:4ea5fc50ba158f72943d5174fbc29ebefe72a2adac051c814c87438dc475cf78"},
     {file = "ijson-3.1.4-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3b98861a4280cf09d267986cefa46c3bd80af887eae02aba07488d80eb798afa"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:068c692efba9692406b86736dcc6803e4a0b6280d7f0b7534bff3faec677ff38"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:86884ac06ac69cea6d89ab7b84683b3b4159c4013e4a20276d3fc630fe9b7588"},

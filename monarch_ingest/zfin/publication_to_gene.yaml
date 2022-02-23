@@ -1,5 +1,3 @@
-
-
 name: 'zfin_gene_to_publication'
 
 format: 'csv'
@@ -37,4 +35,3 @@ edge_properties:
   - 'source'
 
 transform_mode: 'flat'
-
