@@ -43,21 +43,42 @@ def basic_entities(mock_koza, source_name, basic_row, script, global_table):
 
 
 def test_gene(basic_entities):
-    print("basic_entities: ", basic_entities)
     gene = [entity for entity in basic_entities if isinstance(entity, Gene)][0]
     assert gene.id == "MGI:1920971"
 
 
+def test_pub_count(basic_entities):
+    pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
+    assert len(pubs) == 9
+
+
 def test_pub(basic_entities):
-    pub = [entity for entity in basic_entities if isinstance(entity, Publication)][0]
-    assert str(pub.id)[5:] in pubmed_ids
+    pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
+    assert str(pubs[0].id)[5:] in pubmed_ids
 
 
-def test_association(basic_entities):
-    association = [
+def test_association_count(basic_entities):
+    associations = [
         entity
         for entity in basic_entities
         if isinstance(entity, NamedThingToInformationContentEntityAssociation)
-    ][0]
-    assert association.subject == "MGI:1920971"
-    assert association.object == "PMID:31504408"
+    ]
+    assert len(associations) == 9
+
+
+def test_association_values(basic_entities):
+    associations = [
+        entity
+        for entity in basic_entities
+        if isinstance(entity, NamedThingToInformationContentEntityAssociation)
+    ]
+
+    # This is sort of unintentionally testing order, if that breaks and this
+    # tests needs to be refactored to make sure they're in the collection without
+    # worrying about order, that's fine.
+
+    assert associations[0].subject == "MGI:1920971"
+    assert associations[0].object == "PMID:11217851"
+
+    assert associations[8].subject == "MGI:1920971"
+    assert associations[8].object == "PMID:31504408"
