@@ -50,7 +50,7 @@ This ingest reads from Xenbase's [Genes Associated with Literature](http://ftp.x
 * Publication
     * id
     
-* NamedThingToInformationContentEntityAssociation
+* InformationContentEntityToNamedThingAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)

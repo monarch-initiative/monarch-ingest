@@ -3,12 +3,12 @@ import pytest
 
 @pytest.fixture
 def source_name():
-    return "sgd_gene_to_publication"
+    return "sgd_publication_to_gene"
 
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/sgd/gene_to_publication.py"
+    return "./monarch_ingest/sgd/publication_to_gene.py"
 
 
 @pytest.fixture
