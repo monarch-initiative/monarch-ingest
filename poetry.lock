@@ -55,7 +55,7 @@ pyflakes = ">=1.1.0"
 
 [[package]]
 name = "biolink-model-pydantic"
-version = "0.1.4"
+version = "0.1.6"
 description = "Pydantic dataclasses for the Biolink model"
 category = "main"
 optional = false
@@ -1519,7 +1519,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "da01a1c3ec81ec0396701140a57fa19878c9d19935da897d0175d059998ff01e"
+content-hash = "bba3087561ec2b79336a5c7b0426612c587a8d4a3f6b5029b4949cb5857be647"
 
 [metadata.files]
 alembic = [
@@ -1542,8 +1542,8 @@ autoflake = [
     {file = "autoflake-1.4.tar.gz", hash = "sha256:61a353012cff6ab94ca062823d1fb2f692c4acda51c76ff83a8d77915fba51ea"},
 ]
 biolink-model-pydantic = [
-    {file = "biolink_model_pydantic-0.1.4-py3-none-any.whl", hash = "sha256:384cdc52c7688e8b38bae86c2d97847c52dcbed4e7a3b85cf9d4ff920b06e4bf"},
-    {file = "biolink_model_pydantic-0.1.4.tar.gz", hash = "sha256:f0548203cc06c6267b78dc8ee799e71a1af1d5b7dacfe277207b1659cab09c43"},
+    {file = "biolink_model_pydantic-0.1.6-py3-none-any.whl", hash = "sha256:4545a5c0c0d907e8cd0126f608d5a257bb88637306b64f251cc08557526caf7b"},
+    {file = "biolink_model_pydantic-0.1.6.tar.gz", hash = "sha256:af0ca19cf25edd03d9e84a6ecfb7203e77eadf686cfee9a295c70823e69f2008"},
 ]
 bleach = [
     {file = "bleach-4.1.0-py2.py3-none-any.whl", hash = "sha256:4d2651ab93271d1129ac9cbc679f524565cc8a1b791909c4a51eac4446a15994"},
