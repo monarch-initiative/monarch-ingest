@@ -24,6 +24,8 @@ dagster = ">0.13, <0.14"
 kghub_downloader = ">=0.1.0"
 numpy = "^1.22"
 kghub-downloader = "^0.1.6"
+black = "20.8b1"
+kgx = "^1.5.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
