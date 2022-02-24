@@ -1,6 +1,9 @@
 ### Configure Ingest
 
-download the file and put it in the data directory (This is the process until we have local downloads)
+##### Add the file to download.yaml
+
+Edit download.yaml to add entries for any files that need to be downloaded. 
+The local name should put the file in subdirectory named for the source.
 
 ##### Create the directory
 
