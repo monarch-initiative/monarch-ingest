@@ -19,22 +19,22 @@ if gene_ids_a and gene_ids_b:
 
     for gid_a in gene_ids_a.split("|"):
         for gid_b in gene_ids_b.split("|"):
-            gid_a = 'NCBIGene:' + gid_a
-            gid_b = 'NCBIGene:' + gid_b
+            gene_id_a = 'NCBIGene:' + gid_a
+            gene_id_b = 'NCBIGene:' + gid_b
 
             ncbitaxon_match_a = re.match(r'\d+', pid_a)
             if ncbitaxon_match_a:
                 ncbitaxon_a = "NCBITaxon:" + ncbitaxon_match_a.group(0)
-                gene_a = Gene(id=gid_a, in_taxon=ncbitaxon_a, source="infores:entrez")
+                gene_a = Gene(id=gene_id_a, in_taxon=ncbitaxon_a, source="infores:entrez")
             else:
-                gene_a = Gene(id=gid_a, source="infores:entrez")
+                gene_a = Gene(id=gene_id_a, source="infores:entrez")
 
             ncbitaxon_match_b = re.match(r'\d+', pid_b)
             if ncbitaxon_match_b:
                 ncbitaxon_b = "NCBITaxon:" + ncbitaxon_match_b.group(0)
-                gene_b = Gene(id=gid_b, in_taxon=ncbitaxon_b, source="infores:entrez")
+                gene_b = Gene(id=gene_id_b, in_taxon=ncbitaxon_b, source="infores:entrez")
             else:
-                gene_b = Gene(id=gid_b, source="infores:entrez")
+                gene_b = Gene(id=gene_id_b, source="infores:entrez")
 
             association = PairwiseGeneToGeneInteraction(
                 id="uuid:" + str(uuid.uuid1()),
