@@ -1090,7 +1090,7 @@ traitlets = "*"
 
 [[package]]
 name = "kghub-downloader"
-version = "0.1.6"
+version = "0.1.12"
 description = "Downloads and caches files for knowledge graph ETL"
 category = "main"
 optional = false
@@ -1102,6 +1102,7 @@ elasticsearch = "*"
 google-cloud-storage = ">=2.1.0,<3.0.0"
 PyYAML = ">5.0,<7.0"
 tqdm = ">=4.62.3,<5.0.0"
+typer = "0.4"
 
 [[package]]
 name = "kgx"
@@ -2543,7 +2544,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0b994697e686ffdc4c78f0fcafe9ddc997106e782ed1b7df7549db4d87d7c52b"
+content-hash = "033b2f3e5a9dab651dab3ee6a624dee0d90620a6cd703bc8ec4758a126b03bec"
 
 [metadata.files]
 alabaster = [
@@ -3150,8 +3151,8 @@ jupyter-core = [
     {file = "jupyter_core-4.9.1.tar.gz", hash = "sha256:dce8a7499da5a53ae3afd5a9f4b02e5df1d57250cf48f3ad79da23b4778cd6fa"},
 ]
 kghub-downloader = [
-    {file = "kghub-downloader-0.1.6.tar.gz", hash = "sha256:f9cb82bd16687e59bbf9b80c8f68fd285a606d9d88327a312c10d58af2e51c80"},
-    {file = "kghub_downloader-0.1.6-py3-none-any.whl", hash = "sha256:f13ebc436b69fb9bacbd5118029d03c367d521f9c5264c6b3f2dd813bc465cf3"},
+    {file = "kghub-downloader-0.1.12.tar.gz", hash = "sha256:9f966161c89f2120b8d428d2d95deb148023462d19a53882cc522bdc3776654b"},
+    {file = "kghub_downloader-0.1.12-py3-none-any.whl", hash = "sha256:21dc9714528785ccc9179741cd2c5c882fe43dedf70a5313886c4f19f6b91158"},
 ]
 kgx = [
     {file = "kgx-1.5.4-py3-none-any.whl", hash = "sha256:149286c614a12a44c69e54372996078d2e7aef302c0212e654c5c77b24d1dcc4"},
