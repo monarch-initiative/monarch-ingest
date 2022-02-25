@@ -18,7 +18,7 @@ This ingest uses MGI's Reference download file, which contains genes and a tab-d
     * type
     * source
 
-* biolink:NamedThingToInformationContentEntityAssociation
+* biolink:InformationContentEntityToNamedThingAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)

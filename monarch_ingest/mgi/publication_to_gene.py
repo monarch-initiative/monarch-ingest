@@ -2,13 +2,13 @@ import uuid
 
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Predicate,
     Publication,
 )
 from koza.cli_runner import koza_app
 
-source_name = "mgi_gene_to_publication"
+source_name = "mgi_publication_to_gene"
 
 row = koza_app.get_row(source_name)
 
@@ -19,7 +19,6 @@ gene = Gene(
 )
 
 pub_ids = row["PubMed IDs"].split("|")
-pubs = []
 for pub_id in pub_ids:
     pmid = "PMID:" + pub_id
     pub = Publication(
@@ -28,11 +27,11 @@ for pub_id in pub_ids:
         source="infores:mgi",
     )
 
-    association = NamedThingToInformationContentEntityAssociation(
+    association = InformationContentEntityToNamedThingAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
+        subject=pmid,
         predicate=Predicate.mentions,
-        object=pmid,
+        object=gene.id,
         relation=koza_app.translation_table.resolve_term("mentions"),
         source="infores:mgi",
     )
