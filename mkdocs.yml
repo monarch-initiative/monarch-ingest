@@ -8,7 +8,7 @@ nav:
     - Test: tutorials/test-ingest.md
     - Validate: tutorials/validate-output.md
   - Sources:
-    - Alliance of Genome Resources: ingests/alliance.md
+    - AGR: ingests/alliance.md
     - PomBase: ingests/pombase.md
     - XenBase: ingests/xenbase.md
     - ZFIN: ingests/zfin.md
@@ -16,6 +16,11 @@ nav:
     - SGD: ingests/sgd.md
     - FlyBase: ingests/flybase.md
     - RGD: ingests/rgd.md
+    - GO: ingests/goa.md
+    - HPO: ingests/hpoa.md
+    - MGI: ingests/mgi.md
+    - OMIM: ingests/omim.md
+    - STRING: ingests/string.md
   - Kozathon:
       - Setup: kozathon/setup.md
 theme:
