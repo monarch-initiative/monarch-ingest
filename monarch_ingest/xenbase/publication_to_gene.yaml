@@ -1,28 +1,30 @@
-name: 'sgd_gene_to_publication'
-
-files:
-  - './data/sgd/gene2pmid.tab'
-
-format: 'csv'
+name: 'xenbase_publication_to_gene'
 
 delimiter: '\t'
 
 header: 'none'
 
+files:
+  - './data/xenbase/LiteratureMatchedGenesByPaper.txt'
+
+metadata: './monarch_ingest/xenbase/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'
 
 columns:
-  - 'gene name'
-  - 'PubMed ID'
-  - 'feature'
+  - 'xb_article'
+  - 'pmid'
+  - 'gene_pages'
 
+depends_on:
+  - './monarch_ingest/maps/genepage-2-gene.yaml'
 
 node_properties:
   - 'id'
   - 'category'
-  - 'symbol'
-  - 'in_taxon'
   - 'provided_by'
+  - 'type'
+  - 'source'
+
 
 edge_properties:
   - 'id'
@@ -32,5 +34,6 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'

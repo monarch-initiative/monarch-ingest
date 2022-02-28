@@ -1,7 +1,7 @@
 import pytest
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Publication,
 )
 
@@ -13,12 +13,12 @@ markers = "Cbe1|Smrp1"
 
 @pytest.fixture
 def source_name():
-    return "mgi_gene_to_publication"
+    return "mgi_publication_to_gene"
 
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/mgi/gene_to_publication.py"
+    return "./monarch_ingest/mgi/publication_to_gene.py"
 
 
 @pytest.fixture
@@ -61,7 +61,7 @@ def test_association_count(basic_entities):
     associations = [
         entity
         for entity in basic_entities
-        if isinstance(entity, NamedThingToInformationContentEntityAssociation)
+        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
     assert len(associations) == 9
 
@@ -70,15 +70,16 @@ def test_association_values(basic_entities):
     associations = [
         entity
         for entity in basic_entities
-        if isinstance(entity, NamedThingToInformationContentEntityAssociation)
+        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
 
     # This is sort of unintentionally testing order, if that breaks and this
     # tests needs to be refactored to make sure they're in the collection without
     # worrying about order, that's fine.
 
-    assert associations[0].subject == "MGI:1920971"
-    assert associations[0].object == "PMID:11217851"
+    assert associations[0].subject == "PMID:11217851"
+    assert associations[0].object == "MGI:1920971"
 
-    assert associations[8].subject == "MGI:1920971"
-    assert associations[8].object == "PMID:31504408"
+    assert associations[8].subject == "PMID:31504408"
+    assert associations[8].object == "MGI:1920971"
+    

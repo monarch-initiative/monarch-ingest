@@ -1,29 +1,27 @@
-name: 'mgi_gene_to_publication'
+name: 'zfin_publication_to_gene'
 
 format: 'csv'
 
 delimiter: '\t'
 
-# list_delimiter: '|'
-
 header: 'none'
 
 files:
-  - './data/mgi/MRK_Reference.rpt'  # "http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt"
+  - './data/zfin/gene_publication.txt'  # "https://zfin.org/downloads/gene_publication.txt"
 
 global_table: './monarch_ingest/translation_table.yaml'
 
 columns:
-  - 'MGI Marker Accession ID'
-  - 'Marker Symbol'
-  - 'Marker Name'
-  - 'Marker Synonyms'
-  - 'PubMed IDs'
+  - 'Gene Symbol'
+  - 'Gene ID'
+  - 'Publication ID'
+  - 'Publication Type'
+  - 'PubMed ID'
 
 node_properties:
   - 'id'
   - 'category'
-  - 'type'
+  - 'provided_by'
   - 'source'
 
 edge_properties:
@@ -37,4 +35,3 @@ edge_properties:
   - 'source'
 
 transform_mode: 'flat'
-

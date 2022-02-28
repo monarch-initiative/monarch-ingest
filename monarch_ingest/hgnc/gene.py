@@ -2,7 +2,7 @@ import uuid
 
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Predicate,
     Publication,
 )
@@ -46,7 +46,7 @@ for each_id in pubmed_id_list:
         id=publication_id,
         type=koza_app.translation_table.resolve_term("publication"),
     )
-    association = NamedThingToInformationContentEntityAssociation(
+    association = InformationContentEntityToNamedThingAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene.id,
         predicate=Predicate.mentions,

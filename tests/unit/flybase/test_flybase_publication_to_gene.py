@@ -4,13 +4,13 @@ import pytest
 # This name must match the ingest name in the transform code
 @pytest.fixture
 def source_name():
-    return "flybase_gene_to_publication"
+    return "flybase_publication_to_gene"
 
 
 # This is the location of the transform code
 @pytest.fixture
 def script():
-    return "./monarch_ingest/flybase/gene_to_publication.py"
+    return "./monarch_ingest/flybase/publication_to_gene.py"
 
 
 # Create a fixture for a full row, it should be relatively representative of the rows ingested, and can

@@ -2,13 +2,13 @@ import uuid
 
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Predicate,
     Publication,
 )
 from koza.cli_runner import koza_app
 
-source_name = "flybase_gene_to_publication"
+source_name = "flybase_publication_to_gene"
 
 row = koza_app.get_row(source_name)
 
@@ -29,7 +29,7 @@ publication = Publication(
     source="infores:flybase",
 )
 
-association = NamedThingToInformationContentEntityAssociation(
+association = InformationContentEntityToNamedThingAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
     predicate=Predicate.mentions,

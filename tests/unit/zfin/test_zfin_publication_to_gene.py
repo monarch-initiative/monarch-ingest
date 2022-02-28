@@ -1,7 +1,7 @@
 import pytest
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Publication,
 )
 
@@ -20,9 +20,9 @@ def basic_row():
 @pytest.fixture
 def basic_entities(mock_koza, basic_row, global_table):
     return mock_koza(
-        "zfin_gene_to_publication",
+        "zfin_publication_to_gene",
         iter([basic_row]),
-        "./monarch_ingest/zfin/gene_to_publication.py",
+        "./monarch_ingest/zfin/publication_to_gene.py",
         global_table=global_table,
     )
 
@@ -41,7 +41,7 @@ def test_association(basic_entities):
     association = [
         entity
         for entity in basic_entities
-        if isinstance(entity, NamedThingToInformationContentEntityAssociation)
+        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ][0]
-    assert association.subject == "ZFIN:ZDB-GENE-060526-342"
-    assert association.object == "ZFIN:ZDB-PUB-140801-12"
+    assert association.subject == "ZFIN:ZDB-PUB-140801-12"
+    assert association.object == "ZFIN:ZDB-GENE-060526-342"    

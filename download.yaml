@@ -73,7 +73,7 @@
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
   local_name: data/flybase/entity_publication_fb.tsv.gz
-  tag: flybase_gene_to_publication
+  tag: flybase_publication_to_gene
 
 # goa
 
@@ -190,13 +190,13 @@
 -
   url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
   local_name: data/rgd/GENES_RAT.txt
-  tag: rgd_gene_to_publication
+  tag: rgd_publication_to_gene
 
 # sgd
 -
   url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
   local_name: data/sgd/gene2pmid.tab
-  tag: sgd_gene_to_publication
+  tag: sgd_publication_to_gene
 
 # STRING db
 
@@ -251,12 +251,12 @@
 #  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
   url: gs://koza-cache/data/xenbase/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
-  tag: xenbase_gene_to_publication
+  tag: xenbase_publication_to_gene
 -
 # url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
   url: gs://koza-cache/data/xenbase/LiteratureMatchedGenesByPaper.txt
   local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
-  tag: xenbase_gene_to_publication
+  tag: xenbase_publication_to_gene
 -
   url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
   local_name: data/xenbase/xb_xpo_spo_v_v1.tab
@@ -270,7 +270,7 @@
 -
   url: https://zfin.org/downloads/gene_publication.txt
   local_name: data/zfin/gene_publication.txt
-  tag: zfin_gene_to_publication
+  tag: zfin_publication_to_gene
 -
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: data/zfin/id_map_zfin.tsv
@@ -296,4 +296,4 @@
 -
   url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
   local_name: data/mgi/MRK_Reference.rpt
-  tag: mgi_gene_to_publication
+  tag: mgi_publication_to_gene

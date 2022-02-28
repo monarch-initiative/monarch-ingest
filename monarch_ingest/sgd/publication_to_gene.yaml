@@ -1,6 +1,7 @@
+name: 'sgd_publication_to_gene'
 
-
-name: 'zfin_gene_to_publication'
+files:
+  - './data/sgd/gene2pmid.tab'
 
 format: 'csv'
 
@@ -8,23 +9,20 @@ delimiter: '\t'
 
 header: 'none'
 
-files:
-  - './data/zfin/gene_publication.txt'  # "https://zfin.org/downloads/gene_publication.txt"
-
 global_table: './monarch_ingest/translation_table.yaml'
 
 columns:
-  - 'Gene Symbol'
-  - 'Gene ID'
-  - 'Publication ID'
-  - 'Publication Type'
+  - 'gene name'
   - 'PubMed ID'
+  - 'feature'
+
 
 node_properties:
   - 'id'
   - 'category'
+  - 'symbol'
+  - 'in_taxon'
   - 'provided_by'
-  - 'source'
 
 edge_properties:
   - 'id'
@@ -34,7 +32,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'
-

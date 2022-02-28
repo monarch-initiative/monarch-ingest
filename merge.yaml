@@ -45,12 +45,12 @@ merged_graph:
 #        filename:
 #          - output/alliance_gene_to_disease_nodes.tsv
 #          - output/alliance_gene_to_disease_edges.tsv
-    flybase_gene_to_publication:
+    flybase_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/flybase_gene_to_publication_nodes.tsv
-          - output/flybase_gene_to_publication_edges.tsv
+          - output/flybase_publication_to_gene_nodes.tsv
+          - output/flybase_publication_to_gene_edges.tsv
     hgnc_gene:
       input:
         format: tsv
@@ -68,18 +68,18 @@ merged_graph:
         filename:
           - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
-    rgd_gene_to_publication:
+    rgd_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/rgd_gene_to_publication_nodes.tsv
-          - output/rgd_gene_to_publication_edges.tsv
-    sgd_gene_to_publication:
+          - output/rgd_publication_to_gene_nodes.tsv
+          - output/rgd_publication_to_gene_edges.tsv
+    sgd_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/sgd_gene_to_publication_nodes.tsv
-          - output/sgd_gene_to_publication_edges.tsv
+          - output/sgd_publication_to_gene_nodes.tsv
+          - output/sgd_publication_to_gene_edges.tsv
     xenbase_gene:
       input:
         format: tsv
@@ -91,24 +91,24 @@ merged_graph:
         filename:
           - output/xenbase_gene_to_phenotype_nodes.tsv
           - output/xenbase_gene_to_phenotype_edges.tsv
-    xenbase_gene_to_publication:
+    xenbase_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/xenbase_gene_to_publication_nodes.tsv
-          - output/xenbase_gene_to_publication_edges.tsv
+          - output/xenbase_publication_to_gene_nodes.tsv
+          - output/xenbase_publication_to_gene_edges.tsv
     zfin_gene_to_phenotype:
       input:
         format: tsv
         filename:
           - output/zfin_gene_to_phenotype_nodes.tsv
           - output/zfin_gene_to_phenotype_edges.tsv
-    zfin_gene_to_publication:
+    zfin_publication_to_gene:
         input:
           format: tsv
           filename:
-            - output/zfin_gene_to_publication_nodes.tsv
-            - output/zfin_gene_to_publication_edges.tsv
+            - output/zfin_publication_to_gene_nodes.tsv
+            - output/zfin_publication_to_gene_edges.tsv
 
   operations:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats
