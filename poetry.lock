@@ -338,7 +338,7 @@ i18n = ["Babel (>=0.8)"]
 
 [[package]]
 name = "kghub-downloader"
-version = "0.1.6"
+version = "0.1.12"
 description = "Downloads and caches files for knowledge graph ETL"
 category = "main"
 optional = false
@@ -350,6 +350,7 @@ elasticsearch = "*"
 google-cloud-storage = ">=2.1.0,<3.0.0"
 PyYAML = ">5.0,<7.0"
 tqdm = ">=4.62.3,<5.0.0"
+typer = "0.4"
 
 [[package]]
 name = "koza"
@@ -807,7 +808,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8e70ca10f46ed9ddcb10524c5342e1c6cd1cb97bc6307604dd8f1480e16997a9"
+content-hash = "52cef96478049fe94d4b21e79998cf276f4f613ba838fd1de9583949bdd92e38"
 
 [metadata.files]
 appdirs = [
@@ -953,8 +954,8 @@ jinja2 = [
     {file = "Jinja2-2.11.3.tar.gz", hash = "sha256:a6d58433de0ae800347cab1fa3043cebbabe8baa9d29e668f1c768cb87a333c6"},
 ]
 kghub-downloader = [
-    {file = "kghub-downloader-0.1.6.tar.gz", hash = "sha256:f9cb82bd16687e59bbf9b80c8f68fd285a606d9d88327a312c10d58af2e51c80"},
-    {file = "kghub_downloader-0.1.6-py3-none-any.whl", hash = "sha256:f13ebc436b69fb9bacbd5118029d03c367d521f9c5264c6b3f2dd813bc465cf3"},
+    {file = "kghub-downloader-0.1.12.tar.gz", hash = "sha256:9f966161c89f2120b8d428d2d95deb148023462d19a53882cc522bdc3776654b"},
+    {file = "kghub_downloader-0.1.12-py3-none-any.whl", hash = "sha256:21dc9714528785ccc9179741cd2c5c882fe43dedf70a5313886c4f19f6b91158"},
 ]
 koza = [
     {file = "koza-0.1.7-py3-none-any.whl", hash = "sha256:85faa9963636e2c9bcf3a785b1f4af98c77275268d784c01364df6021440d462"},

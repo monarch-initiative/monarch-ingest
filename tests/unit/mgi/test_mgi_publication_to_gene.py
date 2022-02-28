@@ -82,4 +82,3 @@ def test_association_values(basic_entities):
 
     assert associations[8].subject == "PMID:31504408"
     assert associations[8].object == "MGI:1920971"
-    
