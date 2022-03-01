@@ -14,9 +14,11 @@ row = koza_app.get_row(source_name)
 
 if row['DirectEvidence'] in ['marker/mechanism', 'therapeutic']:
 
-    chemical = ChemicalEntity(id='MESH:' + row['ChemicalID'], name=row['ChemicalName'])
+    chemical = ChemicalEntity(
+        id='MESH:' + row['ChemicalID'], name=row['ChemicalName'], source='infores:ctd'
+    )
 
-    disease = Disease(id=row['DiseaseID'])
+    disease = Disease(id=row['DiseaseID'], source="infores:ctd")
 
     if row['DirectEvidence'] == 'marker/mechanism':
         predicate = Predicate.biomarker_for
@@ -32,6 +34,7 @@ if row['DirectEvidence'] in ['marker/mechanism', 'therapeutic']:
         object=disease.id,
         relation=relation,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
+        source="infores:ctd",
     )
 
     koza_app.write(chemical, disease, association)
