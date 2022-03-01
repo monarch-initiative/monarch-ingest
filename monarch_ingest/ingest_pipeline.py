@@ -140,6 +140,7 @@ def ingests(context):
         Ingest("alliance", "gene"),
         Ingest("alliance", "gene_to_phenotype"),
         Ingest("alliance", "publication"),
+        Ingest("ctd", "chemical_to_disease"),
         Ingest("flybase", "publication_to_gene"),
         Ingest("goa", "go_annotation"),
         Ingest("hgnc", "gene"),

@@ -1,10 +1,9 @@
 import uuid
-import logging
 
 from biolink_model_pydantic.model import (
     ChemicalEntity,
-    Disease,
     ChemicalToDiseaseOrPhenotypicFeatureAssociation,
+    Disease,
     Predicate,
 )
 from koza.cli_runner import koza_app
@@ -32,7 +31,7 @@ if row['DirectEvidence'] in ['marker/mechanism', 'therapeutic']:
         predicate=predicate,
         object=disease.id,
         relation=relation,
-        publications=["PMID:" + p for p in row['PubMedIDs'].split("|")]
+        publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
     )
 
     koza_app.write(chemical, disease, association)
