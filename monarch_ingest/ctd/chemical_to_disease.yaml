@@ -1,0 +1,49 @@
+name: 'ctd_chemical_to_disease'
+
+files:
+  - './data/ctd/CTD_chemicals_diseases.tsv.gz'
+
+# Specify compression if necessary
+compression: 'gzip'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+header: 27
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - ChemicalName
+  - ChemicalID
+  - CasRN
+  - DiseaseName
+  - DiseaseID
+  - DirectEvidence
+  - InferenceGeneSymbol
+  - InferenceScore
+  - OmimIDs
+  - PubMedIDs
+
+
+# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'publications'
+  - 'provided_by'
