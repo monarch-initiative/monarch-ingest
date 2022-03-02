@@ -19,9 +19,7 @@ mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 koza = "^0.1.7"
 biolink_model_pydantic = "0.1.6"
-kghub_downloader = ">=0.1.0"
-kghub-downloader = "^0.1.6"
-black = "20.8b1"
+kghub-downloader = "^0.1.12"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

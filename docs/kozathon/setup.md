@@ -18,28 +18,22 @@ This will install Poetry, create the virtual environment and fetch dependencies.
 
 ### Downloading data
 
-Download data files for our demo ingests. PomBase's phenotype annotations, a mini-StringDB file, and the HPOA file.
+Download the PomBase data
 
 ```bash
-#Assuming you are still in monarch-ingest dir
-mkdir -p data
-cd data
-curl -OJ https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
-curl -OJ https://raw.githubusercontent.com/monarch-initiative/koza/main/tests/resources/source-files/string.tsv
-curl -OJ http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
-cd ..
+poetry run downloader --tag pombase_gene_to_phenotype
 ```
 
 ### Make sure the PomBase ingest is working
 
 ```bash
-poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/pombase/metadata.yaml --output-format tsv  
+poetry run koza transform --source monarch_ingest/pombase/gene_to_phenotype.yaml --row-limit 1000
 ```
 
 ### Validate the output*
 
 ```bash
-poetry run kgx validate -i tsv output/PomBase.gene-to-phenotype_nodes.tsv output/PomBase.gene-to-phenotype_edges.tsv 
+poetry run kgx validate -i tsv output/pombase_gene_to_phenotype_nodes.tsv output/pombase_gene_to_phenotype_edges.tsv 
 ```
 
 ### 👍 You're ready for Kozathon
