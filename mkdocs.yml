@@ -11,6 +11,7 @@ nav:
     - AGR: ingests/alliance.md
     - PomBase: ingests/pombase.md
     - XenBase: ingests/xenbase.md
+    - CTD: ingests/ctd.md
     - ZFIN: ingests/zfin.md
     - HGNC: ingests/hgnc.md
     - SGD: ingests/sgd.md

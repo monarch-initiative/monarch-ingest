@@ -69,6 +69,12 @@
   local_name: data/alliance/BGI_WB.json.gz
   tag: alliance_gene
 
+# ctd
+-
+  url: http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
+  local_name: data/ctd/CTD_chemicals_diseases.tsv.gz
+  tag: ctd_chemical_to_disease
+
 # flybase
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
