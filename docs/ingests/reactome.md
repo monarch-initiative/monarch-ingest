@@ -14,7 +14,7 @@ This ingest uses Reactome's gene to pathway download file, which contains all en
 * biolink:Pathway
     * id
 
-* biolink:MacromolecularMachineToBiologicalProcessAssociation
+* biolink:ChemicalToPathwayAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)
@@ -33,7 +33,7 @@ This ingest uses Reactome's chemical to pathway download file, which contains al
 * biolink:Pathway
     * id
 
-* biolink:MacromolecularMachineToBiologicalProcessAssociation
+* biolink:ChemicalToPathwayAssociation
     * id (random uuid)
     * subject (chemical.id)
     * predicate (mentions)

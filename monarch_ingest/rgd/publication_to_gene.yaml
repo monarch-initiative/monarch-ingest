@@ -1,4 +1,4 @@
-name: 'rgd_gene_to_publication'
+name: 'rgd_publication_to_gene'
 
 format: 'csv'
 

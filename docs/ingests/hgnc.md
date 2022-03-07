@@ -24,7 +24,7 @@ This ingest uses HGNC's "complete set" download file, which only contains associ
 * biolink:Publication
     * id
 
-* biolink:NamedThingToInformationContentEntityAssociation
+* biolink:InformationContentEntityToNamedThingAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)

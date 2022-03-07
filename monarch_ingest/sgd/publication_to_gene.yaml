@@ -1,4 +1,4 @@
-name: 'sgd_gene_to_publication'
+name: 'sgd_publication_to_gene'
 
 files:
   - './data/sgd/gene2pmid.tab'

@@ -17,7 +17,7 @@ Note, there will be a column mismatch warning on this transform because there ar
 * biolink:Publication
     * id
 
-* biolink:NamedThingToInformationContentEntityAssociation
+* biolink:InformationContentEntityToNamedThingAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)

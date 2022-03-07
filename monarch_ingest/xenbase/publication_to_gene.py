@@ -3,7 +3,7 @@ import uuid
 
 from biolink_model_pydantic.model import (
     Gene,
-    NamedThingToInformationContentEntityAssociation,
+    InformationContentEntityToNamedThingAssociation,
     Predicate,
     Publication,
 )
@@ -11,7 +11,7 @@ from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
-source_name = "xenbase_gene_to_publication"
+source_name = "xenbase_publication_to_gene"
 
 row = koza_app.get_row(source_name)
 genepage2gene = koza_app.get_map("genepage-2-gene")
@@ -42,7 +42,7 @@ for gene_page in gene_pages.split(","):
 
         entities.append(gene)
 
-        association = NamedThingToInformationContentEntityAssociation(
+        association = InformationContentEntityToNamedThingAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene.id,
             predicate=Predicate.mentions,

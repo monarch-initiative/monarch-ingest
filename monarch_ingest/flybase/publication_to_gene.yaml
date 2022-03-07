@@ -1,30 +1,34 @@
-name: 'xenbase_gene_to_publication'
+name: 'flybase_publication_to_gene'
+
+files:
+  - './data/flybase/entity_publication_fb.tsv.gz'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+compression: 'gzip'
+
+format: 'csv'
 
 delimiter: '\t'
 
-header: 'none'
+comment_char: '#'
 
-files:
-  - './data/xenbase/LiteratureMatchedGenesByPaper.txt'
-
-metadata: './monarch_ingest/xenbase/metadata.yaml'
-global_table: './monarch_ingest/translation_table.yaml'
+header: 5
 
 columns:
-  - 'xb_article'
-  - 'pmid'
-  - 'gene_pages'
+  - 'entity_id'
+  - 'entity_name'
+  - 'FlyBase_publication_id'
+  - 'PubMed_id'
 
-depends_on:
-  - './monarch_ingest/maps/genepage-2-gene.yaml'
 
 node_properties:
   - 'id'
   - 'category'
+  - 'symbol'
+  - 'in_taxon'
   - 'provided_by'
-  - 'type'
   - 'source'
-
 
 edge_properties:
   - 'id'
