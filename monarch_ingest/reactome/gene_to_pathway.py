@@ -2,7 +2,7 @@ import uuid
 
 from biolink_model_pydantic.model import (
     Gene,
-    MacromolecularMachineToBiologicalProcessAssociation,
+    ChemicalToPathwayAssociation,
     Pathway,
     Predicate,
 )
@@ -21,7 +21,7 @@ pathway = Pathway(
     source="infores:reactome",
 )
 
-association = MacromolecularMachineToBiologicalProcessAssociation(
+association = ChemicalToPathwayAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
     predicate=Predicate.participates_in,
