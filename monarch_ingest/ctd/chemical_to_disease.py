@@ -12,7 +12,7 @@ source_name = "ctd_chemical_to_disease"
 
 row = koza_app.get_row(source_name)
 
-if row['DirectEvidence'] in ['marker/mechanism', 'therapeutic']:
+if row['DirectEvidence'] in ['therapeutic']:
 
     chemical = ChemicalEntity(
         id='MESH:' + row['ChemicalID'], name=row['ChemicalName'], source='infores:ctd'
@@ -20,12 +20,9 @@ if row['DirectEvidence'] in ['marker/mechanism', 'therapeutic']:
 
     disease = Disease(id=row['DiseaseID'], source="infores:ctd")
 
-    if row['DirectEvidence'] == 'marker/mechanism':
-        predicate = Predicate.biomarker_for
-        relation = koza_app.translation_table.resolve_term("is marker for")
-    elif row['DirectEvidence'] == 'therapeutic':
-        predicate = Predicate.treats
-        relation = koza_app.translation_table.resolve_term("is substance that treats")
+    # Update this if we start bringing in marker/mechanism records
+    predicate = Predicate.treats
+    relation = koza_app.translation_table.resolve_term("is substance that treats")
 
     association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
