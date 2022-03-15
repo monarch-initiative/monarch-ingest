@@ -3,7 +3,7 @@ Unit tests for GO Annotations ingest
 """
 import logging
 from sys import stderr
-
+from biolink_model_pydantic.model import Association
 import pytest
 
 logger = logging.getLogger(__name__)
@@ -492,3 +492,44 @@ def test_association(basic_goa):
     assert result_expected[association.subject][8] in association.has_evidence
 
     assert "infores:goa" in association.source
+
+
+@pytest.fixture
+def mgi_entities(
+    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
+):
+    row = {
+        'DB': 'MGI',
+        'DB_Object_ID': 'MGI:1918911',
+        'DB_Object_Symbol': '0610005C13Rik',
+        'Qualifier': 'enables',
+        'GO_ID': 'GO:0003674',
+        'DB_Reference': 'MGI:MGI:2156816|GO_REF:0000015',
+        'Evidence_Code': 'ND',
+        'With_or_From': '',
+        'Aspect': 'F',
+        'DB_Object_Name': 'RIKEN cDNA 0610005C13 gene',
+        'DB_Object_Synonym': '',
+        'DB_Object_Type': 'gene',
+        'Taxon': 'taxon:10090',
+        'Date': '20200917',
+        'Assigned_By': 'MGI',
+        'Annotation_Extension': '',
+        'Gene_Product_Form_ID': '',
+    }
+
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+        local_table=local_table,
+        map_cache=map_cache,
+    )
+
+
+def test_mgi_curie(mgi_entities):
+    association = [association for association in mgi_entities if isinstance(association, Association)][0]
+    assert association
+    assert association.subject == "MGI:1918911"
+

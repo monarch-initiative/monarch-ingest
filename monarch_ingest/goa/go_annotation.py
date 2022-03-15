@@ -32,7 +32,14 @@ except KeyError:
 if gene_id:
     gene_id = 'NCBIGene:' + gene_id
 else:
-    gene_id = f"{db}:{db_object_id}"
+    # This check is to avoid MGI:MGI:123
+    if ":" in db_object_id:
+        gene_id = db_object_id
+    else:
+        gene_id = f"{db}:{db_object_id}"
+
+# The biolink model might be wrong here about all caps, but matching it for now
+gene_id = gene_id.replace('PomBase', 'POMBASE')
 
 ncbitaxon = row['Taxon']
 if ncbitaxon:
