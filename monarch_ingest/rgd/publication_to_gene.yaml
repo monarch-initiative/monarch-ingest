@@ -4,7 +4,7 @@ format: 'csv'
 
 delimiter: '\t'
 
-header: 82
+header: 83
 
 files:
   - './data/rgd/GENES_RAT.txt'
