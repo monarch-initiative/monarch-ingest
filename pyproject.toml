@@ -18,8 +18,9 @@ importlib-metadata = "^4.6.1"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 koza = "^0.1.7"
-biolink_model_pydantic = "0.1.6"
+biolink_model_pydantic = "^0.1.7"
 kghub-downloader = "^0.1.12"
+kgx = "^1.5.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -1,8 +1,8 @@
 import uuid
 
 from biolink_model_pydantic.model import (
-    Gene,
     ChemicalToPathwayAssociation,
+    Gene,
     Pathway,
     Predicate,
 )

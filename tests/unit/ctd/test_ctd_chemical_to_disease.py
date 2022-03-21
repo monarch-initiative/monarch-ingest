@@ -90,20 +90,7 @@ def test_no_direct_evidence(no_direct_evidence):
 
 def test_marker_mechanism_entities(marker_mechanism):
     entities = marker_mechanism
-    assert entities
-    assert len(entities) == 3
-    chemical = [e for e in entities if isinstance(e, ChemicalEntity)][0]
-    disease = [e for e in entities if isinstance(e, Disease)][0]
-    association = [
-        e
-        for e in entities
-        if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)
-    ][0]
-    assert chemical
-    assert disease
-    assert association
-    assert association.predicate == Predicate.biomarker_for
-    assert 'PMID:19098162' in association.publications
+    assert len(entities) == 0
 
 
 def test_therapeutic_entities(therapeutic):
