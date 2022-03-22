@@ -112,3 +112,56 @@ This ingest doesn't make an effort to sort these publication categories into mor
     * type (IAO:0000311 for publication, IAO:0000013 for article)
     * creation date (datePublished)
     * keywords (keywords)
+
+### Gene Expression
+
+
+* Species
+* SpeciesID
+* GeneID
+* GeneSymbol
+* Location
+* StageTerm
+* AssayID
+* AssayTermName
+* CellularComponentID
+* CellularComponentTerm
+* CellularComponentQualifierIDs
+* CellularComponentQualifierTermNames
+* SubStructureID
+* SubStructureName
+* SubStructureQualifierIDs
+* SubStructureQualifierTermNames
+* AnatomyTermID
+* AnatomyTermName
+* AnatomyTermQualifierIDs
+* AnatomyTermQualifierTermNames
+* SourceURL
+* Source
+* Reference
+
+#### Discussion Group
+
+https://www.alliancegenome.org/working-groups#expression
+
+#### Download
+
+https://www.alliancegenome.org/downloads#expression
+
+#### Biolink Captured
+
+* biolink:Gene
+    * id (row['GeneID'])
+
+* biolink:Anatomy
+    * id (row['DOID'])
+
+* biolink:GeneToDiseaseAssociation
+    * id (random uuid)
+    * subject (gene.id)
+    * predicates (see table above)
+    * object (disease.id)
+    * negated (for 'is not implicated in')
+    * relation (see predicate table above? )
+    * publications (row['Reference'])
+    * source (row['source'])
