@@ -1,4 +1,4 @@
-## Gene Orthology
+## Panther Gene Orthology
 
 Gene orthology analyses generate testable hypothesis about gene function and biological processes using experimental results from other (especially highly studied so-called 'model' species) using protein (and sometimes, simply nucleic acid level) alignments of genomic sequences.  The source of gene orthology data for this ingest is from the  [PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System](http://www.pantherdb.org/). Panther was designed to classify proteins (and their genes) in order to facilitate high-throughput analysis. Proteins have been classified according to:
 - _Family and subfamily:_ families are groups of evolutionarily related proteins; subfamilies are related proteins that also have the same function
@@ -14,26 +14,48 @@ This ingest uses data derived form the current version (release 16.0) of the Pan
 
 There are various cross-sections of the Panther database which remain be covered by this ingest (Note: **T.B.D** means "To Be Done")
 
+### Status of Panther Ingest
+
+The first iteration of this dataset (committed March 2022) focuses on [Reference Genome Gene-to-Gene Orthology Relationships](#reference-genome-gene-to-gene-orthology-relationships). Additional Panther associations (protein (sub)family pathways, sequences, _etc_, as generally described below) may be added at a later date.
+
 ### Reference Genome Gene-to-Gene Orthology Relationships
 
 Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther analyses.
 
+
 - _Source File:_ [RefGenomeOrthologs.tar.gz](http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz)
 
-- _Biolink classes and properties captured:_
+#### Panther Data Model of RefGenomeOrthologs
 
-    - **biolink:Gene**
-      * id (NCBIGene Entrez ID)
-      * in taxon (NCBITaxon ID)
-      * source (infores:entrez)
+| Data Field | Content                                     | 
+|------------|---------------------------------------------| 
+| Gene       | species1 &#124; DB=id1 &#124; protdb=pdbid1|
+| Ortholog   | species2 &#124; DB=id2 &#124; protdb=pdbid2| 
+| Type of ortholog   | [LDO, O, P, X ,LDX]  see [README](http://data.pantherdb.org/ftp/ortholog/current_release/README). | 
+| Common ancestor for the orthologs   | taxon name of common ancestor|
+| Panther Ortholog ID   | Panther (sub)family identifier| 
 
-    - **biolink:GeneToGeneHomologyAssociation**
-      * id (random uuid)
-      * subject (gene.id)
-      * predicate (orthologous to)
-      * object (gene.id)
-      * relation (RO:HOM0000017)
-      * provided_by (infores:panther)
+The `DB=id#` fields - where DB == database namespace and id# is the object identifier - are directly translated, by internal namespace mapping, into gene CURIEs.
+
+The `species#` are abridged labels currently filtered and mapped onto NCBI Taxon identifiers, using an hard-coded dictionary.
+
+#### Biolink classes and properties captured
+
+- **biolink:Gene**
+  * id (NCBIGene Entrez ID)
+  * in taxon (NCBITaxon ID)
+  * source (infores:panther) 
+
+Note that the Gene `source` is currently given as Panther, although the real source of a Gene identifier is given by its CURIE namespace.
+
+
+- **biolink:GeneToGeneHomologyAssociation**
+  * id (random uuid)
+  * subject (gene.id)
+  * predicate (orthologous to)
+  * object (gene.id)
+  * relation (RO:HOM0000017)
+  * provided_by (infores:panther)
 
 ### Protein Family and Subfamily Classifications - T.B.D.
 
@@ -182,7 +204,3 @@ Only a subset of the available species will be ingested into Monarch at this tim
      * object (pathway.id)
      * relation (RO:0002331)
      * provided_by (infores:panther)
-
-### Identifier mappings
-
-We use the [UniProt ID mapping data data](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz) to map Panther protein nodes onto gene nodes with Entrez (GeneID) identifiers.
