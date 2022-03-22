@@ -1,0 +1,64 @@
+name: 'alliance_gene_to_expression'
+
+format: 'json'
+
+files:
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_RGD.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_RGD.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_MGI.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_MGI.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_FB.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_FB.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_WB.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_WB.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_SGD.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_SGD.json.gz"
+
+metadata: './monarch_ingest/alliance/metadata.yaml'
+global_table: './monarch_ingest/translation_table.yaml'
+
+json_path:
+  - 'data'
+
+required_properties:
+  - Species
+  - SpeciesID
+  - GeneID
+  - GeneSymbol
+  - Location
+  - StageTerm
+  - AssayID
+  - AssayTermName
+  - CellularComponentID
+  - CellularComponentTerm
+  - CellularComponentQualifierIDs
+  - CellularComponentQualifierTermNames
+  - SubStructureID
+  - SubStructureName
+  - SubStructureQualifierIDs
+  - SubStructureQualifierTermNames
+  - AnatomyTermID
+  - AnatomyTermName
+  - AnatomyTermQualifierIDs
+  - AnatomyTermQualifierTermNames
+  - SourceURL
+  - Source
+  - Reference
+
+depends_on:
+  - './monarch_ingest/maps/alliance-gene.yaml'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'qualifiers'
+  - 'publications'
+  - 'provided_by'
+
+transform_mode: 'flat'
