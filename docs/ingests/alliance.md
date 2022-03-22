@@ -115,7 +115,6 @@ This ingest doesn't make an effort to sort these publication categories into mor
 
 ### Gene Expression
 
-
 * Species
 * SpeciesID
 * GeneID
@@ -153,8 +152,8 @@ https://www.alliancegenome.org/downloads#expression
 * biolink:Gene
     * id (row['GeneID'])
 
-* biolink:Anatomy
-    * id (row['DOID'])
+* biolink:CellularComponent
+    * id (row['CellularComponentID'])
 
 * biolink:GeneToDiseaseAssociation
     * id (random uuid)
