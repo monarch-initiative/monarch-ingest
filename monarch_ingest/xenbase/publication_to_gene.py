@@ -26,8 +26,6 @@ publication = Publication(
     source="infores:xenbase",
 )
 
-entities.append(publication)
-
 for gene_page in gene_pages.split(","):
     gene_page_id = gene_page.split(" ")[0]
     try:
@@ -39,8 +37,6 @@ for gene_page in gene_pages.split(","):
         continue
     for gene_id in gene_ids:
         gene = Gene(id=gene_id, source="infores:xenbase")
-
-        entities.append(gene)
 
         association = InformationContentEntityToNamedThingAssociation(
             id="uuid:" + str(uuid.uuid1()),

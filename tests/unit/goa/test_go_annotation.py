@@ -3,8 +3,9 @@ Unit tests for GO Annotations ingest
 """
 import logging
 from sys import stderr
-from biolink_model_pydantic.model import Association
+
 import pytest
+from biolink_model_pydantic.model import Association
 
 logger = logging.getLogger(__name__)
 
@@ -529,7 +530,10 @@ def mgi_entities(
 
 
 def test_mgi_curie(mgi_entities):
-    association = [association for association in mgi_entities if isinstance(association, Association)][0]
+    association = [
+        association
+        for association in mgi_entities
+        if isinstance(association, Association)
+    ][0]
     assert association
     assert association.subject == "MGI:1918911"
-

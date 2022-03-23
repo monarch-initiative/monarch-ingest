@@ -76,40 +76,40 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
     )
 
 
-def test_proteins(basic_pl):
-    gene_a = basic_pl[0]
-    assert gene_a
-    assert gene_a.id == "NCBIGene:14679"
+# def test_proteins(basic_pl):
+#     gene_a = basic_pl[0]
+#     assert gene_a
+#     assert gene_a.id == "NCBIGene:14679"
 
-    # 'category' is multivalued (an array)
-    assert "biolink:Gene" in gene_a.category
-    # This ancestral category appears to be missing? Pydantic model error?
-    # assert "biolink:BiologicalEntity" in gene_a.category
-    assert "biolink:NamedThing" in gene_a.category
+#     # 'category' is multivalued (an array)
+#     assert "biolink:Gene" in gene_a.category
+#     # This ancestral category appears to be missing? Pydantic model error?
+#     # assert "biolink:BiologicalEntity" in gene_a.category
+#     assert "biolink:NamedThing" in gene_a.category
 
-    # 'in_taxon' is multivalued (an array)
-    assert "NCBITaxon:10090" in gene_a.in_taxon
+#     # 'in_taxon' is multivalued (an array)
+#     assert "NCBITaxon:10090" in gene_a.in_taxon
 
-    assert gene_a.source == "infores:entrez"
+#     assert gene_a.source == "infores:entrez"
 
-    gene_b = basic_pl[1]
-    assert gene_b
-    assert gene_b.id == "NCBIGene:56480"
+#     gene_b = basic_pl[1]
+#     assert gene_b
+#     assert gene_b.id == "NCBIGene:56480"
 
-    # 'category' is multivalued (an array)
-    assert "biolink:Gene" in gene_b.category
-    # This ancestral category appears to be missing? Pydantic model error?
-    # assert "biolink:BiologicalEntity" in gene_b.category
-    assert "biolink:NamedThing" in gene_b.category
+#     # 'category' is multivalued (an array)
+#     assert "biolink:Gene" in gene_b.category
+#     # This ancestral category appears to be missing? Pydantic model error?
+#     # assert "biolink:BiologicalEntity" in gene_b.category
+#     assert "biolink:NamedThing" in gene_b.category
 
-    # 'in_taxon' is multivalued (an array)
-    assert "NCBITaxon:10090" in gene_b.in_taxon
+#     # 'in_taxon' is multivalued (an array)
+#     assert "NCBITaxon:10090" in gene_b.in_taxon
 
-    assert gene_b.source == "infores:entrez"
+#     assert gene_b.source == "infores:entrez"
 
 
 def test_association(basic_pl):
-    association = basic_pl[2]
+    association = basic_pl[0]
     assert association
     assert association.subject == "NCBIGene:14679"
     assert association.object == "NCBIGene:56480"

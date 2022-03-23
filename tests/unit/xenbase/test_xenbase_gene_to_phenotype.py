@@ -36,16 +36,12 @@ def entities(
 
 def test_gene2_phenotype_transform(entities):
     assert entities
-    assert len(entities) == 3
-    genes = [entity for entity in entities if isinstance(entity, Gene)]
-    phenotypes = [entity for entity in entities if isinstance(entity, PhenotypicFeature)]
+    assert len(entities) == 1
     associations = [
         entity
         for entity in entities
         if isinstance(entity, GeneToPhenotypicFeatureAssociation)
     ]
-    assert len(genes) == 1
-    assert len(phenotypes) == 1
     assert len(associations) == 1
 
 

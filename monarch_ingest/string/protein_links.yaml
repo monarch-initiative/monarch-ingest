@@ -45,12 +45,6 @@ filters:
     filter_code: 'gt'
     value: 700
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'in_taxon'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -58,6 +52,5 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'source'
 
 transform_mode: 'flat'

@@ -1,9 +1,5 @@
 import pytest
-from biolink_model_pydantic.model import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Publication,
-)
+from biolink_model_pydantic.model import InformationContentEntityToNamedThingAssociation
 
 pubmed_ids = (
     "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"
@@ -42,19 +38,19 @@ def basic_entities(mock_koza, source_name, basic_row, script, global_table):
     )
 
 
-def test_gene(basic_entities):
-    gene = [entity for entity in basic_entities if isinstance(entity, Gene)][0]
-    assert gene.id == "MGI:1920971"
+# def test_gene(basic_entities):
+#     gene = [entity for entity in basic_entities if isinstance(entity, Gene)][0]
+#     assert gene.id == "MGI:1920971"
 
 
-def test_pub_count(basic_entities):
-    pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
-    assert len(pubs) == 9
+# def test_pub_count(basic_entities):
+#     pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
+#     assert len(pubs) == 9
 
 
-def test_pub(basic_entities):
-    pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
-    assert str(pubs[0].id)[5:] in pubmed_ids
+# def test_pub(basic_entities):
+#     pubs = [entity for entity in basic_entities if isinstance(entity, Publication)]
+#     assert str(pubs[0].id)[5:] in pubmed_ids
 
 
 def test_association_count(basic_entities):

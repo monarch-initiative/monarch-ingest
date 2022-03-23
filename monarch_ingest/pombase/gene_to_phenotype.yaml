@@ -34,14 +34,6 @@ columns:
     - 'Taxon'
     - 'Date'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'symbol'
-  - 'in_taxon'
-  - 'provided_by'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -52,6 +44,5 @@ edge_properties:
   - 'qualifiers'
   - 'publications'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'

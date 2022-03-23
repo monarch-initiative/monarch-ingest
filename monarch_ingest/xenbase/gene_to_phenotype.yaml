@@ -24,15 +24,8 @@ columns:
   - 'RELATION_LABEL'
   - 'EVIDENCE'
   - 'EVIDENCE_LABEL'
-  - 'SOURCE'
   - 'IS_DEFINED_BY'
   - 'QUALIFIER'
-
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'source'
 
 edge_properties:
   - 'id'
@@ -42,6 +35,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'
