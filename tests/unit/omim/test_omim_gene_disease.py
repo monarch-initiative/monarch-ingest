@@ -5,9 +5,7 @@ OMIM Morbid map tests to
 import pytest
 from biolink_model_pydantic.model import (
     Disease,
-    Gene,
     GeneToDiseaseAssociation,
-    NucleicAcidEntity,
     Predicate,
 )
 
@@ -50,14 +48,10 @@ def gene_association_entities(mock_koza, gene_association_row, global_table, map
 def test_gene_association_transform(gene_association_entities):
     entities = gene_association_entities
     assert entities
-    assert len(entities) == 3
-    genes = [entity for entity in entities if isinstance(entity, Gene)]
-    diseases = [entity for entity in entities if isinstance(entity, Disease)]
+    assert len(entities) == 2
     associations = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ]
-    assert len(genes) == 1
-    assert len(diseases) == 1
     assert len(associations) == 1
 
 
@@ -87,42 +81,6 @@ def test_ignore_phenotype_modifiers(
         assert isinstance(entity, Disease) is False
         assert isinstance(entity, GeneToDiseaseAssociation) is False
 
-
-def test_genomic_entity_row(mock_koza, global_table, map_cache):
-    row = {
-        'Phenotype': 'Abdominal obesity-metabolic syndrome (2)',
-        'Gene Symbols': 'AOMS2',
-        'MIM Number': '605572',
-        'Cyto Location': '17p12',
-    }
-
-    entities = mock_koza(
-        name="omim_gene_to_disease",
-        data=iter([row]),
-        transform_code="./monarch_ingest/omim/gene_to_disease.py",
-        global_table=global_table,
-        local_table="./monarch_ingest/omim/omim-translation.yaml",
-        map_cache=map_cache,
-    )
-
-    assert entities
-    assert len(entities) == 3
-    genomic_entity = [
-        entity for entity in entities if isinstance(entity, NucleicAcidEntity)
-    ][0]
-    assert genomic_entity
-    assert genomic_entity.id == 'NCBIGene:65077'
-    disease = [entity for entity in entities if isinstance(entity, Disease)][0]
-    assert disease
-    assert disease.id == 'OMIM:605572'
-    association = [
-        entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
-    ][0]
-    assert association
-    assert association.predicate == Predicate.gene_associated_with_condition
-    assert association.relation == 'RO:0003303'
-
-
 def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_cache):
     gene_association_row['Phenotype'] = '{' + gene_association_row['Phenotype'] + '}'
     entities = mock_koza(
@@ -133,7 +91,7 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
         local_table="./monarch_ingest/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
-    assert len(entities) == 3
+    assert len(entities) == 2
     association = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]

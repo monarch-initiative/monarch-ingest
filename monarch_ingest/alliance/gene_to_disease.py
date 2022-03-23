@@ -61,4 +61,4 @@ if row["DBobjectType"] == "gene" and predicate:
 
     # TODO: Handle ECO terms in row["EvidenceCode"]
 
-    koza_app.write(gene, disease, association)
+    koza_app.write(association)

@@ -48,19 +48,6 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
         global_table=global_table,
     )
 
-
-def test_gene_id(rat):
-    genes = [gene for gene in rat if isinstance(gene, Gene)]
-    assert genes[0].id == "RGD:61958"
-
-
-def test_phenotypic_feature_id(rat):
-    phenotypes = [
-        phenotype for phenotype in rat if isinstance(phenotype, PhenotypicFeature)
-    ]
-    assert phenotypes[0].id == "MP:0001625"
-
-
 def test_association_publication(rat):
     associations = [
         association

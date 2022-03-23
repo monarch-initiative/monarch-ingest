@@ -34,21 +34,8 @@ def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
         global_table=global_table,
     )
 
-
-def test_gene(basic_g2p):
-    gene = basic_g2p[0]
-    assert gene
-    assert gene.id == "FB:FBgn0001098"
-
-
-def test_publication(basic_g2p):
-    publication = basic_g2p[1]
-    assert publication
-    assert publication.id == "PMID:10199954"
-
-
 def test_association(basic_g2p):
-    association = basic_g2p[2]
+    association = basic_g2p[0]
     assert association
     assert association.subject == "FB:FBgn0001098"
     assert association.object == "PMID:10199954"
@@ -63,9 +50,3 @@ def basic_g2p_without_pmid(mock_koza, source_name, basic_row, script, global_tab
         script,
         global_table=global_table,
     )
-
-
-def test_publication_withoutpmid(basic_g2p_without_pmid):
-    publication = basic_g2p_without_pmid[1]
-    assert publication
-    assert publication.id == "FB:FBrf0108260"

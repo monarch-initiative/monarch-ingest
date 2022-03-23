@@ -159,4 +159,4 @@ association = GeneToDiseaseAssociation(
     source='infores:omim',
 )
 
-koza_app.write(disease, association)
+koza_app.write(association)

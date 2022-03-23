@@ -58,12 +58,6 @@ columns:
   - Annotation_Extension
   - Gene_Product_Form_ID
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'in_taxon'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -72,6 +66,5 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'source'
 
 transform_mode: 'flat'

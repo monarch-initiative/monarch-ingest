@@ -52,4 +52,4 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
                     qualifiers.append(condition["conditionClassId"])
         association.qualifiers = qualifiers
 
-    koza_app.write(gene, phenotypicFeature, association)
+    koza_app.write(association)
