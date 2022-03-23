@@ -53,7 +53,7 @@ Need a predicate for each kind of relationship:
 
 | Alliance AssociationType | predicate | relation | 
 |  ----------------------- | --------- | ------- |
-| biomarker_via_orthology  | biolionk:biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
+| biomarker_via_orthology  | biolink:biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
 | implicated_via_orthology  | biolink:contributes_to | _currently excluded, is this is_implicated_in, but with a qualifier?_ |
 | is_implicated_in | biolink:contributes_to | "RO:0003302" |
 | is_marker_for | biolink:biomarker_for | "RO:0002607" |
@@ -83,20 +83,21 @@ Need a predicate for each kind of relationship:
 The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/resourcesAndReferences) literature ingest format that aligns publications from MOD members. 
 
 Mapping of Alliance publication category to biolink category
-| Alliance category | Biolink publication type |
-------------------| -------------- | 
-| Research Article | IAO:0000013 |
-| Review Article   | IAO:0000013 |
-| Thesis | IAO:0000311 |
-| Book | IAO:0000311 |
-| Other | IAO:0000311 |
-| Preprint | IAO:0000013 |
-| Conference Publication | IAO:0000311 |
-| Personal Communication | IAO:0000311 |
-| Direct Data Submission | IAO:0000311 |
-| Internal Process Reference | IAO:0000311 |
-| Unknown | IAO:0000311 |
-| Retraction | IAO:0000311 |
+
+| Alliance category          | Biolink publication type |
+|----------------------------|--------------------------| 
+| Research Article           | IAO:0000013              |
+| Review Article             | IAO:0000013              |
+| Thesis                     | IAO:0000311              |
+| Book                       | IAO:0000311              |
+| Other                      | IAO:0000311              |
+| Preprint                   | IAO:0000013              |
+| Conference Publication     | IAO:0000311              |
+| Personal Communication     | IAO:0000311              |
+| Direct Data Submission     | IAO:0000311              |
+| Internal Process Reference | IAO:0000311              |
+| Unknown                    | IAO:0000311              |
+| Retraction                 | IAO:0000311              |
 
 This ingest doesn't make an effort to sort these publication categories into more specific classes than biolink:Publication, but does set the type.
 
