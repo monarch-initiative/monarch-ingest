@@ -3,12 +3,12 @@ name: 'alliance_gene_to_expression'
 format: 'json'
 
 files:
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_RGD.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_RGD.json.gz"
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_MGI.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_MGI.json.gz"
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz"
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_FB.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_FB.json.gz"
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_WB.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_WB.json.gz"
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_SGD.json.gz' # "https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_SGD.json.gz"
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_RGD.json.gz'
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_MGI.json.gz'
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz'
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_FB.json.gz'
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_WB.json.gz'
+  - './data/alliance/EXPRESSION-ALLIANCE-JSON_SGD.json.gz'
 
 metadata: './monarch_ingest/alliance/metadata.yaml'
 global_table: './monarch_ingest/translation_table.yaml'
