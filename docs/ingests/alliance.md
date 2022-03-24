@@ -153,15 +153,17 @@ https://www.alliancegenome.org/downloads#expression
 * biolink:Gene
     * id (row['GeneID'])
 
-* biolink:CellularComponent
+* biolink:AnatomicalEntity
+    * id (row['AnatomyTermID'])
+
+* biolink:CellularComponent  # is_a: anatomical entity...
     * id (row['CellularComponentID'])
 
-* biolink:GeneToDiseaseAssociation
+* biolink:GeneToExpressionSiteAssociation
     * id (random uuid)
-    * subject (gene.id)
-    * predicates (see table above)
-    * object (disease.id)
-    * negated (for 'is not implicated in')
-    * relation (see predicate table above? )
+    * subject (Gene.id)
+    * predicates (biolink:expressed_in)
+    * object (AnatomicalEntity.id or CellularComponent.id)
+    * attribute['assay'] (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
     * publications (row['Reference'])
     * source (row['source'])

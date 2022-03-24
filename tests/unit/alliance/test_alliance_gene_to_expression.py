@@ -1,8 +1,8 @@
 import pytest
 from biolink_model_pydantic.model import (
     Gene,
-    GeneToexpressionFeatureAssociation,
-    expressionFeature,
+    GeneToExpressionSiteAssociation,
+    AnatomicalEntity,
 )
 
 
@@ -18,29 +18,41 @@ def script():
 
 @pytest.fixture
 def map_cache():
-    raise NotImplementedError
-    # return {"alliance-gene": {"RGD:61958": {"gene_id": "RGD:61958"}}}
+    return {"alliance-gene": {"ZFIN:ZDB-GENE-010226-1": {"gene_id": "ZFIN:ZDB-GENE-010226-1"}}}
 
 
 @pytest.fixture
-def rat_row():
-    raise NotImplementedError
-    # return {
-    #     "dateAssigned": "2006-10-25T18:06:17.000-05:00",
-    #     "evidence": {
-    #         "crossReference": {"id": "RGD:1357201", "pages": ["reference"]},
-    #         "publicationId": "PMID:11549339",
-    #     },
-    #     "objectId": "RGD:61958",
-    #     "expressionStatement": "cardiac hypertrophy",
-    #     "expressionTermIdentifiers": [{"termId": "MP:0001625", "termOrder": 1}],
-    # }
+def zfin_row():
+    return {
+        "Species": "Danio rerio",
+        "SpeciesID": "NCBITaxon:7955",
+        "GeneID": "ZFIN:ZDB-GENE-010226-1",
+        "GeneSymbol": "gdnfa",
+        "Location": "intermediate mesoderm",
+        "StageTerm": "Segmentation:10-13 somites",
+        "AssayID": "MMO:0000658",
+        "AssayTermName": "ribonucleic acid in situ hybridization assay",
+        "CellularComponentID": None,
+        "CellularComponentTerm": None,
+        "CellularComponentQualifierIDs": None,
+        "CellularComponentQualifierTermNames": None,
+        "SubStructureID": None,
+        "SubStructureName": None,
+        "SubStructureQualifierIDs": None,
+        "SubStructureQualifierTermNames": None,
+        "AnatomyTermID": "ZFA:0001206",
+        "AnatomyTermName": "intermediate mesoderm",
+        "AnatomyTermQualifierIDs": None,
+        "AnatomyTermQualifierTermNames": None,
+        "SourceURL": ["https://zfin.org/ZDB-FIG-110701-1"],
+        "Source": "ZFIN",
+        "Reference": ["PMID:11237470"]
+    }
 
 
 @pytest.fixture
-def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
-    # First row is a gene, second is a feature and should get ignored
-    rows = iter([rat_row])
+def zebrafish(zfin_row, mock_koza, source_name, script, map_cache, global_table):
+    rows = iter([zfin_row])
 
     return mock_koza(
         source_name,
@@ -51,30 +63,30 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
     )
 
 
-def test_gene_id(rat):
-    genes = [gene for gene in rat if isinstance(gene, Gene)]
-    assert genes[0].id == "RGD:61958"
+def test_gene_id(zebrafish):
+    genes = [gene for gene in zebrafish if isinstance(gene, Gene)]
+    assert genes[0].id == "ZFIN:ZDB-GENE-010226-1"
 
 
-def test_expression_feature_id(rat):
+def test_expression_feature_id(zebrafish):
     expressions = [
-        expression for expression in rat if isinstance(expression, expressionFeature)
+        expression for expression in zebrafish if isinstance(expression, AnatomicalEntity)
     ]
     assert expressions[0].id == "MP:0001625"
 
 
-def test_association_publication(rat):
+def test_association_publication(zebrafish):
     associations = [
         association
-        for association in rat
-        if isinstance(association, GeneToexpressionFeatureAssociation)
+        for association in zebrafish
+        if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].publications[0] == "PMID:11549339"
+    assert associations[0].publications[0] == "PMID:11237470"
 
 
 @pytest.fixture
-def expression_row(rat_row):
-    rat_row["conditionRelations"] = [
+def expression_row(zfin_row):
+    zfin_row["conditionRelations"] = [
         {
             "conditionRelationType": "has_condition",
             "expression": [
@@ -87,7 +99,7 @@ def expression_row(rat_row):
         }
     ]
 
-    return rat_row
+    return zfin_row
 
 
 @pytest.fixture
@@ -109,17 +121,17 @@ def test_expression(expression_entities):
     associations = [
         association
         for association in expression_entities
-        if isinstance(association, GeneToexpressionFeatureAssociation)
+        if isinstance(association, GeneToExpressionSiteAssociation)
     ]
     assert "ZECO:0000111" in associations[0].qualifiers
 
 
 # TODO: can this test be shared across all g2e loads?
 @pytest.mark.parametrize(
-    "cls", [Gene, expressionFeature, GeneToexpressionFeatureAssociation]
+    "cls", [Gene, AnatomicalEntity, GeneToExpressionSiteAssociation]
 )
-def confirm_one_of_each_classes(cls, rat):
-    class_entities = [entity for entity in rat if isinstance(entity, cls)]
+def confirm_one_of_each_classes(cls, zebrafish):
+    class_entities = [entity for entity in zebrafish if isinstance(entity, cls)]
     assert class_entities
     assert len(class_entities) == 1
     assert class_entities[0]
