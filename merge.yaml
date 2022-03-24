@@ -62,8 +62,8 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - goa_go_annotation_nodes.tsv
-          - goa_go_annotation_edges.tsv
+          - output/goa_go_annotation_nodes.tsv
+          - output/goa_go_annotation_edges.tsv
     hgnc_gene:
       input:
         format: tsv
