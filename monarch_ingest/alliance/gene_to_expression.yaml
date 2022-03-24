@@ -26,19 +26,22 @@ required_properties:
   - StageTerm
   - AssayID
   - AssayTermName
+  #
+  # Some of following fields are defined but empty in species files
+  #
   - CellularComponentID
   - CellularComponentTerm
-  - CellularComponentQualifierIDs
-  - CellularComponentQualifierTermNames
-  - SubStructureID
-  - SubStructureName
-  - SubStructureQualifierIDs
-  - SubStructureQualifierTermNames
+  #  - CellularComponentQualifierIDs
+  #  - CellularComponentQualifierTermNames
+  #  - SubStructureID
+  #  - SubStructureName
+  #  - SubStructureQualifierIDs
+  #  - SubStructureQualifierTermNames
   - AnatomyTermID
   - AnatomyTermName
-  - AnatomyTermQualifierIDs
-  - AnatomyTermQualifierTermNames
-  - SourceURL
+  #  - AnatomyTermQualifierIDs
+  #  - AnatomyTermQualifierTermNames
+  #  - SourceURL
   - Source
   - Reference
 
@@ -50,7 +53,7 @@ global_table: './monarch_ingest/translation_table.yaml'
 node_properties:
   - 'id'
   - 'category'
-  - 'provided_by'
+  #  - 'provided_by'
   - 'source'
 
 edge_properties:
@@ -59,9 +62,9 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
-  - 'qualifiers'
+  #  - 'relation'
+  #  - 'qualifiers'
   - 'publications'
-  - 'provided_by'
+  - 'source'
 
 transform_mode: 'flat'
