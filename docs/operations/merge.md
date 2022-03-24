@@ -1,5 +1,20 @@
 ## Notes on merging
 
+if necessary:
+```bash=
+git clone https://github.com/monarch-initiative/monarch-ingest.git
+cd monarch-ingest
+pip3 install poetry
+poetry install
+```
+
+Download the tsv files from the output bucket
+
+```bash=
+mkdir output
+gsutil cp gs://monarch-ingest/kgx/*.tsv kgx/
+```
+
 Start a neo4j docker container to write to
 
 ```bash=
@@ -15,4 +30,10 @@ docker run \
     -v $HOME/neo4j/plugins:/plugins \
     --env NEO4J_AUTH=neo4j/admin \
     neo4j:4.4.4-community
+```
+
+Run the merge command, set -p to an appropriate number of CPUs
+
+```bash=
+poetry run kgx merge --merge-config merge.yaml -p 8
 ```
