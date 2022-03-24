@@ -115,4 +115,4 @@ association = DiseaseToPhenotypicFeatureAssociation(
     frequency_qualifier=row["Frequency"],
 )
 
-koza_app.write(disease, phenotypic_feature, association)
+koza_app.write(association)

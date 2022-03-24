@@ -44,13 +44,6 @@ columns:
   - 'EvidenceCodeName'
   - 'Reference'
   - 'Date'
-  - 'Source'
-
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'source'
 
 edge_properties:
   - 'id'
@@ -59,7 +52,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'source'
   - 'negated'
   - 'publications'
   - 'provided_by'

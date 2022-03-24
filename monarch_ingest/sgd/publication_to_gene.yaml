@@ -16,14 +16,6 @@ columns:
   - 'PubMed ID'
   - 'feature'
 
-
-node_properties:
-  - 'id'
-  - 'category'
-  - 'symbol'
-  - 'in_taxon'
-  - 'provided_by'
-
 edge_properties:
   - 'id'
   - 'subject'

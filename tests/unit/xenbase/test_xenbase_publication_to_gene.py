@@ -83,17 +83,5 @@ def test_gene_literature_entity_types(gene_literature_entities):
         if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
 
-    # a roundabout way of confirming that everything generated is one of these three and there's nothing else
-    assert len(gene_literature_entities) == len(publications) + len(genes) + len(
-        associations
-    )
-    assert len(publications) == 1
-
-
-def test_gene_literature_entity(gene_literature_entities):
-    genes = [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
-
-    # confirm one gene id from each species
-    assert "Xenbase:XB-GENE-480983" in [gene.id for gene in genes]
-    assert "Xenbase:XB-GENE-6253888" in [gene.id for gene in genes]
-    assert "Xenbase:XB-GENE-485630" in [gene.id for gene in genes]
+    # Simple assertion, do any associations exist. Could be more rigorous
+    assert len(associations) != 0

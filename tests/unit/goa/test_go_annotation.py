@@ -3,8 +3,9 @@ Unit tests for GO Annotations ingest
 """
 import logging
 from sys import stderr
-from biolink_model_pydantic.model import Association
+
 import pytest
+from biolink_model_pydantic.model import Association
 
 logger = logging.getLogger(__name__)
 
@@ -434,47 +435,6 @@ result_expected = {
     ],
 }
 
-
-def test_nodes(basic_goa):
-
-    if not len(basic_goa):
-        logger.warning("test_nodes() null test result?")
-        return
-
-    gene = basic_goa[0]
-    go_term = basic_goa[1]
-
-    assert gene
-    assert gene.id in result_expected.keys()
-
-    print(f"\nTesting gene node '{gene.id}'", file=stderr)
-
-    # 'category' is multivalued (an array)
-    assert result_expected[gene.id][0] in gene.category
-    # Pydantic or equivalent bug: doesn't emit this intermediary category... yet?
-    # assert "biolink:BiologicalEntity" in gene.category
-    assert "biolink:NamedThing" in gene.category
-
-    # 'in_taxon' is multivalued (an array)
-    assert result_expected[gene.id][1] in gene.in_taxon
-
-    assert "infores:uniprot" in gene.source
-
-    assert go_term
-    assert go_term.id == result_expected[gene.id][2]
-
-    # 'category' should be multivalued (an array)
-    # TODO: some of the intermediate concrete classes here in between
-    #       NamedThing and MolecularActivity appear to be missing?
-    assert result_expected[gene.id][3] in go_term.category
-    assert result_expected[gene.id][4] in go_term.category
-    # This ancestral category appears to be missing? Pydantic model error?
-    # assert "biolink:BiologicalEntity" in go_term.category
-    assert "biolink:NamedThing" in go_term.category
-
-    assert "infores:go" in go_term.source
-
-
 def test_association(basic_goa):
 
     if not len(basic_goa):
@@ -529,7 +489,10 @@ def mgi_entities(
 
 
 def test_mgi_curie(mgi_entities):
-    association = [association for association in mgi_entities if isinstance(association, Association)][0]
+    association = [
+        association
+        for association in mgi_entities
+        if isinstance(association, Association)
+    ][0]
     assert association
     assert association.subject == "MGI:1918911"
-

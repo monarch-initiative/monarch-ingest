@@ -29,14 +29,6 @@ columns:
   - OmimIDs
   - PubMedIDs
 
-
-# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
-node_properties:
-  - 'id'
-  - 'name'
-  - 'category'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -45,4 +37,3 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'publications'
-  - 'source'

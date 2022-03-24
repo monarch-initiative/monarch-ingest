@@ -43,12 +43,6 @@ columns:
   - 'Aspect'
   - 'Biocuration'
 
-# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
-node_properties:
-  - 'id'
-  - 'category'
-  - 'type'
-
 edge_properties:
   - 'id'
   - 'subject'

@@ -34,4 +34,4 @@ association = GeneToPhenotypicFeatureAssociation(
 if row["SOURCE"]:
     association.publications = [row["SOURCE"]]
 
-koza_app.write(gene, association, phenotype)
+koza_app.write(association)

@@ -156,4 +156,4 @@ else:
             )
 
             # Write the captured Association out
-            koza_app.write(gene, go_term, association)
+            koza_app.write(association)

@@ -34,4 +34,4 @@ for each_id in id_list:
         source="infores:rgd",
     )
 
-    koza_app.write(gene, publication, association)
+    koza_app.write(association)

@@ -30,4 +30,4 @@ association = ChemicalToPathwayAssociation(
     source="infores:reactome",
 )
 
-koza_app.write(chemical, pathway, association)
+koza_app.write(association)

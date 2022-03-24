@@ -46,4 +46,4 @@ if row["Phenotype Tag"] == "abnormal":
         source="infores:zfin",
     )
 
-    koza_app.write(gene, phenotypicFeature, association)
+    koza_app.write(association)
