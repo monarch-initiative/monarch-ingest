@@ -16,11 +16,12 @@ configuration:
 merged_graph:
   name: Monarch Graph
   source:
-    monarch_ontology:
-      input:
-        format: obojson
-        filename:
-          - output/monarch/monarch.json
+# The ontology is commented out so that we can get stats on just what is coming in from koza.
+#    monarch_ontology:
+#      input:
+#        format: obojson
+#        filename:
+#          - output/monarch/monarch.json
     alliance_gene:
       input:
         format: tsv
@@ -45,18 +46,47 @@ merged_graph:
 #        filename:
 #          - output/alliance_gene_to_disease_nodes.tsv
 #          - output/alliance_gene_to_disease_edges.tsv
+    ctd_chemical_to_disease:
+      input:
+        format: tsv
+        filename:
+          - output/ctd_chemical_to_disease_nodes.tsv
+          - output/ctd_chemical_to_disease_edges.tsv
     flybase_publication_to_gene:
       input:
         format: tsv
         filename:
           - output/flybase_publication_to_gene_nodes.tsv
           - output/flybase_publication_to_gene_edges.tsv
+    goa_go_annotation:
+      input:
+        format: tsv
+        filename:
+          - goa_go_annotation_nodes.tsv
+          - goa_go_annotation_edges.tsv
     hgnc_gene:
       input:
         format: tsv
         filename:
           - output/hgnc_gene_nodes.tsv
           - output/hgnc_gene_edges.tsv
+    hpoa_disease_phenotype:
+      input:
+        format: tsv
+        filename:
+          - output/hpoa_disease_phenotype_nodes.tsv
+          - output/hpoa_disease_phenotype_edges.tsv
+    mgi_publication_to_gene:
+      input:
+        format: tsv
+        filename:
+          - output/mgi_publication_to_gene_nodes.tsv
+          - output/mgi_publication_to_gene_edges.tsv
+    omim_gene_to_disease:
+      input:
+        format: tsv
+          - output/omim_gene_to_disease_nodes.yaml
+          - output/omim_gene_to_disease_edges.yaml
     pombase_gene:
       input:
         format: tsv
@@ -68,6 +98,18 @@ merged_graph:
         filename:
           - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
+    reactome_chemical_to_pathway:
+      input:
+        format: tsv
+        filename:
+          - output/reactome_chemical_to_pathway_nodes.tsv
+          - output/reactome_chemical_to_pathway_edges.tsv
+    reactome_gene_to_pathway:
+      input:
+        format: tsv
+        filename:
+          - output/reactome_gene_to_pathway_nodes.tsv
+          - output/reactome_gene_to_pathway_edges.tsv
     rgd_publication_to_gene:
       input:
         format: tsv
@@ -80,6 +122,11 @@ merged_graph:
         filename:
           - output/sgd_publication_to_gene_nodes.tsv
           - output/sgd_publication_to_gene_edges.tsv
+    string_protein_links:
+      input:
+        format: tsv
+          - output/string_protein_links_nodes.tsv
+          - output/string_protein_links_edges.tsv
     xenbase_gene:
       input:
         format: tsv
@@ -114,11 +161,21 @@ merged_graph:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats
       args:
         graph_name: Monarch Graph
-        filename: merged_graph_stats.yaml
+        report_format: yaml
+        filename: stats.yaml
         node_facet_properties:
-          - source
+          - provided_by
         edge_facet_properties:
-          - source
+          - provided_by
+    - name: kgx.graph_operations.summarize_graph.generate_graph_stats
+      args:
+        graph_name: Monarch Graph
+        report_format: json
+        filename: stats.json
+        node_facet_properties:
+          - provided_by
+        edge_facet_properties:
+          - provided_by
   destination:
     merged-kg-tsv:
       format: tsv
@@ -128,8 +185,8 @@ merged_graph:
       format: nt
       compression: gz
       filename: monarch-kg.nt.gz
-#    merged-kg-neo4j:
-#      format: neo4j
-#      uri: http://localhost:7474
-#      username: neo4j
-#      password: admin
+    merged-kg-neo4j:
+      format: neo4j
+      uri: http://localhost:7474
+      username: neo4j
+      password: admin
