@@ -33,145 +33,127 @@ merged_graph:
         filename:
           - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
-    alliance_publication:
-      input:
-        format: tsv
-        filename:
-          - output/alliance_publication_nodes.tsv
-# Excluded while we sort out gene to disease requirements
-#
-#    alliance_gene_to_disease:
+#    alliance_publication:
 #      input:
 #        format: tsv
 #        filename:
-#          - output/alliance_gene_to_disease_nodes.tsv
-#          - output/alliance_gene_to_disease_edges.tsv
-    ctd_chemical_to_disease:
-      input:
-        format: tsv
-        filename:
-          - output/ctd_chemical_to_disease_nodes.tsv
-          - output/ctd_chemical_to_disease_edges.tsv
-    flybase_publication_to_gene:
-      input:
-        format: tsv
-        filename:
-          - output/flybase_publication_to_gene_nodes.tsv
-          - output/flybase_publication_to_gene_edges.tsv
-    goa_go_annotation:
-      input:
-        format: tsv
-        filename:
-          - output/goa_go_annotation_nodes.tsv
-          - output/goa_go_annotation_edges.tsv
-    hgnc_gene:
-      input:
-        format: tsv
-        filename:
-          - output/hgnc_gene_nodes.tsv
-          - output/hgnc_gene_edges.tsv
-    hpoa_disease_phenotype:
-      input:
-        format: tsv
-        filename:
-          - output/hpoa_disease_phenotype_nodes.tsv
-          - output/hpoa_disease_phenotype_edges.tsv
-    mgi_publication_to_gene:
-      input:
-        format: tsv
-        filename:
-          - output/mgi_publication_to_gene_nodes.tsv
-          - output/mgi_publication_to_gene_edges.tsv
-    omim_gene_to_disease:
-      input:
-        format: tsv
-          - output/omim_gene_to_disease_nodes.yaml
-          - output/omim_gene_to_disease_edges.yaml
-    pombase_gene:
-      input:
-        format: tsv
-        filename:
-          - output/pombase_gene_nodes.tsv
-    pombase_gene_to_phenotype:
-      input:
-        format: tsv
-        filename:
-          - output/pombase_gene_to_phenotype_nodes.tsv
-          - output/pombase_gene_to_phenotype_edges.tsv
-    reactome_chemical_to_pathway:
-      input:
-        format: tsv
-        filename:
-          - output/reactome_chemical_to_pathway_nodes.tsv
-          - output/reactome_chemical_to_pathway_edges.tsv
-    reactome_gene_to_pathway:
-      input:
-        format: tsv
-        filename:
-          - output/reactome_gene_to_pathway_nodes.tsv
-          - output/reactome_gene_to_pathway_edges.tsv
-    rgd_publication_to_gene:
-      input:
-        format: tsv
-        filename:
-          - output/rgd_publication_to_gene_nodes.tsv
-          - output/rgd_publication_to_gene_edges.tsv
-    sgd_publication_to_gene:
-      input:
-        format: tsv
-        filename:
-          - output/sgd_publication_to_gene_nodes.tsv
-          - output/sgd_publication_to_gene_edges.tsv
-    string_protein_links:
-      input:
-        format: tsv
-          - output/string_protein_links_nodes.tsv
-          - output/string_protein_links_edges.tsv
-    xenbase_gene:
-      input:
-        format: tsv
-        filename:
-          - output/xenbase_gene_nodes.tsv
-    xenbase_gene_to_phenotype:
-      input:
-        format: tsv
-        filename:
-          - output/xenbase_gene_to_phenotype_nodes.tsv
-          - output/xenbase_gene_to_phenotype_edges.tsv
-    xenbase_publication_to_gene:
-      input:
-        format: tsv
-        filename:
-          - output/xenbase_publication_to_gene_nodes.tsv
-          - output/xenbase_publication_to_gene_edges.tsv
-    zfin_gene_to_phenotype:
-      input:
-        format: tsv
-        filename:
-          - output/zfin_gene_to_phenotype_nodes.tsv
-          - output/zfin_gene_to_phenotype_edges.tsv
-    zfin_publication_to_gene:
-        input:
-          format: tsv
-          filename:
-            - output/zfin_publication_to_gene_nodes.tsv
-            - output/zfin_publication_to_gene_edges.tsv
+#          - output/alliance_publication_nodes.tsv
+#    ctd_chemical_to_disease:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/ctd_chemical_to_disease_nodes.tsv
+#          - output/ctd_chemical_to_disease_edges.tsv
+#    flybase_publication_to_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/flybase_publication_to_gene_nodes.tsv
+#          - output/flybase_publication_to_gene_edges.tsv
+#    goa_go_annotation:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/goa_go_annotation_nodes.tsv
+#          - output/goa_go_annotation_edges.tsv
+#    hgnc_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/hgnc_gene_nodes.tsv
+#          - output/hgnc_gene_edges.tsv
+#    hpoa_disease_phenotype:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/hpoa_disease_phenotype_nodes.tsv
+#          - output/hpoa_disease_phenotype_edges.tsv
+#    mgi_publication_to_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/mgi_publication_to_gene_nodes.tsv
+#          - output/mgi_publication_to_gene_edges.tsv
+#    omim_gene_to_disease:
+#      input:
+#        format: tsv
+#          - output/omim_gene_to_disease_nodes.yaml
+#          - output/omim_gene_to_disease_edges.yaml
+#    pombase_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/pombase_gene_nodes.tsv
+#    pombase_gene_to_phenotype:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/pombase_gene_to_phenotype_nodes.tsv
+#          - output/pombase_gene_to_phenotype_edges.tsv
+#    reactome_chemical_to_pathway:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/reactome_chemical_to_pathway_nodes.tsv
+#          - output/reactome_chemical_to_pathway_edges.tsv
+#    reactome_gene_to_pathway:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/reactome_gene_to_pathway_nodes.tsv
+#          - output/reactome_gene_to_pathway_edges.tsv
+#    rgd_publication_to_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/rgd_publication_to_gene_nodes.tsv
+#          - output/rgd_publication_to_gene_edges.tsv
+#    sgd_publication_to_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/sgd_publication_to_gene_nodes.tsv
+#          - output/sgd_publication_to_gene_edges.tsv
+#    string_protein_links:
+#      input:
+#        format: tsv
+#          - output/string_protein_links_nodes.tsv
+#          - output/string_protein_links_edges.tsv
+#    xenbase_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/xenbase_gene_nodes.tsv
+#    xenbase_gene_to_phenotype:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/xenbase_gene_to_phenotype_nodes.tsv
+#          - output/xenbase_gene_to_phenotype_edges.tsv
+#    xenbase_publication_to_gene:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/xenbase_publication_to_gene_nodes.tsv
+#          - output/xenbase_publication_to_gene_edges.tsv
+#    zfin_gene_to_phenotype:
+#      input:
+#        format: tsv
+#        filename:
+#          - output/zfin_gene_to_phenotype_nodes.tsv
+#          - output/zfin_gene_to_phenotype_edges.tsv
+#    zfin_publication_to_gene:
+#        input:
+#          format: tsv
+#          filename:
+#            - output/zfin_publication_to_gene_nodes.tsv
+#            - output/zfin_publication_to_gene_edges.tsv
 
   operations:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats
       args:
         graph_name: Monarch Graph
-        report_format: yaml
-        filename: stats.yaml
-        node_facet_properties:
-          - provided_by
-        edge_facet_properties:
-          - provided_by
-    - name: kgx.graph_operations.summarize_graph.generate_graph_stats
-      args:
-        graph_name: Monarch Graph
-        report_format: json
-        filename: stats.json
+        filename: merged_graph_stats.yaml
         node_facet_properties:
           - provided_by
         edge_facet_properties:
@@ -187,6 +169,6 @@ merged_graph:
       filename: monarch-kg.nt.gz
     merged-kg-neo4j:
       format: neo4j
-      uri: http://localhost:7474
+      uri: bolt://localhost:7687
       username: neo4j
       password: admin
