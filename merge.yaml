@@ -167,8 +167,8 @@ merged_graph:
       format: nt
       compression: gz
       filename: monarch-kg.nt.gz
-    merged-kg-neo4j:
-      format: neo4j
-      uri: bolt://localhost:7687
-      username: neo4j
-      password: admin
+#    merged-kg-neo4j:
+#      format: neo4j
+#      uri: bolt://localhost:7687
+#      username: neo4j
+#      password: admin
