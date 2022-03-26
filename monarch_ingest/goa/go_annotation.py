@@ -18,28 +18,18 @@ logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
-uniprot_2_gene = koza_app.get_map('uniprot_2_gene')
 
 db = row['DB']
 db_object_id = row['DB_Object_ID']
 
-# Map DB_Object_ID onto Entrez (attempted interpretation as an 'UniProtKB-AC' ID?)
-try:
-    gene_id = uniprot_2_gene[db_object_id]['Entrez']
-except KeyError:
-    gene_id = None
-
-if gene_id:
-    gene_id = 'NCBIGene:' + gene_id
+# This check is to avoid MGI:MGI:123
+if ":" in db_object_id:
+    object_id = db_object_id
 else:
-    # This check is to avoid MGI:MGI:123
-    if ":" in db_object_id:
-        gene_id = db_object_id
-    else:
-        gene_id = f"{db}:{db_object_id}"
+    object_id = f"{db}:{db_object_id}"
 
 # The biolink model might be wrong here about all caps, but matching it for now
-gene_id = gene_id.replace('PomBase', 'POMBASE')
+gene_id = object_id.replace('PomBase', 'POMBASE')
 
 ncbitaxon = row['Taxon']
 if ncbitaxon:
@@ -48,11 +38,10 @@ if ncbitaxon:
     ncbitaxon: List[str] = list()
     for taxon in taxa:
         ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
-    gene = Gene(id=gene_id, in_taxon=ncbitaxon, source="infores:uniprot")
 else:
     # Unlikely to happen, but...
-    logger.warning(f"Missing taxon for Gene '{db_object_id}'?")
-    gene = Gene(id=gene_id, source="infores:uniprot")
+    logger.warning(f"Missing taxon for '{object_id}'?")
+
 
 # Grab the Gene Ontology ID
 go_id = row['GO_ID']
@@ -146,8 +135,8 @@ else:
             # Instantiate the appropriate Gene-to-GO Term instance
             association = gene_go_term_association_class(
                 id="uuid:" + str(uuid.uuid1()),
-                subject=gene.id,
-                object=go_term.id,
+                subject=object_id,
+                object=go_id,
                 predicate=predicate,
                 negated=negated,
                 relation=relation,

@@ -153,12 +153,6 @@
   local_name: data/goa/4896.go_annotations.gaf.gz
   tag: goa_go_annotation
 
-# Uniprot ID to Gene mapping file
-# See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README
-- url: https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
-  local_name: data/goa/uniprot_2_gene.tab.gz
-  tag: goa_go_annotation
-
 # hgnc
 -
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt

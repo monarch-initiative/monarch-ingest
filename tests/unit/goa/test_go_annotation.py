@@ -313,7 +313,7 @@ def basic_goa(
 
 result_expected = {
     # Test regular MolecularActivity go term
-    "NCBIGene:440671": [
+    "UniProtKB:A0A024RBG1": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",
@@ -325,7 +325,7 @@ result_expected = {
         "ECO:0000501",
     ],
     # Multiple Taxa
-    "NCBIGene:440672": [
+    "WB:WBGene00000013": [
         "biolink:Gene",
         "NCBITaxon:46170",  # test for presence of the second one?
         "GO:0050830",
@@ -337,7 +337,7 @@ result_expected = {
         "ECO:0000270",
     ],
     # Test default qualifier override for Molecular Activity go term
-    "NCBIGene:440673": [
+    "UniProtKB:A0A024RBG2": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003674",
@@ -349,7 +349,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test default qualifier override for Biological Process go term
-    "NCBIGene:440674": [
+    "UniProtKB:A0A024RBG3": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0008150",
@@ -361,7 +361,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test default qualifier override for Cellular Component go term
-    "NCBIGene:440675": [
+    "UniProtKB:A0A024RBG4": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0005575",
@@ -373,7 +373,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test non-default Biological Process and non-default qualifier
-    "NCBIGene:440676": [
+    "UniProtKB:Q6GZX3": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -398,7 +398,7 @@ result_expected = {
         "ECO:0007001",
     ],
     # Test non-default Biological Process with negated qualifier
-    "NCBIGene:440677": [
+    "UniProtKB:Q6GZX0": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -410,7 +410,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Missing (empty) qualifier - assign GO Aspect associated default
-    "NCBIGene:440678": [
+    "UniProtKB:A0A024RBG8": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0005575",
@@ -422,7 +422,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Invalid Evidence Code - coerced into 'ND' -> "ECO:0000307"
-    "NCBIGene:440679": [
+    "UniProtKB:A0A024RBG9": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",
