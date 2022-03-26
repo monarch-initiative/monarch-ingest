@@ -176,7 +176,7 @@ def download():
         )
     if not os.path.exists("./data/goa/uniprot_2_entrez.tab.gz"):
         os.system(
-            "gzcat ./data/goa/uniprot_2_gene.tab.gz | awk 'BEGIN {OFS=\"\t\"} ($7==10090 || $7==10116 || $7==162425 || $7==44689 || $7==6239 || $7==7227 || $7==7955 || $7==9031 || $7==9606 || $7==9615 || $7==9823 || $7==9913) {print $1,$3}' | pigz > ./data/goa/uniprot_2_entrez.tab.gz"
+            "gzcat ./data/goa/uniprot_2_gene.tab.gz | awk -F '\t' 'BEGIN {OFS=\"\t\"} ($13==10090 || $13==10116 || $13==162425 || $13==44689 || $13==6239 || $13==7227 || $13==7955 || $13==9031 || $13==9606 || $13==9615 || $13==9823 || $13==9913) {print $1,$3}' | pigz > ./data/goa/uniprot_2_entrez.tab.gz"
         )
 
 
