@@ -26,25 +26,6 @@ def script():
     return "./monarch_ingest/goa/go_annotation.py"
 
 
-@pytest.fixture
-def map_cache():
-    """
-    :return: Multi-level mock map_cache Uniprot to Entrez GeneID dictionary (realistic looking but synthetic data)
-    """
-    uniprot_2_gene = {
-        "A0A024RBG1": {"Entrez": "440671"},
-        "WBGene00000013": {"Entrez": "440672"},
-        "A0A024RBG2": {"Entrez": "440673"},
-        "A0A024RBG3": {"Entrez": "440674"},
-        "A0A024RBG4": {"Entrez": "440675"},
-        "Q6GZX3": {"Entrez": "440676"},
-        "Q6GZX0": {"Entrez": "440677"},
-        "A0A024RBG8": {"Entrez": "440678"},
-        "A0A024RBG9": {"Entrez": "440679"},
-    }
-    return {"uniprot_2_gene": uniprot_2_gene}
-
-
 @pytest.fixture(scope="package")
 def local_table():
     """
@@ -286,7 +267,7 @@ def test_rows():
 
 @pytest.fixture
 def basic_goa(
-    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
+    mock_koza, source_name, test_rows, script, global_table, local_table
 ):
     """
     Mock Koza run for GO annotation ingest.
@@ -297,7 +278,6 @@ def basic_goa(
     :param script:
     :param global_table:
     :param local_table:
-    :param map_cache:
 
     :return: mock_koza application
     """
@@ -307,7 +287,7 @@ def basic_goa(
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
-        map_cache=map_cache,
+        map_cache=None,
     )
 
 
@@ -456,7 +436,7 @@ def test_association(basic_goa):
 
 @pytest.fixture
 def mgi_entities(
-    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
+    mock_koza, source_name, test_rows, script, global_table, local_table
 ):
     row = {
         'DB': 'MGI',
@@ -484,7 +464,7 @@ def mgi_entities(
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
-        map_cache=map_cache,
+        map_cache=None,
     )
 
 
