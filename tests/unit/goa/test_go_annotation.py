@@ -2,7 +2,6 @@
 Unit tests for GO Annotations ingest
 """
 import logging
-from sys import stderr
 
 import pytest
 from biolink_model_pydantic.model import Association
@@ -266,9 +265,7 @@ def test_rows():
 
 
 @pytest.fixture
-def basic_goa(
-    mock_koza, source_name, test_rows, script, global_table, local_table
-):
+def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_table):
     """
     Mock Koza run for GO annotation ingest.
 
@@ -415,6 +412,7 @@ result_expected = {
     ],
 }
 
+
 def test_association(basic_goa):
 
     if not len(basic_goa):
@@ -435,9 +433,7 @@ def test_association(basic_goa):
 
 
 @pytest.fixture
-def mgi_entities(
-    mock_koza, source_name, test_rows, script, global_table, local_table
-):
+def mgi_entities(mock_koza, source_name, test_rows, script, global_table, local_table):
     row = {
         'DB': 'MGI',
         'DB_Object_ID': 'MGI:1918911',

@@ -1,8 +1,6 @@
 import pytest
 from biolink_model_pydantic.model import (
-    ChemicalEntity,
     ChemicalToDiseaseOrPhenotypicFeatureAssociation,
-    Disease,
     Predicate,
 )
 

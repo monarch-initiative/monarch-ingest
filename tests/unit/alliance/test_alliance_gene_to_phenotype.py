@@ -48,6 +48,7 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
         global_table=global_table,
     )
 
+
 def test_association_publication(rat):
     associations = [
         association

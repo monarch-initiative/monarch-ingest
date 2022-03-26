@@ -176,7 +176,6 @@ def download():
         )
 
 
-
 @dagster.job
 def monarch_ingest_pipeline():
     processed_ingests = ingests(start=download()).map(process)

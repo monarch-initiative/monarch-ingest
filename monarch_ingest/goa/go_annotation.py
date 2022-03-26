@@ -9,7 +9,6 @@ import re
 import uuid
 from typing import List
 
-from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
 
 from monarch_ingest.goa.goa_utils import get_biolink_classes, lookup_predicate
