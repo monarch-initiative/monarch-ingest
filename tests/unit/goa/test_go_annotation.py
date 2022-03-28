@@ -2,7 +2,6 @@
 Unit tests for GO Annotations ingest
 """
 import logging
-from sys import stderr
 
 import pytest
 from biolink_model_pydantic.model import Association
@@ -24,25 +23,6 @@ def script():
     :return: string path to GO Annotations ingest script
     """
     return "./monarch_ingest/goa/go_annotation.py"
-
-
-@pytest.fixture
-def map_cache():
-    """
-    :return: Multi-level mock map_cache Uniprot to Entrez GeneID dictionary (realistic looking but synthetic data)
-    """
-    uniprot_2_gene = {
-        "A0A024RBG1": {"Entrez": "440671"},
-        "WBGene00000013": {"Entrez": "440672"},
-        "A0A024RBG2": {"Entrez": "440673"},
-        "A0A024RBG3": {"Entrez": "440674"},
-        "A0A024RBG4": {"Entrez": "440675"},
-        "Q6GZX3": {"Entrez": "440676"},
-        "Q6GZX0": {"Entrez": "440677"},
-        "A0A024RBG8": {"Entrez": "440678"},
-        "A0A024RBG9": {"Entrez": "440679"},
-    }
-    return {"uniprot_2_gene": uniprot_2_gene}
 
 
 @pytest.fixture(scope="package")
@@ -285,9 +265,7 @@ def test_rows():
 
 
 @pytest.fixture
-def basic_goa(
-    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
-):
+def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_table):
     """
     Mock Koza run for GO annotation ingest.
 
@@ -297,7 +275,6 @@ def basic_goa(
     :param script:
     :param global_table:
     :param local_table:
-    :param map_cache:
 
     :return: mock_koza application
     """
@@ -307,13 +284,13 @@ def basic_goa(
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
-        map_cache=map_cache,
+        map_cache=None,
     )
 
 
 result_expected = {
     # Test regular MolecularActivity go term
-    "NCBIGene:440671": [
+    "UniProtKB:A0A024RBG1": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",
@@ -325,7 +302,7 @@ result_expected = {
         "ECO:0000501",
     ],
     # Multiple Taxa
-    "NCBIGene:440672": [
+    "WB:WBGene00000013": [
         "biolink:Gene",
         "NCBITaxon:46170",  # test for presence of the second one?
         "GO:0050830",
@@ -337,7 +314,7 @@ result_expected = {
         "ECO:0000270",
     ],
     # Test default qualifier override for Molecular Activity go term
-    "NCBIGene:440673": [
+    "UniProtKB:A0A024RBG2": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003674",
@@ -349,7 +326,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test default qualifier override for Biological Process go term
-    "NCBIGene:440674": [
+    "UniProtKB:A0A024RBG3": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0008150",
@@ -361,7 +338,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test default qualifier override for Cellular Component go term
-    "NCBIGene:440675": [
+    "UniProtKB:A0A024RBG4": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0005575",
@@ -373,7 +350,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Test non-default Biological Process and non-default qualifier
-    "NCBIGene:440676": [
+    "UniProtKB:Q6GZX3": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -398,7 +375,7 @@ result_expected = {
         "ECO:0007001",
     ],
     # Test non-default Biological Process with negated qualifier
-    "NCBIGene:440677": [
+    "UniProtKB:Q6GZX0": [
         "biolink:Gene",
         "NCBITaxon:1000",
         "GO:0045759",
@@ -410,7 +387,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Missing (empty) qualifier - assign GO Aspect associated default
-    "NCBIGene:440678": [
+    "UniProtKB:A0A024RBG8": [
         "biolink:Gene",
         "NCBITaxon:4932",
         "GO:0005575",
@@ -422,7 +399,7 @@ result_expected = {
         "ECO:0000307",
     ],
     # Invalid Evidence Code - coerced into 'ND' -> "ECO:0000307"
-    "NCBIGene:440679": [
+    "UniProtKB:A0A024RBG9": [
         "biolink:Gene",
         "NCBITaxon:9606",
         "GO:0003723",
@@ -434,6 +411,7 @@ result_expected = {
         "ECO:0000307",
     ],
 }
+
 
 def test_association(basic_goa):
 
@@ -455,9 +433,7 @@ def test_association(basic_goa):
 
 
 @pytest.fixture
-def mgi_entities(
-    mock_koza, source_name, test_rows, script, global_table, local_table, map_cache
-):
+def mgi_entities(mock_koza, source_name, test_rows, script, global_table, local_table):
     row = {
         'DB': 'MGI',
         'DB_Object_ID': 'MGI:1918911',
@@ -484,7 +460,7 @@ def mgi_entities(
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
-        map_cache=map_cache,
+        map_cache=None,
     )
 
 

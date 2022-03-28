@@ -76,7 +76,7 @@ def test_gene_literature_entity_types(gene_literature_entities):
     publications = [
         entity for entity in gene_literature_entities if isinstance(entity, Publication)
     ]
-    genes = [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
+    [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
     associations = [
         entity
         for entity in gene_literature_entities

@@ -1,9 +1,5 @@
 import pytest
-from biolink_model_pydantic.model import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Publication,
-)
+from biolink_model_pydantic.model import InformationContentEntityToNamedThingAssociation
 
 
 @pytest.fixture

@@ -28,6 +28,7 @@ def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
         global_table=global_table,
     )
 
+
 def test_association(basic_g2p):
     association = basic_g2p[0]
     assert association
