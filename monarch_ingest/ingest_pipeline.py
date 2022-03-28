@@ -147,6 +147,7 @@ def ingests(context):
         Ingest("hpoa", "disease_phenotype"),
         Ingest("mgi", "publication_to_gene"),
         Ingest("omim", "gene_to_disease"),
+        Ingest("panther", "ref_genome_orthologs"),
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("reactome", "chemical_to_pathway"),
@@ -173,6 +174,11 @@ def download():
     if not os.path.exists("./data/alliance/alliance_gene_ids.txt.gz"):
         os.system(
             "gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz"
+        )
+    # For some reason the single file is archived as a tar, undo that and just gzip
+    if not os.path.exists("./data/panther/RefGenomeOrthologs.tsv.gz"):
+        os.system(
+            "tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz | pigz > ./data/panther/RefGenomeOrthologs.tsv.gz"
         )
 
 
