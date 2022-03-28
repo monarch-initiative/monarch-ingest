@@ -28,7 +28,7 @@ else:
     object_id = f"{db}:{db_object_id}"
 
 # The biolink model might be wrong here about all caps, but matching it for now
-gene_id = object_id.replace('PomBase', 'POMBASE')
+object_id = object_id.replace('PomBase', 'POMBASE')
 
 ncbitaxon = row['Taxon']
 if ncbitaxon:
