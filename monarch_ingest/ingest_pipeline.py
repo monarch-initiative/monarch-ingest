@@ -21,7 +21,7 @@ class KgxGraph:
         self.edges_file = edges_file
         self.has_node_properties = has_node_properties
         self.has_edge_properties = has_edge_properties
-        assert has_node_properties or has_node_properties
+        assert has_node_properties or has_edge_properties
         if has_node_properties:
             assert exists(nodes_file)
         if has_edge_properties:
