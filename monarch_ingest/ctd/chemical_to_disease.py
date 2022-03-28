@@ -34,4 +34,4 @@ if row['DirectEvidence'] in ['therapeutic']:
         source="infores:ctd",
     )
 
-    koza_app.write(chemical, disease, association)
+    koza_app.write(association)

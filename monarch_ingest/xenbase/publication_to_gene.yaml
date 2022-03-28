@@ -18,14 +18,6 @@ columns:
 depends_on:
   - './monarch_ingest/maps/genepage-2-gene.yaml'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'type'
-  - 'source'
-
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -34,6 +26,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'

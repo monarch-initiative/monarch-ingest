@@ -1,8 +1,6 @@
 import pytest
 from biolink_model_pydantic.model import (
-    ChemicalEntity,
     ChemicalToDiseaseOrPhenotypicFeatureAssociation,
-    Disease,
     Predicate,
 )
 
@@ -96,16 +94,12 @@ def test_marker_mechanism_entities(marker_mechanism):
 def test_therapeutic_entities(therapeutic):
     entities = therapeutic
     assert entities
-    assert len(entities) == 3
-    chemical = [e for e in entities if isinstance(e, ChemicalEntity)][0]
-    disease = [e for e in entities if isinstance(e, Disease)][0]
+    assert len(entities) == 1
     association = [
         e
         for e in entities
         if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)
     ][0]
-    assert chemical
-    assert disease
     assert association
     assert association.predicate == Predicate.treats
     assert 'PMID:17516704' in association.publications

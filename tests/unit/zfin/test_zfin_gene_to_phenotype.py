@@ -65,20 +65,20 @@ def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, global_table
     )
 
 
-def test_gene(basic_g2p):
-    gene = basic_g2p[0]
-    assert gene
-    assert gene.id == "ZFIN:ZDB-GENE-990415-8"
+# def test_gene(basic_g2p):
+#     gene = basic_g2p[0]
+#     assert gene
+#     assert gene.id == "ZFIN:ZDB-GENE-990415-8"
 
 
-def test_phenotypic_feature(basic_g2p):
-    phenotypic_feature = basic_g2p[1]
-    assert phenotypic_feature
-    assert phenotypic_feature.id == "ZP:0004225"
+# def test_phenotypic_feature(basic_g2p):
+#     phenotypic_feature = basic_g2p[1]
+#     assert phenotypic_feature
+#     assert phenotypic_feature.id == "ZP:0004225"
 
 
 def test_association(basic_g2p):
-    association = basic_g2p[2]
+    association = basic_g2p[0]
     assert association
     assert association.subject == "ZFIN:ZDB-GENE-990415-8"
     assert association.object == "ZP:0004225"
@@ -86,52 +86,52 @@ def test_association(basic_g2p):
     assert association.publications[0] == "ZFIN:ZDB-PUB-970210-19"
 
 
-@pytest.fixture
-def postcomposed(mock_koza, source_name, basic_row, script, map_cache, global_table):
+# @pytest.fixture
+# def postcomposed(mock_koza, source_name, basic_row, script, map_cache, global_table):
 
-    basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000112"
-    basic_row["Post-composed Relationship ID"] = "BFO:0000050"
-    basic_row["Affected Structure or Process 1 superterm ID"] = "ZFA:0000042"
+#     basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000112"
+#     basic_row["Post-composed Relationship ID"] = "BFO:0000050"
+#     basic_row["Affected Structure or Process 1 superterm ID"] = "ZFA:0000042"
 
-    return mock_koza(
-        source_name,
-        iter([basic_row]),
-        script,
-        map_cache=map_cache,
-        global_table=global_table,
-    )
-
-
-def test_postcomposed(postcomposed):
-    phenotypic_feature = postcomposed[1]
-    assert phenotypic_feature.id == "ZP:0011243"
+#     return mock_koza(
+#         source_name,
+#         iter([basic_row]),
+#         script,
+#         map_cache=map_cache,
+#         global_table=global_table,
+#     )
 
 
-@pytest.fixture
-def double_postcomposed(
-    mock_koza, source_name, basic_row, script, map_cache, global_table
-):
-
-    basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000000"
-    basic_row["Post-composed Relationship ID"] = "BFO:0000050"
-    basic_row["Affected Structure or Process 1 superterm ID"] = "ZFA:0000823"
-    basic_row["Phenotype Keyword ID"] = "PATO:0000642"
-    basic_row["Affected Structure or Process 2 subterm ID"] = "BSPO:0000007"
-    basic_row["Post-composed Relationship (rel) ID"] = "BFO:0000050"
-    basic_row["Affected Structure or Process 2 superterm ID"] = "ZFA:0000823"
-
-    return mock_koza(
-        source_name,
-        iter([basic_row]),
-        script,
-        map_cache=map_cache,
-        global_table=global_table,
-    )
+# def test_postcomposed(postcomposed):
+#     phenotypic_feature = postcomposed[1]
+#     assert phenotypic_feature.id == "ZP:0011243"
 
 
-def test_double_postcomposed(double_postcomposed):
-    phenotypic_feature = double_postcomposed[1]
-    assert phenotypic_feature.id == "ZP:0000157"
+# @pytest.fixture
+# def double_postcomposed(
+#     mock_koza, source_name, basic_row, script, map_cache, global_table
+# ):
+
+#     basic_row["Affected Structure or Process 1 subterm ID"] = "BSPO:0000000"
+#     basic_row["Post-composed Relationship ID"] = "BFO:0000050"
+#     basic_row["Affected Structure or Process 1 superterm ID"] = "ZFA:0000823"
+#     basic_row["Phenotype Keyword ID"] = "PATO:0000642"
+#     basic_row["Affected Structure or Process 2 subterm ID"] = "BSPO:0000007"
+#     basic_row["Post-composed Relationship (rel) ID"] = "BFO:0000050"
+#     basic_row["Affected Structure or Process 2 superterm ID"] = "ZFA:0000823"
+
+#     return mock_koza(
+#         source_name,
+#         iter([basic_row]),
+#         script,
+#         map_cache=map_cache,
+#         global_table=global_table,
+#     )
+
+
+# def test_double_postcomposed(double_postcomposed):
+#     phenotypic_feature = double_postcomposed[1]
+#     assert phenotypic_feature.id == "ZP:0000157"
 
 
 @pytest.mark.parametrize("tag", ["normal", "exacerbated", "ameliorated"])
@@ -161,4 +161,4 @@ def test_included_tags(
         map_cache=map_cache,
         global_table=global_table,
     )
-    assert len(entities) == 3
+    assert len(entities) == 1

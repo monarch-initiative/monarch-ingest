@@ -18,12 +18,6 @@ columns:
   - 'Publication Type'
   - 'PubMed ID'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -32,6 +26,5 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'

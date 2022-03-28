@@ -16,12 +16,11 @@ configuration:
 merged_graph:
   name: Monarch Graph
   source:
-# The ontology is commented out so that we can get stats on just what is coming in from koza.
-#    monarch_ontology:
-#      input:
-#        format: obojson
-#        filename:
-#          - output/monarch/monarch.json
+    monarch_ontology:
+      input:
+        format: obojson
+        filename:
+          - output/monarch/monarch.json
     alliance_gene:
       input:
         format: tsv
@@ -31,7 +30,6 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/alliance_gene_to_phenotype_nodes.tsv
           - output/alliance_gene_to_phenotype_edges.tsv
     alliance_publication:
       input:
@@ -42,19 +40,16 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/ctd_chemical_to_disease_nodes.tsv
           - output/ctd_chemical_to_disease_edges.tsv
     flybase_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/flybase_publication_to_gene_nodes.tsv
           - output/flybase_publication_to_gene_edges.tsv
     goa_go_annotation:
       input:
         format: tsv
         filename:
-          - output/goa_go_annotation_nodes.tsv
           - output/goa_go_annotation_edges.tsv
     hgnc_gene:
       input:
@@ -72,7 +67,6 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/mgi_publication_to_gene_nodes.tsv
           - output/mgi_publication_to_gene_edges.tsv
     omim_gene_to_disease:
       input:
@@ -88,36 +82,30 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/pombase_gene_to_phenotype_nodes.tsv
           - output/pombase_gene_to_phenotype_edges.tsv
     reactome_chemical_to_pathway:
       input:
         format: tsv
         filename:
-          - output/reactome_chemical_to_pathway_nodes.tsv
           - output/reactome_chemical_to_pathway_edges.tsv
     reactome_gene_to_pathway:
       input:
         format: tsv
         filename:
-          - output/reactome_gene_to_pathway_nodes.tsv
           - output/reactome_gene_to_pathway_edges.tsv
     rgd_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/rgd_publication_to_gene_nodes.tsv
           - output/rgd_publication_to_gene_edges.tsv
     sgd_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/sgd_publication_to_gene_nodes.tsv
           - output/sgd_publication_to_gene_edges.tsv
     string_protein_links:
       input:
         format: tsv
-          - output/string_protein_links_nodes.tsv
           - output/string_protein_links_edges.tsv
     xenbase_gene:
       input:
@@ -128,25 +116,21 @@ merged_graph:
       input:
         format: tsv
         filename:
-          - output/xenbase_gene_to_phenotype_nodes.tsv
           - output/xenbase_gene_to_phenotype_edges.tsv
     xenbase_publication_to_gene:
       input:
         format: tsv
         filename:
-          - output/xenbase_publication_to_gene_nodes.tsv
           - output/xenbase_publication_to_gene_edges.tsv
     zfin_gene_to_phenotype:
       input:
         format: tsv
         filename:
-          - output/zfin_gene_to_phenotype_nodes.tsv
           - output/zfin_gene_to_phenotype_edges.tsv
     zfin_publication_to_gene:
         input:
           format: tsv
           filename:
-            - output/zfin_publication_to_gene_nodes.tsv
             - output/zfin_publication_to_gene_edges.tsv
 
   operations:

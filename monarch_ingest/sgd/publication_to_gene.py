@@ -29,4 +29,4 @@ association = InformationContentEntityToNamedThingAssociation(
     source="infores:sgd",
 )
 
-koza_app.write(gene, publication, association)
+koza_app.write(association)

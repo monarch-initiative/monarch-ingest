@@ -45,8 +45,8 @@ if gene_ids_a and gene_ids_b:
                 source="infores:string",
             )
 
-            entities.append(gene_a)
-            entities.append(gene_b)
+            # entities.append(gene_a)
+            # entities.append(gene_b)
             entities.append(association)
 
     koza_app.write(*entities)

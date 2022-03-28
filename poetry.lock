@@ -753,7 +753,7 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.1.7"
+version = "0.1.9"
 description = "Koza, an ETL framework for LinkML data models"
 category = "main"
 optional = false
@@ -1982,7 +1982,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "106851c74d3a3ad7fcac153de958837d9e02c0d17fa99d68eef2c043bcac0a01"
+content-hash = "482dc4704b818d5437480ad9c709909a250348eac6e55b6fb30c01abe3f0c7e2"
 
 [metadata.files]
 alabaster = [
@@ -2249,6 +2249,7 @@ ijson = [
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:fa10a1d88473303ec97aae23169d77c5b92657b7fb189f9c584974c00a79f383"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:9a5bf5b9d8f2ceaca131ee21fc7875d0f34b95762f4f32e4d65109ca46472147"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:81cc8cee590c8a70cca3c9aefae06dd7cb8e9f75f3a7dc12b340c2e332d33a2a"},
+    {file = "ijson-3.1.4-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:4ea5fc50ba158f72943d5174fbc29ebefe72a2adac051c814c87438dc475cf78"},
     {file = "ijson-3.1.4-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3b98861a4280cf09d267986cefa46c3bd80af887eae02aba07488d80eb798afa"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:068c692efba9692406b86736dcc6803e4a0b6280d7f0b7534bff3faec677ff38"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:86884ac06ac69cea6d89ab7b84683b3b4159c4013e4a20276d3fc630fe9b7588"},
@@ -2373,8 +2374,8 @@ kgx = [
     {file = "kgx-1.5.6.tar.gz", hash = "sha256:b0b73070c3cebf698270fef2aecc042b5944c7c68d074b350b462f810197a1ad"},
 ]
 koza = [
-    {file = "koza-0.1.7-py3-none-any.whl", hash = "sha256:85faa9963636e2c9bcf3a785b1f4af98c77275268d784c01364df6021440d462"},
-    {file = "koza-0.1.7.tar.gz", hash = "sha256:18f42d9d2e52e08fb4a7c544df69a28f886f545effe972301f7667b51dd204b7"},
+    {file = "koza-0.1.9-py3-none-any.whl", hash = "sha256:2962f7996ec04e461dcc050945818aa7d34c7340e1d19de129110493688650c3"},
+    {file = "koza-0.1.9.tar.gz", hash = "sha256:4de0762057d18fbcf1d1aa64a8696b6f5542114226cede6e9cd5ee2179a4cc0f"},
 ]
 linkml = [
     {file = "linkml-1.2.2-py3-none-any.whl", hash = "sha256:d6928231d6fef738b4825a54b81d8e407e868a526b2ef6199c1b02218e6c5113"},
@@ -2544,6 +2545,7 @@ numpy = [
     {file = "numpy-1.22.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8251ed96f38b47b4295b1ae51631de7ffa8260b5b087808ef09a39a9d66c97ab"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:48a3aecd3b997bf452a2dedb11f4e79bc5bfd21a1d4cc760e703c31d57c84b3e"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a3bae1a2ed00e90b3ba5f7bd0a7c7999b55d609e0c54ceb2b076a25e345fa9f4"},
+    {file = "numpy-1.22.3-cp310-cp310-win32.whl", hash = "sha256:f950f8845b480cffe522913d35567e29dd381b0dc7e4ce6a4a9f9156417d2430"},
     {file = "numpy-1.22.3-cp310-cp310-win_amd64.whl", hash = "sha256:08d9b008d0156c70dc392bb3ab3abb6e7a711383c3247b410b39962263576cd4"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:201b4d0552831f7250a08d3b38de0d989d6f6e4658b709a02a73c524ccc6ffce"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:f8c1f39caad2c896bc0018f699882b345b2a63708008be29b1f355ebf6f933fe"},

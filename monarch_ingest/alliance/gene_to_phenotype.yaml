@@ -26,12 +26,6 @@ required_properties:
 depends_on:
   - './monarch_ingest/maps/alliance-gene.yaml'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'

@@ -27,4 +27,4 @@ association = GeneToPhenotypicFeatureAssociation(
 if row["Condition"]:
     association.qualifiers = row["Condition"].split(",")
 
-koza_app.write(gene, phenotype, association)
+koza_app.write(association)

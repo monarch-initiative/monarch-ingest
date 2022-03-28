@@ -43,12 +43,6 @@ columns:
 depends_on:
   - './monarch_ingest/maps/eqe2zp.yaml'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -58,7 +52,6 @@ edge_properties:
   - 'relation'
   - 'publications'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'
 

@@ -153,12 +153,6 @@
   local_name: data/goa/4896.go_annotations.gaf.gz
   tag: goa_go_annotation
 
-# Uniprot ID to Gene mapping file
-# See https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/README
-- url: https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
-  local_name: data/goa/uniprot_2_gene.tab.gz
-  tag: goa_go_annotation
-
 # hgnc
 -
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
@@ -181,6 +175,69 @@
   url: gs://koza-cache/data/omim/mim2gene.txt
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
+
+# gene orthology (from www.pantherdb.org)
+
+# Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
+- url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
+  local_name: data/panther/RefGenomeOrthologs.tsv.gz
+
+##
+## This orthology data ingest is not yet implemented
+##
+## Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and
+## pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library
+#- url: http://data.pantherdb.org/ftp/hmm_classifications/current_release/PANTHER16.0_HMM_classifications
+#  local_name: data/panther/classifications.tsv
+
+##
+## This orthology data ingest is not yet implemented
+##
+## Contains regulatory and metabolic pathways, each with subfamilies and
+## protein sequences mapped to individual pathway components.
+#- url: http://data.pantherdb.org/ftp/pathway/current_release/SequenceAssociationPathway3.6.5.txt
+#  local_name: data/panther/pathways.tsv
+
+##
+## This orthology data ingest is not yet implemented
+##
+## Sequence Classifications files contain the PANTHER family, subfamily, molecular function, biological process,
+## and pathway classifications for the complete proteomes derived from the various genomes, indexed by species.
+## Refer to http://data.pantherdb.org/ftp/sequence_classifications/current_release/README for details.
+## Only a subset (as noted below) of the available species is ingested into Monarch at this time.
+##
+## Homo sapiens (human)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_human
+#  local_name: data/panther/9606.sequence_classifications.tsv
+#
+## Mus musculus (house mouse)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_mouse
+#  local_name: data/panther/10090.sequence_classifications.tsv
+#
+## Rattus norvegicus (Norway rat)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_rat
+#  local_name: data/panther/10116.sequence_classifications.tsv
+#
+## Danio rerio (Zebrafish)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_zebrafish
+#  local_name: data/panther/7955.sequence_classifications.tsv
+#
+## Drosophila melanogaster (fruit fly)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_fruit_fly
+#  local_name: data/panther/7227.sequence_classifications.tsv
+#
+## Caenorhabditis elegans (nematodes)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_nematode_worm
+#  local_name: data/panther/6239.sequence_classifications.tsv
+#
+## Schizosaccharomyces pombe ("fission" yeast)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_fission_yeast
+#  local_name: data/panther/4896.sequence_classifications.tsv
+#
+## Saccharomyces cerevisiae (baker's "budding" yeast)
+#- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_budding_yeast
+#  local_name: data/panther/4932.sequence_classifications.tsv
+
 
 # pombase
 -
@@ -245,6 +302,17 @@
 - url: https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
   local_name: data/string/entrez_2_string.tsv.gz
   tag: string_protein_links
+
+# TODO: The main web site doesn't seem to directly have the Rat Entrez mappings?
+#       Rather, we can extract this manually (including the header line)
+#       with something like the following sequence of *nix OS commands:
+#
+#    cd data/string
+#    wget https://string-db.org/mapping_files/entrez/all_organisms.entrez_2_string.2018.tsv.gz
+#    gunzip all_organisms.entrez_2_string.2018.tsv.gz
+#    head -1 all_organisms.entrez_2_string.2018.tsv >10116.entrez_2_string.tsv
+#    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
+#    gzip 10116.entrez_2_string.tsv
 
 # Xenbase
 -

@@ -33,27 +33,15 @@ def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
     )
 
 
-def test_gene(basic_g2p):
-    gene = basic_g2p[0]
-    assert gene
-    assert gene.id == "RGD:2533"
-
-
-def test_publication(basic_g2p):
-    publication = basic_g2p[1]
-    assert publication
-    assert publication.id == "PMID:8106108"
-
-
 def test_association(basic_g2p):
-    association = basic_g2p[2]
+    association = basic_g2p[0]
     assert association
     assert association.subject == "RGD:2533"
     assert association.object == "PMID:8106108"
 
 
 def test_association_duplicates(basic_g2p):
-    association = basic_g2p[2]
+    association = basic_g2p[0]
     assert association
     assert association.subject == "RGD:2533"
     assert association.object == "PMID:8106108"

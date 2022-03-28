@@ -38,4 +38,4 @@ association = InformationContentEntityToNamedThingAssociation(
     source="infores:flybase",
 )
 
-koza_app.write(gene, publication, association)
+koza_app.write(association)

@@ -20,12 +20,6 @@ columns:
   - 'Marker Synonyms'
   - 'PubMed IDs'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'type'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'

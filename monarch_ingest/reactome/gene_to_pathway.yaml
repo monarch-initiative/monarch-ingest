@@ -20,14 +20,6 @@ columns:
     - 'go_ecode'
     - 'species_nam'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'symbol'
-  - 'in_taxon'
-  - 'provided_by'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'
@@ -37,6 +29,5 @@ edge_properties:
   - 'relation'
   - 'pathway'
   - 'provided_by'
-  - 'source'
 
 transform_mode: 'flat'

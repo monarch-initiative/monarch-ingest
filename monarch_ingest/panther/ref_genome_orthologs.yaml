@@ -1,0 +1,42 @@
+name: 'panther_ref_genome_orthologs'
+
+compression: 'gzip'
+
+format: 'csv'
+delimiter: '\t'
+header: none
+
+files:
+  - './data/panther/RefGenomeOrthologs.tsv.gz'
+
+metadata:
+  ingest_title: 'Orthology Ingest'
+  ingest_url: 'http://www.pantherdb.org/'
+  description: 'Gene Orthology Relationships (mainly Panther Db)'
+  rights: 'http://www.pantherdb.org/tou.jsp'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'Gene'                                 # species1|DB=id1|protdb=pdbid1
+  - 'Ortholog'                             # species2|DB=id2|protdb=pdbid2
+  - 'Type of ortholog'                     # [LDO, O, P, X ,LDX]  see: localtt
+  - 'Common ancestor for the orthologs'    # unused
+  - 'Panther Ortholog ID'                  # panther_id
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'in_taxon'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'relation'
+  - 'source'
+
+transform_mode: 'flat'

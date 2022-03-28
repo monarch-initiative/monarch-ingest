@@ -36,4 +36,4 @@ for pub_id in pub_ids:
         source="infores:mgi",
     )
 
-    koza_app.write(gene, pub, association)
+    koza_app.write(association)
