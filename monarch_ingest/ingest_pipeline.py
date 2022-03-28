@@ -147,6 +147,7 @@ def ingests(context):
         Ingest("hpoa", "disease_phenotype"),
         Ingest("mgi", "publication_to_gene"),
         Ingest("omim", "gene_to_disease"),
+        Ingest("panther", "ref_genome_orthologs"),
         Ingest("pombase", "gene"),
         Ingest("pombase", "gene_to_phenotype"),
         Ingest("reactome", "chemical_to_pathway"),
@@ -177,6 +178,11 @@ def download():
     if not os.path.exists("./data/goa/uniprot_2_entrez.tab.gz"):
         os.system(
             "gzcat ./data/goa/uniprot_2_gene.tab.gz | awk 'BEGIN {OFS=\"\t\"} ($7==10090 || $7==10116 || $7==162425 || $7==44689 || $7==6239 || $7==7227 || $7==7955 || $7==9031 || $7==9606 || $7==9615 || $7==9823 || $7==9913) {print $1,$3}' | pigz > ./data/goa/uniprot_2_entrez.tab.gz"
+        )
+    # For some reason the single file is archived as a tar, undo that and just gzip
+    if not os.path.exists("./data/panther/RefGenomeOrthologs.tsv.gz"):
+        os.system(
+            "tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz | pigz > ./data/panther/RefGenomeOrthologs.tsv.gz"
         )
 
 

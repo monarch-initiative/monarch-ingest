@@ -1,0 +1,7 @@
+name: 'orthology'
+
+dataset_description:
+  ingest_title: 'Orthology Ingest'
+  ingest_url: 'http://www.pantherdb.org/'
+  description: 'Gene Orthology Relationships (mainly Panther Db)'
+  rights: 'http://www.pantherdb.org/tou.jsp'
