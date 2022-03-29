@@ -22,6 +22,8 @@ pipeline {
             steps {
                 sh '''
                     $HOME/.poetry/bin/poetry run downloader
+                    gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
+                    tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz > ./data/panther/RefGenomeOrthologs.tsv
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/gene.yaml --row-limit 1000
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/gene_to_phenotype.yaml --row-limit 1000
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/publication.yaml --row-limit 1000
