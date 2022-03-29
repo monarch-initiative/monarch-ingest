@@ -71,8 +71,15 @@ merged_graph:
     omim_gene_to_disease:
       input:
         format: tsv
-          - output/omim_gene_to_disease_nodes.yaml
-          - output/omim_gene_to_disease_edges.yaml
+        filename:
+          - output/omim_gene_to_disease_nodes.tsv
+          - output/omim_gene_to_disease_edges.tsv
+    panther_ref_genome_orthologs:
+      input:
+        format: tsv
+        filename:
+          - output/panther_ref_genome_orthologs_nodes.tsv
+          - output/panther_ref_genome_orthologs_edges.tsv
     pombase_gene:
       input:
         format: tsv
@@ -106,6 +113,7 @@ merged_graph:
     string_protein_links:
       input:
         format: tsv
+        filename:
           - output/string_protein_links_edges.tsv
     xenbase_gene:
       input:
@@ -132,7 +140,6 @@ merged_graph:
           format: tsv
           filename:
             - output/zfin_publication_to_gene_edges.tsv
-
   operations:
     - name: kgx.graph_operations.summarize_graph.generate_graph_stats
       args:
