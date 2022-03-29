@@ -10,10 +10,12 @@ pipeline {
     }
     stages {
         stage('setup') {
-            sh '''
-            pip install poetry
-            poetry install
-            '''
+            steps {
+                sh '''
+                pip install poetry
+                poetry install
+                '''
+            }
         }
         stage('download-and-transform') {
             steps {
