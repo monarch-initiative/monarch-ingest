@@ -9,17 +9,16 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    python -mvenv venv
-                    . ./venv/bin/activate
-                    pip install kghub-downloader
+                    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+                    chmod 755 $HOME/.poetry/env
+                    $HOME/.poetry/bin/poetry install
                 '''
             }
         }
         stage('download and mirror') {
             steps {
                 sh '''
-                    . ./venv/bin/activate
-                    downloader download.yaml --mirror gs://monarch-ingest/download-cache
+                    $HOME/.poetry/bin/poetry run downloader download.yaml --mirror gs://monarch-ingest/download-cache
                 '''
             }
         }
