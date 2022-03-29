@@ -61,9 +61,11 @@ edge_properties:
   - 'subject'
   - 'predicate'
   - 'object'
+  - 'stage_qualifier'
   - 'category'
   #  - 'relation'
   #  - 'qualifiers'
+  - 'has_evidence'
   - 'publications'
   - 'source'
 

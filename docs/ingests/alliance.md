@@ -152,6 +152,7 @@ https://www.alliancegenome.org/downloads#expression
 
 * biolink:Gene
     * id (row['GeneID'])
+    * in taxon (row['SpeciesID'])
 
 * biolink:AnatomicalEntity
     * id (row['AnatomyTermID'])
@@ -159,11 +160,16 @@ https://www.alliancegenome.org/downloads#expression
 * biolink:CellularComponent  # is_a: anatomical entity...
     * id (row['CellularComponentID'])
 
+* biolink:LifeStage
+  * id (CURIE heuristically inferred from row['StageTerm'] and row['SpeciesID'])
+  * in taxon (row['SpeciesID'])
+
 * biolink:GeneToExpressionSiteAssociation
     * id (random uuid)
     * subject (Gene.id)
     * predicates (biolink:expressed_in)
     * object (AnatomicalEntity.id or CellularComponent.id)
-    * attribute['assay'] (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
+    * stage qualifier (LifeStage.id)  # if specified; None otherwise
+    * has evidence (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
     * publications (row['Reference'])
-    * source (row['source'])
+    * source (row['source'])  # infores of source model database
