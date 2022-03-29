@@ -1,4 +1,4 @@
-name: 'reactome_node_to_pathway'
+name: 'reactome_pathway'
 
 files:
   - './data/ReactomePathways.txt'
@@ -18,6 +18,17 @@ columns:
     - 'Name'
     - 'species'
 
+node_properties:
+  - 'id'
+  - 'category'
+  - 'provided_by'
+  - 'name'
+  - 'symbol'
+  - 'in_taxon'
+  - 'xref'
+  - 'synonym'
+  - 'source'
+
 edge_properties:
   - 'id'
   - 'subject'
@@ -25,7 +36,6 @@ edge_properties:
   - 'object'
   - 'category'
   - 'relation'
-  - 'pathway'
   - 'provided_by'
 
 transform_mode: 'flat'
