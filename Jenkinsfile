@@ -14,8 +14,7 @@ pipeline {
                 sh '''
                 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
                 chmod 755 $HOME/.poetry/env
-                $HOME/.poetry/env
-                poetry install
+                $HOME/.poetry/bin/poetry install
                 '''
             }
         }
