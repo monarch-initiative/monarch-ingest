@@ -21,7 +21,7 @@ pipeline {
         stage('download and mirror') {
             steps {
                 sh '''
-                    $HOME/.poetry/bin/poetry run downloader download.yaml --mirror gs://monarch-ingest/download-cache
+                    $HOME/.poetry/bin/poetry run downloader --mirror gs://monarch-ingest/download-cache download.yaml
                 '''
             }
         }
