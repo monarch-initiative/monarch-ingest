@@ -85,7 +85,7 @@ The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas
 Mapping of Alliance publication category to biolink category
 
 | Alliance category          | Biolink publication type |
-|----------------------------|--------------------------| 
+|----------------------------|--------------------------|
 | Research Article           | IAO:0000013              |
 | Review Article             | IAO:0000013              |
 | Thesis                     | IAO:0000311              |
