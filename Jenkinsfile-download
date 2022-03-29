@@ -8,12 +8,19 @@ pipeline {
     stages {
         stage('setup') {
             steps {
-                sh 'pip install kghub-downloader'
+                sh '''
+                    python -mvenv venv
+                    . ./venv/bin/activate
+                    pip install kghub-downloader
+                '''
             }
         }
         stage('download and mirror') {
             steps {
-                sh 'downloader download.yaml --mirror gs://monarch-ingest/download-cache'
+                sh '''
+                    . ./venv/bin/activate
+                    downloader download.yaml --mirror gs://monarch-ingest/download-cache
+                '''
             }
         }
     }
