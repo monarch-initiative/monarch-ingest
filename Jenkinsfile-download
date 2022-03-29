@@ -5,6 +5,9 @@ pipeline {
             image 'python:3.8-buster'
         }
     }
+    environment {
+        HOME = "${env.WORKSPACE}"
+    }
     stages {
         stage('setup') {
             steps {
