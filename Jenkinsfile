@@ -1,14 +1,11 @@
 pipeline {
     agent none
-    environment {
-        HOME = "${env.WORKSPACE}"
-    }
     stages {
         stage('setup') {
             agent { dockerfile true }
             steps {
                 sh '''
-                $HOME/.poetry/bin/poetry install
+                poetry install
                 '''
             }
         }
