@@ -67,7 +67,7 @@ pipeline {
             }
             steps {
                 sh '''poetry install'''
-                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${env.RELEASE}/output/* output/'''
+                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/* output/'''
                 sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
             }
         }
@@ -75,9 +75,9 @@ pipeline {
             agent { label 'worker'}
             steps {
                 sh '''
-                    gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/experimental-output/${env.RELEASE}/
-                    gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/experimental-output/${env.RELEASE}/
-                    gsutil cp merged_graph_stats.yaml gs://monarch-ingest/experimental-output/${env.RELEASE}/
+                    gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/experimental-output/${RELEASE}/
+                    gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/experimental-output/${RELEASE}/
+                    gsutil cp merged_graph_stats.yaml gs://monarch-ingest/experimental-output/${RELEASE}/
                 '''
             }
         }
