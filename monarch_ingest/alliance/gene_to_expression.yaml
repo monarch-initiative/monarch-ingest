@@ -41,17 +41,16 @@ required_properties:
   - AnatomyTermName
   #  - AnatomyTermQualifierIDs
   #  - AnatomyTermQualifierTermNames
-  #  - SourceURL
+  - SourceURL
   - Source
   - Reference
 
-depends_on:
-  - './monarch_ingest/maps/alliance-gene.yaml'
 
 global_table: './monarch_ingest/translation_table.yaml'
 
 node_properties:
   - 'id'
+  - 'name'
   - 'category'
   #  - 'provided_by'
   - 'source'
@@ -63,7 +62,7 @@ edge_properties:
   - 'object'
   - 'stage_qualifier'
   - 'category'
-  #  - 'relation'
+  - 'relation'
   #  - 'qualifiers'
   - 'has_evidence'
   - 'publications'
