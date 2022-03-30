@@ -180,7 +180,7 @@ def download():
     # For some reason the single file is archived as a tar, undo that and just gzip
     if not os.path.exists("./data/panther/RefGenomeOrthologs.tsv"):
         os.system(
-            "tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz > ./data/panther/RefGenomeOrthologs.tsv"
+            "tar -xzf ./data/panther/RefGenomeOrthologs.tar.gz"
         )
 
 
