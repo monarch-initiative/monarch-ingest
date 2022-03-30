@@ -18,10 +18,27 @@ pipeline {
                 '''
             }
         }
-        stage('download and mirror') {
+        stage('download') {
             steps {
                 sh '''
-                    $HOME/.poetry/bin/poetry run downloader --mirror gs://monarch-ingest/download-cache download.yaml
+                    $HOME/.poetry/bin/poetry run downloader
+                '''
+            }
+        }
+        stage('post-process') {
+            steps {
+                sh '''
+                    zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
+                '''
+                sh '''
+                    tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz > ./data/panther/RefGenomeOrthologs.tsv
+                '''
+            }
+        }
+        stage('upload') {
+            steps {
+                sh '''
+                    gsutil -m cp -r data/ gs://monarch-ingest/data-cache
                 '''
             }
         }
