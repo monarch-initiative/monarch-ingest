@@ -36,7 +36,7 @@ pipeline {
                     zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
                 '''
                 sh '''
-                    tar -xzf ./data/panther/RefGenomeOrthologs.tar.gz
+                    cd data/panther && tar zxf RefGenomeOrthologs.tar.gz
                 '''
             }
         }
@@ -44,7 +44,7 @@ pipeline {
             agent { label 'worker' }
             steps {
                 sh '''
-                    gsutil -m cp -r data/ gs://monarch-ingest/data-cache
+                    gsutil -m cp -r data gs://monarch-ingest/data-cache
                 '''
             }
         }
