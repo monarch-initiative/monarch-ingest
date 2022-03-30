@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            label 'worker'
-            image 'python:3.8-buster'
-        }
-    }
+    agent { dockerfile true }
     environment {
         HOME = "${env.WORKSPACE}"
     }
