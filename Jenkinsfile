@@ -18,7 +18,7 @@ pipeline {
             agent { label 'worker'}
             steps {
                 sh 'mkdir data || true'
-                sh 'gsutil -m cp -r gs://monarch-ingest/data-cache/ data/'
+                sh 'gsutil -m cp -r gs://monarch-ingest/data-cache/* data/'
                 sh 'ls -la'
                 sh 'ls -la data'
             }
