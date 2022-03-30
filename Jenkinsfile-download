@@ -1,10 +1,11 @@
 pipeline {
-    agent { dockerfile true }
+    agent none
     environment {
         HOME = "${env.WORKSPACE}"
     }
     stages {
         stage('setup') {
+            agent { dockerfile true }
             steps {
                 sh '''
                     python3 -mvenv venv
@@ -15,6 +16,7 @@ pipeline {
             }
         }
         stage('download') {
+            agent { dockerfile true }
             steps {
                 sh '''
                     . venv/bin/activate
@@ -23,6 +25,7 @@ pipeline {
             }
         }
         stage('post-process') {
+            agent { dockerfile true }
             steps {
                 sh '''
                     zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
@@ -33,6 +36,7 @@ pipeline {
             }
         }
         stage('upload') {
+            agent { label 'worker' }
             steps {
                 sh '''
                     gsutil -m cp -r data/ gs://monarch-ingest/data-cache
