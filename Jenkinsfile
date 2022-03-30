@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         HOME = "${env.WORKSPACE}"
-        BUILDSTARTDATE = sh(script: "echo `date +%Y%m%d`", returnStdout: true).trim()
+        RELEASE = sh(script: "echo `date +%Y%m%d`", returnStdout: true).trim()
     }
     stages {
         stage('setup') {
@@ -54,11 +54,32 @@ pipeline {
                 '''
             }
         }
-        stage('upload') {
+        stage('upload kgx files') {
             agent { label 'worker'}
             steps {
-                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/'
+                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
 //                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
+            }
+        }
+        stage('merge') {
+            agent {
+                dockerfile true
+                label 'medium-worker'
+            }
+            steps {
+                sh '''poetry install'''
+                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${env.RELEASE}/output/* output/'''
+                sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
+            }
+        }
+        stage('upload merged') {
+            agent { label 'worker'}
+            steps {
+                sh '''
+                    gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/experimental-output/${env.RELEASE}/
+                    gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/experimental-output/${env.RELEASE}/
+                    gsutil cp merged_graph_stats.yaml gs://monarch-ingest/experimental-output/${env.RELEASE}/
+                '''
             }
         }
     }
