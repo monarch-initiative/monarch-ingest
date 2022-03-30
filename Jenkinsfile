@@ -17,7 +17,7 @@ pipeline {
         stage('download') {
             agent { label 'worker'}
             steps {
-                sh 'gsutil -m cp -r data-cache/data .'
+                sh 'gsutil -m cp -r data-cache/ data/'
             }
         }
         stage('transform') {
