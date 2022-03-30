@@ -12,16 +12,17 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-                    chmod 755 $HOME/.poetry/env
-                    $HOME/.poetry/bin/poetry install
+                    python -mvenv venv
+                    . venv/bin/activate
+                    pip install kghub-downloader
                 '''
             }
         }
         stage('download') {
             steps {
                 sh '''
-                    $HOME/.poetry/bin/poetry run downloader
+                    . venv/bin/activate
+                    downloader
                 '''
             }
         }
