@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         HOME = "${env.WORKSPACE}"
         BUILDSTARTDATE = sh(script: "echo `date +%Y%m%d`", returnStdout: true).trim()
