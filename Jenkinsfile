@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         HOME = "${env.WORKSPACE}"
-        RELEASE = sh(script: "echo `date +%Y%m%d`", returnStdout: true).trim()
+        RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
     }
     stages {
         stage('setup') {
