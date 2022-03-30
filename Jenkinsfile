@@ -1,10 +1,15 @@
 pipeline {
     agent none
+    environment {
+        HOME = "${env.WORKSPACE}"
+    }
     stages {
         stage('setup') {
             agent { dockerfile true }
             steps {
                 sh '''
+                pwd
+                ls
                 poetry install
                 '''
             }
