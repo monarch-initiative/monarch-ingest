@@ -17,6 +17,7 @@ pipeline {
         stage('download') {
             agent { label 'worker'}
             steps {
+                sh 'mkdir data'
                 sh 'gsutil -m cp -r gs://monarch-ingest/data-cache/ data/'
             }
         }
