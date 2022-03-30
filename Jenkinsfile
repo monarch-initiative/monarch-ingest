@@ -32,13 +32,13 @@ pipeline {
                         sh ''' poetry run koza transform --source monarch_ingest/string/protein_links.yaml --row-limit 1000 '''
                     }
                 }
-                stage {
+                stage('GO Annotation'){
                     agent { dockerfile true }
                     steps {
                         sh ''' poetry run koza transform --source monarch_ingest/goa/go_annotation.yaml --row-limit 1000 '''
                     }
                 }
-                stage {
+                stage('The Rest') {
                     agent { dockerfile true }
                     steps {
                         sh '''
