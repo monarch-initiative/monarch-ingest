@@ -175,11 +175,24 @@ def test_mouse_association(mouse):
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "EMAPA:19144"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier.id == "MGI:TS27"
+    assert associations[0].stage_qualifier == "MGI:TS27"
     assert associations[0].publications[0] == "PMID:10813634"
     assert "MMO:0000647" in associations[0].has_evidence
     assert "http://www.informatics.jax.org/assay/MGI:6726480" in associations[0].has_evidence
     assert associations[0].source == "infores:mgi"
+
+
+# we only test the presence of LifeStages here for Mouse
+def test_mouse_life_stage(mouse):
+    lifestages = [
+        lifestage
+        for lifestage in mouse
+        if isinstance(lifestage, LifeStage)
+    ]
+    assert lifestages[0].id == "MGI:TS27"
+    assert lifestages[0].name == "TS27"
+    assert "NCBITaxon:10090" in lifestages[0].in_taxon
+    assert lifestages[0].source == "infores:mgi"
 
 
 # Zebrafish has rich gene expression associations with
@@ -252,11 +265,23 @@ def test_zebrafish_association(zebrafish):
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "ZFA:0001206"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier.id == "ZFIN:Segmentation:10-13_somites"
+    assert associations[0].stage_qualifier == "ZFIN:Segmentation:10-13_somites"
     assert associations[0].publications[0] == "PMID:11237470"
     assert "MMO:0000658" in associations[0].has_evidence
     assert "https://zfin.org/ZDB-FIG-110701-1" in associations[0].has_evidence
     assert associations[0].source == "infores:zfin"
+
+
+def test_zebrafish_life_stage(zebrafish):
+    lifestages = [
+        lifestage
+        for lifestage in zebrafish
+        if isinstance(lifestage, LifeStage)
+    ]
+    assert lifestages[0].id == "ZFIN:Segmentation:10-13_somites"
+    assert lifestages[0].name == "Segmentation:10-13 somites"
+    assert "NCBITaxon:7955" in lifestages[0].in_taxon
+    assert lifestages[0].source == "infores:zfin"
 
 
 # Drosophila has some embryonic staged gene expression associations with anatomical entities
@@ -328,7 +353,7 @@ def test_drosophila_association_publication(drosophila):
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "FBbt:00004204"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier.id == "FB:embryonic_stage_4"
+    assert associations[0].stage_qualifier == "FB:embryonic_stage_4"
     assert associations[0].publications[0] == "FB:FBrf0219073"
     assert "MMO:0000658" in associations[0].has_evidence
     assert associations[0].source == "infores:flybase"
@@ -403,7 +428,7 @@ def test_worm_association_publication(worm):
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "WBbt:0000100"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier.id == "WB:L4_larva_Ce"
+    assert associations[0].stage_qualifier == "WB:L4_larva_Ce"
     assert associations[0].publications[0] == "PMID:12393910"
     assert "MMO:0000670" in associations[0].has_evidence
     assert "https://www.wormbase.org/species/all/expr_pattern/Expr2275" in associations[0].has_evidence

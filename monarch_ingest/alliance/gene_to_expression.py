@@ -70,7 +70,7 @@ try:
                 db=db,
                 ncbi_taxon_id=ncbi_taxon_id,
                 stage_term=stage_term,
-                source=source_map[db]
+                source=source
             )
 
         # TODO: For now, we write out separate gene expression site associations for each
@@ -90,13 +90,16 @@ try:
                 predicate=Predicate.expressed_in,
                 relation=EXPRESSED_IN_RELATION,
                 object=cellular_component.id,
-                stage_qualifier=life_stage,
+
+                # TODO: Pydantic can't seem to handle a full LifeStage object here
+                stage_qualifier=life_stage.id if life_stage else None,
+
                 has_evidence=evidence,
                 publications=publication_ids,
                 source=source
             )
 
-            koza_app.write(gene, cellular_component, association)
+            koza_app.write(gene, cellular_component, association, life_stage)
 
         if anatomical_entity_id:
             anatomical_entity = \
@@ -112,13 +115,16 @@ try:
                 predicate=Predicate.expressed_in,
                 relation=EXPRESSED_IN_RELATION,
                 object=anatomical_entity.id,
-                stage_qualifier=life_stage,
+
+                # TODO: Pydantic can't seem to handle a full LifeStage object here
+                stage_qualifier=life_stage.id if life_stage else None,
+
                 has_evidence=evidence,
                 publications=publication_ids,
                 source=source
             )
 
-            koza_app.write(gene, anatomical_entity, association)
+            koza_app.write(gene, anatomical_entity, association, life_stage)
 
 except Exception as exc:
     logger.error(f"Invalid Alliance gene expression record: {str(exc)}")

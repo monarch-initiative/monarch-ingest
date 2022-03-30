@@ -116,6 +116,8 @@ This ingest doesn't make an effort to sort these publication categories into mor
 
 ### Gene Expression
 
+This is the full data model of the Alliance file ingested; however, not all fields are currently used in the current ingest (in most cases, these fields are not yet set in the input data sets; see the gene_to_expression.yaml file)
+
 * Species
 * SpeciesID
 * GeneID
@@ -152,17 +154,25 @@ https://www.alliancegenome.org/downloads#expression
 
 * biolink:Gene
     * id (row['GeneID'])
+    * name (row['GeneSymbol'])
     * in taxon (row['SpeciesID'])
+    * source (`infores` mapped from row['Source'])
 
 * biolink:AnatomicalEntity
     * id (row['AnatomyTermID'])
+    * name (row['AnatomyTermName'])
+    * source (`infores` mapped from row['Source'])
 
 * biolink:CellularComponent  # is_a: anatomical entity...
     * id (row['CellularComponentID'])
+    * name (row['CellularComponentTerm'])
+    * source (`infores` mapped from row['Source'])
 
 * biolink:LifeStage
-  * id (CURIE heuristically inferred from row['StageTerm'] and row['SpeciesID'])
-  * in taxon (row['SpeciesID'])
+    * id (CURIE heuristically inferred from row['SpeciesID'] and row['StageTerm'])
+    * name (row['StageTerm'])
+    * in taxon (row['SpeciesID'])
+    * source (`infores` mapped from row['Source'])
 
 * biolink:GeneToExpressionSiteAssociation
     * id (random uuid)
@@ -172,4 +182,4 @@ https://www.alliancegenome.org/downloads#expression
     * stage qualifier (LifeStage.id)  # if specified; None otherwise
     * has evidence (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
     * publications (row['Reference'])
-    * source (row['source'])  # infores of source model database
+    * source (`infores` mapped from row['Source'])

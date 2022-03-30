@@ -16,5 +16,5 @@ def get_life_stage(db: str, ncbi_taxon_id: str, stage_term: str, source: str) ->
         # TODO: do we need to have a better mapping of stage_term's onto their proper CURIE?
         # Pre-pend the namespace and replace spaces with underscores?
         stage_term_id = f"{db}:{stage_term.replace(' ','_')}"
-        life_stage = LifeStage(id=stage_term_id, in_taxon=ncbi_taxon_id, source=source)
+        life_stage = LifeStage(id=stage_term_id, name=stage_term, in_taxon=ncbi_taxon_id, source=source)
         return life_stage
