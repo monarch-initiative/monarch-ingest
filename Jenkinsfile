@@ -57,8 +57,8 @@ pipeline {
         stage('upload kgx files') {
             agent { label 'worker'}
             steps {
-                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
-//                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
+                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${RELEASE}/output/'
+//                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${RELEASE}/output/'
             }
         }
         stage('merge') {
