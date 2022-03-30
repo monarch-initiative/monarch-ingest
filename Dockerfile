@@ -7,3 +7,4 @@ RUN apt install -y python3.8-venv
 RUN apt install -y python3-pip
 RUN apt install -y jq
 RUN pip install poetry
+RUN poetry config virtualenvs.in-project true
