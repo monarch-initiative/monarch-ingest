@@ -1,10 +1,11 @@
 pipeline {
-    agent { dockerfile true }
+    agent none
     environment {
         HOME = "${env.WORKSPACE}"
     }
     stages {
         stage('setup') {
+            agent { dockerfile true }
             steps {
                 sh '''
                 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
@@ -13,12 +14,16 @@ pipeline {
                 '''
             }
         }
-        stage('download-and-transform') {
+        stage('download') {
+            agent { label 'worker'}
+            steps {
+                sh 'gsutil -m cp -r data-cache/data .'
+            }
+        }
+        stage('transform') {
+            agent { dockerfile true }
             steps {
                 sh '''
-                    $HOME/.poetry/bin/poetry run downloader
-                    gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
-                    tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz > ./data/panther/RefGenomeOrthologs.tsv
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/gene.yaml --row-limit 1000
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/gene_to_phenotype.yaml --row-limit 1000
                     $HOME/.poetry/bin/poetry run koza transform --source monarch_ingest/alliance/publication.yaml --row-limit 1000
@@ -48,9 +53,6 @@ pipeline {
         stage('upload') {
             agent { label 'worker'}
             steps {
-                sh 'cd /tmp/workspace/ingest-test'
-                sh 'pwd'
-                sh 'ls -l'
                 sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/'
                 sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/'
             }

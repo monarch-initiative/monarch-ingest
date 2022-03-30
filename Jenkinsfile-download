@@ -1,5 +1,8 @@
 pipeline {
     agent none
+    triggers {
+        cron('H H * * 7')  //sometime on Sundays
+    }
     environment {
         HOME = "${env.WORKSPACE}"
     }
@@ -7,6 +10,8 @@ pipeline {
         stage('setup') {
             agent { dockerfile true }
             steps {
+                // This step could (and maybe should) do a poetry install like the ingest Jenkinsfile
+                // and then run downloader from within a poetry run command
                 sh '''
                     python3 -mvenv venv
                     . venv/bin/activate
