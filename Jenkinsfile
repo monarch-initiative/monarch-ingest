@@ -2,7 +2,6 @@ pipeline {
     agent none
     environment {
         HOME = "${env.WORKSPACE}"
-        RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
     }
     stages {
         stage('setup') {
@@ -57,7 +56,7 @@ pipeline {
         stage('upload') {
             agent { label 'worker'}
             steps {
-                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
+                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/'
 //                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${env.RELEASE}/output/'
             }
         }
