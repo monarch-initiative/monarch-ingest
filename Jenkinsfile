@@ -63,8 +63,7 @@ pipeline {
         }
         stage('merge') {
             agent {
-                dockerfile true
-                label 'medium-worker'
+                dockerfile { label 'medium-worker' }
             }
             steps {
                 sh '''poetry install'''
