@@ -44,7 +44,7 @@ try:
 
     source_url = row["SourceURL"]
     if source_url:
-        evidence.append(source_url)
+        evidence.extend(source_url)
 
     db = row['Source']
     source = source_map[db]
@@ -66,7 +66,12 @@ try:
 
         life_stage: Optional[LifeStage] = None
         if stage_term:
-            life_stage = get_life_stage(db=db, ncbi_taxon_id=ncbi_taxon_id, stage_term=stage_term)
+            life_stage = get_life_stage(
+                db=db,
+                ncbi_taxon_id=ncbi_taxon_id,
+                stage_term=stage_term,
+                source=source_map[db]
+            )
 
         # TODO: For now, we write out separate gene expression site associations for each
         #       kind of expression localization, in case a single ingest record records both?
@@ -76,6 +81,7 @@ try:
                 CellularComponent(
                     id=cellular_component_id,
                     name=cellular_component_name,
+                    in_taxon=ncbi_taxon_id,
                     source=source
                 )
             association = GeneToExpressionSiteAssociation(
@@ -97,6 +103,7 @@ try:
                 AnatomicalEntity(
                     id=anatomical_entity_id,
                     name=anatomical_entity_name,
+                    in_taxon=ncbi_taxon_id,
                     source=source
                 )
             association = GeneToExpressionSiteAssociation(

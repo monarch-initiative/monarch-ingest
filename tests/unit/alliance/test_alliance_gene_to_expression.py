@@ -11,7 +11,12 @@ from monarch_ingest.alliance.utils import get_life_stage
 
 
 def test_get_life_stage():
-    life_stage = get_life_stage("ZFIN", ncbi_taxon_id="NCBITaxon:7955", stage_term="Segmentation:10-13 somites")
+    life_stage = get_life_stage(
+        db="ZFIN",
+        ncbi_taxon_id="NCBITaxon:7955",
+        stage_term="Segmentation:10-13 somites",
+        source="infores:zfin"
+    )
     assert isinstance(life_stage, LifeStage)
     assert life_stage.id == "ZFIN:Segmentation:10-13_somites"
     assert "NCBITaxon:7955" in life_stage.in_taxon
@@ -82,6 +87,7 @@ def test_rattus_expression_site(rattus):
     ]
     assert entities[0].id == "GO:0005737"
     assert entities[0].name == "cytoplasm"
+    assert "NCBITaxon:10116" in entities[0].in_taxon
     assert entities[0].source == "infores:rgd"
 
 
@@ -91,9 +97,10 @@ def test_rattus_association(rattus):
         for association in rattus
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "RGD:619834"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "GO:0005737"
+    assert associations[0].subject == "RGD:619834"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "GO:0005737"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].publications[0] == "PMID:11870221"
     assert "MMO:0000640" in associations[0].has_evidence
     assert associations[0].source == "infores:rgd"
@@ -144,7 +151,7 @@ def test_mouse_gene(mouse):
     genes = [gene for gene in mouse if isinstance(gene, Gene)]
     assert genes[0].id == "MGI:101757"
     assert genes[0].name == "Cfl1"
-    assert "NCBITaxon:10116" in genes[0].in_taxon
+    assert "NCBITaxon:10090" in genes[0].in_taxon
     assert genes[0].source == "infores:mgi"
 
 
@@ -154,6 +161,7 @@ def test_mouse_expression_site(mouse):
     ]
     assert entities[0].id == "EMAPA:19144"
     assert entities[0].name == "upper leg muscle"
+    assert "NCBITaxon:10090" in entities[0].in_taxon
     assert entities[0].source == "infores:mgi"
 
 
@@ -163,9 +171,10 @@ def test_mouse_association(mouse):
         for association in mouse
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "MGI:101757"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "EMAPA:19144"
+    assert associations[0].subject == "MGI:101757"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "EMAPA:19144"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier.id == "MGI:TS27"
     assert associations[0].publications[0] == "PMID:10813634"
     assert "MMO:0000647" in associations[0].has_evidence
@@ -229,6 +238,7 @@ def test_zebrafish_expression_site(zebrafish):
     ]
     assert entities[0].id == "ZFA:0001206"
     assert entities[0].name == "intermediate mesoderm"
+    assert "NCBITaxon:7955" in entities[0].in_taxon
     assert entities[0].source == "infores:zfin"
 
 
@@ -238,9 +248,10 @@ def test_zebrafish_association(zebrafish):
         for association in zebrafish
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "ZFIN:ZDB-GENE-010226-1"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "ZFA:0001206"
+    assert associations[0].subject == "ZFIN:ZDB-GENE-010226-1"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "ZFA:0001206"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier.id == "ZFIN:Segmentation:10-13_somites"
     assert associations[0].publications[0] == "PMID:11237470"
     assert "MMO:0000658" in associations[0].has_evidence
@@ -303,6 +314,7 @@ def test_drosophila_expression_site(drosophila):
     ]
     assert entities[0].id == "FBbt:00004204"
     assert entities[0].name == "ventral ectoderm anlage"
+    assert "NCBITaxon:7227" in entities[0].in_taxon
     assert entities[0].source == "infores:flybase"
 
 
@@ -312,9 +324,10 @@ def test_drosophila_association_publication(drosophila):
         for association in drosophila
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "FB:FBgn0000251"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "FBbt:00004204"
+    assert associations[0].subject == "FB:FBgn0000251"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "FBbt:00004204"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier.id == "FB:embryonic_stage_4"
     assert associations[0].publications[0] == "FB:FBrf0219073"
     assert "MMO:0000658" in associations[0].has_evidence
@@ -376,6 +389,7 @@ def test_worm_expression_site(worm):
     ]
     assert entities[0].id == "WBbt:0000100"
     assert entities[0].name == "C. elegans anatomical entity"
+    assert "NCBITaxon:6239" in entities[0].in_taxon
     assert entities[0].source == "infores:wormbase"
 
 
@@ -385,9 +399,10 @@ def test_worm_association_publication(worm):
         for association in worm
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "WB:WBGene00000001"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "WBbt:0000100"
+    assert associations[0].subject == "WB:WBGene00000001"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "WBbt:0000100"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier.id == "WB:L4_larva_Ce"
     assert associations[0].publications[0] == "PMID:12393910"
     assert "MMO:0000670" in associations[0].has_evidence
@@ -451,6 +466,7 @@ def test_yeast_expression_site(yeast):
     ]
     assert entities[0].id == "GO:0005737"
     assert entities[0].name == "cytoplasm"
+    assert "NCBITaxon:559292" in entities[0].in_taxon
     assert entities[0].source == "infores:sgd"
 
 
@@ -460,9 +476,10 @@ def test_yeast_association(yeast):
         for association in yeast
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject.id == "SGD:S000002429"
-    assert associations[0].predicate.id == "biolink:expressed_in"
-    assert associations[0].object.id == "GO:0005737"
+    assert associations[0].subject == "SGD:S000002429"
+    assert associations[0].predicate == "biolink:expressed_in"
+    assert associations[0].object == "GO:0005737"
+    assert associations[0].relation == "RO:0002206"
     assert associations[0].publications[0] == "PMID:14562095"
     assert "MMO:0000662" in associations[0].has_evidence
     assert associations[0].source == "infores:sgd"
