@@ -5,4 +5,4 @@ RUN apt install -y python3-pip
 RUN apt install -y jq
 RUN pip install poetry
 
-ENTRYPOINT "/bin/bash"
+ENTRYPOINT ["poetry","run"]
