@@ -61,6 +61,13 @@ pipeline {
 //                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${RELEASE}/output/'
             }
         }
+        // This seems like a sign that I'm doing this wrong...
+        stage('download kgx files to next worker ') {
+            agent { label 'large-worker'}
+            steps {
+                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/*.tsv output/'''
+            }
+        }
         stage('merge') {
             agent {
                 dockerfile { label 'large-worker' }
