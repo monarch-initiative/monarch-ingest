@@ -68,6 +68,7 @@ pipeline {
             steps {
                 sh '''poetry install'''
                 sh '''mkdir -p output/merged || true '''
+                sh '''downloader --tag monarch_ontology '''
                 sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
             }
         }
