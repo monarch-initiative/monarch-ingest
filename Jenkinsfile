@@ -67,7 +67,6 @@ pipeline {
             }
             steps {
                 sh '''poetry install'''
-                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/* output/'''
                 sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
             }
         }
