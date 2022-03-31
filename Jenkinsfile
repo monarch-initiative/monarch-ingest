@@ -65,6 +65,7 @@ pipeline {
         stage('download kgx files to next worker ') {
             agent { label 'large-worker'}
             steps {
+                sh '''mkdir -p output/merged || true '''
                 sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/*.tsv output/'''
             }
         }
