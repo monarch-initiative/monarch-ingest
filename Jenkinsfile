@@ -63,7 +63,7 @@ pipeline {
         }
         stage('merge') {
             agent {
-                dockerfile { label 'medium-worker' }
+                dockerfile { label 'large-worker' }
             }
             steps {
                 sh '''poetry install'''
