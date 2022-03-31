@@ -67,6 +67,7 @@ pipeline {
             }
             steps {
                 sh '''poetry install'''
+                sh '''mkdir -p output/merged || true '''
                 sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
             }
         }
