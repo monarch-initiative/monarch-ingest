@@ -16,7 +16,7 @@ pipeline {
             }
         }
         stage('download') {
-            agent { label 'worker'}
+            agent { dockerfile true }
             steps {
                 sh 'mkdir data || true'
                 sh 'gsutil -m cp -r gs://monarch-ingest/data-cache/* data/'
@@ -55,18 +55,11 @@ pipeline {
             }
         }
         stage('upload kgx files') {
-            agent { label 'worker'}
+            agent { dockerfile true }
             steps {
                 sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${RELEASE}/output/'
+// commented out because this pipeline isn't yet making graph summaries
 //                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${RELEASE}/output/'
-            }
-        }
-        // This seems like a sign that I'm doing this wrong...
-        stage('download kgx files to next worker ') {
-            agent { label 'large-worker'}
-            steps {
-                sh '''mkdir -p output/merged || true '''
-                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/*.tsv output/'''
             }
         }
         stage('merge') {
@@ -76,13 +69,9 @@ pipeline {
             steps {
                 sh '''poetry install'''
                 sh '''mkdir -p output/merged || true '''
+                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/*.tsv output/'''
                 sh '''poetry run downloader --tag monarch_ontology '''
                 sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
-            }
-        }
-        stage('upload merged') {
-            agent { label 'worker'}
-            steps {
                 sh '''
                     gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/experimental-output/${RELEASE}/
                     gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/experimental-output/${RELEASE}/
