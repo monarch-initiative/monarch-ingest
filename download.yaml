@@ -69,28 +69,28 @@
   local_name: data/alliance/BGI_WB.json.gz
   tag: alliance_gene
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_RGD.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_RGD.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_RGD.json.gz
+  local_name: data/alliance/EXPRESSION_RGD.json.gz
   tag: alliance_gene_to_expression
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_MGI.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_MGI.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_MGI.json.gz
+  local_name: data/alliance/EXPRESSION_MGI.json.gz
   tag: alliance_gene_to_expression
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_ZFIN.json.gz
+  local_name: data/alliance/EXPRESSION_ZFIN.json.gz
   tag: alliance_gene_to_expression
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_FB.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_FB.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_FB.json.gz
+  local_name: data/alliance/EXPRESSION_FB.json.gz
   tag: alliance_gene_to_expression
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_WB.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_WB.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_WB.json.gz
+  local_name: data/alliance/EXPRESSION_WB.json.gz
   tag: alliance_gene_to_expression
 -
-  url: https://fms.alliancegenome.org/download/EXPRESSION-ALLIANCE-JSON_SGD.json.gz
-  local_name: data/alliance/EXPRESSION-ALLIANCE-JSON_SGD.json.gz
+  url: https://fms.alliancegenome.org/download/EXPRESSION_SGD.json.gz
+  local_name: data/alliance/EXPRESSION_SGD.json.gz
   tag: alliance_gene_to_expression
 
 # ctd
@@ -265,7 +265,7 @@
 
 # pombase
 -
-  url: https://www.pombase.org/data/annotations/EXPRESSION-ALLIANCE-JSON_annotations/phenotype_annotations.pombase.phaf.gz
+  url: https://www.pombase.org/data/annotations/EXPRESSION_annotations/phenotype_annotations.pombase.phaf.gz
   local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
   tag: pombase_gene_to_phenotype
 -

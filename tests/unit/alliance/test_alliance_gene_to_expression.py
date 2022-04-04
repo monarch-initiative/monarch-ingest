@@ -7,19 +7,19 @@ from biolink_model_pydantic.model import (
     LifeStage
 )
 
-from monarch_ingest.alliance.utils import get_life_stage
-
-
-def test_get_life_stage():
-    life_stage = get_life_stage(
-        db="ZFIN",
-        ncbi_taxon_id="NCBITaxon:7955",
-        stage_term="Segmentation:10-13 somites",
-        source="infores:zfin"
-    )
-    assert isinstance(life_stage, LifeStage)
-    assert life_stage.id == "ZFIN:Segmentation:10-13_somites"
-    assert "NCBITaxon:7955" in life_stage.in_taxon
+#
+# Alliance master schema formatted data now used, already has the required stage term (if available)
+#
+# def test_get_life_stage():
+#     life_stage = get_life_stage(
+#         db="ZFIN",
+#         ncbi_taxon_id="NCBITaxon:7955",
+#         stage_term="Segmentation:10-13 somites",
+#         source="infores:zfin"
+#     )
+#     assert isinstance(life_stage, LifeStage)
+#     assert life_stage.id == "ZFIN:Segmentation:10-13_somites"
+#     assert "NCBITaxon:7955" in life_stage.in_taxon
 
 
 @pytest.fixture
@@ -35,31 +35,35 @@ def script():
 # The Rat data seems to only have gene expression assigned to cellular components
 @pytest.fixture
 def rat_row():
-    return {
-        "Species": "Rattus norvegicus",
-        "SpeciesID": "NCBITaxon:10116",
-        "GeneID": "RGD:619834",
-        "GeneSymbol": "A1cf",
-        "Location": "cytoplasm",
-        "StageTerm": "",
-        "AssayID": "MMO:0000640",
-        "AssayTermName": "expression assay",
-        "CellularComponentID": "GO:0005737",
-        "CellularComponentTerm": "cytoplasm",
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": None,
-        "AnatomyTermName": None,
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": None,
-        "Source": "RGD",
-        "Reference": ["PMID:11870221"]
-    }
+    #
+    # Deprecated original input file format
+    #
+    # return {
+    #     "Species": "Rattus norvegicus",
+    #     "SpeciesID": "NCBITaxon:10116",
+    #     "GeneID": "RGD:619834",
+    #     "GeneSymbol": "A1cf",
+    #     "Location": "cytoplasm",
+    #     "StageTerm": "",
+    #     "AssayID": "MMO:0000640",
+    #     "AssayTermName": "expression assay",
+    #     "CellularComponentID": "GO:0005737",
+    #     "CellularComponentTerm": "cytoplasm",
+    #     "CellularComponentQualifierIDs": None,
+    #     "CellularComponentQualifierTermNames": None,
+    #     "SubStructureID": None,
+    #     "SubStructureName": None,
+    #     "SubStructureQualifierIDs": None,
+    #     "SubStructureQualifierTermNames": None,
+    #     "AnatomyTermID": None,
+    #     "AnatomyTermName": None,
+    #     "AnatomyTermQualifierIDs": None,
+    #     "AnatomyTermQualifierTermNames": None,
+    #     "SourceURL": None,
+    #     "Source": "RGD",
+    #     "Reference": ["PMID:11870221"]
+    # }
+    raise NotImplementedError
 
 
 @pytest.fixture
@@ -199,31 +203,66 @@ def test_mouse_life_stage(mouse):
 # tissue level and above anatomical entities
 @pytest.fixture
 def zfin_row():
+    #
+    # Deprecated original input file format
+    #
+    # return {
+    #     "Species": "Danio rerio",
+    #     "SpeciesID": "NCBITaxon:7955",
+    #     "GeneID": "ZFIN:ZDB-GENE-010226-1",
+    #     "GeneSymbol": "gdnfa",
+    #     "Location": "intermediate mesoderm",
+    #     "StageTerm": "Segmentation:10-13 somites",
+    #     "AssayID": "MMO:0000658",
+    #     "AssayTermName": "ribonucleic acid in situ hybridization assay",
+    #     "CellularComponentID": None,
+    #     "CellularComponentTerm": None,
+    #     "CellularComponentQualifierIDs": None,
+    #     "CellularComponentQualifierTermNames": None,
+    #     "SubStructureID": None,
+    #     "SubStructureName": None,
+    #     "SubStructureQualifierIDs": None,
+    #     "SubStructureQualifierTermNames": None,
+    #     "AnatomyTermID": "ZFA:0001206",
+    #     "AnatomyTermName": "intermediate mesoderm",
+    #     "AnatomyTermQualifierIDs": None,
+    #     "AnatomyTermQualifierTermNames": None,
+    #     "SourceURL": ["https://zfin.org/ZDB-FIG-110701-1"],
+    #     "Source": "ZFIN",
+    #     "Reference": ["PMID:11237470"]
+    # }
+
+    # just a single Alliance JSON "data" array record
     return {
-        "Species": "Danio rerio",
-        "SpeciesID": "NCBITaxon:7955",
-        "GeneID": "ZFIN:ZDB-GENE-010226-1",
-        "GeneSymbol": "gdnfa",
-        "Location": "intermediate mesoderm",
-        "StageTerm": "Segmentation:10-13 somites",
-        "AssayID": "MMO:0000658",
-        "AssayTermName": "ribonucleic acid in situ hybridization assay",
-        "CellularComponentID": None,
-        "CellularComponentTerm": None,
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": "ZFA:0001206",
-        "AnatomyTermName": "intermediate mesoderm",
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": ["https://zfin.org/ZDB-FIG-110701-1"],
-        "Source": "ZFIN",
-        "Reference": ["PMID:11237470"]
-    }
+            "dateAssigned": "2022-01-21T07:09:02-08:00",
+            "geneId": "ZFIN:ZDB-GENE-031222-3",
+            "evidence": {
+              "crossReference": {
+                "id": "ZFIN:ZDB-PUB-080616-21",
+                "pages": ["reference"]
+              },
+              "publicationId": "PMID:18544660"
+            },
+            "crossReference": {
+              "id": "ZFIN:ZDB-FIG-080908-4",
+              "pages": ["gene/expression/annotation/detail"]
+            },
+            "assay": "MMO:0000655",
+            "whenExpressed": {
+              "stageName": "Larval:Protruding-mouth",
+              "stageTermId": "ZFS:0000035",
+              "stageUberonSlimTerm": {
+                "uberonTerm": "post embryonic, pre-adult"
+              }
+            },
+            "whereExpressed": {
+              "whereExpressedStatement": "whole organism",
+              "anatomicalStructureTermId": "ZFA:0001094",
+              "anatomicalStructureUberonSlimTermIds": [{
+                "uberonTerm": "Other"
+              }]
+            }
+          }
 
 
 @pytest.fixture
@@ -239,18 +278,27 @@ def zebrafish(zfin_row, mock_koza, source_name, script, global_table):
 
 def test_zebrafish_gene(zebrafish):
     genes = [gene for gene in zebrafish if isinstance(gene, Gene)]
-    assert genes[0].id == "ZFIN:ZDB-GENE-010226-1"
-    assert genes[0].name == "gdnfa"
+    assert genes[0].id == "ZFIN:ZDB-GENE-031222-3"
     assert "NCBITaxon:7955" in genes[0].in_taxon
     assert genes[0].source == "infores:zfin"
+
+
+def test_zebrafish_life_stage(zebrafish):
+    lifestages = [
+        lifestage
+        for lifestage in zebrafish
+        if isinstance(lifestage, LifeStage)
+    ]
+    assert lifestages[0].id == "ZFS:0000035"
+    assert "NCBITaxon:7955" in lifestages[0].in_taxon
+    assert lifestages[0].source == "infores:zfin"
 
 
 def test_zebrafish_expression_site(zebrafish):
     entities = [
         entity for entity in zebrafish if isinstance(entity, AnatomicalEntity)
     ]
-    assert entities[0].id == "ZFA:0001206"
-    assert entities[0].name == "intermediate mesoderm"
+    assert entities[0].id == "ZFA:0001094"
     assert "NCBITaxon:7955" in entities[0].in_taxon
     assert entities[0].source == "infores:zfin"
 
@@ -261,27 +309,15 @@ def test_zebrafish_association(zebrafish):
         for association in zebrafish
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "ZFIN:ZDB-GENE-010226-1"
+    assert associations[0].subject == "ZFIN:ZDB-GENE-031222-3"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "ZFA:0001206"
+    assert associations[0].object == "ZFA:0001094"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier == "ZFIN:Segmentation:10-13_somites"
-    assert associations[0].publications[0] == "PMID:11237470"
-    assert "MMO:0000658" in associations[0].has_evidence
-    assert "https://zfin.org/ZDB-FIG-110701-1" in associations[0].has_evidence
+    assert associations[0].stage_qualifier == "ZFS:0000035"
+    assert associations[0].publications[0] == "PMID:18544660"
+    assert "MMO:0000655" in associations[0].has_evidence
+    assert "ZFIN:ZDB-FIG-080908-4" in associations[0].has_evidence
     assert associations[0].source == "infores:zfin"
-
-
-def test_zebrafish_life_stage(zebrafish):
-    lifestages = [
-        lifestage
-        for lifestage in zebrafish
-        if isinstance(lifestage, LifeStage)
-    ]
-    assert lifestages[0].id == "ZFIN:Segmentation:10-13_somites"
-    assert lifestages[0].name == "Segmentation:10-13 somites"
-    assert "NCBITaxon:7955" in lifestages[0].in_taxon
-    assert lifestages[0].source == "infores:zfin"
 
 
 # Drosophila has some embryonic staged gene expression associations with anatomical entities

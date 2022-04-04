@@ -2,49 +2,100 @@ name: 'alliance_gene_to_expression'
 
 metadata: './monarch_ingest/alliance/metadata.yaml'
 
-json_path:
-  - 'data'
-
 files:
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_RGD.json.gz'
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_MGI.json.gz'
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_ZFIN.json.gz'
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_FB.json.gz'
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_WB.json.gz'
-  - './data/alliance/EXPRESSION-ALLIANCE-JSON_SGD.json.gz'
+  - './data/alliance/EXPRESSION_RGD.json.gz'
+  - './data/alliance/EXPRESSION_MGI.json.gz'
+  - './data/alliance/EXPRESSION_ZFIN.json.gz'
+  - './data/alliance/EXPRESSION_FB.json.gz'
+  - './data/alliance/EXPRESSION_WB.json.gz'
+  - './data/alliance/EXPRESSION_SGD.json.gz'
 
 format: 'json'
 
 compression: 'gzip'
 
-required_properties:
-  - Species
-  - SpeciesID
-  - GeneID
-  - GeneSymbol
-  - Location
-  - StageTerm
-  - AssayID
-  - AssayTermName
-  #
-  # Some of following fields are defined but empty in species files
-  #
-  - CellularComponentID
-  - CellularComponentTerm
-  #  - CellularComponentQualifierIDs
-  #  - CellularComponentQualifierTermNames
-  #  - SubStructureID
-  #  - SubStructureName
-  #  - SubStructureQualifierIDs
-  #  - SubStructureQualifierTermNames
-  - AnatomyTermID
-  - AnatomyTermName
-  #  - AnatomyTermQualifierIDs
-  #  - AnatomyTermQualifierTermNames
-  - SourceURL
-  - Source
-  - Reference
+json_path:
+  - 'data'
 
+#
+# Sample Alliance schema formatted JSON record
+#
+# {
+#  "metaData" : {
+#    "dateProduced" : "2022-01-21T07:09:04-08:00",
+#    "dataProvider" : {
+#      "crossReference" : {
+#        "id" : "ZFIN",
+#        "pages" : [ "homepage" ]
+#      },
+#      "type" : "curated"
+#    }
+#  },
+#  "data" : [{
+#    "dateAssigned" : "2022-01-21T07:09:02-08:00",
+#    "geneId" : "ZFIN:ZDB-GENE-031222-3",
+#    "evidence" : {
+#      "crossReference" : {
+#        "id" : "ZFIN:ZDB-PUB-080616-21",
+#        "pages" : [ "reference" ]
+#      },
+#    "publicationId" : "PMID:18544660"
+#    },
+#    "crossReference" : {
+#      "id" : "ZFIN:ZDB-FIG-080908-4",
+#      "pages" : [ "gene/expression/annotation/detail" ]
+#    },
+#    "assay" : "MMO:0000655",
+#    "whenExpressed" : {
+#      "stageName" : "Larval:Protruding-mouth",
+#      "stageTermId" : "ZFS:0000035",
+#      "stageUberonSlimTerm" : {
+#        "uberonTerm" : "post embryonic, pre-adult"
+#      }
+#    },
+#    "whereExpressed" : {
+#      "whereExpressedStatement" : "whole organism",
+#      "anatomicalStructureTermId" : "ZFA:0001094",
+#      "anatomicalStructureUberonSlimTermIds" : [ {
+#        "uberonTerm" : "Other"
+#      } ]
+#    }
+#  }
+required_properties:
+#  - Species
+#  - SpeciesID
+  - metaData.crossReference.id  # e.g. "ZFIN"
+#  - GeneID  # e.g. "ZFIN:ZDB-GENE-031222-3"
+  - geneId
+#  - GeneSymbol
+#  - Location
+#  - StageTerm
+  - whenExpressed.stageTermId # "ZFS:0000035"
+#  - AssayID
+  - assay  # e.g. "MMO:0000655"
+#  - AssayTermName
+#  #
+#  # Some of following fields are defined but empty in species files
+#  #
+#  - CellularComponentID
+#  - CellularComponentTerm
+#  #  - CellularComponentQualifierIDs
+#  #  - CellularComponentQualifierTermNames
+#  #  - SubStructureID
+#  #  - SubStructureName
+#  #  - SubStructureQualifierIDs
+#  #  - SubStructureQualifierTermNames
+  - whereExpressed.cellularComponentTermId  # e.g. "GO:0005737",
+#  - AnatomyTermID
+#  - AnatomyTermName
+#  #  - AnatomyTermQualifierIDs
+#  #  - AnatomyTermQualifierTermNames
+  - whereExpressed.anatomicalStructureTermId  # e.g. "ZFA:0001094",
+#  - SourceURL
+  - crossReference.id  # e.g."ZFIN:ZDB-FIG-080908-4" mapping onto "https://zfin.org/ZDB-FIG-080908-4"
+#  - Source
+#  - Reference
+  - evidence.publicationId  # e.g. "PMID:18544660"
 
 global_table: './monarch_ingest/translation_table.yaml'
 
