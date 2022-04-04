@@ -1,0 +1,11 @@
+name: 'NCBI'
+
+dataset_description:
+  ingest_title: 'NCBI'
+  ingest_url: 'https://www.ncbi.nlm.nih.gov/gene/'
+  description: 'Gene integrates information from a wide range of species. A record may include nomenclature, Reference Sequences (RefSeqs), maps, pathways, variations, phenotypes, and links to genome-, phenotype-, and locus-specific resources worldwide.'
+  rights: 'http://www.ncbi.nlm.nih.gov/home/about/policies.shtml'
+
+source_files:
+  - 'gene.yaml'
+
