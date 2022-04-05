@@ -22,11 +22,15 @@ try:
     #       soon to something like "aggregating_knowledge_source"
     db = gene_id.split(":")[0]
     source = source_map[db]
-    provided_by = source
 
     cellular_component_id = get_data(row, "whereExpressed.cellularComponentTermId")
     anatomical_entity_id = get_data(row, "whereExpressed.anatomicalStructureTermId")
+
     stage_term_id = get_data(row, "whenExpressed.stageTermId")
+    if not stage_term_id:
+        # TODO: some databases (e.g. MGI) do not stageTermId's
+        #       but may have an UBERON term that we can use
+        stage_term_id = get_data(row, "whenExpressed.stageUberonSlimTerm.uberonTerm")
 
     evidence = list()
     assay = get_data(row, "assay")  # e.g. "MMO:0000658"
@@ -39,54 +43,42 @@ try:
 
     publication_ids = get_data(row, "evidence.publicationId")
 
-    if not (anatomical_entity_id or cellular_component_id):
-        # Print a log error and skip the S-P-O ingest
-        logger.error(f"Gene expression record: \n\t'{str(row)}'\n has no ontology terms specified for expression site?")
+    # Our current ingest policy is to first use a reported Anatomical structure term...
+    if anatomical_entity_id:
+        koza_app.write(
+            GeneToExpressionSiteAssociation(
+                id="uuid:" + str(uuid.uuid1()),
+                subject=gene_id,
+                predicate=Predicate.expressed_in,
+                relation=EXPRESSED_IN_RELATION,
+                object=anatomical_entity_id,
+                stage_qualifier=stage_term_id,
+                has_evidence=evidence,
+                publications=publication_ids,
+                source=source
+            )
+        )
+
+    elif cellular_component_id:
+        # ... and failing that, fall back to using a subcellular component
+        # (but ignore otherwise ignore it, if reported alongside in the record)
+        koza_app.write(
+            GeneToExpressionSiteAssociation(
+                id="uuid:" + str(uuid.uuid1()),
+                subject=gene_id,
+                predicate=Predicate.expressed_in,
+                relation=EXPRESSED_IN_RELATION,
+                object=cellular_component_id,
+                stage_qualifier=stage_term_id,
+                has_evidence=evidence,
+                publications=publication_ids,
+                source=source
+            )
+        )
     else:
-        #
-        # TODO: having both component and anatomy id values is probably not a problem, but we'll
-        #       have to deal with this concurrency of location information sensibly down below?
-        #
-        if anatomical_entity_id and cellular_component_id:
-            logger.warning(
-                "Gene expression record has both " +
-                f"a Cellular Component term '{cellular_component_id}' " +
-                f"and an Anatomy Term '{anatomical_entity_id}'? I will try to capture both..."
-            )
-
-        # TODO: For now, we write out separate gene expression site associations for each
-        #       type of gene expression localization, in case a single ingest row records both?
-        if cellular_component_id:
-            koza_app.write(
-                GeneToExpressionSiteAssociation(
-                    id="uuid:" + str(uuid.uuid1()),
-                    subject=gene_id,
-                    predicate=Predicate.expressed_in,
-                    relation=EXPRESSED_IN_RELATION,
-                    object=cellular_component_id,
-                    stage_qualifier=stage_term_id,
-                    has_evidence=evidence,
-                    publications=publication_ids,
-                    provided_by=provided_by,
-                    source=source
-                )
-            )
-
-        if anatomical_entity_id:
-            koza_app.write(
-                GeneToExpressionSiteAssociation(
-                    id="uuid:" + str(uuid.uuid1()),
-                    subject=gene_id,
-                    predicate=Predicate.expressed_in,
-                    relation=EXPRESSED_IN_RELATION,
-                    object=anatomical_entity_id,
-                    stage_qualifier=stage_term_id,
-                    has_evidence=evidence,
-                    publications=publication_ids,
-                    provided_by=provided_by,
-                    source=source
-                )
-            )
+        # Print a log error and skip the S-P-O ingest
+        logger.error(
+            f"Gene expression record: \n\t'{str(row)}'\n has no ontology terms specified for expression site?")
 
 except Exception as exc:
     logger.error(f"Alliance gene expression ingest parsing exception for data row:\n\t'{str(row)}'\n{str(exc)}")

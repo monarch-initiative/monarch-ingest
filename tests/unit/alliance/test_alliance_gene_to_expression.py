@@ -4,17 +4,20 @@ from biolink_model_pydantic.model import GeneToExpressionSiteAssociation
 from monarch_ingest.alliance.utils import get_data
 
 
-def test_get_data():
-    entry = {
-        "testing": {
-            "one": {
-                "two": {
-                    "three": "Success!"
-                }
-            }
-        }
-    }
-    assert get_data(entry, "testing.one.two.three") == "Success!"
+#
+# test of utility function - proven to work, unless modified in the future?
+#
+# def test_get_data():
+#     entry = {
+#         "testing": {
+#             "one": {
+#                 "two": {
+#                     "three": "Success!"
+#                 }
+#             }
+#         }
+#     }
+#     assert get_data(entry, "testing.one.two.three") == "Success!"
 
 
 @pytest.fixture
@@ -30,35 +33,28 @@ def script():
 # The Rat data seems to only have gene expression assigned to cellular components
 @pytest.fixture
 def rat_row():
-    #
-    # Deprecated original input file format
-    #
-    # return {
-    #     "Species": "Rattus norvegicus",
-    #     "SpeciesID": "NCBITaxon:10116",
-    #     "GeneID": "RGD:619834",
-    #     "GeneSymbol": "A1cf",
-    #     "Location": "cytoplasm",
-    #     "StageTerm": "",
-    #     "AssayID": "MMO:0000640",
-    #     "AssayTermName": "expression assay",
-    #     "CellularComponentID": "GO:0005737",
-    #     "CellularComponentTerm": "cytoplasm",
-    #     "CellularComponentQualifierIDs": None,
-    #     "CellularComponentQualifierTermNames": None,
-    #     "SubStructureID": None,
-    #     "SubStructureName": None,
-    #     "SubStructureQualifierIDs": None,
-    #     "SubStructureQualifierTermNames": None,
-    #     "AnatomyTermID": None,
-    #     "AnatomyTermName": None,
-    #     "AnatomyTermQualifierIDs": None,
-    #     "AnatomyTermQualifierTermNames": None,
-    #     "SourceURL": None,
-    #     "Source": "RGD",
-    #     "Reference": ["PMID:11870221"]
-    # }
-    raise NotImplementedError
+    # just a single Alliance schema JSON formatted "data" array entry
+    return {
+        "assay": "MMO:0000640",
+        "dateAssigned": "2006-10-24T10:38:36.000-05:00",
+        "evidence": {
+            "crossReference": {
+                "id": "RGD:1298991",
+                "pages": [
+                    "reference"
+                ]
+            },
+            "publicationId": "PMID:12615975"
+        },
+        "geneId": "RGD:3143",
+        "whenExpressed": {
+            "stageName": "N/A"
+        },
+        "whereExpressed": {
+            "cellularComponentTermId": "GO:0030141",
+            "whereExpressedStatement": "secretory granule"
+        }
+    }
 
 
 @pytest.fixture
@@ -73,16 +69,18 @@ def rattus(rat_row, mock_koza, source_name, script, global_table):
 
 
 def test_rattus_association(rattus):
+    assert len(rattus) > 0
     associations = [
         association
         for association in rattus
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "RGD:619834"
+    assert associations[0].subject == "RGD:3143"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "GO:0005737"
+    assert associations[0].object == "GO:0030141"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].publications[0] == "PMID:11870221"
+    assert not associations[0].stage_qualifier
+    assert "PMID:12615975" in associations[0].publications
     assert "MMO:0000640" in associations[0].has_evidence
     assert associations[0].source == "infores:rgd"
 
@@ -90,30 +88,41 @@ def test_rattus_association(rattus):
 # Mouse seems to have gene expression in bulk anatomical structures
 @pytest.fixture
 def mgi_row():
+    # just a single Alliance schema JSON formatted "data" array entry
     return {
-        "Species": "Mus musculus",
-        "SpeciesID": "NCBITaxon:10090",
-        "GeneID": "MGI:101757",
-        "GeneSymbol": "Cfl1",
-        "Location": "upper leg muscle",
-        "StageTerm": "TS27",
-        "AssayID": "MMO:0000647",
-        "AssayTermName": "Northern blot assay",
-        "CellularComponentID": None,
-        "CellularComponentTerm": None,
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": "EMAPA:19144",
-        "AnatomyTermName": "upper leg muscle",
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": ["http://www.informatics.jax.org/assay/MGI:6726480"],
-        "Source": "MGI",
-        "Reference": ["PMID:10813634"]
+        "assay": "MMO:0000655",
+        "crossReference": {
+            "id": "MGI:1203979",
+            "pages": [
+                "gene/expression/annotation/detail"
+            ]
+        },
+        "dateAssigned": "2018-07-18T13:27:43-04:00",
+        "evidence": {
+            "crossReference": {
+                "id": "MGI:1199209",
+                "pages": [
+                    "reference"
+                ]
+            },
+            "publicationId": "MGI:1199209"
+        },
+        "geneId": "MGI:99180",
+        "whenExpressed": {
+            "stageName": "TS23",
+            "stageUberonSlimTerm": {
+                "uberonTerm": "UBERON:0000068"
+            }
+        },
+        "whereExpressed": {
+            "anatomicalStructureTermId": "EMAPA:16039",
+            "anatomicalStructureUberonSlimTermIds": [
+                {
+                    "uberonTerm": "Other"
+                }
+            ],
+            "whereExpressedStatement": "embryo"
+        }
     }
 
 
@@ -134,14 +143,14 @@ def test_mouse_association(mouse):
         for association in mouse
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "MGI:101757"
+    assert associations[0].subject == "MGI:99180"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "EMAPA:19144"
+    assert associations[0].object == "EMAPA:16039"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier == "MGI:TS27"
-    assert associations[0].publications[0] == "PMID:10813634"
-    assert "MMO:0000647" in associations[0].has_evidence
-    assert "http://www.informatics.jax.org/assay/MGI:6726480" in associations[0].has_evidence
+    assert associations[0].stage_qualifier == "UBERON:0000068"
+    assert "MGI:1199209" in associations[0].publications
+    assert "MMO:0000655" in associations[0].has_evidence
+    assert "MGI:1203979" in associations[0].has_evidence
     assert associations[0].source == "infores:mgi"
 
 
@@ -151,35 +160,41 @@ def test_mouse_association(mouse):
 def zfin_row():
     # just a single Alliance schema JSON formatted "data" array entry
     return {
-            "dateAssigned": "2022-01-21T07:09:02-08:00",
-            "geneId": "ZFIN:ZDB-GENE-031222-3",
-            "evidence": {
-              "crossReference": {
-                "id": "ZFIN:ZDB-PUB-080616-21",
-                "pages": ["reference"]
-              },
-              "publicationId": "PMID:18544660"
-            },
+        "dateAssigned": "2022-01-21T07:09:02-08:00",
+        "geneId": "ZFIN:ZDB-GENE-031222-3",
+        "evidence": {
             "crossReference": {
-              "id": "ZFIN:ZDB-FIG-080908-4",
-              "pages": ["gene/expression/annotation/detail"]
+                "id": "ZFIN:ZDB-PUB-080616-21",
+                "pages": [
+                    "reference"
+                ]
             },
-            "assay": "MMO:0000655",
-            "whenExpressed": {
-              "stageName": "Larval:Protruding-mouth",
-              "stageTermId": "ZFS:0000035",
-              "stageUberonSlimTerm": {
+            "publicationId": "PMID:18544660"
+        },
+        "crossReference": {
+            "id": "ZFIN:ZDB-FIG-080908-4",
+            "pages": [
+                "gene/expression/annotation/detail"
+            ]
+        },
+        "assay": "MMO:0000655",
+        "whenExpressed": {
+            "stageName": "Larval:Protruding-mouth",
+            "stageTermId": "ZFS:0000035",
+            "stageUberonSlimTerm": {
                 "uberonTerm": "post embryonic, pre-adult"
-              }
-            },
-            "whereExpressed": {
-              "whereExpressedStatement": "whole organism",
-              "anatomicalStructureTermId": "ZFA:0001094",
-              "anatomicalStructureUberonSlimTermIds": [{
-                "uberonTerm": "Other"
-              }]
             }
-          }
+        },
+        "whereExpressed": {
+            "whereExpressedStatement": "whole organism",
+            "anatomicalStructureTermId": "ZFA:0001094",
+            "anatomicalStructureUberonSlimTermIds": [
+                {
+                    "uberonTerm": "Other"
+                }
+            ]
+        }
+    }
 
 
 @pytest.fixture
@@ -205,10 +220,9 @@ def test_zebrafish_association(zebrafish):
     assert associations[0].object == "ZFA:0001094"
     assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier == "ZFS:0000035"
-    assert associations[0].publications[0] == "PMID:18544660"
+    assert "PMID:18544660" in associations[0].publications
     assert "MMO:0000655" in associations[0].has_evidence
     assert "ZFIN:ZDB-FIG-080908-4" in associations[0].has_evidence
-    assert "infores:zfin" in associations[0].provided_by
     assert associations[0].source == "infores:zfin"
 
 
@@ -216,29 +230,29 @@ def test_zebrafish_association(zebrafish):
 @pytest.fixture
 def fly_row():
     return {
-        "Species": "Drosophila melanogaster",
-        "SpeciesID": "NCBITaxon:7227",
-        "GeneID": "FB:FBgn0000251",
-        "GeneSymbol": "cad",
-        "Location": "ventral ectoderm anlage: anlage in statu nascendi",
-        "StageTerm": "embryonic stage 4",
-        "AssayID": "MMO:0000658",
-        "AssayTermName": "ribonucleic acid in situ hybridization assay",
-        "CellularComponentID": None,
-        "CellularComponentTerm": None,
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": "FBbt:00004204",
-        "AnatomyTermName": "ventral ectoderm anlage",
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": None,
-        "Source": "FB",
-        "Reference": ["FB:FBrf0219073"]
+        "assay": "MMO:0000534",
+        "dateAssigned": "2022-01-12T10:12:11-05:00",
+        "evidence": {
+            "publicationId": "FB:FBrf0231198"
+        },
+        "geneId": "FB:FBgn0010339",
+        "whenExpressed": {
+            "stageName": "adult stage",
+            "stageTermId": "FBdv:00005369",
+            "stageUberonSlimTerm": {
+                "uberonTerm": "UBERON:0000113"
+            }
+        },
+        "whereExpressed": {
+            "anatomicalStructureTermId": "FBbt:00003007",
+            "anatomicalStructureUberonSlimTermIds": [
+                {
+                    "uberonTerm": "Other"
+                }
+            ],
+            "cellularComponentTermId": "GO:0016020",
+            "whereExpressedStatement": "membrane in adult head"
+        }
     }
 
 
@@ -259,13 +273,13 @@ def test_drosophila_association(drosophila):
         for association in drosophila
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "FB:FBgn0000251"
+    assert associations[0].subject == "FB:FBgn0010339"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "FBbt:00004204"
+    assert associations[0].object == "FBbt:00003007"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier == "FB:embryonic_stage_4"
-    assert associations[0].publications[0] == "FB:FBrf0219073"
-    assert "MMO:0000658" in associations[0].has_evidence
+    assert associations[0].stage_qualifier == "FBdv:00005369"
+    assert "FB:FBrf0231198" in associations[0].publications
+    assert "MMO:0000534" in associations[0].has_evidence
     assert associations[0].source == "infores:flybase"
 
 
@@ -273,29 +287,40 @@ def test_drosophila_association(drosophila):
 @pytest.fixture
 def worm_row():
     return {
-        "Species": "Caenorhabditis elegans",
-        "SpeciesID": "NCBITaxon:6239",
-        "GeneID": "WB:WBGene00000001",
-        "GeneSymbol": "aap-1",
-        "Location": "C. elegans Cell and Anatomy",
-        "StageTerm": "L4 larva Ce",
-        "AssayID": "MMO:0000670",
-        "AssayTermName": "in situ reporter assay",
-        "CellularComponentID": None,
-        "CellularComponentTerm": None,
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": "WBbt:0000100",
-        "AnatomyTermName": "C. elegans anatomical entity",
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": ["https://www.wormbase.org/species/all/expr_pattern/Expr2275"],
-        "Source": "WB",
-        "Reference": ["PMID:12393910"]
+        "assay": "MMO:0000670",
+        "crossReference": {
+            "id": "WB:Expr1",
+            "pages": [
+                "gene/expression/annotation/detail"
+            ]
+        },
+        "dateAssigned": "2021-11-10T00:12:21+00:00",
+        "evidence": {
+            "crossReference": {
+                "id": "WB:WBPaper00001469",
+                "pages": [
+                    "reference"
+                ]
+            },
+            "publicationId": "PMID:1782857"
+        },
+        "geneId": "WB:WBGene00001386",
+        "whenExpressed": {
+            "stageName": "adult hermaphrodite Ce",
+            "stageTermId": "WBls:0000057",
+            "stageUberonSlimTerm": {
+                "uberonTerm": "UBERON:0000113"
+            }
+        },
+        "whereExpressed": {
+            "anatomicalStructureTermId": "WBbt:0000100",
+            "anatomicalStructureUberonSlimTermIds": [
+                {
+                    "uberonTerm": "Other"
+                }
+            ],
+            "whereExpressedStatement": "C. elegans Cell and Anatomy"
+        }
     }
 
 
@@ -310,20 +335,20 @@ def worm(worm_row, mock_koza, source_name, script, global_table):
     )
 
 
-def test_worm_association_publication(worm):
+def test_worm_association(worm):
     associations = [
         association
         for association in worm
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "WB:WBGene00000001"
+    assert associations[0].subject == "WB:WBGene00001386"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "WBbt:0000100"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier == "WB:L4_larva_Ce"
-    assert associations[0].publications[0] == "PMID:12393910"
+    assert associations[0].stage_qualifier == "WBls:0000057"
+    assert associations[0].publications[0] == "PMID:1782857"
     assert "MMO:0000670" in associations[0].has_evidence
-    assert "https://www.wormbase.org/species/all/expr_pattern/Expr2275" in associations[0].has_evidence
+    assert "WB:Expr1" in associations[0].has_evidence
     assert associations[0].source == "infores:wormbase"
 
 
@@ -332,29 +357,25 @@ def test_worm_association_publication(worm):
 @pytest.fixture
 def sgd_row():
     return {
-        "Species": "Saccharomyces cerevisiae",
-        "SpeciesID": "NCBITaxon:559292",
-        "GeneID": "SGD:S000002429",
-        "GeneSymbol": "ATG31",
-        "Location": "cytoplasm",
-        "StageTerm": "",
-        "AssayID": "MMO:0000662",
-        "AssayTermName": "immunofluorescence",
-        "CellularComponentID": "GO:0005737",
-        "CellularComponentTerm": "cytoplasm",
-        "CellularComponentQualifierIDs": None,
-        "CellularComponentQualifierTermNames": None,
-        "SubStructureID": None,
-        "SubStructureName": None,
-        "SubStructureQualifierIDs": None,
-        "SubStructureQualifierTermNames": None,
-        "AnatomyTermID": None,
-        "AnatomyTermName": None,
-        "AnatomyTermQualifierIDs": None,
-        "AnatomyTermQualifierTermNames": None,
-        "SourceURL": None,
-        "Source": "SGD",
-        "Reference": ["PMID:14562095"]
+        "assay": "MMO:0000642",
+        "dateAssigned": "2018-01-18T00:01:00-00:00",
+        "evidence": {
+            "crossReference": {
+                "id": "SGD:S000184034",
+                "pages": [
+                    "reference"
+                ]
+            },
+            "publicationId": "PMID:26753620"
+        },
+        "geneId": "SGD:S000002429",
+        "whenExpressed": {
+            "stageName": "N/A"
+        },
+        "whereExpressed": {
+            "cellularComponentTermId": "GO:1990316",
+            "whereExpressedStatement": "Atg1/ULK1 kinase complex"
+        }
     }
 
 
@@ -377,8 +398,9 @@ def test_yeast_association(yeast):
     ]
     assert associations[0].subject == "SGD:S000002429"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "GO:0005737"
+    assert associations[0].object == "GO:1990316"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].publications[0] == "PMID:14562095"
-    assert "MMO:0000662" in associations[0].has_evidence
+    assert not associations[0].stage_qualifier
+    assert associations[0].publications[0] == "PMID:26753620"
+    assert "MMO:0000642" in associations[0].has_evidence
     assert associations[0].source == "infores:sgd"
