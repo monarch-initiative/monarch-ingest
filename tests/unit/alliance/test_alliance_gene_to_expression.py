@@ -1,25 +1,20 @@
 import pytest
-from biolink_model_pydantic.model import (
-    Gene,
-    GeneToExpressionSiteAssociation,
-    AnatomicalEntity,
-    CellularComponent,
-    LifeStage
-)
 
-#
-# Alliance master schema formatted data now used, already has the required stage term (if available)
-#
-# def test_get_life_stage():
-#     life_stage = get_life_stage(
-#         db="ZFIN",
-#         ncbi_taxon_id="NCBITaxon:7955",
-#         stage_term="Segmentation:10-13 somites",
-#         source="infores:zfin"
-#     )
-#     assert isinstance(life_stage, LifeStage)
-#     assert life_stage.id == "ZFIN:Segmentation:10-13_somites"
-#     assert "NCBITaxon:7955" in life_stage.in_taxon
+from biolink_model_pydantic.model import GeneToExpressionSiteAssociation
+from monarch_ingest.alliance.utils import get_data
+
+
+def test_get_data():
+    entry = {
+        "testing": {
+            "one": {
+                "two": {
+                    "three": "Success!"
+                }
+            }
+        }
+    }
+    assert get_data(entry, "testing.one.two.three") == "Success!"
 
 
 @pytest.fixture
@@ -75,24 +70,6 @@ def rattus(rat_row, mock_koza, source_name, script, global_table):
         script,
         global_table=global_table,
     )
-
-
-def test_rattus_gene(rattus):
-    genes = [gene for gene in rattus if isinstance(gene, Gene)]
-    assert genes[0].id == "RGD:619834"
-    assert genes[0].name == "A1cf"
-    assert "NCBITaxon:10116" in genes[0].in_taxon
-    assert genes[0].source == "infores:rgd"
-
-
-def test_rattus_expression_site(rattus):
-    entities = [
-        entity for entity in rattus if isinstance(entity, CellularComponent)
-    ]
-    assert entities[0].id == "GO:0005737"
-    assert entities[0].name == "cytoplasm"
-    assert "NCBITaxon:10116" in entities[0].in_taxon
-    assert entities[0].source == "infores:rgd"
 
 
 def test_rattus_association(rattus):
@@ -151,24 +128,6 @@ def mouse(mgi_row, mock_koza, source_name, script, global_table):
     )
 
 
-def test_mouse_gene(mouse):
-    genes = [gene for gene in mouse if isinstance(gene, Gene)]
-    assert genes[0].id == "MGI:101757"
-    assert genes[0].name == "Cfl1"
-    assert "NCBITaxon:10090" in genes[0].in_taxon
-    assert genes[0].source == "infores:mgi"
-
-
-def test_mouse_expression_site(mouse):
-    entities = [
-        entity for entity in mouse if isinstance(entity, AnatomicalEntity)
-    ]
-    assert entities[0].id == "EMAPA:19144"
-    assert entities[0].name == "upper leg muscle"
-    assert "NCBITaxon:10090" in entities[0].in_taxon
-    assert entities[0].source == "infores:mgi"
-
-
 def test_mouse_association(mouse):
     associations = [
         association
@@ -186,53 +145,11 @@ def test_mouse_association(mouse):
     assert associations[0].source == "infores:mgi"
 
 
-# we only test the presence of LifeStages here for Mouse
-def test_mouse_life_stage(mouse):
-    lifestages = [
-        lifestage
-        for lifestage in mouse
-        if isinstance(lifestage, LifeStage)
-    ]
-    assert lifestages[0].id == "MGI:TS27"
-    assert lifestages[0].name == "TS27"
-    assert "NCBITaxon:10090" in lifestages[0].in_taxon
-    assert lifestages[0].source == "infores:mgi"
-
-
 # Zebrafish has rich gene expression associations with
 # tissue level and above anatomical entities
 @pytest.fixture
 def zfin_row():
-    #
-    # Deprecated original input file format
-    #
-    # return {
-    #     "Species": "Danio rerio",
-    #     "SpeciesID": "NCBITaxon:7955",
-    #     "GeneID": "ZFIN:ZDB-GENE-010226-1",
-    #     "GeneSymbol": "gdnfa",
-    #     "Location": "intermediate mesoderm",
-    #     "StageTerm": "Segmentation:10-13 somites",
-    #     "AssayID": "MMO:0000658",
-    #     "AssayTermName": "ribonucleic acid in situ hybridization assay",
-    #     "CellularComponentID": None,
-    #     "CellularComponentTerm": None,
-    #     "CellularComponentQualifierIDs": None,
-    #     "CellularComponentQualifierTermNames": None,
-    #     "SubStructureID": None,
-    #     "SubStructureName": None,
-    #     "SubStructureQualifierIDs": None,
-    #     "SubStructureQualifierTermNames": None,
-    #     "AnatomyTermID": "ZFA:0001206",
-    #     "AnatomyTermName": "intermediate mesoderm",
-    #     "AnatomyTermQualifierIDs": None,
-    #     "AnatomyTermQualifierTermNames": None,
-    #     "SourceURL": ["https://zfin.org/ZDB-FIG-110701-1"],
-    #     "Source": "ZFIN",
-    #     "Reference": ["PMID:11237470"]
-    # }
-
-    # just a single Alliance JSON "data" array record
+    # just a single Alliance schema JSON formatted "data" array entry
     return {
             "dateAssigned": "2022-01-21T07:09:02-08:00",
             "geneId": "ZFIN:ZDB-GENE-031222-3",
@@ -276,34 +193,8 @@ def zebrafish(zfin_row, mock_koza, source_name, script, global_table):
     )
 
 
-def test_zebrafish_gene(zebrafish):
-    genes = [gene for gene in zebrafish if isinstance(gene, Gene)]
-    assert genes[0].id == "ZFIN:ZDB-GENE-031222-3"
-    assert "NCBITaxon:7955" in genes[0].in_taxon
-    assert genes[0].source == "infores:zfin"
-
-
-def test_zebrafish_life_stage(zebrafish):
-    lifestages = [
-        lifestage
-        for lifestage in zebrafish
-        if isinstance(lifestage, LifeStage)
-    ]
-    assert lifestages[0].id == "ZFS:0000035"
-    assert "NCBITaxon:7955" in lifestages[0].in_taxon
-    assert lifestages[0].source == "infores:zfin"
-
-
-def test_zebrafish_expression_site(zebrafish):
-    entities = [
-        entity for entity in zebrafish if isinstance(entity, AnatomicalEntity)
-    ]
-    assert entities[0].id == "ZFA:0001094"
-    assert "NCBITaxon:7955" in entities[0].in_taxon
-    assert entities[0].source == "infores:zfin"
-
-
 def test_zebrafish_association(zebrafish):
+    assert len(zebrafish) > 0
     associations = [
         association
         for association in zebrafish
@@ -317,6 +208,7 @@ def test_zebrafish_association(zebrafish):
     assert associations[0].publications[0] == "PMID:18544660"
     assert "MMO:0000655" in associations[0].has_evidence
     assert "ZFIN:ZDB-FIG-080908-4" in associations[0].has_evidence
+    assert "infores:zfin" in associations[0].provided_by
     assert associations[0].source == "infores:zfin"
 
 
@@ -361,25 +253,7 @@ def drosophila(fly_row, mock_koza, source_name, script, global_table):
     )
 
 
-def test_drosophila_gene(drosophila):
-    genes = [gene for gene in drosophila if isinstance(gene, Gene)]
-    assert genes[0].id == "FB:FBgn0000251"
-    assert genes[0].name == "cad"
-    assert "NCBITaxon:7227" in genes[0].in_taxon
-    assert genes[0].source == "infores:flybase"
-
-
-def test_drosophila_expression_site(drosophila):
-    entities = [
-        entity for entity in drosophila if isinstance(entity, AnatomicalEntity)
-    ]
-    assert entities[0].id == "FBbt:00004204"
-    assert entities[0].name == "ventral ectoderm anlage"
-    assert "NCBITaxon:7227" in entities[0].in_taxon
-    assert entities[0].source == "infores:flybase"
-
-
-def test_drosophila_association_publication(drosophila):
+def test_drosophila_association(drosophila):
     associations = [
         association
         for association in drosophila
@@ -434,24 +308,6 @@ def worm(worm_row, mock_koza, source_name, script, global_table):
         script,
         global_table=global_table,
     )
-
-
-def test_worm_gene(worm):
-    genes = [gene for gene in worm if isinstance(gene, Gene)]
-    assert genes[0].id == "WB:WBGene00000001"
-    assert genes[0].name == "aap-1"
-    assert "NCBITaxon:6239" in genes[0].in_taxon
-    assert genes[0].source == "infores:wormbase"
-
-
-def test_worm_expression_site(worm):
-    entities = [
-        entity for entity in worm if isinstance(entity, AnatomicalEntity)
-    ]
-    assert entities[0].id == "WBbt:0000100"
-    assert entities[0].name == "C. elegans anatomical entity"
-    assert "NCBITaxon:6239" in entities[0].in_taxon
-    assert entities[0].source == "infores:wormbase"
 
 
 def test_worm_association_publication(worm):
@@ -511,24 +367,6 @@ def yeast(sgd_row, mock_koza, source_name, script, global_table):
         script,
         global_table=global_table,
     )
-
-
-def test_yeast_gene(yeast):
-    genes = [gene for gene in yeast if isinstance(gene, Gene)]
-    assert genes[0].id == "SGD:S000002429"
-    assert genes[0].name == "ATG31"
-    assert "NCBITaxon:559292" in genes[0].in_taxon
-    assert genes[0].source == "infores:sgd"
-
-
-def test_yeast_expression_site(yeast):
-    entities = [
-        entity for entity in yeast if isinstance(entity, CellularComponent)
-    ]
-    assert entities[0].id == "GO:0005737"
-    assert entities[0].name == "cytoplasm"
-    assert "NCBITaxon:559292" in entities[0].in_taxon
-    assert entities[0].source == "infores:sgd"
 
 
 def test_yeast_association(yeast):
