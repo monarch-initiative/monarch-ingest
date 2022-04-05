@@ -20,23 +20,10 @@ columns:
 
 node_properties:
   - 'id'
-  - 'category'
-  - 'provided_by'
   - 'name'
-  - 'symbol'
-  - 'in_taxon'
-  - 'xref'
-  - 'synonym'
+  - 'type'
   - 'source'
 
-edge_properties:
-  - 'id'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'category'
-  - 'relation'
-  - 'provided_by'
 
 transform_mode: 'flat'
 

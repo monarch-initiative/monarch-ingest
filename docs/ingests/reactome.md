@@ -2,6 +2,18 @@ Reactome is a free, open-source, curated and peer reviewed pathway database. Our
 
 * [Reactome bulk downloads](http://www.reactome.org/download/current/)
 
+### Pathway
+
+This ingest uses Reactome's pathway download file. 
+
+#### Biolink captured
+
+* biolink:Pathway
+    * id
+    * name
+    * type
+    * source
+
 ### Gene to Pathway
 
 This ingest uses Reactome's gene to pathway download file, which contains all entities and only assocations between pathways and genes that are denoted in some way in the pathyways. 
