@@ -57,26 +57,7 @@ pipeline {
         stage('upload kgx files') {
             agent { dockerfile true }
             steps {
-                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/experimental-output/${RELEASE}/output/'
-// commented out because this pipeline isn't yet making graph summaries
-//                sh 'gsutil -m cp -r output/*.yaml gs://monarch-ingest/experimental-output/${RELEASE}/output/'
-            }
-        }
-        stage('merge') {
-            agent {
-                dockerfile { label 'large-worker' }
-            }
-            steps {
-                sh '''poetry install'''
-                sh '''mkdir -p output/merged || true '''
-                sh '''gsutil -m cp -r gs://monarch-ingest/experimental-output/${RELEASE}/output/*.tsv output/'''
-                sh '''poetry run downloader --tag monarch_ontology '''
-                sh '''poetry run kgx merge --merge-config merge.yaml -p 8 '''
-                sh '''
-                    gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/experimental-output/${RELEASE}/
-                    gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/experimental-output/${RELEASE}/
-                    gsutil cp merged_graph_stats.yaml gs://monarch-ingest/experimental-output/${RELEASE}/
-                '''
+                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/${RELEASE}/output/'
             }
         }
     }
