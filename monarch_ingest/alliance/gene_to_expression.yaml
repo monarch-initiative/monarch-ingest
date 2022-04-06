@@ -50,15 +50,17 @@ json_path:
 #      } ]
 #    }
 #  }
-required_properties:
-  - metaData.crossReference.id                # "ZFIN"
-  - geneId                                    # "ZFIN:ZDB-GENE-031222-3"
-  - whenExpressed.stageTermId                 # "ZFS:0000035"
-  - assay                                     # "MMO:0000655"
-  - whereExpressed.cellularComponentTermId    # "GO:0005737",
-  - whereExpressed.anatomicalStructureTermId  # "ZFA:0001094",
-  - crossReference.id                         # "ZFIN:ZDB-FIG-080908-4" => "https://zfin.org/ZDB-FIG-080908-4"
-  - evidence.publicationId                    # "PMID:18544660"
+#required_properties:
+#  # Various nested JSON properties needed, but can't be specified yet (see also gene_to_phenotype.yaml)
+#  # Target of Koza Issue https://github.com/monarch-initiative/koza/issues/80
+#  - metaData.crossReference.id                # "ZFIN"
+#  - geneId                                    # "ZFIN:ZDB-GENE-031222-3"
+#  - whenExpressed.stageTermId                 # "ZFS:0000035"
+#  - assay                                     # "MMO:0000655"
+#  - whereExpressed.cellularComponentTermId    # "GO:0005737",
+#  - whereExpressed.anatomicalStructureTermId  # "ZFA:0001094",
+#  - crossReference.id                         # "ZFIN:ZDB-FIG-080908-4" => "https://zfin.org/ZDB-FIG-080908-4"
+#  - evidence.publicationId                    # "PMID:18544660"
 
 global_table: './monarch_ingest/translation_table.yaml'
 
