@@ -65,13 +65,13 @@ def test_rattus_association(rattus):
         for association in rattus
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "rgd:3143"
+    assert associations[0].subject == "RGD:3143"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "go:0030141"
-    assert associations[0].relation == "ro:0002206"
+    assert associations[0].object == "GO:0030141"
+    assert associations[0].relation == "RO:0002206"
     assert not associations[0].stage_qualifier
-    assert "pmid:12615975" in associations[0].publications
-    assert "mmo:0000640" in associations[0].has_evidence
+    assert "PMID:12615975" in associations[0].publications
+    assert "MMO:0000640" in associations[0].has_evidence
     assert associations[0].source == "infores:rgd"
 
 
@@ -120,14 +120,14 @@ def test_mouse_association(mouse):
         for association in mouse
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "mgi:99180"
+    assert associations[0].subject == "MGI:99180"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "emapa:16039"
-    assert associations[0].relation == "ro:0002206"
-    assert associations[0].stage_qualifier == "uberon:0000068"
-    assert "mgi:1199209" in associations[0].publications
-    assert "mmo:0000655" in associations[0].has_evidence
-    assert "mgi:1203979" in associations[0].has_evidence
+    assert associations[0].object == "EMAPA:16039"
+    assert associations[0].relation == "RO:0002206"
+    assert associations[0].stage_qualifier == "UBERON:0000068"
+    assert "MGI:1199209" in associations[0].publications
+    assert "MMO:0000655" in associations[0].has_evidence
+    assert "MGI:1203979" in associations[0].has_evidence
     assert associations[0].source == "infores:mgi"
 
 
@@ -179,14 +179,14 @@ def test_zebrafish_association(zebrafish):
         for association in zebrafish
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "zfin:ZDB-GENE-031222-3"
+    assert associations[0].subject == "ZFIN:ZDB-GENE-031222-3"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "zfa:0001094"
-    assert associations[0].relation == "ro:0002206"
-    assert associations[0].stage_qualifier == "zfs:0000035"
-    assert "pmid:18544660" in associations[0].publications
-    assert "mmo:0000655" in associations[0].has_evidence
-    assert "zfin:ZDB-FIG-080908-4" in associations[0].has_evidence
+    assert associations[0].object == "ZFA:0001094"
+    assert associations[0].relation == "RO:0002206"
+    assert associations[0].stage_qualifier == "ZFS:0000035"
+    assert "PMID:18544660" in associations[0].publications
+    assert "MMO:0000655" in associations[0].has_evidence
+    assert "ZFIN:ZDB-FIG-080908-4" in associations[0].has_evidence
     assert associations[0].source == "infores:zfin"
 
 
@@ -229,13 +229,13 @@ def test_drosophila_association(drosophila):
         for association in drosophila
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "fb:FBgn0010339"
+    assert associations[0].subject == "FB:FBgn0010339"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "fbbt:00003007"
-    assert associations[0].relation == "ro:0002206"
-    assert associations[0].stage_qualifier == "fbdv:00005369"
-    assert "fb:FBrf0231198" in associations[0].publications
-    assert "mmo:0000534" in associations[0].has_evidence
+    assert associations[0].object == "FBbt:00003007"
+    assert associations[0].relation == "RO:0002206"
+    assert associations[0].stage_qualifier == "FBdv:00005369"
+    assert "FB:FBrf0231198" in associations[0].publications
+    assert "MMO:0000534" in associations[0].has_evidence
     assert associations[0].source == "infores:flybase"
 
 
@@ -284,14 +284,14 @@ def test_worm_association(worm):
         for association in worm
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "wb:WBGene00001386"
+    assert associations[0].subject == "WB:WBGene00001386"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "wbbt:0000100"
-    assert associations[0].relation == "ro:0002206"
-    assert associations[0].stage_qualifier == "wbls:0000057"
-    assert associations[0].publications[0] == "pmid:1782857"
-    assert "mmo:0000670" in associations[0].has_evidence
-    assert "wb:Expr1" in associations[0].has_evidence
+    assert associations[0].object == "WBbt:0000100"
+    assert associations[0].relation == "RO:0002206"
+    assert associations[0].stage_qualifier == "WBls:0000057"
+    assert associations[0].publications[0] == "PMID:1782857"
+    assert "MMO:0000670" in associations[0].has_evidence
+    assert "WB:Expr1" in associations[0].has_evidence
     assert associations[0].source == "infores:wormbase"
 
 
@@ -332,11 +332,11 @@ def test_yeast_association(yeast):
         for association in yeast
         if isinstance(association, GeneToExpressionSiteAssociation)
     ]
-    assert associations[0].subject == "sgd:S000002429"
+    assert associations[0].subject == "SGD:S000002429"
     assert associations[0].predicate == "biolink:expressed_in"
-    assert associations[0].object == "go:1990316"
-    assert associations[0].relation == "ro:0002206"
+    assert associations[0].object == "GO:1990316"
+    assert associations[0].relation == "RO:0002206"
     assert not associations[0].stage_qualifier
-    assert associations[0].publications[0] == "pmid:26753620"
-    assert "mmo:0000642" in associations[0].has_evidence
+    assert associations[0].publications[0] == "PMID:26753620"
+    assert "MMO:0000642" in associations[0].has_evidence
     assert associations[0].source == "infores:sgd"

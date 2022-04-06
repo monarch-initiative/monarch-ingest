@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (GeneToExpressionSiteAssociation, Predicate)
+from biolink_model_pydantic.model import GeneToExpressionSiteAssociation, Predicate
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
@@ -31,6 +31,7 @@ try:
         # TODO: some databases (e.g. MGI) do not stageTermId's
         #       but may have an UBERON term that we can use
         stage_term_id = get_data(row, "whenExpressed.stageUberonSlimTerm.uberonTerm")
+    stage_term_id = stage_term_id
 
     evidence = list()
     assay = get_data(row, "assay")  # e.g. "MMO:0000658"
@@ -55,7 +56,7 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=publication_ids,
-                source=source
+                source=source,
             )
         )
 
@@ -72,13 +73,16 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=publication_ids,
-                source=source
+                source=source,
             )
         )
     else:
         # Print a log error and skip the S-P-O ingest
         logger.error(
-            f"Gene expression record: \n\t'{str(row)}'\n has no ontology terms specified for expression site?")
+            f"Gene expression record: \n\t'{str(row)}'\n has no ontology terms specified for expression site?"
+        )
 
 except Exception as exc:
-    logger.error(f"Alliance gene expression ingest parsing exception for data row:\n\t'{str(row)}'\n{str(exc)}")
+    logger.error(
+        f"Alliance gene expression ingest parsing exception for data row:\n\t'{str(row)}'\n{str(exc)}"
+    )

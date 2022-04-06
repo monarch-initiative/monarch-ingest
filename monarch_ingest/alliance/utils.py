@@ -1,5 +1,7 @@
 from typing import Optional
 
+# TODO: 'utility' methods in this Alliance ingest folder could be shared or moved into Koza(?)
+
 
 def get_data(entry, path) -> Optional[str]:
     """
