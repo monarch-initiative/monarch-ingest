@@ -106,6 +106,10 @@ transform:
 merge:
 	poetry run kgx merge --merge-config merge.yaml
 
+.PHONY: neo4j-load
+neo4j-load:
+	poetry run kgx transform --stream --transform-config neo-transform.yaml
+
 .PHONY: upload
 upload:
 	gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/

@@ -1,13 +1,11 @@
 name: 'panther_ref_genome_orthologs'
 
-compression: 'gzip'
-
 format: 'csv'
 delimiter: '\t'
 header: none
 
 files:
-  - './data/panther/RefGenomeOrthologs.tsv.gz'
+  - './data/panther/RefGenomeOrthologs'
 
 metadata:
   ingest_title: 'Orthology Ingest'
