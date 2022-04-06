@@ -700,7 +700,7 @@ test = ["tox"]
 
 [[package]]
 name = "kghub-downloader"
-version = "0.1.12"
+version = "0.1.14"
 description = "Downloads and caches files for knowledge graph ETL"
 category = "main"
 optional = false
@@ -1973,6 +1973,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
+
 content-hash = "4bb250e71ffa5237434a62098bb17f9fb938b47cf592dba82c9e74f010ebd2f0"
 
 [metadata.files]
@@ -2359,8 +2360,8 @@ jsonstreams = [
     {file = "jsonstreams-0.6.0.tar.gz", hash = "sha256:721cda7391e9415b7b15cebd6cf92fc7f8788ca211eda7d64162a066ee45a72e"},
 ]
 kghub-downloader = [
-    {file = "kghub-downloader-0.1.12.tar.gz", hash = "sha256:9f966161c89f2120b8d428d2d95deb148023462d19a53882cc522bdc3776654b"},
-    {file = "kghub_downloader-0.1.12-py3-none-any.whl", hash = "sha256:21dc9714528785ccc9179741cd2c5c882fe43dedf70a5313886c4f19f6b91158"},
+    {file = "kghub-downloader-0.1.14.tar.gz", hash = "sha256:4b6bc7179bac40e574d4b4d4479bf46a8375a68ee7781d773fdc4dc51375251a"},
+    {file = "kghub_downloader-0.1.14-py3-none-any.whl", hash = "sha256:108306a3adfe5ea375c647af6f86b5f9f97b1cc507afdb41555829bd7dac81d9"},
 ]
 kgx = [
     {file = "kgx-1.5.6-py3-none-any.whl", hash = "sha256:d2e5aa96baa2983e5e4a9228ea3d06de5d0683fb9b3a434d23b1d6f8c4ce97e4"},
@@ -2535,7 +2536,6 @@ numpy = [
     {file = "numpy-1.22.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8251ed96f38b47b4295b1ae51631de7ffa8260b5b087808ef09a39a9d66c97ab"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:48a3aecd3b997bf452a2dedb11f4e79bc5bfd21a1d4cc760e703c31d57c84b3e"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a3bae1a2ed00e90b3ba5f7bd0a7c7999b55d609e0c54ceb2b076a25e345fa9f4"},
-    {file = "numpy-1.22.3-cp310-cp310-win32.whl", hash = "sha256:f950f8845b480cffe522913d35567e29dd381b0dc7e4ce6a4a9f9156417d2430"},
     {file = "numpy-1.22.3-cp310-cp310-win_amd64.whl", hash = "sha256:08d9b008d0156c70dc392bb3ab3abb6e7a711383c3247b410b39962263576cd4"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:201b4d0552831f7250a08d3b38de0d989d6f6e4658b709a02a73c524ccc6ffce"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:f8c1f39caad2c896bc0018f699882b345b2a63708008be29b1f355ebf6f933fe"},

@@ -27,7 +27,7 @@ try:
     #       However, this may result in KGX record duplication?
     # ortholog_type = row["Type of ortholog"]
     predicate = Predicate.orthologous_to
-    relation = koza_app.translation_table.global_table['in orthology relationship with']
+    relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # build the Gene and Orthologous Gene nodes
     gene = Gene(id=gene_id, in_taxon=gene_ncbitaxon, source="infores:panther")
