@@ -180,7 +180,7 @@
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
-  local_name: data/panther/RefGenomeOrthologs.tsv.gz
+  local_name: data/panther/RefGenomeOrthologs.tar.gz
 
 ##
 ## This orthology data ingest is not yet implemented
