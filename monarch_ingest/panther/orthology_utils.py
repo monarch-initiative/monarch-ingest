@@ -14,7 +14,7 @@ _ncbitaxon_catalog = {
     "CAEEL": "6239",
     "DICDI": "5782",
     "SCHPO": "4896",
-    "YEAST": "4932"
+    "YEAST": "4932",
 }
 
 
@@ -26,14 +26,12 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
     if species_name in _ncbitaxon_catalog:
         return f"NCBITaxon:{_ncbitaxon_catalog[species_name]}"
     else:
-        raise RuntimeError(f"ncbitaxon_by_name(): '{species_name}' is not a taxon of interest to Monarch? Ignoring...")
+        raise RuntimeError(
+            f"ncbitaxon_by_name(): '{species_name}' is not a taxon of interest to Monarch? Ignoring..."
+        )
 
 
-_db_to_curie = {
-    "FlyBase": "FB",
-    "Ensembl": "ENSEMBL",
-    "PomBase": "POMBASE"
-}
+_db_to_curie = {"FlyBase": "FB", "Ensembl": "ENSEMBL", "PomBase": "POMBASE"}
 
 
 def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
@@ -56,20 +54,22 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
         raise RuntimeError(f"parse_gene_id(): Empty 'gene_id_spec'? Ignoring...")
 
     spec_part = gene_id_spec.split("=")
-    
+
     if len(spec_part) == 2:
         # Map DB to Biolink Model canonical CURIE namespace
         prefix = get_biolink_curie_prefix(spec_part[0])
         return f"{prefix}:{spec_part[1]}"
-    
+
     elif len(spec_part) == 3 and spec_part[1] == "MGI":
         # Odd special case of MGI
         # (is this the only one like this? Logger errors
         #  trapped by the RuntimeError below should answer this...)
         return f"{spec_part[1]}:{spec_part[2]}"
-    
+
     else:
-        raise RuntimeError(f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring...")
+        raise RuntimeError(
+            f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring..."
+        )
 
 
 def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
@@ -78,18 +78,20 @@ def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
 
     :param gene_entry: string "species1|DB=id1|protdb=pdbid1" of descriptors describing the target gene
     """
-    
+
     if not gene_entry:
         raise RuntimeError("parse_gene(): Empty 'gene_entry' argument?. Ignoring...")
-    
+
     try:
         species, gene_spec, _ = gene_entry.split("|")
     except ValueError:
-        raise RuntimeError(f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring...")
-    
+        raise RuntimeError(
+            f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring..."
+        )
+
     # get the NCBI Taxonomic identifier
     ncbitaxon_id = ncbitaxon_by_name(species)
-    
+
     # Quietly ignore a species we don't know about? Only complain in debug mode though (otherwise...)
     if not ncbitaxon_id:
         raise RuntimeError(
@@ -99,13 +101,13 @@ def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
 
     # get the gene identifier
     gene_id = parse_gene_id(gene_spec)
-    
+
     # Quietly ignore a gene identifier we can't parse out? Only complain in debug mode though (otherwise...)
     if not gene_id:
         raise RuntimeError(
             f"parse_gene(): Gene identifier in gene entry '{str(gene_entry)}' cannot be parsed. Ignoring..."
         )
-    
+
     return ncbitaxon_id, gene_id
 
 
