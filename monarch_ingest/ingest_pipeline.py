@@ -177,11 +177,7 @@ def download():
         os.system(
             "gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz"
         )
-    # For some reason the single file is archived as a tar, undo that and just gzip
-    if not os.path.exists("./data/panther/RefGenomeOrthologs.tsv"):
-        os.system(
-            "tar -xzf ./data/panther/RefGenomeOrthologs.tar.gz"
-        )
+
 
 
 @dagster.job

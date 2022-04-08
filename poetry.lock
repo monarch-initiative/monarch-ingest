@@ -761,13 +761,14 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.1.9"
+version = "0.1.11"
 description = "Koza, an ETL framework for LinkML data models"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
+linkml-validator = ">=0.1.0"
 ordered-set = ">=4.1.0"
 pydantic = ">=1.0.0,<2.0.0"
 pyyaml = ">=5.3.1,<6.0.0"
@@ -851,6 +852,24 @@ prefixcommons = "*"
 pyyaml = ">=5.1.0"
 rdflib = ">=6.0.0"
 requests = "*"
+
+[[package]]
+name = "linkml-validator"
+version = "0.1.0"
+description = "LinkML Validator"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+click = ">=7.0.0"
+linkml = ">=1.1.18"
+linkml-runtime = ">=1.2.0"
+pydantic = ">=1.8.2"
+stringcase = ">=1.2.0"
+
+[package.extras]
+dev = ["pytest", "pytest-cov", "mkdocs"]
 
 [[package]]
 name = "markdown"
@@ -1973,8 +1992,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-
-content-hash = "4bb250e71ffa5237434a62098bb17f9fb938b47cf592dba82c9e74f010ebd2f0"
+content-hash = "a31809379f1e60107563a8a15dba0ec4677d12bd7d06a6fcfb442bcf8a20741b"
 
 [metadata.files]
 alabaster = [
@@ -2369,8 +2387,8 @@ kgx = [
     {file = "kgx-1.5.6.tar.gz", hash = "sha256:b0b73070c3cebf698270fef2aecc042b5944c7c68d074b350b462f810197a1ad"},
 ]
 koza = [
-    {file = "koza-0.1.9-py3-none-any.whl", hash = "sha256:2962f7996ec04e461dcc050945818aa7d34c7340e1d19de129110493688650c3"},
-    {file = "koza-0.1.9.tar.gz", hash = "sha256:4de0762057d18fbcf1d1aa64a8696b6f5542114226cede6e9cd5ee2179a4cc0f"},
+    {file = "koza-0.1.11-py3-none-any.whl", hash = "sha256:1f2715d49cf9979695448b20a3f045a31e923dda5201d1869c44a6d68ab0a345"},
+    {file = "koza-0.1.11.tar.gz", hash = "sha256:5b66e12cbd1ab880bc0d0c7bfea82f45b2e31fcbad5998ea3a7a74365cfc3b3b"},
 ]
 linkml = [
     {file = "linkml-1.2.2-py3-none-any.whl", hash = "sha256:d6928231d6fef738b4825a54b81d8e407e868a526b2ef6199c1b02218e6c5113"},
@@ -2383,6 +2401,10 @@ linkml-dataops = [
 linkml-runtime = [
     {file = "linkml_runtime-1.2.2-py3-none-any.whl", hash = "sha256:4df6f91e7256bb9b05bc79c9e5dca3757433ea19577e50df6f57baafb1a1b050"},
     {file = "linkml_runtime-1.2.2.tar.gz", hash = "sha256:dc01bf5965df1d8266aa5cb1ba39a9679ce66eedebbb1a83f4764596dbb11f47"},
+]
+linkml-validator = [
+    {file = "linkml_validator-0.1.0-py3-none-any.whl", hash = "sha256:7fd55963f9a942ffee2de3f0c24354cf0d4ea95118878dbe5e215c0d8a9ec7d5"},
+    {file = "linkml_validator-0.1.0.tar.gz", hash = "sha256:3f817d3ddc16ac256a15efcf2ea1f623f91b2abc84bcd5b6a452d6d4e7655f95"},
 ]
 markdown = [
     {file = "Markdown-3.3.6-py3-none-any.whl", hash = "sha256:9923332318f843411e9932237530df53162e29dc7a4e2b91e35764583c46c9a3"},
