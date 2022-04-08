@@ -28,7 +28,6 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    poetry run prefect storage set-default d61aac64-4ae1-42af-a114-b13621c8d11b
                     poetry run python monarch_ingest/pipeline.py
                 '''
             }
