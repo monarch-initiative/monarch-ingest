@@ -10,14 +10,9 @@ import logging
 import re
 import uuid
 
-from biolink_model_pydantic.model import (
-    Disease,
-    Gene,
-    GeneToDiseaseAssociation,
-    NucleicAcidEntity,
-    Predicate,
-)
 from koza.cli_runner import koza_app
+
+from model.biolink import Disease, Gene, GeneToDiseaseAssociation, NucleicAcidEntity
 
 LOG = logging.getLogger(__name__)
 
@@ -121,21 +116,21 @@ else:
 #   (4) the disorder is a chromosome deletion or duplication syndrome.
 # reference: https://omim.org/help/faq#1_6
 
-predicate = Predicate.gene_associated_with_condition
+predicate = "biolink:gene_associated_with_condition"
 relation = koza_app.translation_table.global_table['causes condition']
 
 if disorder_label.startswith('['):
-    # predicate = Predicate.related_condition
+    # predicate = "biolink:related_condition"
     # relation = koza_app.translation_table.global_table['is marker for']
     koza_app.next_row()
 elif disorder_label.startswith('{'):
-    predicate = Predicate.risk_affected_by
+    predicate = "biolink:risk_affected_by"
     relation = koza_app.translation_table.global_table[
         'confers susceptibility to condition'
     ]
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
-    # predicate = Predicate.related_condition
+    # predicate = "biolink:related_condition"
     # relation = koza_app.translation_table.global_table['contributes to']
     koza_app.next_row()
 

@@ -1,12 +1,12 @@
 import uuid
 
-from biolink_model_pydantic.model import (
+from koza.cli_runner import koza_app
+
+from model.biolink import (
     ChemicalEntity,
     ChemicalToDiseaseOrPhenotypicFeatureAssociation,
     Disease,
-    Predicate,
 )
-from koza.cli_runner import koza_app
 
 source_name = "ctd_chemical_to_disease"
 
@@ -21,7 +21,7 @@ if row['DirectEvidence'] in ['therapeutic']:
     disease = Disease(id=row['DiseaseID'], source="infores:ctd")
 
     # Update this if we start bringing in marker/mechanism records
-    predicate = Predicate.treats
+    predicate = "biolink:treats"
     relation = koza_app.translation_table.resolve_term("is substance that treats")
 
     association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(

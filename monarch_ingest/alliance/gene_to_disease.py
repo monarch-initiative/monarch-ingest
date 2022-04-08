@@ -1,14 +1,10 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
-    Disease,
-    Gene,
-    GeneToDiseaseAssociation,
-    Predicate,
-)
 from koza.cli_runner import koza_app
 from source_translation import source_map
+
+from model.biolink import Disease, Gene, GeneToDiseaseAssociation
 
 LOG = logging.getLogger(__name__)
 
@@ -24,16 +20,16 @@ relation = None
 negated = False
 
 if associationType == "is_model_of":
-    predicate = Predicate.model_of
+    predicate = "biolink:model_of"
     relation = koza_app.translation_table.resolve_term("is model of")
 elif associationType == "is_marker_of":
-    predicate = Predicate.biomarker_for
+    predicate = "biolink:biomarker_for"
     relation = koza_app.translation_table.resolve_term("is marker for")
 elif associationType == "is_implicated_in":
-    predicate = Predicate.contributes_to
+    predicate = "biolink:contributes_to"
     relation = koza_app.translation_table.resolve_term("causes_or_contributes")
 elif associationType == "is_not_implicated_in":
-    predicate = Predicate.contributes_to
+    predicate = "biolink:contributes_to"
     relation = koza_app.translation_table.resolve_term("causes_or_contributes")
     negated = True
 

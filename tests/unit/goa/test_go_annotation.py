@@ -4,7 +4,8 @@ Unit tests for GO Annotations ingest
 import logging
 
 import pytest
-from biolink_model_pydantic.model import Association
+
+from model.biolink import Association
 
 logger = logging.getLogger(__name__)
 

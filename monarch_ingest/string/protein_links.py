@@ -1,8 +1,9 @@
 import re
 import uuid
 
-from biolink_model_pydantic.model import Gene, PairwiseGeneToGeneInteraction, Predicate
 from koza.cli_runner import koza_app
+
+from model.biolink import Gene, PairwiseGeneToGeneInteraction
 
 row = koza_app.get_row()
 entrez_2_string = koza_app.get_map('entrez_2_string')
@@ -40,7 +41,7 @@ if gene_ids_a and gene_ids_b:
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene_a.id,
                 object=gene_b.id,
-                predicate=Predicate.interacts_with,
+                predicate="biolink:interacts_with",
                 relation=koza_app.translation_table.global_table['interacts with'],
                 source="infores:string",
             )

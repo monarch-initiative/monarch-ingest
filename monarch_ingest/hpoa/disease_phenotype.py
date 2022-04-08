@@ -27,14 +27,14 @@ import logging
 import uuid
 from typing import List
 
-from biolink_model_pydantic.model import (
+from koza.cli_runner import koza_app
+
+from model.biolink import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
-    Predicate,
     Publication,
 )
-from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ for pub in publications:
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
-    predicate=Predicate.has_phenotype,
+    predicate="biolink:has_phenotype",
     object=phenotypic_feature.id,
     relation=koza_app.translation_table.resolve_term("has phenotype"),
     publications=publications,

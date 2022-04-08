@@ -1,5 +1,6 @@
-from biolink_model_pydantic.model import Publication
 from koza.cli_runner import koza_app
+
+from model.biolink import Publication
 
 source_name = "alliance_publication"
 

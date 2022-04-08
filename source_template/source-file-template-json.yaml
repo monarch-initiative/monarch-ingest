@@ -21,6 +21,8 @@ required_properties:
   - 'symbol'
 
 # Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+
+# For node-only ingests
 node_properties:
   - 'id'
   - 'category'
@@ -28,6 +30,7 @@ node_properties:
   - 'in_taxon'
   - 'provided_by'
 
+# For edge-only ingests
 edge_properties:
   - 'id'
   - 'subject'

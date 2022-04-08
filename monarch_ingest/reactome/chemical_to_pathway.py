@@ -1,12 +1,8 @@
 import uuid
 
-from biolink_model_pydantic.model import (
-    ChemicalEntity,
-    ChemicalToPathwayAssociation,
-    Pathway,
-    Predicate,
-)
 from koza.cli_runner import koza_app
+
+from model.biolink import ChemicalEntity, ChemicalToPathwayAssociation, Pathway
 
 source_name = "reactome_chemical_to_pathway"
 
@@ -24,7 +20,7 @@ pathway = Pathway(
 association = ChemicalToPathwayAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=chemical.id,
-    predicate=Predicate.participates_in,
+    predicate="biolink:participates_in",
     object=pathway.id,
     relation=koza_app.translation_table.resolve_term("participates_in"),
     source="infores:reactome",

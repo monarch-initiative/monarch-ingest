@@ -1,12 +1,13 @@
 """
 Ingest of Reference Genome Orthologs from Panther
 """
+import logging
 import uuid
 
 from koza.cli_runner import koza_app
-from biolink_model_pydantic.model import Gene, Predicate, GeneToGeneHomologyAssociation
+
+from model.biolink import Gene, GeneToGeneHomologyAssociation
 from monarch_ingest.panther.orthology_utils import parse_gene
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ try:
     # TODO: how do I discriminate between LDO and O? I don't care for now??
     #       However, this may result in KGX record duplication?
     # ortholog_type = row["Type of ortholog"]
-    predicate = Predicate.orthologous_to
+    predicate = "biolink:orthologous_to"
     relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # build the Gene and Orthologous Gene nodes
@@ -42,7 +43,7 @@ try:
         predicate=predicate,
         relation=relation,
         source="infores:panther",
-        has_evidence=f"PANTHER.FAMILY:{panther_ortholog_id}"
+        has_evidence=f"PANTHER.FAMILY:{panther_ortholog_id}",
     )
 
     # Write the captured Association out

@@ -1,10 +1,11 @@
 import pytest
-from biolink_model_pydantic.model import (
+from koza.cli_runner import get_translation_table
+
+from model.biolink import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
     Publication,
 )
-from koza.cli_runner import get_translation_table
 
 
 @pytest.fixture

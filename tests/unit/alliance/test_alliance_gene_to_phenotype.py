@@ -1,9 +1,6 @@
 import pytest
-from biolink_model_pydantic.model import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-)
+
+from model.biolink import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
 
 
 @pytest.fixture
