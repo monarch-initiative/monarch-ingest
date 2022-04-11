@@ -374,7 +374,7 @@
 
 # ncbi-gene
 -
-  url: https://www.ncbi.nlm.nih.gov/gene/gene_info.gz
+  url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
   local_name: data/ncbi-gene/gene_info.gz
   tag: ncbi_gene
 

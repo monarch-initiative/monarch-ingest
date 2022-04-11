@@ -1,7 +1,7 @@
 name: 'ncbi_gene'
 
 files:
-  - './data/ncbi-gene/gene_info_filtered.tsv'
+  - './data/ncbi-gene/gene_info.gz'
 
 metadata: './monarch_ingest/ncbi-gene/metadata.yaml'
 
