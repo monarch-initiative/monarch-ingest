@@ -176,7 +176,7 @@
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
 
-# gene orthology (from www.pantherdb.org)
+# Panther Gene Orthology (from www.pantherdb.org)
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
