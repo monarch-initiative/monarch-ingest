@@ -22,7 +22,6 @@ format: csv
 delimiter: '\t'
 comment_char: '!!'
 header: 22
-compression: 'gzip'
 
 node_properties:
   - 'id'
