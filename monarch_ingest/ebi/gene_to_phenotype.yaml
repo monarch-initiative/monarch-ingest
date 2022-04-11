@@ -1,5 +1,7 @@
 name: 'ebi_gene_to_phenotype'
 
+metadata: './monarch_ingest/ebi/metadata.yaml'
+
 files:
   - './data/ebi/CancerG2P.csv.gz'
   - './data/ebi/DDG2P.csv.gz'
@@ -12,31 +14,33 @@ format: 'csv'
 
 delimiter: ','
 
-# Optionally, if a source file depends on any map files, specify their configuration file here
+global_table: './monarch_ingest/translation_table.yaml'
+
+# Dipper relied on this file in its cache, but not sure where to get the data...
 # depends_on:
-#   - './path/to/map.yaml'
+#   - './monarch_ingest/maps/unmapped_ebi_diseases.tsv'
 
-columns:
-  - "gene symbol"
-  - "gene mim"
-  - "disease name"
-  - "disease mim"
-  - "confidence category"
-  - "allelic requirement"
-  - "mutation consequence"
-  - "phenotypes"
-  - "organ specificity list"
-  - "pmids"
-  - "panel"
-  - "prev symbols"
-  - "hgnc id"
-  - "gene disease pair entry date"
-  - "cross cutting modifier"
-  - "mutation consequence flag"
-  - "confidence value flag"
-  - "comments"
+columns:  # with some field value examples
+  - "gene symbol"                   # FANCC
+  - "gene mim"                      # 613899
+  - "disease name"                  # "FANCONI ANEMIA, COMPLEMENTATION GROUP C"
+  - "disease mim"                   # 227645
+  - "confidence category"           # definitive
+  - "allelic requirement"           # biallelic_autosomal
+  - "mutation consequence"          # "absent gene product"
+  - "phenotypes"                    # HP:0000568;HP:0000978; ...
+  - "organ specificity list"        # "Bone Marrow/Immune;Skeleton;Cancer predisposition"
+  - "pmids"                         # 10431244;20869034;8348157
+  - "panel"                         # Cancer
+  - "prev symbols"                  # FACC
+  - "hgnc id"                       # 3584
+  - "gene disease pair entry date"  # "2016-11-29 13:19:27"
+  - "cross cutting modifier"        #
+  - "mutation consequence flag"     #
+  - "confidence value flag"         #
+  - "comments"                      #
 
-# Node and edge properties added in the ingest
+# Node and edge properties added to the ingest
 # must be enumerated here to make it into the kgx file
 node_properties:
   - 'id'
@@ -54,3 +58,5 @@ edge_properties:
   - 'relation'
   - 'publications'
   - 'provided_by'
+
+transform_mode: 'flat'
