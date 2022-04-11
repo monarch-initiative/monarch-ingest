@@ -4,7 +4,7 @@ Ingest of Reference Genome Orthologs from Panther
 import logging
 import uuid
 
-from biolink_model_pydantic.model import Gene, GeneToGeneHomologyAssociation, Predicate
+from biolink_model_pydantic.model import Gene, GeneToGeneHomologyAssociation
 from koza.cli_runner import koza_app
 
 from model.biolink import Gene, GeneToGeneHomologyAssociation

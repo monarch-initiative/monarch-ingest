@@ -1,14 +1,15 @@
-from prefect import flow, task
-from prefect.task_runners import DaskTaskRunner, RayTaskRunner, SequentialTaskRunner
-from koza.cli_runner import transform_source
-from koza.model.config.source_config import OutputFormat
-import yaml
-import typer
-from typing import Optional, List
 import glob
 import os
-import pandas as pd
+from typing import List, Optional
+
 import kgx
+import pandas as pd
+import typer
+import yaml
+from koza.cli_runner import transform_source
+from koza.model.config.source_config import OutputFormat
+from prefect import flow, task
+from prefect.task_runners import SequentialTaskRunner
 
 
 @task()
@@ -24,35 +25,39 @@ def transform(ingest_config, row_limit=None):
         output_format=OutputFormat.tsv,
         local_table=None,
         global_table=None,
-        row_limit=row_limit
+        row_limit=row_limit,
     )
 
 
 @task()
 def ontology_transform():
-    assert (os.path.exists('data/monarch/monarch.json'))
+    assert os.path.exists('data/monarch/monarch.json')
 
     edges = 'output/monarch_ontology_edges.tsv'
     nodes = 'output/monarch_ontology_nodes.tsv'
 
     # Since this is fairly slow, don't re-do it if the files exist
     # This shouldn't affect cloud builds, but will be handy for local runs
-    if os.path.exists(edges) \
-            and os.path.exists(nodes) \
-            and os.path.getsize(edges) > 0 \
-            and os.path.getsize(nodes):
+    if (
+        os.path.exists(edges)
+        and os.path.exists(nodes)
+        and os.path.getsize(edges) > 0
+        and os.path.getsize(nodes)
+    ):
         return
 
-    kgx.cli.cli_utils.transform(inputs=["data/monarch/monarch.json"],
-                                input_format="obojson",
-                                stream=False,
-                                output="output/monarch_ontology",
-                                output_format="tsv")
+    kgx.cli.cli_utils.transform(
+        inputs=["data/monarch/monarch.json"],
+        input_format="obojson",
+        stream=False,
+        output="output/monarch_ontology",
+        output_format="tsv",
+    )
 
-    assert (os.path.exists(edges))
-    assert (os.path.getsize(edges) > 0)
-    assert (os.path.exists(nodes))
-    assert (os.path.getsize(nodes) > 0)
+    assert os.path.exists(edges)
+    assert os.path.getsize(edges) > 0
+    assert os.path.exists(nodes)
+    assert os.path.getsize(nodes) > 0
 
 
 @task()
@@ -60,9 +65,13 @@ def merge(edge_files: List[str], node_files: List[str]):
     edge_dfs = []
     node_dfs = []
     for edge_file in edge_files:
-        edge_dfs.append(pd.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n"))
+        edge_dfs.append(
+            pd.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n")
+        )
     for node_file in node_files:
-        node_dfs.append(pd.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n"))
+        node_dfs.append(
+            pd.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n")
+        )
 
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)

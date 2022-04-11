@@ -17,7 +17,7 @@ def pax2a_row():
         "GeneID": "373854",
         "Symbol": "TENM2",
         "description": "teneurin transmembrane protein 2",
-        "tax_id": "9031"
+        "tax_id": "9031",
     }
 
 
@@ -51,8 +51,3 @@ def test_gene_information_symbol(pax2a):
 def test_gene_information_description(pax2a):
     gene = pax2a[0]
     assert gene.description == "teneurin transmembrane protein 2"
-
-
-
-
-

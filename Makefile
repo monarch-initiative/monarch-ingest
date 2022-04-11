@@ -25,6 +25,12 @@ install-poetry:
 install-requirements: install-poetry
 	poetry install
 
+.PHONY: generate-biolink-model
+generate-biolink-model:
+	mkdir -p model
+	wget https://raw.githubusercontent.com/biolink/biolink-model/master/biolink-model.yaml -O model/biolink-model.yaml
+	poetry run gen-pydantic model/biolink-model.yaml > model/biolink.py
+
 .PHONY: test
 test:
 	poetry run python -m pytest --ignore=source_template

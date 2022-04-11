@@ -1317,7 +1317,7 @@ adal = ["adal (>=1.0.2)"]
 
 [[package]]
 name = "linkml"
-version = "1.2.6"
+version = "1.2.7"
 description = "Linked Open Data Modeling Language"
 category = "main"
 optional = false
@@ -3014,7 +3014,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "c52dec240515e1346b019619d7924adf6f4067f8f14e5912af86e5975c1d28aa"
+content-hash = "986f6f2e22ecfc8c4e638e5f2c4630739bce192f570b3ce895b96c5e257833be"
 
 [metadata.files]
 aiofiles = [
@@ -3722,6 +3722,7 @@ ijson = [
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:fa10a1d88473303ec97aae23169d77c5b92657b7fb189f9c584974c00a79f383"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:9a5bf5b9d8f2ceaca131ee21fc7875d0f34b95762f4f32e4d65109ca46472147"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:81cc8cee590c8a70cca3c9aefae06dd7cb8e9f75f3a7dc12b340c2e332d33a2a"},
+    {file = "ijson-3.1.4-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:4ea5fc50ba158f72943d5174fbc29ebefe72a2adac051c814c87438dc475cf78"},
     {file = "ijson-3.1.4-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3b98861a4280cf09d267986cefa46c3bd80af887eae02aba07488d80eb798afa"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:068c692efba9692406b86736dcc6803e4a0b6280d7f0b7534bff3faec677ff38"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:86884ac06ac69cea6d89ab7b84683b3b4159c4013e4a20276d3fc630fe9b7588"},
@@ -3866,8 +3867,8 @@ kubernetes = [
     {file = "kubernetes-23.3.0.tar.gz", hash = "sha256:05c98e4bd92f7091fa0fa58f594490e712c9151144d5f458235663a8909e342a"},
 ]
 linkml = [
-    {file = "linkml-1.2.6-py3-none-any.whl", hash = "sha256:ea66ce57abee112c0e983db02686e03d41ddde716f9b438d4d5414a39ac77902"},
-    {file = "linkml-1.2.6.tar.gz", hash = "sha256:2d3c9bcaaa3184e9479a0f0ccae19c8438f96cf3f73d386469e0aad4f94c4e03"},
+    {file = "linkml-1.2.7-py3-none-any.whl", hash = "sha256:177d82ebee9db3054ea8d8e44ccaf239e36ead31c516f5dfeed8a232a2b7e935"},
+    {file = "linkml-1.2.7.tar.gz", hash = "sha256:ccd7c34db8ac960ac153bb7acdf509d79abef64d3bafe9c9d68fc828df5141e5"},
 ]
 linkml-dataops = [
     {file = "linkml_dataops-0.1.0-py3-none-any.whl", hash = "sha256:193cf7f659e5f07946d2c2761896910d5f7151d91282543b1363801f68307f4c"},
@@ -3876,10 +3877,6 @@ linkml-dataops = [
 linkml-runtime = [
     {file = "linkml_runtime-1.2.5-py3-none-any.whl", hash = "sha256:44aedeb57e85dff787467a27910c1656a61ac6a547f0e0484d63466f9322a9d5"},
     {file = "linkml_runtime-1.2.5.tar.gz", hash = "sha256:0c8756323df4fa8b4368051fa0ab7a4f8999d0e4fb14c9bc3b0085efae8de491"},
-]
-linkml-validator = [
-    {file = "linkml_validator-0.1.0-py3-none-any.whl", hash = "sha256:7fd55963f9a942ffee2de3f0c24354cf0d4ea95118878dbe5e215c0d8a9ec7d5"},
-    {file = "linkml_validator-0.1.0.tar.gz", hash = "sha256:3f817d3ddc16ac256a15efcf2ea1f623f91b2abc84bcd5b6a452d6d4e7655f95"},
 ]
 linkml-validator = [
     {file = "linkml_validator-0.1.0-py3-none-any.whl", hash = "sha256:7fd55963f9a942ffee2de3f0c24354cf0d4ea95118878dbe5e215c0d8a9ec7d5"},
@@ -4146,6 +4143,7 @@ numpy = [
     {file = "numpy-1.22.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8251ed96f38b47b4295b1ae51631de7ffa8260b5b087808ef09a39a9d66c97ab"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:48a3aecd3b997bf452a2dedb11f4e79bc5bfd21a1d4cc760e703c31d57c84b3e"},
     {file = "numpy-1.22.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a3bae1a2ed00e90b3ba5f7bd0a7c7999b55d609e0c54ceb2b076a25e345fa9f4"},
+    {file = "numpy-1.22.3-cp310-cp310-win32.whl", hash = "sha256:f950f8845b480cffe522913d35567e29dd381b0dc7e4ce6a4a9f9156417d2430"},
     {file = "numpy-1.22.3-cp310-cp310-win_amd64.whl", hash = "sha256:08d9b008d0156c70dc392bb3ab3abb6e7a711383c3247b410b39962263576cd4"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:201b4d0552831f7250a08d3b38de0d989d6f6e4658b709a02a73c524ccc6ffce"},
     {file = "numpy-1.22.3-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:f8c1f39caad2c896bc0018f699882b345b2a63708008be29b1f355ebf6f933fe"},
