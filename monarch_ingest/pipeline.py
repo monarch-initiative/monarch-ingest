@@ -8,6 +8,8 @@ from typing import Optional, List
 import glob
 import os
 import pandas as pd
+import kgx
+
 
 @task()
 def transform(ingest_config, row_limit=None):
@@ -24,6 +26,33 @@ def transform(ingest_config, row_limit=None):
         global_table=None,
         row_limit=row_limit
     )
+
+
+@task()
+def ontology_transform():
+    assert (os.path.exists('data/monarch/monarch.json'))
+
+    edges = 'output/monarch_ontology_edges.tsv'
+    nodes = 'output/monarch_ontology_nodes.tsv'
+
+    # Since this is fairly slow, don't re-do it if the files exist
+    # This shouldn't affect cloud builds, but will be handy for local runs
+    if os.path.exists(edges) \
+            and os.path.exists(nodes) \
+            and os.path.getsize(edges) > 0 \
+            and os.path.getsize(nodes):
+        return
+
+    kgx.cli.cli_utils.transform(inputs=["data/monarch/monarch.json"],
+                                input_format="obojson",
+                                stream=False,
+                                output="output/monarch_ontology",
+                                output_format="tsv")
+
+    assert (os.path.exists(edges))
+    assert (os.path.getsize(edges) > 0)
+    assert (os.path.exists(nodes))
+    assert (os.path.getsize(nodes) > 0)
 
 
 @task()
@@ -44,15 +73,17 @@ def merge(edge_files: List[str], node_files: List[str]):
     nodes.to_csv("monarch-kg_nodes.tsv", sep="\t")
 
 
-# Commenting out the DaskTaskRunner because the cluster arrangement is hitting singleton problems with Koza
+# Commenting out the DaskTaskRunner because the cluster arrangement is hitting singleton problems with Koza,
+# and the same happens with the default ConcurrentTaskRunner.
 # @flow(task_runner=DaskTaskRunner(cluster_kwargs={"memory_limit": "6 GiB", "n_workers": 1}))
 @flow(task_runner=SequentialTaskRunner)
 def run_ingests(row_limit: Optional[int] = None):
-
     # todo: download from data cache
 
     with open("ingests.yaml", "r") as stream:
         ingests = yaml.safe_load(stream)
+
+    ontology_transform()
 
     for ingest in ingests:
         print(ingest)
