@@ -31,6 +31,16 @@ columns:
   - 'Modification_date'
   - 'Feature_type'
 
+filters:
+  - inclusion: 'include'
+    column: 'tax_id'
+    filter_code: 'in'
+    value:
+      - '9615'
+      - '9913'
+      - '9823'
+      - '9031'
+
 node_properties:
   - 'id'
   - 'symbol'
