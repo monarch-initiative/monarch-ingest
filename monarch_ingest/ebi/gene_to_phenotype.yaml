@@ -1,37 +1,43 @@
-name: 'source-file-template-csv'
+name: 'ebi_gene_to_phenotype'
 
-# List of files to be ingested
 files:
-  - './data/something_annotations.tsv.gz'
+  - './data/ebi/CancerG2P.csv.gz'
+  - './data/ebi/DDG2P.csv.gz'
+  - './data/ebi/EyeG2P.csv.gz'
+  - './data/ebi/SkinG2P.csv.gz'
 
-# Specify compression if necessary
 compression: 'gzip'
 
-# Format options csv, json
 format: 'csv'
 
-# Specify a delimiter for csv formats
-delimiter: '\t'
-
-# Presence of a header defaults to true
-# if no header is present in the file, use
-# header = false
-
-# If the source_file has metadata lines to skip, use
-# skip_lines: 10
+delimiter: ','
 
 # Optionally, if a source file depends on any map files, specify their configuration file here
 # depends_on:
 #   - './path/to/map.yaml'
 
-# For a csv/tsv file, list expected columns
 columns:
-  - 'ID'
-  - 'Name'
-  - 'Xrefs'
+  - "gene symbol"
+  - "gene mim"
+  - "disease name"
+  - "disease mim"
+  - "confidence category"
+  - "allelic requirement"
+  - "mutation consequence"
+  - "phenotypes"
+  - "organ specificity list"
+  - "pmids"
+  - "panel"
+  - "prev symbols"
+  - "hgnc id"
+  - "gene disease pair entry date"
+  - "cross cutting modifier"
+  - "mutation consequence flag"
+  - "confidence value flag"
+  - "comments"
 
-
-# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+# Node and edge properties added in the ingest
+# must be enumerated here to make it into the kgx file
 node_properties:
   - 'id'
   - 'category'
