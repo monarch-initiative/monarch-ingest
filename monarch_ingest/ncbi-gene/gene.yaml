@@ -1,0 +1,53 @@
+name: 'ncbi_gene'
+
+files:
+  - './data/ncbi-gene/gene_info.gz'
+
+metadata: './monarch_ingest/ncbi-gene/metadata.yaml'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: 0
+
+columns:
+  - 'tax_id'
+  - 'GeneID'
+  - 'Symbol'
+  - 'LocusTag'
+  - 'Synonyms'
+  - 'dbXrefs'
+  - 'chromosome'
+  - 'map_location'
+  - 'description'
+  - 'type_of_gene'
+  - 'Symbol_from_nomenclature_authority'
+  - 'Full_name_from_nomenclature_authority'
+  - 'Nomenclature_status'
+  - 'Other_designations'
+  - 'Modification_date'
+  - 'Feature_type'
+
+filters:
+  - inclusion: 'include'
+    column: 'tax_id'
+    filter_code: 'in'
+    value:
+      - '9615'
+      - '9913'
+      - '9823'
+      - '9031'
+
+node_properties:
+  - 'id'
+  - 'symbol'
+  - 'description'
+  - 'in_taxon'
+  - 'source'
+
+
+transform_mode: 'flat'
+
