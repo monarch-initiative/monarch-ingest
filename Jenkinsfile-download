@@ -35,9 +35,6 @@ pipeline {
                 sh '''
                     zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
                 '''
-                sh '''
-                    cd data/panther && tar zxf RefGenomeOrthologs.tar.gz
-                '''
             }
         }
         stage('upload') {
