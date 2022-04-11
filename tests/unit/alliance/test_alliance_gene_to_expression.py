@@ -93,7 +93,7 @@ def mgi_row():
         "geneId": "MGI:99180",
         "whenExpressed": {
             "stageName": "TS23",
-            "stageUberonSlimTerm": {"uberonTerm": "UBERON:0000068"},
+            "stageUberonSlimTerm": {"uberonTerm": "post embryonic, pre-adult"},
         },
         "whereExpressed": {
             "anatomicalStructureTermId": "EMAPA:16039",
@@ -124,7 +124,7 @@ def test_mouse_association(mouse):
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "EMAPA:16039"
     assert associations[0].relation == "RO:0002206"
-    assert associations[0].stage_qualifier == "UBERON:0000068"
+    assert associations[0].stage_qualifier is None
     assert "MGI:1199209" in associations[0].publications
     assert "MMO:0000655" in associations[0].has_evidence
     assert "MGI:1203979" in associations[0].has_evidence
