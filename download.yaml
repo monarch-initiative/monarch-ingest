@@ -99,6 +99,23 @@
   local_name: data/ctd/CTD_chemicals_diseases.tsv.gz
   tag: ctd_chemical_to_disease
 
+# ebi
+- url: https://www.ebi.ac.uk/gene2phenotype/downloads/CancerG2P.csv.gz
+  local_name: data/ebi/CancerG2P.csv.gz
+  tag: ebi_gene_to_phenotype
+
+- url: https://www.ebi.ac.uk/gene2phenotype/downloads/DDG2P.csv.gz
+  local_name: data/ebi/DDG2P.csv.gz
+  tag: ebi_gene_to_phenotype
+
+- url: https://www.ebi.ac.uk/gene2phenotype/downloads/EyeG2P.csv.gz
+  local_name: data/ebi/EyeG2P.csv.gz
+  tag: ebi_gene_to_phenotype
+
+- url: https://www.ebi.ac.uk/gene2phenotype/downloads/SkinG2P.csv.gz
+  local_name: data/ebi/SkinG2P.csv.gz
+  tag: ebi_gene_to_phenotype
+
 # flybase
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
