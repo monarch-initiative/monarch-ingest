@@ -297,6 +297,10 @@
   url: https://reactome.org/download/current/ChEBI2Reactome.txt
   local_name: data/reactome/ChEBI2Reactome.txt
   tag: reactome_chemical_to_pathway
+-
+  url: https://reactome.org/download/current/ChEBI2Reactome.txt
+  local_name: data/reactome/ReactomePathways.txt
+  tag: reactome_pathway
 
 # mgi
 -
