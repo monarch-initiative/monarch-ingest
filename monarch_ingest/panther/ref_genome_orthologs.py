@@ -32,8 +32,8 @@ try:
     relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # build the Gene and Orthologous Gene nodes
-    gene = Gene(id=gene_id, in_taxon=gene_ncbitaxon, source="infores:panther")
-    ortholog = Gene(id=ortholog_id, in_taxon=ortholog_ncbitaxon, source="infores:panther")
+    gene = Gene(id=gene_id, in_taxon=[gene_ncbitaxon], source="infores:panther")
+    ortholog = Gene(id=ortholog_id, in_taxon=[ortholog_ncbitaxon], source="infores:panther")
 
     # Instantiate the instance of Gene-to-Gene Homology Association
     panther_ortholog_id = row["Panther Ortholog ID"]
