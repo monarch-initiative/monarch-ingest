@@ -12,8 +12,6 @@ files:
 
 format: 'json'
 
-compression: 'gzip'
-
 json_path:
   - 'data'
 
