@@ -3,8 +3,6 @@ name: 'alliance-gene'
 metadata:
   description: 'Mapping file to look up whether an Alliance ID is for a gene'
 
-compression: 'gzip'
-
 delimiter: '\t'
 
 # This is generated from Alliance BGI files using:

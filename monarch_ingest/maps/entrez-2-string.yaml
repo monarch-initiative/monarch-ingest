@@ -8,8 +8,6 @@ header_delimiter: '/'
 header: 0
 comment_char: '#'
 
-compression: 'gzip'
-
 # Assumes that no identifiers in multiple files are overlapping
 # otherwise these should go into separate configs
 files:
