@@ -1,0 +1,12 @@
+name: 'SomethingBase'
+
+dataset_description:
+  ingest_title: 'SomethingBase'
+  ingest_url: 'https://somethingbase.org/downloads'
+  description: 'Ingest of SomethingBase data'
+  rights: 'https://somethingbase.org/rights'
+
+source_files:
+  - 'gene_to_phenotype.yaml'
+  - 'source-file-template-json.yaml'
+
