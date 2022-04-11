@@ -27,11 +27,10 @@ try:
     anatomical_entity_id = get_data(row, "whereExpressed.anatomicalStructureTermId")
 
     stage_term_id = get_data(row, "whenExpressed.stageTermId")
-    if not stage_term_id:
+    #if not stage_term_id:
         # TODO: some databases (e.g. MGI) do not stageTermId's
         #       but may have an UBERON term that we can use
-        stage_term_id = get_data(row, "whenExpressed.stageUberonSlimTerm.uberonTerm")
-    stage_term_id = stage_term_id
+        # stage_term_id = get_data(row, "whenExpressed.stageUberonSlimTerm.uberonTerm")
 
     evidence = list()
     assay = get_data(row, "assay")  # e.g. "MMO:0000658"
