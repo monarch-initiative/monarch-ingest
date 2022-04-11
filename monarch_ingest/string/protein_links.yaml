@@ -1,7 +1,5 @@
 name: 'string_protein_links'
 
-compression: 'gzip'
-
 format: 'csv'
 
 delimiter: ' '

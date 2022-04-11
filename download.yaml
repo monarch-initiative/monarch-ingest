@@ -377,7 +377,7 @@
 # monarch
 -
   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
-  local_name: output/monarch/monarch.json
+  local_name: data/monarch/monarch.json
   tag: monarch_ontology
 
 # reactome

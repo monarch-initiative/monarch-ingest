@@ -3,9 +3,6 @@ name: 'ctd_chemical_to_disease'
 files:
   - './data/ctd/CTD_chemicals_diseases.tsv.gz'
 
-# Specify compression if necessary
-compression: 'gzip'
-
 # Format options csv, json
 format: 'csv'
 

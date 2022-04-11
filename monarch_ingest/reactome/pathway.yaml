@@ -1,7 +1,7 @@
 name: 'reactome_pathway'
 
 files:
-  - './data/ReactomePathways.txt'
+  - './data/reactome/ReactomePathways.txt'
 
 metadata: './monarch_ingest/reactome/metadata.yaml'
 

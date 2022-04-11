@@ -1,7 +1,5 @@
 name: 'goa_go_annotation'
 
-compression: 'gzip'
-
 format: 'csv'  # is 'gaf' specifically recognized, or does it need to be specifically recognized?
 delimiter: '\t'
 header: none

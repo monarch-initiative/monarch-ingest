@@ -5,8 +5,6 @@ files:
 
 global_table: './monarch_ingest/translation_table.yaml'
 
-compression: 'gzip'
-
 format: 'csv'
 
 delimiter: '\t'
