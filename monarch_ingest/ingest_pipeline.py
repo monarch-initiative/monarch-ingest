@@ -21,7 +21,7 @@ class KgxGraph:
         self.edges_file = edges_file
         self.has_node_properties = has_node_properties
         self.has_edge_properties = has_edge_properties
-        assert has_node_properties or has_node_properties
+        assert has_node_properties or has_edge_properties
         if has_node_properties:
             assert exists(nodes_file)
         if has_edge_properties:
@@ -66,7 +66,7 @@ def transform(ingest: Ingest) -> KgxGraph:
             output_format=OutputFormat.tsv,
             local_table=None,
             global_table=None,
-            # row_limit=1000  # TODO: Ideally we can make this a part of running the pipeline in a developer mode
+            # row_limit=100  # TODO: Ideally we can make this a part of running the pipeline in a developer mode
         )
 
     return KgxGraph(
@@ -114,6 +114,7 @@ def summarize(kgx: KgxGraph) -> KgxGraph:
         output=f"output/{kgx.name}_graph_stats.yaml",
         report_type="kgx-map",
         report_format="yaml",
+        stream=True
     )
     return kgx
 
@@ -128,7 +129,8 @@ def merge(context, merge_files: List[KgxGraph]):
 
 @dagster.graph
 def process(ingest: Ingest) -> KgxGraph:
-    return summarize(validate(transform(ingest)))
+    # temporarily removing validation for performance reasons, it's taking 2-3x as long as the ingest
+    return summarize(transform(ingest))
 
 
 @dagster.op(
@@ -175,11 +177,7 @@ def download():
         os.system(
             "gzcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz"
         )
-    # For some reason the single file is archived as a tar, undo that and just gzip
-    if not os.path.exists("./data/panther/RefGenomeOrthologs.tsv.gz"):
-        os.system(
-            "tar -xOf ./data/panther/RefGenomeOrthologs.tar.gz | pigz > ./data/panther/RefGenomeOrthologs.tsv.gz"
-        )
+
 
 
 @dagster.job

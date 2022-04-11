@@ -1,0 +1,49 @@
+pipeline {
+    agent none
+    triggers {
+        cron('H H * * 7')  //sometime on Sundays
+    }
+    environment {
+        HOME = "${env.WORKSPACE}"
+    }
+    stages {
+        stage('setup') {
+            agent { dockerfile true }
+            steps {
+                // This step could (and maybe should) do a poetry install like the ingest Jenkinsfile
+                // and then run downloader from within a poetry run command
+                sh '''
+                    python3 -mvenv venv
+                    . venv/bin/activate
+                    pip install click==8.0.4
+                    pip install kghub-downloader
+                '''
+            }
+        }
+        stage('download') {
+            agent { dockerfile true }
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    downloader
+                '''
+            }
+        }
+        stage('post-process') {
+            agent { dockerfile true }
+            steps {
+                sh '''
+                    zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
+                '''
+            }
+        }
+        stage('upload') {
+            agent { label 'worker' }
+            steps {
+                sh '''
+                    gsutil -m cp -r data gs://monarch-ingest/data-cache
+                '''
+            }
+        }
+    }
+}

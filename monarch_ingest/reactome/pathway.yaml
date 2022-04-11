@@ -1,0 +1,29 @@
+name: 'reactome_pathway'
+
+files:
+  - './data/ReactomePathways.txt'
+
+metadata: './monarch_ingest/reactome/metadata.yaml'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+header: none
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+    - 'ID'
+    - 'Name'
+    - 'species'
+
+node_properties:
+  - 'id'
+  - 'name'
+  - 'type'
+  - 'source'
+
+
+transform_mode: 'flat'
+

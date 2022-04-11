@@ -19,7 +19,7 @@
 -
   url: https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz
   local_name: data/alliance/DISEASE-ALLIANCE_COMBINED.tsv.gz
-  tag: alliance_gene_to_phenotype
+  tag: alliance_gene_to_disease
 -
   url: https://fms.alliancegenome.org/download/REFERENCE_FB.json.gz
   local_name: data/alliance/REFERENCE_FB.json.gz
@@ -68,6 +68,30 @@
   url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
   local_name: data/alliance/BGI_WB.json.gz
   tag: alliance_gene
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_RGD.json.gz
+  local_name: data/alliance/EXPRESSION_RGD.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_MGI.json.gz
+  local_name: data/alliance/EXPRESSION_MGI.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_ZFIN.json.gz
+  local_name: data/alliance/EXPRESSION_ZFIN.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_FB.json.gz
+  local_name: data/alliance/EXPRESSION_FB.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_WB.json.gz
+  local_name: data/alliance/EXPRESSION_WB.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_SGD.json.gz
+  local_name: data/alliance/EXPRESSION_SGD.json.gz
+  tag: alliance_gene_to_expression
 
 # ctd
 -
@@ -176,11 +200,11 @@
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
 
-# gene orthology (from www.pantherdb.org)
+# Panther Gene Orthology (from www.pantherdb.org)
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
-  local_name: data/panther/RefGenomeOrthologs.tsv.gz
+  local_name: data/panther/RefGenomeOrthologs.tar.gz
 
 ##
 ## This orthology data ingest is not yet implemented
@@ -241,7 +265,7 @@
 
 # pombase
 -
-  url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
+  url: https://www.pombase.org/data/annotations/EXPRESSION_annotations/phenotype_annotations.pombase.phaf.gz
   local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
   tag: pombase_gene_to_phenotype
 -
@@ -365,9 +389,20 @@
   url: https://reactome.org/download/current/ChEBI2Reactome.txt
   local_name: data/reactome/ChEBI2Reactome.txt
   tag: reactome_chemical_to_pathway
+-
+  url: https://reactome.org/download/current/ReactomePathways.txt
+  local_name: data/reactome/ReactomePathways.txt
+  tag: reactome_pathway
 
 # mgi
 -
   url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
   local_name: data/mgi/MRK_Reference.rpt
   tag: mgi_publication_to_gene
+
+# ncbi-gene
+-
+  url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
+  local_name: data/ncbi-gene/gene_info.gz
+  tag: ncbi_gene
+

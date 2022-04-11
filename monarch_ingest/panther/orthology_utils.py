@@ -9,10 +9,11 @@ _ncbitaxon_catalog = {
     "HUMAN": "9606",
     "MOUSE": "10090",
     "RAT": "10116",
+    "CHICK": "9031",
     "DANRE": "7955",
     "DROME": "7227",
     "CAEEL": "6239",
-    "DICDI": "5782",
+    "DICDI": "44689",
     "SCHPO": "4896",
     "YEAST": "4932",
 }
