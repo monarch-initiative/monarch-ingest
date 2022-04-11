@@ -53,7 +53,7 @@ Need a predicate for each kind of relationship:
 
 | Alliance AssociationType | predicate | relation | 
 |  ----------------------- | --------- | ------- |
-| biomarker_via_orthology  | biolionk:biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
+| biomarker_via_orthology  | biolink:biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
 | implicated_via_orthology  | biolink:contributes_to | _currently excluded, is this is_implicated_in, but with a qualifier?_ |
 | is_implicated_in | biolink:contributes_to | "RO:0003302" |
 | is_marker_for | biolink:biomarker_for | "RO:0002607" |
@@ -83,20 +83,21 @@ Need a predicate for each kind of relationship:
 The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/resourcesAndReferences) literature ingest format that aligns publications from MOD members. 
 
 Mapping of Alliance publication category to biolink category
-| Alliance category | Biolink publication type |
-------------------| -------------- | 
-| Research Article | IAO:0000013 |
-| Review Article   | IAO:0000013 |
-| Thesis | IAO:0000311 |
-| Book | IAO:0000311 |
-| Other | IAO:0000311 |
-| Preprint | IAO:0000013 |
-| Conference Publication | IAO:0000311 |
-| Personal Communication | IAO:0000311 |
-| Direct Data Submission | IAO:0000311 |
-| Internal Process Reference | IAO:0000311 |
-| Unknown | IAO:0000311 |
-| Retraction | IAO:0000311 |
+
+| Alliance category          | Biolink publication type |
+|----------------------------|--------------------------|
+| Research Article           | IAO:0000013              |
+| Review Article             | IAO:0000013              |
+| Thesis                     | IAO:0000311              |
+| Book                       | IAO:0000311              |
+| Other                      | IAO:0000311              |
+| Preprint                   | IAO:0000013              |
+| Conference Publication     | IAO:0000311              |
+| Personal Communication     | IAO:0000311              |
+| Direct Data Submission     | IAO:0000311              |
+| Internal Process Reference | IAO:0000311              |
+| Unknown                    | IAO:0000311              |
+| Retraction                 | IAO:0000311              |
 
 This ingest doesn't make an effort to sort these publication categories into more specific classes than biolink:Publication, but does set the type.
 
@@ -112,3 +113,73 @@ This ingest doesn't make an effort to sort these publication categories into mor
     * type (IAO:0000311 for publication, IAO:0000013 for article)
     * creation date (datePublished)
     * keywords (keywords)
+
+### Gene Expression
+
+This is the full data model of the Alliance file ingested; however, not all fields are currently used in the current ingest (in most cases, these fields are not yet set in the input data sets; see the gene_to_expression.yaml file)
+
+* Species
+* SpeciesID
+* GeneID
+* GeneSymbol
+* Location
+* StageTerm
+* AssayID
+* AssayTermName
+* CellularComponentID
+* CellularComponentTerm
+* CellularComponentQualifierIDs
+* CellularComponentQualifierTermNames
+* SubStructureID
+* SubStructureName
+* SubStructureQualifierIDs
+* SubStructureQualifierTermNames
+* AnatomyTermID
+* AnatomyTermName
+* AnatomyTermQualifierIDs
+* AnatomyTermQualifierTermNames
+* SourceURL
+* Source
+* Reference
+
+#### Discussion Group
+
+https://www.alliancegenome.org/working-groups#expression
+
+#### Download
+
+https://www.alliancegenome.org/downloads#expression
+
+#### Biolink Captured
+
+* biolink:Gene
+    * id (row['GeneID'])
+    * name (row['GeneSymbol'])
+    * in taxon (row['SpeciesID'])
+    * source (`infores` mapped from row['Source'])
+
+* biolink:AnatomicalEntity
+    * id (row['AnatomyTermID'])
+    * name (row['AnatomyTermName'])
+    * source (`infores` mapped from row['Source'])
+
+* biolink:CellularComponent  # is_a: anatomical entity...
+    * id (row['CellularComponentID'])
+    * name (row['CellularComponentTerm'])
+    * source (`infores` mapped from row['Source'])
+
+* biolink:LifeStage
+    * id (CURIE heuristically inferred from row['SpeciesID'] and row['StageTerm'])
+    * name (row['StageTerm'])
+    * in taxon (row['SpeciesID'])
+    * source (`infores` mapped from row['Source'])
+
+* biolink:GeneToExpressionSiteAssociation
+    * id (random uuid)
+    * subject (Gene.id)
+    * predicates (biolink:expressed_in)
+    * object (AnatomicalEntity.id or CellularComponent.id)
+    * stage qualifier (LifeStage.id)  # if specified; None otherwise
+    * has evidence (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
+    * publications (row['Reference'])
+    * source (`infores` mapped from row['Source'])
