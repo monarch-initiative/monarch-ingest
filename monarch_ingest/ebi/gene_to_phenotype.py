@@ -72,24 +72,26 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
 #
 #      def parse(self, limit: Optional[int]=None):
 #         """
-#         Here we parse each row of the gene to phenotype file
+#         Here we parse each row of the gene-to-phenotype file.
+#
 #         We create anonymous variants along with their attributes
 #         (allelic requirement, functional consequence)
-#         and connect these to genes and diseases
-#         genes are connected to variants via
-#         global_terms['has_affected_locus']
-#         variants are connected to attributes via:
-#         global_terms['has_allelic_requirement']
-#         global_terms['has_functional_consequence']
-#         variants are connected to disease based on
-#         mappings to the DDD category column,
-#         see the translationtable specific to this source
-#         for mappings
+#         and connect these to genes and diseases.
+#
+#         Genes are associated with variants via global_terms['has_affected_locus'].
+
+#         Variants are associated with their attributes via:
+#         - global_terms['has_allelic_requirement']
+#         - global_terms['has_functional_consequence']
+
+#         Variants are connected to disease based on mappings to the DDD category column,
+
+#         See the translation table specific to this source for mappings.
+
 #         For cases where there are no disease OMIM id,
 #         we either use a disease cache file with mappings
-#         to MONDO that has been manually curated
-#         :param limit: {int} number of rows to parse
-#         :return: None
+#         to MONDO that has been manually curated.
+
 #         """
 #         if limit is not None:
 #             LOG.info("Only parsing first %d rows", limit)
@@ -234,25 +236,4 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
 #                     allelic_requirement,
 #                     allelic_requirement.strip(':').replace('_', ' '))
 #
-#     @staticmethod
-#     def _get_consequence_predicate(consequence):
-#         consequence_map = {
-#             'has_molecular_consequence': [
-#                 '5_prime or 3_prime UTR mutation',
-#                 'all missense/in frame',
-#                 'cis-regulatory or promotor mutation',
-#                 'part of contiguous gene duplication'
-#             ],
-#             'has_functional_consequence': [
-#                 'activating',
-#                 'dominant negative',
-#                 'increased gene dosage',
-#                 'loss of function'
-#             ]
-#         }
-#         consequence_type = 'uncertain'
-#         for typ, typ_list in consequence_map.items():
-#             if consequence in typ_list:
-#                 consequence_type = typ
-#
-#         return consequence_type
+

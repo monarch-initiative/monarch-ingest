@@ -3,7 +3,7 @@ The European Bioinformatics Institute Gene2Phenotype (G2P) resource is a publicl
 * [EBI G2P Bulk Downloads](https://www.ebi.ac.uk/gene2phenotype/downloads): the EBI G2P resource currently provides human data partitioned into four broad categories:
 
   - Cancer gene-disease pairs and attributes (CancerG2P.csv.gz)
-  - DD gene-disease pairs and attributes (DDG2P.csv.gz)
+  - Developmental Disorder gene-disease pairs and attributes (DDG2P.csv.gz)
   - Eye gene-disease pairs and attributes (EyeG2P.csv.gz)
   - Skin gene-disease pairs and attributes (SkinG2P.csv.gz)
 
@@ -21,54 +21,54 @@ The core phenotype data fields  provided in the input data files are:
   - **gene mim:** OMIM number for a gene entry
   - **disease name:** Name provided by the curator
   - **disease mim:** OMIM number for a disease entry
-  - **confidence value:** one value from [the list of possible categories](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#confidence_value) (Note: this field may still be called "confidence category" in legacy data files):
-      - both RD and IF
-      - definitive
-      - strong
-      - moderate
-      - limited
-  - **allelic requirement:**  One value from [the list of possible allelic requirement attributes](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#allelic_requirement). Possible values are:
-      - biallelic_autosomal
-      - monoallelic_autosomal
-      - monoallelic_PAR
-      - biallelic_PAR
-      - mitochondrial
-      - monoallelix_X_hem
-      - monallelic_X_het
-      - monoallelic_Y_hem   
-  - **mutation consequence:** One value from the [list of possible consequences](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#mutation_consequence):
-      - 5_prime or 3_prime UTR mutation
-      - cis-regulatory or promotor mutation
-      - absent gene product
-      - altered gene product structure
-      - increased gene product level
-      - uncertain.
+  - **confidence value:** one value from [the list of possible categories](https://www.ebi.ac.uk/gene2phenotype/terminology) (Note: this field may still be called "confidence category" in legacy data files):
+      - "both RD and IF"  (where RD is the Relevant Disease and IF designates multiple (>3) Incidental (disorder) Families)
+      - "definitive"
+      - "strong"
+      - "moderate"
+      - "limited"
+  - **allelic requirement:**  One value from [the list of possible allelic requirement attributes](https://www.ebi.ac.uk/gene2phenotype/terminology). Possible values are:
+      - "biallelic_autosomal"
+      - "monoallelic_autosomal"
+      - "monoallelic_PAR"
+      - "biallelic_PAR"
+      - "mitochondrial"
+      - "monoallelix_X_hem"
+      - "monallelic_X_het"
+      - "monoallelic_Y_hem" 
+  - **mutation consequence:** One value from the [list of possible consequences](https://www.ebi.ac.uk/gene2phenotype/terminology):
+      - "5_prime or 3_prime UTR mutation"
+      - "cis-regulatory or promotor mutation"
+      - "absent gene product"
+      - "altered gene product structure"
+      - "increased gene product level"
+      - "uncertain"
   - **phenotypes:** semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - **organ specificity list:** semicolon-separated list of organs
   - **pmids:** semicolon-separated list of PMIDs 
   - **panel:** G2P panel:
-      - Cancer
-      - Cardiac
-      - DD
-      - Ear
-      - Eye
-      - Skin
+      - "Cancer"
+      - "Cardiac"
+      - "DD" ("Developmental Disorders")
+      - "Ear"
+      - "Eye"
+      - "Skin"
   - **prev symbols:** Symbols previously approved by the HGNC for this gene
   - **hgnc id:** HGNC identifier
   - **gene disease pair entry date:** Entry date for the gene disease pair into the database
-  - **cross cutting modifier:** semi-colon separated [list of possible cross-cutting modifier attributes](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#confidence_value):
-      - requires heterozygosity
-      - typically de novo
-      - typically mosaic
-      - imprinted
-      - typified by age related penetrance
-      - typified by reduced penetrance
-  - **mutation consequences flag:** One value from [the list of possible flags](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#mutation_consequence):
-      - likely to escape nonsense mediated decay
-      - part of contiguous gene duplication
-      - part of contiguous genomic interval deletion
-      - restricted repertoire of mutations
-  - **confidence value flag:** if not empty, then [should be set to the value 'requires clinical review'](https://www.ebi.ac.uk/gene2phenotype/updates_to_our_terms#new_confidence_value_flag)
+  - **cross cutting modifier:** semi-colon separated [list of possible cross-cutting modifier attributes](https://www.ebi.ac.uk/gene2phenotype/terminology):
+      - "requires heterozygosity"
+      - "typically de novo"
+      - "typically mosaic"
+      - "imprinted"
+      - "typified by age related penetrance"
+      - "typified by reduced penetrance"
+  - **mutation consequences flag:** One value from [the list of possible flags](https://www.ebi.ac.uk/gene2phenotype/terminology):
+      - "likely to escape nonsense mediated decay"
+      - "part of contiguous gene duplication"
+      - "part of contiguous genomic interval deletion"
+      - "restricted repertoire of mutations"
+  - **confidence value flag:** if not empty, then [should be set to the value 'requires clinical review'](https://www.ebi.ac.uk/gene2phenotype/terminology)
   - **comments:** any additional information about the gene to phenotype relationship that are not captured elsewhere
 
 #### Biolink captured
