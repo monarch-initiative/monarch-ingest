@@ -1,6 +1,7 @@
 """
 Utility methods for EBI ingests
 """
+import uuid
 from koza.cli_runner import koza_app
 
 #
@@ -36,7 +37,6 @@ mondo_map = koza_app.get_map('mondo_map')
 
 
 def build_gene_disease_model(
-        self,
         gene_id,
         relation_id,
         disease_id,
@@ -49,8 +49,8 @@ def build_gene_disease_model(
     Builds gene variant disease model
     :return: None
     """
-    model = Model(self.graph)
-    geno = Genotype(self.graph)
+    model = Model()
+    geno = Genotype()
 
     pmids = [] if pmids is None else pmids
 
@@ -58,10 +58,9 @@ def build_gene_disease_model(
     variant_or_gene = gene_id
 
     variant_id_string = variant_label
-    variant_bnode = self.make_id(variant_id_string, "_")
+    variant_bnode = str(f"{variant_id_string}_{uuid.uuid1()}")  # self.make_id(variant_id_string, "_")
 
-    if consequence_predicate is not None \
-            and consequence_id is not None:
+    if consequence_predicate is not None and consequence_id is not None:
         is_variant = True
         model.addTriple(variant_bnode,
                         consequence_predicate,
@@ -69,33 +68,40 @@ def build_gene_disease_model(
         # Hack to add labels to terms that
         # don't exist in an ontology
         if consequence_id.startswith(':'):
-            model.addLabel(consequence_id,
-                           consequence_id.strip(':').replace('_', ' '))
+            model.addLabel(
+                consequence_id,
+                consequence_id.strip(':').replace('_', ' ')
+            )
 
     if is_variant:
         variant_or_gene = variant_bnode
-        # Typically we would type the variant using the
+        # We would typically type the variant using the
         # molecular consequence, but these are not specific
         # enough for us to make mappings (see translation table)
-        model.addIndividualToGraph(variant_bnode,
-                                   variant_label,
-                                   self.globaltt['variant_locus'])
+        model.addIndividualToGraph(
+            variant_bnode,
+            variant_label,
+            koza_app.translation_table.resolve_term('variant_locus')
+        )
         geno.addAffectedLocus(variant_bnode, gene_id)
         model.addBlankNodeAnnotation(variant_bnode)
 
-    assoc = G2PAssoc(
-        self.graph, self.name, variant_or_gene, disease_id, relation_id)
+    assoc = G2PAssoc(variant_or_gene, disease_id, relation_id)
+
     assoc.source = pmids
     assoc.add_association_to_graph()
 
     if allelic_requirement is not None and is_variant is False:
         model.addTriple(
-            assoc.assoc_id, self.globaltt['has_allelic_requirement'],
-            allelic_requirement)
+            assoc.assoc_id,
+            koza_app.translation_table.resolve_term('has_allelic_requirement'),
+            allelic_requirement
+        )
         if allelic_requirement.startswith(':'):
             model.addLabel(
                 allelic_requirement,
-                allelic_requirement.strip(':').replace('_', ' '))
+                allelic_requirement.strip(':').replace('_', ' ')
+            )
 
 
 def get_consequence_predicate(consequence):
@@ -140,9 +146,10 @@ def get_consequence_predicate(consequence):
     return consequence_type
 
 
-def process_gene_disease(row):  # ::List  getting syntax error here
+def process_gene_disease(row):  # :List  getting syntax error here
     """
-    Parse and add gene variant disease model
+    Parse and add gene variant disease model.
+
     Model building happens in build_gene_disease_model
     
     :param row:  single row from EBI G2P csv input file.
@@ -166,7 +173,8 @@ def process_gene_disease(row):  # ::List  getting syntax error here
     mutation_consequence = row['mutation_consequence']
     if mutation_consequence not in ('uncertain', ''):
         consequence_relation = koza_app.translation_table.local_table[
-            get_consequence_predicate(mutation_consequence)]
+            get_consequence_predicate(mutation_consequence)
+        ]
         consequence_curie = koza_app.translation_table.local_table[mutation_consequence]
         variant_label = "{} {}".format(mutation_consequence, variant_label)
     else:
