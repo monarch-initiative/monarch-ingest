@@ -16,7 +16,8 @@ delimiter: ','
 
 global_table: './monarch_ingest/translation_table.yaml'
 
-# Dipper relied on this file in its cache, but not sure where to get the data...
+# Dipper relied on this file in its cache,
+# but not sure where to get the data... or if it is even still needed...
 # depends_on:
 #   - './monarch_ingest/maps/unmapped_ebi_diseases.tsv'
 
