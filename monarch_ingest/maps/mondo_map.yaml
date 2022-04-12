@@ -1,0 +1,22 @@
+name: 'mondo_map'
+
+metadata:
+  description: 'Mapping EBI diseases and phenotypes to MONDO'
+
+format: 'csv'
+
+delimiter: '\t'
+
+files:
+  - './data/ebi/unmapped_ebi_diseases.tsv'
+
+header: 0
+
+columns:
+  - 'mondo'
+  - 'id'
+
+key: 'id'
+
+values:
+  - 'mondo'
