@@ -44,7 +44,8 @@ def build_gene_disease_model(
         consequence_predicate=None,
         consequence_id=None,
         allelic_requirement=None,
-        pmids=None):
+        pmids=None
+):
     """
     Builds gene variant disease model
     :return: None
@@ -62,9 +63,11 @@ def build_gene_disease_model(
 
     if consequence_predicate is not None and consequence_id is not None:
         is_variant = True
-        model.addTriple(variant_bnode,
-                        consequence_predicate,
-                        consequence_id)
+        model.addTriple(
+            variant_bnode,
+            consequence_predicate,
+            consequence_id
+        )
         # Hack to add labels to terms that
         # don't exist in an ontology
         if consequence_id.startswith(':'):
@@ -127,15 +130,15 @@ def get_consequence_predicate(consequence):
     consequence_map = {
         'has_molecular_consequence': [
             '5_prime or 3_prime UTR mutation',
-            'altered gene product structure',
+            'altered gene product structure',  # 'all missense/in frame',
             'cis-regulatory or promotor mutation',
-            'increased gene product level'
+            'increased gene product level'  # 'part of contiguous gene duplication'
         ],
         'has_functional_consequence': [
-            'altered gene product structure',
-            'altered gene product structure',
-            'increased gene product level',
-            'absent gene product'
+            'altered gene product structure',  # 'activating'
+            'altered gene product structure',  # 'dominant negative'
+            'increased gene product level',  # 'increased gene dosage'
+            'absent gene product'  # 'loss of function'
         ]
     }
     consequence_type = 'uncertain'
@@ -146,9 +149,9 @@ def get_consequence_predicate(consequence):
     return consequence_type
 
 
-def process_gene_disease(row):  # :List  getting syntax error here
+def process_gene_disease(row):
     """
-    Parse and add gene variant disease model.
+    Parse row to derive a gene-variant-disease triples.
 
     Model building happens in build_gene_disease_model
     
@@ -163,13 +166,14 @@ def process_gene_disease(row):  # :List  getting syntax error here
         if disease_label in mondo_map:
             disease_id = mondo_map['disease_label']
         else:
-            return  # sorry for this
+            return  # can't map this disease?
     else:
         disease_id = 'OMIM:' + disease_omim_id
 
     hgnc_curie = 'HGNC:' + row['hgnc_id']
 
     relation_curie = koza_app.translation_table.local_tablerow['g2p_relation_label']
+
     mutation_consequence = row['mutation_consequence']
     if mutation_consequence not in ('uncertain', ''):
         consequence_relation = koza_app.translation_table.local_table[
@@ -189,9 +193,9 @@ def process_gene_disease(row):  # :List  getting syntax error here
 
     pmids = row['pmids']
     if pmids != '':
-        pmid_list = ['PMID:' + pmid for pmid in pmids.split(';')]
+        publications = ['PMID:' + pmid for pmid in pmids.split(';')]
     else:
-        pmid_list = []
+        publications = []
 
     # build the model
     # Should we build a reusable object and/or tuple that
@@ -205,5 +209,5 @@ def process_gene_disease(row):  # :List  getting syntax error here
         consequence_relation,
         consequence_curie,
         requirement_curie,
-        pmid_list
+        publications
     )

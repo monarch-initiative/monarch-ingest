@@ -116,6 +116,11 @@
   local_name: data/ebi/SkinG2P.csv.gz
   tag: ebi_gene_to_phenotype
 
+-
+  url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/unmapped_ebi_diseases.tsv
+  local_name: data/ebi/unmapped_ebi_diseases.tsv
+  tag: ebi_gene_to_phenotype
+
 # flybase
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz

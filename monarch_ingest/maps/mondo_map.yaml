@@ -1,22 +1,23 @@
 name: 'mondo_map'
 
 metadata:
-  description: 'Mapping EBI diseases and phenotypes to MONDO'
+  description: 'Mapping file from unmapped EBI Gene-Phenotype disease names to MONDO terms'
 
 format: 'csv'
 
 delimiter: '\t'
 
+#  https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/unmapped_ebi_diseases.tsv
 files:
   - './data/ebi/unmapped_ebi_diseases.tsv'
 
 header: 0
 
 columns:
-  - 'mondo'
+  - 'name'
   - 'id'
 
-key: 'id'
+key: 'name'
 
 values:
-  - 'mondo'
+  - 'id'
