@@ -162,12 +162,12 @@ def process_gene_disease(row):  # ::List  getting syntax error here
 
     hgnc_curie = 'HGNC:' + row['hgnc_id']
 
-    relation_curie = koza_app.translation_table.global_tablerow['g2p_relation_label']
+    relation_curie = koza_app.translation_table.local_tablerow['g2p_relation_label']
     mutation_consequence = row['mutation_consequence']
     if mutation_consequence not in ('uncertain', ''):
-        consequence_relation = koza_app.translation_table.global_table[
+        consequence_relation = koza_app.translation_table.local_table[
             get_consequence_predicate(mutation_consequence)]
-        consequence_curie = koza_app.translation_table.global_table[mutation_consequence]
+        consequence_curie = koza_app.translation_table.local_table[mutation_consequence]
         variant_label = "{} {}".format(mutation_consequence, variant_label)
     else:
         consequence_relation = None
@@ -175,7 +175,7 @@ def process_gene_disease(row):  # ::List  getting syntax error here
 
     allelic_requirement = row['allelic_requirement']
     if allelic_requirement != '':
-        requirement_curie = koza_app.translation_table.global_table[allelic_requirement]
+        requirement_curie = koza_app.translation_table.local_table[allelic_requirement]
     else:
         requirement_curie = None
 

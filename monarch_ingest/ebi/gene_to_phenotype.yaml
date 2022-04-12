@@ -16,6 +16,9 @@ delimiter: ','
 
 global_table: './monarch_ingest/translation_table.yaml'
 
+# G2P code mappings from a local table
+local_table: './monarch_ingest/ebi/ebi_g2p.yaml'
+
 # Dipper relied on this file in its cache,
 # but not sure where to get the data... or if it is even still needed...
 depends_on:
