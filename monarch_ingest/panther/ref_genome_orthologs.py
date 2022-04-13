@@ -30,16 +30,12 @@ try:
     predicate = Predicate.orthologous_to
     relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
-    # build the Gene and Orthologous Gene nodes
-    gene = Gene(id=gene_id, in_taxon=gene_ncbitaxon, source="infores:panther")
-    ortholog = Gene(id=ortholog_id, in_taxon=ortholog_ncbitaxon, source="infores:panther")
-
     # Instantiate the instance of Gene-to-Gene Homology Association
     panther_ortholog_id = row["Panther Ortholog ID"]
     association = GeneToGeneHomologyAssociation(
         id=f"uuid:{str(uuid.uuid1())}",
-        subject=gene.id,
-        object=ortholog.id,
+        subject=gene_id,
+        object=ortholog_id,
         predicate=predicate,
         relation=relation,
         source="infores:panther",
@@ -47,7 +43,7 @@ try:
     )
 
     # Write the captured Association out
-    koza_app.write(gene, ortholog, association)
+    koza_app.write(association)
 
 except RuntimeError as rte:
     logger.error(f"{str(rte)} in data row:\n\t'{str(row)}'")
