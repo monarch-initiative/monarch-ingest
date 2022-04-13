@@ -68,22 +68,32 @@ The core phenotype data fields  provided in the input data files are:
       - "part of contiguous gene duplication"
       - "part of contiguous genomic interval deletion"
       - "restricted repertoire of mutations"
-  - **confidence value flag:** if not empty, then [should be set to the value 'requires clinical review'](https://www.ebi.ac.uk/gene2phenotype/terminology)
+  - **confidence value flag:** if not empty, then it should be set to the value ['requires clinical review'](https://www.ebi.ac.uk/gene2phenotype/terminology)
   - **comments:** any additional information about the gene to phenotype relationship that are not captured elsewhere
 
 #### Biolink captured
 
 * biolink:Gene
-    * id 
+    * id (HGNC id) 
+
+* biolink:Disease
+    * id (MIM id)
+
+* biolink:GeneToDiseaseAssociation
+    * id (random uuid)
+    * subject (Gene id)
+    * predicate (gene_associated_with_condition)
+    * object (Disease id)
+    * publications (PMID's)
+    * source (infores:ebi_g2p)
 
 * biolink:PhenotypicFeature
-    * id
+    * id (HP id)
 
 * biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
-    * subject (hgnc id)
+    * subject (Gene id)
     * predicate (has_phenotype)
-    * object (phenotypicFeature.id)
+    * object (PhenotypicFeature.id)
     * relation (has phenotype)
     * publications (PMID's)
-    * qualifiers (condition terms)

@@ -9,7 +9,102 @@ from koza.cli_runner import koza_app
 #
 
 #
+# TODO: how do we handle this: the Biolink Model only has
+#       the predicate "has molecular consequence",
+#       without any exact mapping nor relation mapping defined?
+#
+# def get_consequence_predicate(consequence):
+#     #
+#     # Original Dipper map (based on original G2P terms?).
+#     # TODO: Note that the original list is orthogonal, but the new mapping is not,
+#     #       hence there now is an overlap between the two consequence types?
+#     #
+#     # consequence_map = {
+#     #     'has_molecular_consequence': [
+#     #         '5_prime or 3_prime UTR mutation',
+#     #         'all missense/in frame',
+#     #         'cis-regulatory or promotor mutation',
+#     #         'part of contiguous gene duplication'
+#     #     ],
+#     #     'has_functional_consequence': [
+#     #         'activating',
+#     #         'dominant negative',
+#     #         'increased gene dosage',
+#     #         'loss of function'
+#     #     ]
+#     # }
+#     consequence_map = {
+#         'has_molecular_consequence': [
+#             '5_prime or 3_prime UTR mutation',
+#             'altered gene product structure',  # 'all missense/in frame',
+#             'cis-regulatory or promotor mutation',
+#             'increased gene product level'  # 'part of contiguous gene duplication'
+#         ],
+#         'has_functional_consequence': [
+#             'altered gene product structure',  # 'activating'
+#             'altered gene product structure',  # 'dominant negative'
+#             'increased gene product level',  # 'increased gene dosage'
+#             'absent gene product'  # 'loss of function'
+#         ]
+#     }
+#     consequence_type = 'uncertain'
+#     for typ, typ_list in consequence_map.items():
+#         if consequence in typ_list:
+#             consequence_type = typ
+#
+#     return consequence_type
+
+#
+# Extracted from Alliance gene_to_phenotype code
+#
+# # TODO: another exemplar for EBI - needs fixing
+# gene_ids = koza_app.get_map("alliance-gene")
+#
+# if len(row["phenotypeTermIdentifiers"]) == 0:
+#     LOG.warning("Phenotype ingest record has 0 phenotype terms: " + str(row))
+#
+# if len(row["phenotypeTermIdentifiers"]) > 1:
+#     LOG.warning("Phenotype ingest record has >1 phenotype terms: " + str(row))
+#
+# # limit to only genes
+# if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:
+#
+#     source = source_map[row["objectId"].split(':')[0]]
+#
+#     pheno_id = row["phenotypeTermIdentifiers"][0]["termId"]
+#     # Remove the extra WB: prefix if necessary
+#     pheno_id = pheno_id.replace("WB:WBPhenotype:", "WBPhenotype:")
+#
+#     gene = Gene(id=row["objectId"], source=source)
+#
+#     # populate any additional optional gene properties
+#     if row['xrefs']:
+#         gene.xrefs = [curie_cleaner.clean(xref) for xref in row['xrefs']]
+#
+#     phenotypicFeature = PhenotypicFeature(id=pheno_id, source=source)
+#     association = GeneToPhenotypicFeatureAssociation(
+#         id="uuid:" + str(uuid.uuid1()),
+#         subject=gene.id,
+#         predicate=Predicate.has_phenotype,
+#         object=phenotypicFeature.id,
+#         relation=koza_app.translation_table.resolve_term("has phenotype"),
+#         publications=[row["evidence"]["publicationId"]],
+#         source=source,
+#     )
+#
+#     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
+#         qualifiers = []
+#         for conditionRelation in row["conditionRelations"]:
+#             for condition in conditionRelation["conditions"]:
+#                 if condition["conditionClassId"]:
+#                     qualifiers.append(condition["conditionClassId"])
+#         association.qualifiers = qualifiers
+#
+#     koza_app.write(association)
+
+#
 # extracted from Dipper implementation
+# dipper/sources/EBIGene2Phen.py::_build_gene_disease_model()
 #
 """
 Parsing of each row of the gene-to-phenotype file.
@@ -33,43 +128,42 @@ we either use a disease cache file with mappings
 to MONDO that has been manually curated.
 
 """
-mondo_map = koza_app.get_map('mondo_map')
+
+# TODO: temporary hack to silence compile errors
+model = None
+geno = None
 
 
-def build_gene_disease_model(
+def publish_gene_variant_disease_phenotype_statements(
         gene_id,
-        relation_id,
+        gene_to_disease_predicate,
         disease_id,
         variant_label,
-        consequence_predicate=None,
-        consequence_id=None,
-        allelic_requirement=None,
-        pmids=None
+        consequence_predicate,
+        consequence_id,
+        allelic_requirement,
+        publications
 ):
     """
-    Builds gene variant disease model
-    :return: None
+    Publishes gene-variant-disease predicate statement
     """
-    model = Model()
-    geno = Genotype()
-
-    pmids = [] if pmids is None else pmids
-
     is_variant = False
     variant_or_gene = gene_id
 
     variant_id_string = variant_label
     variant_bnode = str(f"{variant_id_string}_{uuid.uuid1()}")  # self.make_id(variant_id_string, "_")
 
-    if consequence_predicate is not None and consequence_id is not None:
+    # TODO: we don't really model blank nodes in KGX.
+    #       Perhaps this information needs to be embedded in the _attributes JSON blob?
+    #       Or do we need to add an additional predicate statement?
+    if consequence_predicate and consequence_id:
         is_variant = True
         model.addTriple(
             variant_bnode,
             consequence_predicate,
             consequence_id
         )
-        # Hack to add labels to terms that
-        # don't exist in an ontology
+        # Hack to add labels to terms that don't exist in an ontology
         if consequence_id.startswith(':'):
             model.addLabel(
                 consequence_id,
@@ -77,6 +171,7 @@ def build_gene_disease_model(
             )
 
     if is_variant:
+        # TODO: if we have a mutation consequence, then we model a variant association?
         variant_or_gene = variant_bnode
         # We would typically type the variant using the
         # molecular consequence, but these are not specific
@@ -84,14 +179,18 @@ def build_gene_disease_model(
         model.addIndividualToGraph(
             variant_bnode,
             variant_label,
+
+            # this is the 'relation' slot value, not the predicate?
             koza_app.translation_table.resolve_term('variant_locus')
         )
         geno.addAffectedLocus(variant_bnode, gene_id)
         model.addBlankNodeAnnotation(variant_bnode)
 
-    assoc = G2PAssoc(variant_or_gene, disease_id, relation_id)
+    # the main event here is the gene-to-disease association?
+    # TODO: temporary hack to silence compile errors
+    assoc = None  # G2PAssoc(variant_or_gene, disease_id, gene_to_disease_predicate)
 
-    assoc.source = pmids
+    assoc.source = publications
     assoc.add_association_to_graph()
 
     if allelic_requirement is not None and is_variant is False:
@@ -105,109 +204,3 @@ def build_gene_disease_model(
                 allelic_requirement,
                 allelic_requirement.strip(':').replace('_', ' ')
             )
-
-
-def get_consequence_predicate(consequence):
-    #
-    # Original Dipper map (based on original G2P terms?).
-    # TODO: Note that the original list is orthogonal, but the new mapping is not,
-    #       hence there now is an overlap between the two consequence types?
-    #
-    # consequence_map = {
-    #     'has_molecular_consequence': [
-    #         '5_prime or 3_prime UTR mutation',
-    #         'all missense/in frame',
-    #         'cis-regulatory or promotor mutation',
-    #         'part of contiguous gene duplication'
-    #     ],
-    #     'has_functional_consequence': [
-    #         'activating',
-    #         'dominant negative',
-    #         'increased gene dosage',
-    #         'loss of function'
-    #     ]
-    # }
-    consequence_map = {
-        'has_molecular_consequence': [
-            '5_prime or 3_prime UTR mutation',
-            'altered gene product structure',  # 'all missense/in frame',
-            'cis-regulatory or promotor mutation',
-            'increased gene product level'  # 'part of contiguous gene duplication'
-        ],
-        'has_functional_consequence': [
-            'altered gene product structure',  # 'activating'
-            'altered gene product structure',  # 'dominant negative'
-            'increased gene product level',  # 'increased gene dosage'
-            'absent gene product'  # 'loss of function'
-        ]
-    }
-    consequence_type = 'uncertain'
-    for typ, typ_list in consequence_map.items():
-        if consequence in typ_list:
-            consequence_type = typ
-
-    return consequence_type
-
-
-def process_gene_disease(row):
-    """
-    Parse row to derive a gene-variant-disease triples.
-
-    Model building happens in build_gene_disease_model
-    
-    :param row:  single row from EBI G2P csv input file.
-
-    """
-    variant_label = "variant of {}".format(row['gene_symbol'])
-    disease_omim_id = row['disease_omim_id']
-    if disease_omim_id == 'No disease mim':
-        # check if we've manually curated
-        disease_label = row['disease_label']
-        if disease_label in mondo_map:
-            disease_id = mondo_map['disease_label']
-        else:
-            return  # can't map this disease?
-    else:
-        disease_id = 'OMIM:' + disease_omim_id
-
-    hgnc_curie = 'HGNC:' + row['hgnc_id']
-
-    relation_curie = koza_app.translation_table.local_tablerow['g2p_relation_label']
-
-    mutation_consequence = row['mutation_consequence']
-    if mutation_consequence not in ('uncertain', ''):
-        consequence_relation = koza_app.translation_table.local_table[
-            get_consequence_predicate(mutation_consequence)
-        ]
-        consequence_curie = koza_app.translation_table.local_table[mutation_consequence]
-        variant_label = "{} {}".format(mutation_consequence, variant_label)
-    else:
-        consequence_relation = None
-        consequence_curie = None
-
-    allelic_requirement = row['allelic_requirement']
-    if allelic_requirement != '':
-        requirement_curie = koza_app.translation_table.local_table[allelic_requirement]
-    else:
-        requirement_curie = None
-
-    pmids = row['pmids']
-    if pmids != '':
-        publications = ['PMID:' + pmid for pmid in pmids.split(';')]
-    else:
-        publications = []
-
-    # build the model
-    # Should we build a reusable object and/or tuple that
-    # could be passed to a more general model builder for
-    # this and orphanet (and maybe clinvar)
-    build_gene_disease_model(
-        hgnc_curie,
-        relation_curie,
-        disease_id,
-        variant_label,
-        consequence_relation,
-        consequence_curie,
-        requirement_curie,
-        publications
-    )

@@ -27,14 +27,14 @@ columns:  # with some field value examples
   - "gene mim"                      # 613899
   - "disease name"                  # "FANCONI ANEMIA, COMPLEMENTATION GROUP C"
   - "disease mim"                   # 227645
-  - "confidence category"           # definitive
-  - "allelic requirement"           # biallelic_autosomal
+  - "confidence category"           # "definitive"
+  - "allelic requirement"           # "biallelic_autosomal"
   - "mutation consequence"          # "absent gene product"
   - "phenotypes"                    # HP:0000568;HP:0000978; ...
   - "organ specificity list"        # "Bone Marrow/Immune;Skeleton;Cancer predisposition"
   - "pmids"                         # 10431244;20869034;8348157
-  - "panel"                         # Cancer
-  - "prev symbols"                  # FACC
+  - "panel"                         # "Cancer"
+  - "prev symbols"                  # "FACC"
   - "hgnc id"                       # 3584
   - "gene disease pair entry date"  # "2016-11-29 13:19:27"
   - "cross cutting modifier"        #

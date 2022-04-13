@@ -1,12 +1,69 @@
 #
-# Copied over and adapted from
-#    https://github.com/monarch-initiative/dipper/blob/master/translationtable/ebi_g2p.yaml
+# EBI Gene to Phenotype Mapping file
 #
-# ebi_g2p.yaml
-# See https://www.clinicalgenome.org/site/assets/files/2757/fitzpatrick_ddg2p.pdf
 
+"g2p_relation_label": ""  # not too sure what goes here...
+
+# - **confidence value:** one value from [the list of possible categories](https://www.ebi.ac.uk/gene2phenotype/terminology) (Note: this field may still be called "confidence category" in legacy data files):
+#      - "both RD and IF"  (where RD is the Relevant Disease and IF designates multiple (>3) Incidental (disorder) Families)
+#      - "definitive"
+#      - "strong"
+#      - "moderate"
+#      - "limited"
+#
+#  - **allelic requirement:**  One value from [the list of possible allelic requirement attributes](https://www.ebi.ac.uk/gene2phenotype/terminology). Possible values are:
+#      - "biallelic_autosomal"
+#      - "monoallelic_autosomal"
+#      - "monoallelic_PAR"
+#      - "biallelic_PAR"
+#      - "mitochondrial"
+#      - "monoallelix_X_hem"
+#      - "monallelic_X_het"
+#      - "monoallelic_Y_hem"
+#
+#  - **mutation consequence:** One value from the [list of possible consequences](https://www.ebi.ac.uk/gene2phenotype/terminology):
+#      - "5_prime or 3_prime UTR mutation"
+#      - "cis-regulatory or promotor mutation"
+#      - "absent gene product"
+#      - "altered gene product structure"
+#      - "increased gene product level"
+#      - "uncertain"
+#
+#   - **panel:** G2P panel:
+#      - "Cancer"
+#      - "Cardiac"
+#      - "DD" ("Developmental Disorders")
+#      - "Ear"
+#      - "Eye"
+#      - "Skin"
+#
+#   - **cross cutting modifier:** semi-colon separated [list of possible cross-cutting modifier attributes](https://www.ebi.ac.uk/gene2phenotype/terminology):
+#      - "requires heterozygosity"
+#      - "typically de novo"
+#      - "typically mosaic"
+#      - "imprinted"
+#      - "typified by age related penetrance"
+#      - "typified by reduced penetrance"
+#
+#   - **mutation consequences flag:** One value from [the list of possible flags](https://www.ebi.ac.uk/gene2phenotype/terminology):
+#      - "likely to escape nonsense mediated decay"
+#      - "part of contiguous gene duplication"
+#      - "part of contiguous genomic interval deletion"
+#      - "restricted repertoire of mutations"
+#
+#   - **confidence value flag:** if not empty, then it should be set to the value
+#      ['requires clinical review'](https://www.ebi.ac.uk/gene2phenotype/terminology)
+#
+
+#################################################################################################
+# Copied over and updated from
+#    https://github.com/monarch-initiative/dipper/blob/master/translationtable/ebi_g2p.yaml
+#################################################################################################
+
+
+# ############
 # DDD category
-# #############
+# ############
 
 # both DD and IF - plausible disease-causing mutations within,
 # affecting or encompassing the coding region of a single gene
@@ -63,7 +120,7 @@
 # a single large family with a developmental disorder
 "possible": "contributes to condition"
 
-
+# ####################
 # allelic requirement
 # ####################
 
@@ -88,7 +145,7 @@
 # Can't find def
 "x-linked over-dominance": "x_linked_dominant"
 
-
+# ######################
 # functional consequence
 # #######################
 
@@ -107,7 +164,7 @@
 
 "loss of function": "loss_of_function_variant"
 
-
+# ######################
 # molecular consequence
 # ######################
 "5_prime or 3_prime UTR mutation": "UTR_variant"
