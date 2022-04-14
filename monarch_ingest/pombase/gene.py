@@ -8,9 +8,6 @@ LOG = logging.getLogger(__name__)
 source_name = "pombase_gene"
 row = koza_app.get_row(source_name)
 
-# Given that this file is coming from PomBase, I think the biolink model is wrong about all caps
-row["curie"] = row["curie"].replace("PomBase", "POMBASE")
-
 gene = Gene(
     id=row["curie"],
     symbol=row["primary gene name"],

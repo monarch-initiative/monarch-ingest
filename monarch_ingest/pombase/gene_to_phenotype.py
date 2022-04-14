@@ -12,7 +12,7 @@ source_name = "pombase_gene_to_phenotype"
 
 row = koza_app.get_row(source_name)
 
-gene = Gene(id="POMBASE:" + row["Gene systematic ID"], source="infores:pombase")
+gene = Gene(id="PomBase:" + row["Gene systematic ID"], source="infores:pombase")
 phenotype = PhenotypicFeature(id=row["FYPO ID"], source="infores:pombase")
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
