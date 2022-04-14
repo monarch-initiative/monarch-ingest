@@ -1,4 +1,4 @@
-The European Bioinformatics Institute Gene2Phenotype (G2P) resource is a publicly-accessible online system designed to facilitate the development, validation, curation and distribution of large-scale, evidence-based datasets for use in diagnostic variant filtering. Each G2P entry associates an allelic requirement and a mutational consequence at a defined locus with a disease entity. A confidence level and evidence link are assigned to each entry.
+The European Bioinformatics Institute Gene2Phenotype (G2P) resource is a publicly-accessible online system designed to facilitate the development, validation, curation and distribution of large-scale, evidence-based datasets for use in diagnostic variant filtering. Each G2P entry associates an allelic requirement and a mutational consequence, at a defined locus with a disease entity. A confidence level and evidence link are assigned to each entry.
 
 * [EBI G2P Bulk Downloads](https://www.ebi.ac.uk/gene2phenotype/downloads): the EBI G2P resource currently provides human data partitioned into four broad categories:
 
