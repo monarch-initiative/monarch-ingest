@@ -38,25 +38,19 @@ def entities(mock_koza, global_table):
 
 def test_gene2_phenotype_transform(entities):
     assert entities
-    assert len(entities) == 2
-    [entity for entity in entities if isinstance(entity, Disease)]
-    [entity for entity in entities if isinstance(entity, PhenotypicFeature)]
-    [entity for entity in entities if isinstance(entity, Publication)]
+    assert len(entities) == 1
     associations = [
         entity
         for entity in entities
         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
     ]
-    # assert len(diseases) == 1
-    # assert len(phenotypes) == 1
-    # assert len(publications) == 1
     assert len(associations) == 1
 
-
-def test_disease_phenotype_transform_publications(entities):
-    associations = [
-        entity
-        for entity in entities
-        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-    ]
-    assert associations[0].publications[0] == "OMIM:614856"
+# Commenting out publication node generation in edge ingests, at least temporarily
+# def test_disease_phenotype_transform_publications(entities):
+#     associations = [
+#         entity
+#         for entity in entities
+#         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
+#     ]
+#     assert associations[0].publications[0] == "OMIM:614856"
