@@ -99,6 +99,15 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)
 
+    # Clean up nodes, dropping duplicates and merging on the same ID, which causes some weirdness
+    # with OMIM, where different categories use the same ID
+    nodes.drop('Unnamed: 0', axis=1, inplace=True)
+    nodes.drop('Unnamed: 0.1', axis=1, inplace=True)
+    nodes.drop_duplicates(inplace=True)
+    nodes.fillna("None", inplace=True)
+    column_agg = {x: ' '.join for x in nodes.columns if x != 'id'}
+    nodes = nodes.groupby(['id'], as_index=False).agg(column_agg)
+
     # todo: log and remove edges with dangling subjects & objects
 
     edges.to_csv(f"{output_dir}/{file_root}_edges.tsv", sep="\t")
