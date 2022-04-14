@@ -76,14 +76,14 @@ node_properties:
   - 'synonym'
   - 'source'
 
-
-edge_properties:
-  - 'id'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'category'
-  - 'relation'
-  - 'provided_by'
+# Commented out while we're not bringing in publication associations
+#edge_properties:
+#  - 'id'
+#  - 'subject'
+#  - 'predicate'
+#  - 'object'
+#  - 'category'
+#  - 'relation'
+#  - 'provided_by'
 
 transform_mode: 'flat'

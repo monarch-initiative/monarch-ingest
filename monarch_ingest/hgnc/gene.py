@@ -1,11 +1,6 @@
 import uuid
 
-from biolink_model_pydantic.model import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Predicate,
-    Publication,
-)
+from biolink_model_pydantic.model import (Gene)
 from koza.cli_runner import koza_app
 
 source_name = "hgnc_gene"
@@ -39,19 +34,20 @@ gene = Gene(
     synonym=synonyms_list,
 )
 
-pubmed_id_list = row["pubmed_id"].split('|')
-for each_id in pubmed_id_list:
-    publication_id = "PMID:" + each_id
-    publication = Publication(
-        id=publication_id,
-        type=koza_app.translation_table.resolve_term("publication"),
-    )
-    association = InformationContentEntityToNamedThingAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
-        predicate=Predicate.mentions,
-        object=publication.id,
-        relation=koza_app.translation_table.resolve_term("mentions"),
-    )
+# Excluding pub to gene associations for now
+# pubmed_id_list = row["pubmed_id"].split('|')
+# for each_id in pubmed_id_list:
+#     publication_id = "PMID:" + each_id
+#     publication = Publication(
+#         id=publication_id,
+#         type=koza_app.translation_table.resolve_term("publication"),
+#     )
+#     association = InformationContentEntityToNamedThingAssociation(
+#         id="uuid:" + str(uuid.uuid1()),
+#         subject=gene.id,
+#         predicate=Predicate.mentions,
+#         object=publication.id,
+#         relation=koza_app.translation_table.resolve_term("mentions"),
+#     )
 
-    koza_app.write(gene, publication, association)
+koza_app.write(gene)

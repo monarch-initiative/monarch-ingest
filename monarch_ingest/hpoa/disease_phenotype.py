@@ -69,37 +69,39 @@ phenotypic_feature = PhenotypicFeature(
     id=row["HPO_ID"],
 )
 
+#    Avoiding creating publication nodes within ingests, at least temporarily
+
 # Publications
-publications: List[str] = row["Reference"].split(";")
-for pub in publications:
-
-    publication = Publication(
-        id=pub,
-        type=koza_app.translation_table.global_table["publication"],
-    )
-
-    if pub.startswith("PMID:"):
-        # journal article -> IAO:0000013
-        publication.type = koza_app.translation_table.global_table["journal article"]
-
-    elif pub.startswith("ISBN"):
-        # publication -> IAO:0000311
-        publication.type = koza_app.translation_table.global_table["publication"]
-
-    elif pub.startswith("OMIM:"):
-        # web page -> SIO:000302
-        publication.type = koza_app.translation_table.global_table["web page"]
-
-    elif pub.startswith("DECIPHER:"):
-        publication.type = koza_app.translation_table.global_table["web page"]
-
-    elif pub.startswith("ORPHA:"):
-        publication.type = koza_app.translation_table.global_table["web page"]
-
-    elif pub.startswith("http"):
-        publication.type = koza_app.translation_table.global_table["web page"]
-
-    koza_app.write(publication)
+# publications: List[str] = row["Reference"].split(";")
+# for pub in publications:
+#
+#     publication = Publication(
+#         id=pub,
+#         type=koza_app.translation_table.global_table["publication"],
+#     )
+#
+#     if pub.startswith("PMID:"):
+#         # journal article -> IAO:0000013
+#         publication.type = koza_app.translation_table.global_table["journal article"]
+#
+#     elif pub.startswith("ISBN"):
+#         # publication -> IAO:0000311
+#         publication.type = koza_app.translation_table.global_table["publication"]
+#
+#     elif pub.startswith("OMIM:"):
+#         # web page -> SIO:000302
+#         publication.type = koza_app.translation_table.global_table["web page"]
+#
+#     elif pub.startswith("DECIPHER:"):
+#         publication.type = koza_app.translation_table.global_table["web page"]
+#
+#     elif pub.startswith("ORPHA:"):
+#         publication.type = koza_app.translation_table.global_table["web page"]
+#
+#     elif pub.startswith("http"):
+#         publication.type = koza_app.translation_table.global_table["web page"]
+#
+#     koza_app.write(publication)
 
 # Associations/Edges
 association = DiseaseToPhenotypicFeatureAssociation(
@@ -108,7 +110,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
     predicate=Predicate.has_phenotype,
     object=phenotypic_feature.id,
     relation=koza_app.translation_table.resolve_term("has phenotype"),
-    publications=publications,
+    publications=row["Reference"].split(";"),
     has_evidence=evidence_curie,
     sex_qualifier=sex_qualifier,
     onset_qualifier=row["Onset"],
