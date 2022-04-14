@@ -11,12 +11,14 @@ if not row["pubmed_id"]:
     koza_app.next_row()
 
 xref_list = []
-xref_list.append('ENSEMBL:' + row['ensembl_gene_id'])
-if '|' in row['omim_id']:
-    for each in row['omim_id'].split('|'):
-        xref_list.append('OMIM:' + each)
-else:
-    xref_list.append('OMIM:' + row['omim_id'])
+if row['ensembl_gene_id']:
+    xref_list.append('ENSEMBL:' + row['ensembl_gene_id'])
+if row['omim_id']:
+    if '|' in row['omim_id']:
+        for each in row['omim_id'].split('|'):
+            xref_list.append('OMIM:' + each)
+    else:
+        xref_list.append('OMIM:' + row['omim_id'])
 
 
 synonyms_list = (
