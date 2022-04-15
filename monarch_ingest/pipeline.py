@@ -9,6 +9,7 @@ import glob
 import os
 import pandas as pd
 from kgx.cli.cli_utils import transform as kgx_transform
+import tarfile
 
 OUTPUT_DIR = "output"
 
@@ -89,29 +90,44 @@ def ontology_transform(output_dir: str, force=False):
 
 @task()
 def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_root: str):
+
+    os.makedirs(f"{output_dir}/merged", exist_ok=True)
+
     edge_dfs = []
     node_dfs = []
     for edge_file in edge_files:
-        edge_dfs.append(pd.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n"))
+        edge_dfs.append(pd.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'))
     for node_file in node_files:
-        node_dfs.append(pd.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n"))
+        node_dfs.append(pd.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'))
 
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)
 
     # Clean up nodes, dropping duplicates and merging on the same ID, which causes some weirdness
     # with OMIM, where different categories use the same ID
-    nodes.drop('Unnamed: 0', axis=1, inplace=True)
-    nodes.drop('Unnamed: 0.1', axis=1, inplace=True)
+
+    duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
+    duplicate_nodes.to_csv(f"{output_dir}/merged/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
+
     nodes.drop_duplicates(inplace=True)
     nodes.fillna("None", inplace=True)
     column_agg = {x: ' '.join for x in nodes.columns if x != 'id'}
     nodes = nodes.groupby(['id'], as_index=False).agg(column_agg)
 
-    # todo: log and remove edges with dangling subjects & objects
+    nodes_path = f"{output_dir}/merged/{file_root}_nodes.tsv"
+    nodes.to_csv(nodes_path, sep="\t")
 
-    edges.to_csv(f"{output_dir}/{file_root}_edges.tsv", sep="\t")
-    nodes.to_csv(f"{output_dir}/{file_root}_nodes.tsv", sep="\t")
+    dangling_edges = edges[~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)]
+    dangling_edges.to_csv(f"{output_dir}/merged/{file_root}-dangling-edges.tsv.gz", sep="\t")
+    edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
+
+    edges_path = f"{output_dir}/merged/{file_root}_edges.tsv"
+    edges.to_csv(edges_path, sep="\t")
+
+    tar = tarfile.open(f"{output_dir}/merged/{file_root}.tar.gz", "w:gz")
+    tar.add(nodes_path)
+    tar.add(edges_path)
+    tar.close()
 
 
 # Commenting out the DaskTaskRunner because the cluster arrangement is hitting singleton problems with Koza,
@@ -134,14 +150,8 @@ def run_ingests(row_limit: Optional[int] = None, force_transform=False):
     # todo: if releasing/uploading, upload kgx files
 
     # Merge once without the ontology files
-    edge_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*[!ontology]edges.tsv"))
-    node_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*[!ontology]nodes.tsv"))
-
-    merge(edge_files=edge_files, node_files=node_files, output_dir=OUTPUT_DIR, file_root="monarch-kg-no-ontology")
-
-    # Merge again with the ontology files
-    edge_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*edges.tsv"))
-    node_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*nodes.tsv"))
+    edge_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_edges.tsv"))
+    node_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_nodes.tsv"))
 
     merge(edge_files=edge_files, node_files=node_files, output_dir=OUTPUT_DIR, file_root="monarch-kg")
 
