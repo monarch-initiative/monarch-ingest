@@ -1,6 +1,8 @@
 ---
 - name: 'alliance_gene'
   config: 'alliance/gene.yaml'
+- name: 'alliance_gene_to_expression'
+  config: 'alliance/gene_to_expression.yaml'
 - name: 'alliance_gene_to_phenotype'
   config: 'alliance/gene_to_phenotype.yaml'
 # - name: 'alliance_publication'

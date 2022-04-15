@@ -1,3 +1,5 @@
+import logging
+
 from prefect import flow, task
 from prefect.task_runners import DaskTaskRunner, RayTaskRunner, SequentialTaskRunner
 from koza.cli_runner import transform_source
@@ -110,15 +112,17 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
     duplicate_nodes.to_csv(f"{output_dir}/merged/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
 
     nodes.drop_duplicates(inplace=True)
+    nodes.index.name = 'id'
     nodes.fillna("None", inplace=True)
     column_agg = {x: ' '.join for x in nodes.columns if x != 'id'}
-    nodes = nodes.groupby(['id'], as_index=False).agg(column_agg)
+    nodes.groupby(['id'], as_index=True).agg(column_agg)
 
     nodes_path = f"{output_dir}/merged/{file_root}_nodes.tsv"
     nodes.to_csv(nodes_path, sep="\t")
 
     dangling_edges = edges[~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)]
     dangling_edges.to_csv(f"{output_dir}/merged/{file_root}-dangling-edges.tsv.gz", sep="\t")
+
     edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
 
     edges_path = f"{output_dir}/merged/{file_root}_edges.tsv"
@@ -143,7 +147,6 @@ def run_ingests(row_limit: Optional[int] = None, force_transform=False):
     ontology_transform(output_dir=OUTPUT_DIR, force=force_transform)
 
     for ingest in ingests:
-        print(ingest)
         task_name = f"transform {ingest['name']}"
         transform.with_options(name=task_name)(ingest['config'], force=force_transform, row_limit=row_limit)
 
