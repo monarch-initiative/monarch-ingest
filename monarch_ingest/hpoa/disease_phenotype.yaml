@@ -43,10 +43,11 @@ columns:
   - 'Aspect'
   - 'Biocuration'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'type'
+# Avoiding creating publication nodes, at least temporarily
+#node_properties:
+#  - 'id'
+#  - 'category'
+#  - 'type'
 
 edge_properties:
   - 'id'

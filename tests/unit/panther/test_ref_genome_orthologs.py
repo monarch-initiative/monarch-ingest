@@ -76,46 +76,9 @@ result_expected = {
 }
 
 
-def assert_genes(data):
-
-    gene = data[0]
-    ortholog = data[1]
-
-    assert gene
-    assert ortholog
-
-    # The test data mostly has the same human 'gene'
-    # but is distinguished by the orthology gene id
-    # hence the result_expected dictionary is now indexed thus...
-    assert ortholog.id in result_expected.keys()
-    assert gene.id == result_expected[ortholog.id][0]
-
-    # 'category' is multivalued (an array)
-    assert "biolink:Gene" in gene.category
-    # This ancestral category appears to be missing? Pydantic model error?
-    # assert "biolink:BiologicalEntity" in gene.category
-    assert "biolink:NamedThing" in gene.category
-
-    # 'in_taxon' is multivalued (an array)
-    assert result_expected[ortholog.id][1] in gene.in_taxon
-
-    assert "infores:panther" in gene.source
-
-    # 'category' is multivalued (an array)
-    assert "biolink:Gene" in ortholog.category
-    # This ancestral category appears to be missing? Pydantic model error?
-    # assert "biolink:BiologicalEntity" in ortholog.category
-    assert "biolink:NamedThing" in ortholog.category
-
-    # 'in_taxon' is multivalued (an array)
-    assert result_expected[ortholog.id][2] in ortholog.in_taxon
-
-    assert "infores:panther" in ortholog.source
-
-
 def assert_association(data):
 
-    association = data[2]
+    association = data[0]
 
     assert association
     assert association.object in result_expected.keys()
@@ -152,7 +115,6 @@ def well_behaved_record_1(mock_koza, source_name, script, global_table):
 
 def test_well_behaved_record_1(well_behaved_record_1):
     data = well_behaved_record_1
-    assert_genes(data)
     assert_association(data)
 
 
@@ -175,7 +137,6 @@ def well_behaved_record_3(mock_koza, source_name, script, global_table):
 
 def test_well_behaved_record_3(well_behaved_record_3):
     data = well_behaved_record_3
-    assert_genes(data)
     assert_association(data)
 
 
@@ -198,7 +159,6 @@ def well_behaved_record_4(mock_koza, source_name, script, global_table):
 
 def test_well_behaved_record_4(well_behaved_record_4):
     data = well_behaved_record_4
-    assert_genes(data)
     assert_association(data)
 
 
@@ -221,7 +181,6 @@ def well_behaved_record_5(mock_koza, source_name, script, global_table):
 
 def test_well_behaved_record_5(well_behaved_record_5):
     data = well_behaved_record_5
-    assert_genes(data)
     assert_association(data)
 
 
@@ -244,7 +203,6 @@ def well_behaved_record_6(mock_koza, source_name, script, global_table):
 
 def test_well_behaved_record_6(well_behaved_record_6):
     data = well_behaved_record_6
-    assert_genes(data)
     assert_association(data)
 
 
@@ -267,7 +225,6 @@ def odd_mgi_gene_id_record(mock_koza, source_name, script, global_table):
 
 def test_odd_mgi_gene_id_record(odd_mgi_gene_id_record):
     data = odd_mgi_gene_id_record
-    assert_genes(data)
     assert_association(data)
 
 

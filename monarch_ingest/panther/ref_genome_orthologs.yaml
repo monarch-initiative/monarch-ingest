@@ -24,12 +24,6 @@ columns:
   - 'Common ancestor for the orthologs'    # unused
   - 'Panther Ortholog ID'                  # panther_id
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'in_taxon'
-  - 'source'
-
 edge_properties:
   - 'id'
   - 'subject'

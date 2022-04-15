@@ -34,13 +34,4 @@ node_properties:
   - 'synonyms'
   - 'source'
 
-edge_properties:
-  - 'id'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'category'
-  - 'relation'
-  - 'provided_by'
-
 transform_mode: 'flat'

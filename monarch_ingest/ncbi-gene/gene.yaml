@@ -43,6 +43,7 @@ filters:
 
 node_properties:
   - 'id'
+  - 'category'
   - 'symbol'
   - 'description'
   - 'in_taxon'

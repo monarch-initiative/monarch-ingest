@@ -32,7 +32,7 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
         )
 
 
-_db_to_curie = {"FlyBase": "FB", "Ensembl": "ENSEMBL", "PomBase": "POMBASE"}
+_db_to_curie = {"FlyBase": "FB", "Ensembl": "ENSEMBL"}
 
 
 def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
