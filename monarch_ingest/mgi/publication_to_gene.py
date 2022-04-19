@@ -8,9 +8,6 @@ from biolink_model_pydantic.model import (
 )
 from koza.cli_runner import koza_app
 
-import logging
-logger = logging.getLogger(__name__)
-
 source_name = "mgi_publication_to_gene"
 
 row = koza_app.get_row(source_name)
@@ -40,6 +37,3 @@ for pub_id in pub_ids:
     )
 
     koza_app.write(association)
-
-logger.info("HELLO? IS IT ME YOU'RE LOOKING FOR?")
-logger.debug("HELLO FROM THE OTHER SIIIIIIIDE")
