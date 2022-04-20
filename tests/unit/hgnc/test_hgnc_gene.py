@@ -55,6 +55,7 @@ def test_gene_information_xref(pax2a):
     assert gene.xref
     assert gene.xref == ['ENSEMBL:ENSG00000148584', 'OMIM:618199']
 
+
 # Commenting out publication ingests at least temporarily
 # def test_publication(pax2a):
 #     publication = pax2a[1]

@@ -1,6 +1,4 @@
-import uuid
-
-from biolink_model_pydantic.model import (Gene)
+from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
 
 source_name = "hgnc_gene"
