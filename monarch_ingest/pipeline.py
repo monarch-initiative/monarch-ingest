@@ -1,17 +1,16 @@
-import logging
-
-from prefect import flow, task
-from prefect.task_runners import DaskTaskRunner, RayTaskRunner, SequentialTaskRunner
-from koza.cli_runner import transform_source
-from koza.model.config.source_config import OutputFormat
-import yaml
-import typer
-from typing import Optional, List
 import glob
 import os
-import pandas as pd
-from kgx.cli.cli_utils import transform as kgx_transform
 import tarfile
+from typing import List, Optional
+
+import pandas as pd
+import typer
+import yaml
+from kgx.cli.cli_utils import transform as kgx_transform
+from koza.cli_runner import transform_source
+from koza.model.config.source_config import OutputFormat
+from prefect import flow, task
+from prefect.task_runners import SequentialTaskRunner
 
 OUTPUT_DIR = "output"
 
@@ -55,7 +54,7 @@ def transform(ingest_config_file, row_limit=None, force=False):
         output_format=OutputFormat.tsv,
         local_table=None,
         global_table=None,
-        row_limit=row_limit
+        row_limit=row_limit,
     )
 
     if not ingest_output_exists(ingest_config_file):
@@ -64,25 +63,29 @@ def transform(ingest_config_file, row_limit=None, force=False):
 
 @task()
 def ontology_transform(output_dir: str, force=False):
-    assert (os.path.exists('data/monarch/monarch.json'))
+    assert os.path.exists('data/monarch/monarch.json')
 
     edges = 'output/monarch_ontology_edges.tsv'
     nodes = 'output/monarch_ontology_nodes.tsv'
 
     # Since this is fairly slow, don't re-do it if the files exist unless forcing transforms
     # This shouldn't affect cloud builds, but will be handy for local runs
-    if not force \
-            and os.path.exists(edges) \
-            and os.path.exists(nodes) \
-            and os.path.getsize(edges) > 0 \
-            and os.path.getsize(nodes):
+    if (
+        not force
+        and os.path.exists(edges)
+        and os.path.exists(nodes)
+        and os.path.getsize(edges) > 0
+        and os.path.getsize(nodes)
+    ):
         return
 
-    kgx_transform(inputs=["data/monarch/monarch.json"],
-                  input_format="obojson",
-                  stream=False,
-                  output=f"{OUTPUT_DIR}/monarch_ontology",
-                  output_format="tsv")
+    kgx_transform(
+        inputs=["data/monarch/monarch.json"],
+        input_format="obojson",
+        stream=False,
+        output=f"{OUTPUT_DIR}/monarch_ontology",
+        output_format="tsv",
+    )
 
     if not file_exists(edges):
         raise ValueError("Ontology transform did not produce an edges file")
@@ -98,9 +101,17 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
     edge_dfs = []
     node_dfs = []
     for edge_file in edge_files:
-        edge_dfs.append(pd.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'))
+        edge_dfs.append(
+            pd.read_csv(
+                edge_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'
+            )
+        )
     for node_file in node_files:
-        node_dfs.append(pd.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'))
+        node_dfs.append(
+            pd.read_csv(
+                node_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'
+            )
+        )
 
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)
@@ -109,7 +120,9 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
     # with OMIM, where different categories use the same ID
 
     duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
-    duplicate_nodes.to_csv(f"{output_dir}/merged/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
+    duplicate_nodes.to_csv(
+        f"{output_dir}/merged/{file_root}-duplicate-nodes.tsv.gz", sep="\t"
+    )
 
     nodes.drop_duplicates(inplace=True)
     nodes.index.name = 'id'
@@ -120,8 +133,12 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
     nodes_path = f"{output_dir}/merged/{file_root}_nodes.tsv"
     nodes.to_csv(nodes_path, sep="\t")
 
-    dangling_edges = edges[~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)]
-    dangling_edges.to_csv(f"{output_dir}/merged/{file_root}-dangling-edges.tsv.gz", sep="\t")
+    dangling_edges = edges[
+        ~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)
+    ]
+    dangling_edges.to_csv(
+        f"{output_dir}/merged/{file_root}-dangling-edges.tsv.gz", sep="\t"
+    )
 
     edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
 
@@ -148,7 +165,9 @@ def run_ingests(row_limit: Optional[int] = None, force_transform=False):
 
     for ingest in ingests:
         task_name = f"transform {ingest['name']}"
-        transform.with_options(name=task_name)(ingest['config'], force=force_transform, row_limit=row_limit)
+        transform.with_options(name=task_name)(
+            ingest['config'], force=force_transform, row_limit=row_limit
+        )
 
     # todo: if releasing/uploading, upload kgx files
 
@@ -156,7 +175,12 @@ def run_ingests(row_limit: Optional[int] = None, force_transform=False):
     edge_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_edges.tsv"))
     node_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_nodes.tsv"))
 
-    merge(edge_files=edge_files, node_files=node_files, output_dir=OUTPUT_DIR, file_root="monarch-kg")
+    merge(
+        edge_files=edge_files,
+        node_files=node_files,
+        output_dir=OUTPUT_DIR,
+        file_root="monarch-kg",
+    )
 
     # todo: if releasing/uploading, upload merged kgx
 
