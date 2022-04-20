@@ -36,6 +36,7 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/${RELEASE}/output/'
+                sh 'gsutil -m cp -r output/merged/* gs://monarch-ingest/${RELEASE}/'
             }
         }
     }
