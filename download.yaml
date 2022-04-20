@@ -265,7 +265,7 @@
 
 # pombase
 -
-  url: https://www.pombase.org/data/annotations/EXPRESSION_annotations/phenotype_annotations.pombase.phaf.gz
+  url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
   local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
   tag: pombase_gene_to_phenotype
 -
