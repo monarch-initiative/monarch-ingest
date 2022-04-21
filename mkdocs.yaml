@@ -1,0 +1,45 @@
+site_name: 'Monarch Ingest Documentation'
+site_url: 'https://monarch-initiative.github.io/monarch-ingest/'
+
+repo_name: 'monarch-initiative/monarch-ingest'
+repo_url: 'https://github.com/monarch-initiative/monarch-ingest'
+
+theme:
+    name: 'material'
+    docs_dir: docs/
+    logo: 'images/monarch-initiative2.png'
+    favicon:
+        'images/favicon.ico'
+    features:
+        - navigation.expand
+        - navigation.instant
+        - navigation.tracking
+        - navigation.tabs
+        - navigation.tabs.sticky
+    palette:
+        scheme: 'slate'
+        primary: 'teal'
+        accent: 'purple'
+    font:
+        text: 'Roboto'
+        #code: 'Fira Mono'
+
+extra:
+  social:
+    - icon: 'fontawesome/solid/house'
+      link: 'https://monarchinitiative.org'
+    - icon: 'fontawesome/brands/github-alt'
+      link: 'https://github.com/monarch-initiative'
+
+markdown_extensions:
+  - def_list # list support
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.keys
+  - attr_list
+  - pymdownx.betterem:
+      smart_enable: all
+      
+#copyright: 'Copyright &copy; 2020 - 2022 Glass (contact@glass-ships.com)'
