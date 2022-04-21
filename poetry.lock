@@ -240,7 +240,7 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "biolink-model-pydantic"
-version = "0.1.8"
+version = "0.1.11"
 description = "Pydantic dataclasses for the Biolink model"
 category = "main"
 optional = false
@@ -3155,8 +3155,8 @@ babel = [
     {file = "Babel-2.9.1.tar.gz", hash = "sha256:bc0c176f9f6a994582230df350aa6e05ba2ebe4b3ac317eab29d9be5d2768da0"},
 ]
 biolink-model-pydantic = [
-    {file = "biolink_model_pydantic-0.1.8-py3-none-any.whl", hash = "sha256:5ea5f04c817ec7ecb03fdf50fe0a2918560fe80489a43cb177e12c267244850e"},
-    {file = "biolink_model_pydantic-0.1.8.tar.gz", hash = "sha256:8d79d79e8bb2335243e08585e4761e11930227858770d3dada7c32ac9b2eea0d"},
+    {file = "biolink_model_pydantic-0.1.11-py3-none-any.whl", hash = "sha256:2bc09436bdcbe7b46d211392b1a3f0f89025e567c8678dcb512faf9581d32bed"},
+    {file = "biolink_model_pydantic-0.1.11.tar.gz", hash = "sha256:bac47d24a9c9ab9d98391634b0d2f29158001092b125298a6bc6a42542f50dc2"},
 ]
 black = [
     {file = "black-21.12b0-py3-none-any.whl", hash = "sha256:a615e69ae185e08fdd73e4715e260e2479c861b5740057fde6e8b4e3b7dd589f"},

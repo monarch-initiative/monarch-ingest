@@ -25,14 +25,12 @@ poetry run koza transform \
 
 import logging
 import uuid
-from typing import List
 
 from biolink_model_pydantic.model import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
     Predicate,
-    Publication,
 )
 from koza.cli_runner import koza_app
 

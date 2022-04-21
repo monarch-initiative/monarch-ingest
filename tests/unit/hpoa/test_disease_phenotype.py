@@ -1,10 +1,5 @@
 import pytest
-from biolink_model_pydantic.model import (
-    Disease,
-    DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Publication,
-)
+from biolink_model_pydantic.model import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -45,6 +40,7 @@ def test_gene2_phenotype_transform(entities):
         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 1
+
 
 # Commenting out publication node generation in edge ingests, at least temporarily
 # def test_disease_phenotype_transform_publications(entities):
