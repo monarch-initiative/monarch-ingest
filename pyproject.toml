@@ -24,8 +24,8 @@ typer = "0.4"
 autoflake = "^1.4"
 flake8 = "^3.9.2"
 isort = "^5.9.1"
-mkdocs = "^1.2.2"
-mkdocs-material = "^7.2.4"
+mkdocs = "^1.3.0"
+mkdocs-material = "^8.2.9"
 pytest = "^7.1.1"
 
 [build-system]
