@@ -36,7 +36,7 @@ def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=No
     if not ingest_output_exists(ingest_config_file, output_dir):
         raise ValueError(f"{ingest_config_file} did not produce the the expected output")
 
-def ontology_transform(output_dir: str = OUTPUT_DIR, force=False):
+def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
     assert os.path.exists('data/monarch/monarch.json')
 
     edges = 'output/monarch_ontology_edges.tsv'
@@ -65,6 +65,35 @@ def ontology_transform(output_dir: str = OUTPUT_DIR, force=False):
         raise ValueError("Ontology transform did not produce an edges file")
     if not file_exists(nodes):
         raise ValueError("Ontology transform did not produce a nodes file")
+
+def transform_all(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
+    # TODO: download from data cache
+
+    with open("ingests.yaml", "r") as stream:
+        ingests = yaml.safe_load(stream)
+
+    transform_ontology(output_dir=output_dir, force=force_transform)
+
+    for ingest in ingests:
+        task_name = f"transform {ingest['name']}"
+        transform_one.with_options(name=task_name)(
+            ingest['config'], force=force_transform, row_limit=row_limit
+        )
+
+    # TODO: if releasing/uploading, upload kgx files
+
+    # Merge once without the ontology files
+    edge_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_edges.tsv"))
+    node_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_nodes.tsv"))
+
+    merge_files(
+        edge_files=edge_files,
+        node_files=node_files,
+        output_dir=output_dir,
+        file_root="monarch-kg",
+    )
+
+    # TODO: if releasing/uploading, upload merged kgx
 
 def merge_files(edge_files: List[str], node_files: List[str], file_root: str, output_dir: str = OUTPUT_DIR):
 
@@ -121,32 +150,3 @@ def merge_files(edge_files: List[str], node_files: List[str], file_root: str, ou
     tar.add(nodes_path)
     tar.add(edges_path)
     tar.close()
-
-def run_ingests(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
-    # TODO: download from data cache
-
-    with open("ingests.yaml", "r") as stream:
-        ingests = yaml.safe_load(stream)
-
-    ontology_transform(output_dir=output_dir, force=force_transform)
-
-    for ingest in ingests:
-        task_name = f"transform {ingest['name']}"
-        transform_one.with_options(name=task_name)(
-            ingest['config'], force=force_transform, row_limit=row_limit
-        )
-
-    # TODO: if releasing/uploading, upload kgx files
-
-    # Merge once without the ontology files
-    edge_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_edges.tsv"))
-    node_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_nodes.tsv"))
-
-    merge_files(
-        edge_files=edge_files,
-        node_files=node_files,
-        output_dir=output_dir,
-        file_root="monarch-kg",
-    )
-
-    # TODO: if releasing/uploading, upload merged kgx
