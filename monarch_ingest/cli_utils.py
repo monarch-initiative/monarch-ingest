@@ -8,8 +8,6 @@ import yaml
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
-from prefect import flow, task
-from prefect.task_runners import SequentialTaskRunner
 
 from monarch_ingest.helper import *
 
@@ -17,7 +15,6 @@ LOG = get_logger(__name__)
 
 OUTPUT_DIR = "output"
 
-@task()
 def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=None, force=False):
     source = f"./monarch_ingest/{ingest_config_file}"
 
@@ -39,8 +36,6 @@ def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=No
     if not ingest_output_exists(ingest_config_file, output_dir):
         raise ValueError(f"{ingest_config_file} did not produce the the expected output")
 
-
-@task()
 def ontology_transform(output_dir: str = OUTPUT_DIR, force=False):
     assert os.path.exists('data/monarch/monarch.json')
 
@@ -71,8 +66,6 @@ def ontology_transform(output_dir: str = OUTPUT_DIR, force=False):
     if not file_exists(nodes):
         raise ValueError("Ontology transform did not produce a nodes file")
 
-
-@task()
 def merge_files(edge_files: List[str], node_files: List[str], file_root: str, output_dir: str = OUTPUT_DIR):
 
     os.makedirs(f"{output_dir}/merged", exist_ok=True)
@@ -129,11 +122,6 @@ def merge_files(edge_files: List[str], node_files: List[str], file_root: str, ou
     tar.add(edges_path)
     tar.close()
 
-
-# Commenting out the DaskTaskRunner because the cluster arrangement is hitting singleton problems with Koza,
-# and the same happens with the default ConcurrentTaskRunner.
-# @flow(task_runner=DaskTaskRunner(cluster_kwargs={"memory_limit": "6 GiB", "n_workers": 1}))
-@flow(task_runner=SequentialTaskRunner)
 def run_ingests(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
     # TODO: download from data cache
 
