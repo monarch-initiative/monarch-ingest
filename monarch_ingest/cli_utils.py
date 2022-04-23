@@ -4,7 +4,6 @@ import tarfile
 from typing import List, Optional
 
 import pandas as pd
-import typer
 import yaml
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -12,57 +11,37 @@ from koza.model.config.source_config import OutputFormat
 from prefect import flow, task
 from prefect.task_runners import SequentialTaskRunner
 
+from monarch_ingest.helper import *
+
+LOG = get_logger(__name__)
+
 OUTPUT_DIR = "output"
 
-
-def file_exists(file):
-    return os.path.exists(file) and os.path.getsize(file) > 0
-
-
-def ingest_output_exists(ingest_config_file):
-    source = f"./monarch_ingest/{ingest_config_file}"
-    with open(source) as sfh:
-        ingest_config = yaml.load(sfh, yaml.FullLoader)
-
-    has_node_properties = "node_properties" in ingest_config
-    has_edge_properties = "edge_properties" in ingest_config
-
-    nodes_file = f"{OUTPUT_DIR}/{ingest_config['name']}_nodes.tsv"
-    edges_file = f"{OUTPUT_DIR}/{ingest_config['name']}_edges.tsv"
-
-    if has_node_properties and not file_exists(nodes_file):
-        return False
-    if has_edge_properties and not file_exists(edges_file):
-        return False
-
-    return True
-
-
 @task()
-def transform(ingest_config_file, row_limit=None, force=False):
+def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=None, force=False):
     source = f"./monarch_ingest/{ingest_config_file}"
 
     if not os.path.exists(source):
         raise ValueError(f"Transform source_config {source} does not exist")
 
-    if ingest_output_exists(ingest_config_file) and not force:
+    if ingest_output_exists(ingest_config_file, output_dir) and not force:
         return
 
     transform_source(
         source=source,
-        output_dir=OUTPUT_DIR,
+        output_dir=output_dir,
         output_format=OutputFormat.tsv,
         local_table=None,
         global_table=None,
         row_limit=row_limit,
     )
 
-    if not ingest_output_exists(ingest_config_file):
+    if not ingest_output_exists(ingest_config_file, output_dir):
         raise ValueError(f"{ingest_config_file} did not produce the the expected output")
 
 
 @task()
-def ontology_transform(output_dir: str, force=False):
+def ontology_transform(output_dir: str = OUTPUT_DIR, force=False):
     assert os.path.exists('data/monarch/monarch.json')
 
     edges = 'output/monarch_ontology_edges.tsv'
@@ -83,7 +62,7 @@ def ontology_transform(output_dir: str, force=False):
         inputs=["data/monarch/monarch.json"],
         input_format="obojson",
         stream=False,
-        output=f"{OUTPUT_DIR}/monarch_ontology",
+        output=f"{output_dir}/monarch_ontology",
         output_format="tsv",
     )
 
@@ -94,7 +73,7 @@ def ontology_transform(output_dir: str, force=False):
 
 
 @task()
-def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_root: str):
+def merge_files(edge_files: List[str], node_files: List[str], file_root: str, output_dir: str = OUTPUT_DIR):
 
     os.makedirs(f"{output_dir}/merged", exist_ok=True)
 
@@ -155,35 +134,31 @@ def merge(edge_files: List[str], node_files: List[str], output_dir: str, file_ro
 # and the same happens with the default ConcurrentTaskRunner.
 # @flow(task_runner=DaskTaskRunner(cluster_kwargs={"memory_limit": "6 GiB", "n_workers": 1}))
 @flow(task_runner=SequentialTaskRunner)
-def run_ingests(row_limit: Optional[int] = None, force_transform=False):
-    # todo: download from data cache
+def run_ingests(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
+    # TODO: download from data cache
 
     with open("ingests.yaml", "r") as stream:
         ingests = yaml.safe_load(stream)
 
-    ontology_transform(output_dir=OUTPUT_DIR, force=force_transform)
+    ontology_transform(output_dir=output_dir, force=force_transform)
 
     for ingest in ingests:
         task_name = f"transform {ingest['name']}"
-        transform.with_options(name=task_name)(
+        transform_one.with_options(name=task_name)(
             ingest['config'], force=force_transform, row_limit=row_limit
         )
 
-    # todo: if releasing/uploading, upload kgx files
+    # TODO: if releasing/uploading, upload kgx files
 
     # Merge once without the ontology files
-    edge_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_edges.tsv"))
-    node_files = glob.glob(os.path.join(os.getcwd(), f"{OUTPUT_DIR}/*_nodes.tsv"))
+    edge_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_edges.tsv"))
+    node_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_nodes.tsv"))
 
-    merge(
+    merge_files(
         edge_files=edge_files,
         node_files=node_files,
-        output_dir=OUTPUT_DIR,
+        output_dir=output_dir,
         file_root="monarch-kg",
     )
 
-    # todo: if releasing/uploading, upload merged kgx
-
-
-if __name__ == "__main__":
-    typer.run(run_ingests)
+    # TODO: if releasing/uploading, upload merged kgx

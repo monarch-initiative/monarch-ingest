@@ -1,3 +1,0 @@
-load_from:
- - python_file: monarch_ingest/ingest_pipeline.py
-
