@@ -1,6 +1,8 @@
-import os, glob, yaml, tarfile, pkgutil
+import os, glob, tarfile, tarfile
+from pathlib import Path
 from typing import List, Optional
 import pandas as pd
+
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
@@ -11,20 +13,41 @@ LOG = get_logger(__name__)
 
 OUTPUT_DIR = "output"
 
-def transform_one(source, output_dir: str = OUTPUT_DIR, row_limit=None, force=False):
+
+def transform_one(
+    source,
+    output_dir: str = f"{OUTPUT_DIR}/transformed_output",
+    row_limit: int = None,
+    force: bool = False,
+    quiet: bool = False,
+    debug: bool = False,
+    log: bool = False
+):
+
+    if log:
+        Path("logs").mkdir(parents=True, exist_ok=True)
+    logfile = Path(f"logs/{source}.log")
+    _set_log_level(quiet, debug, log, logfile)
 
     ingests = get_ingests()
-        
-    if source not in ingests:
-        raise ValueError(f"{source} is not a valid ingest - see ingests.yaml for a list of options")
 
-    source_file = os.path.join( os.path.dirname(__file__), (ingests[source]['config']) )
+    if source not in ingests:
+        raise ValueError(
+            f"{source} is not a valid ingest - see ingests.yaml for a list of options"
+        )
+
+    source_file = os.path.join(os.path.dirname(__file__), (ingests[source]['config']))
 
     if not os.path.exists(source_file):
         raise ValueError(f"Source file {source_file} does not exist")
 
     if ingest_output_exists(source, output_dir) and not force:
+        LOG.info(
+            f"\nTransformed output exists - skipping ingest: {source}\n\nTo run this ingest anyway, use --force"
+        )
         return
+
+    LOG.info(f"\n──────────────────────────\nRunning ingest: {source}...")
 
     transform_source(
         source=source_file,
@@ -37,6 +60,7 @@ def transform_one(source, output_dir: str = OUTPUT_DIR, row_limit=None, force=Fa
 
     if not ingest_output_exists(source, output_dir):
         raise ValueError(f"{source} did not produce the the expected output")
+
 
 def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force=False):
     assert os.path.exists('data/monarch/monarch.json')
@@ -68,21 +92,38 @@ def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force
     if not file_exists(nodes):
         raise ValueError("Ontology transform did not produce a nodes file")
 
-def transform_all(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
+
+def transform_all(
+    output_dir: str = f"{OUTPUT_DIR}/transform_output",
+    row_limit: Optional[int] = None,
+    force: bool = False,
+    quiet: bool = False,
+    debug: bool = False,
+    log: bool = False,
+):
+
     # TODO: check for data - download if missing (maybe y/n prompt?)
 
-    with open("ingests.yaml", "r") as stream:
-        ingests = yaml.safe_load(stream)
+    transform_ontology(output_dir=output_dir, force=force)
 
-    transform_ontology(output_dir=output_dir, force=force_transform)
-
+    ingests = get_ingests()
     for ingest in ingests:
-        task_name = f"transform {ingest['name']}"
-        transform_one.with_options(name=task_name)(
-            ingest['config'], force=force_transform, row_limit=row_limit
+        transform_one(
+            source=ingest,
+            output_dir=output_dir,
+            row_limit=row_limit,
+            force=force,
+            log=log,
+            quiet=quiet,
+            debug=debug,
         )
 
-def merge_files(file_root: str = "monarch-kg", input_dir: str = f"{OUTPUT_DIR}/transform_output", output_dir: str = OUTPUT_DIR):
+
+def merge_files(
+    file_root: str = "monarch-kg",
+    input_dir: str = f"{OUTPUT_DIR}/transform_output",
+    output_dir: str = OUTPUT_DIR,
+):
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -111,9 +152,7 @@ def merge_files(file_root: str = "monarch-kg", input_dir: str = f"{OUTPUT_DIR}/t
     # with OMIM, where different categories use the same ID
 
     duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
-    duplicate_nodes.to_csv(
-        f"{output_dir}/{file_root}-duplicate-nodes.tsv.gz", sep="\t"
-    )
+    duplicate_nodes.to_csv(f"{output_dir}/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
 
     nodes.drop_duplicates(inplace=True)
     nodes.index.name = 'id'
@@ -127,9 +166,7 @@ def merge_files(file_root: str = "monarch-kg", input_dir: str = f"{OUTPUT_DIR}/t
     dangling_edges = edges[
         ~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)
     ]
-    dangling_edges.to_csv(
-        f"{output_dir}/{file_root}-dangling-edges.tsv.gz", sep="\t"
-    )
+    dangling_edges.to_csv(f"{output_dir}/{file_root}-dangling-edges.tsv.gz", sep="\t")
 
     edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
 
@@ -140,3 +177,35 @@ def merge_files(file_root: str = "monarch-kg", input_dir: str = f"{OUTPUT_DIR}/t
     tar.add(nodes_path)
     tar.add(edges_path)
     tar.close()
+
+def _set_log_level(
+    quiet: bool = False, debug: bool = False, log: bool = False, logfile: str = 'logs/transform.log'
+):
+
+    if log:
+        # Reset root logger in case it was configured elsewhere
+        logger = logging.getLogger()
+        logging.root.handlers = []
+
+        # Set a handler for console output
+        stream_handler = logging.StreamHandler()
+        stream_formatter = logging.Formatter(':%(name)-20s: %(levelname)-8s: %(message)s')
+        stream_handler.setFormatter(stream_formatter)
+        stream_handler.setLevel(logging.WARNING)
+        logger.addHandler(stream_handler)
+
+        # Set a handler for file output
+        file_handler = logging.FileHandler(logfile, mode='w')
+        file_formatter = logging.Formatter("%(name)-26s: %(levelname)-8s: %(message)s")
+        file_handler.setFormatter(file_formatter)
+        file_handler.setLevel(logging.DEBUG)
+        logger.addHandler(file_handler)
+
+        # Set root logger level
+        logger.setLevel(logging.DEBUG)
+    elif quiet:
+        logging.getLogger().setLevel(logging.WARNING)
+    elif debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.INFO)

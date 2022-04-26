@@ -213,7 +213,7 @@ test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
 name = "compress-json"
-version = "1.0.5"
+version = "1.0.6"
 description = "The missing Python utility to read and write large compressed JSONs."
 category = "main"
 optional = false
@@ -305,7 +305,7 @@ develop = ["pytest", "pytest-cov", "pytest-mock", "pytest-asyncio", "pytest-http
 
 [[package]]
 name = "elasticsearch"
-version = "8.1.2"
+version = "8.1.3"
 description = "Python client for Elasticsearch"
 category = "main"
 optional = false
@@ -2100,7 +2100,7 @@ commonmark = [
     {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
 ]
 compress-json = [
-    {file = "compress_json-1.0.5.tar.gz", hash = "sha256:8cd15b09413f402a08faa09255baa44261f20cad76956a18d2581b0792c69523"},
+    {file = "compress_json-1.0.6.tar.gz", hash = "sha256:4565a0a07718e2e680cb61395cea0d6a55c538290304796e516c09bf5eba6e26"},
 ]
 decorator = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
@@ -2131,8 +2131,8 @@ elastic-transport = [
     {file = "elastic_transport-8.1.2-py3-none-any.whl", hash = "sha256:10914d0c5c268d9dcfee02cfbef861382d098309ba4eedab820062841bd214b3"},
 ]
 elasticsearch = [
-    {file = "elasticsearch-8.1.2-py3-none-any.whl", hash = "sha256:2fd3c88bc5fef259ab936538287404b2c3c5956630944563722d5b16a4edc550"},
-    {file = "elasticsearch-8.1.2.tar.gz", hash = "sha256:bf031b44c483f6dc40d607186103d8a152ce4ade96e4ed4c656f2421f794e123"},
+    {file = "elasticsearch-8.1.3-py3-none-any.whl", hash = "sha256:d092f4a0d3f4228753cd06d4f70438aec101e13206b31425910d807ec23f232b"},
+    {file = "elasticsearch-8.1.3.tar.gz", hash = "sha256:70d4ab4a4dcfc2631aaaf58853984b3e7658b85a490f4d2d2c657e91437bb620"},
 ]
 et-xmlfile = [
     {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
