@@ -1,10 +1,6 @@
-import glob
-import os
-import tarfile
+import os, glob, yaml, tarfile, pkgutil
 from typing import List, Optional
-
 import pandas as pd
-import yaml
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
@@ -15,17 +11,23 @@ LOG = get_logger(__name__)
 
 OUTPUT_DIR = "output"
 
-def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=None, force=False):
-    source = f"./monarch_ingest/{ingest_config_file}"
+def transform_one(source, output_dir: str = OUTPUT_DIR, row_limit=None, force=False):
 
-    if not os.path.exists(source):
-        raise ValueError(f"Transform source_config {source} does not exist")
+    ingests = get_ingests()
+        
+    if source not in ingests:
+        raise ValueError(f"{source} is not a valid ingest - see ingests.yaml for a list of options")
 
-    if ingest_output_exists(ingest_config_file, output_dir) and not force:
+    source_file = os.path.join( os.path.dirname(__file__), (ingests[source]['config']) )
+
+    if not os.path.exists(source_file):
+        raise ValueError(f"Source file {source_file} does not exist")
+
+    if ingest_output_exists(source, output_dir) and not force:
         return
 
     transform_source(
-        source=source,
+        source=source_file,
         output_dir=output_dir,
         output_format=OutputFormat.tsv,
         local_table=None,
@@ -33,14 +35,14 @@ def transform_one(ingest_config_file, output_dir: str = OUTPUT_DIR, row_limit=No
         row_limit=row_limit,
     )
 
-    if not ingest_output_exists(ingest_config_file, output_dir):
-        raise ValueError(f"{ingest_config_file} did not produce the the expected output")
+    if not ingest_output_exists(source, output_dir):
+        raise ValueError(f"{source} did not produce the the expected output")
 
-def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
+def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force=False):
     assert os.path.exists('data/monarch/monarch.json')
 
-    edges = 'output/monarch_ontology_edges.tsv'
-    nodes = 'output/monarch_ontology_nodes.tsv'
+    edges = f"{output_dir}/monarch_ontology_edges.tsv"
+    nodes = f"{output_dir}/monarch_ontology_nodes.tsv"
 
     # Since this is fairly slow, don't re-do it if the files exist unless forcing transforms
     # This shouldn't affect cloud builds, but will be handy for local runs
@@ -67,7 +69,7 @@ def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
         raise ValueError("Ontology transform did not produce a nodes file")
 
 def transform_all(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None, force_transform=False):
-    # TODO: download from data cache
+    # TODO: check for data - download if missing (maybe y/n prompt?)
 
     with open("ingests.yaml", "r") as stream:
         ingests = yaml.safe_load(stream)
@@ -80,24 +82,12 @@ def transform_all(output_dir: str = OUTPUT_DIR, row_limit: Optional[int] = None,
             ingest['config'], force=force_transform, row_limit=row_limit
         )
 
-    # TODO: if releasing/uploading, upload kgx files
+def merge_files(file_root: str = "monarch-kg", input_dir: str = f"{OUTPUT_DIR}/transform_output", output_dir: str = OUTPUT_DIR):
 
-    # Merge once without the ontology files
-    edge_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_edges.tsv"))
-    node_files = glob.glob(os.path.join(os.getcwd(), f"{output_dir}/*_nodes.tsv"))
+    os.makedirs(output_dir, exist_ok=True)
 
-    merge_files(
-        edge_files=edge_files,
-        node_files=node_files,
-        output_dir=output_dir,
-        file_root="monarch-kg",
-    )
-
-    # TODO: if releasing/uploading, upload merged kgx
-
-def merge_files(edge_files: List[str], node_files: List[str], file_root: str, output_dir: str = OUTPUT_DIR):
-
-    os.makedirs(f"{output_dir}/merged", exist_ok=True)
+    edge_files = glob.glob(os.path.join(os.getcwd(), f"{input_dir}/*_edges.tsv"))
+    node_files = glob.glob(os.path.join(os.getcwd(), f"{input_dir}/*_nodes.tsv"))
 
     edge_dfs = []
     node_dfs = []
@@ -122,7 +112,7 @@ def merge_files(edge_files: List[str], node_files: List[str], file_root: str, ou
 
     duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
     duplicate_nodes.to_csv(
-        f"{output_dir}/merged/{file_root}-duplicate-nodes.tsv.gz", sep="\t"
+        f"{output_dir}/{file_root}-duplicate-nodes.tsv.gz", sep="\t"
     )
 
     nodes.drop_duplicates(inplace=True)
@@ -131,22 +121,22 @@ def merge_files(edge_files: List[str], node_files: List[str], file_root: str, ou
     column_agg = {x: ' '.join for x in nodes.columns if x != 'id'}
     nodes.groupby(['id'], as_index=True).agg(column_agg)
 
-    nodes_path = f"{output_dir}/merged/{file_root}_nodes.tsv"
+    nodes_path = f"{output_dir}/{file_root}_nodes.tsv"
     nodes.to_csv(nodes_path, sep="\t")
 
     dangling_edges = edges[
         ~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)
     ]
     dangling_edges.to_csv(
-        f"{output_dir}/merged/{file_root}-dangling-edges.tsv.gz", sep="\t"
+        f"{output_dir}/{file_root}-dangling-edges.tsv.gz", sep="\t"
     )
 
     edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
 
-    edges_path = f"{output_dir}/merged/{file_root}_edges.tsv"
+    edges_path = f"{output_dir}/{file_root}_edges.tsv"
     edges.to_csv(edges_path, sep="\t")
 
-    tar = tarfile.open(f"{output_dir}/merged/{file_root}.tar.gz", "w:gz")
+    tar = tarfile.open(f"{output_dir}/{file_root}.tar.gz", "w:gz")
     tar.add(nodes_path)
     tar.add(edges_path)
     tar.close()

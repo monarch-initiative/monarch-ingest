@@ -400,9 +400,9 @@
   local_name: data/mgi/MRK_Reference.rpt
   tag: mgi_publication_to_gene
 
-# ncbi-gene
+# ncbi
 -
   url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
-  local_name: data/ncbi-gene/gene_info.gz
+  local_name: data/ncbi/gene_info.gz
   tag: ncbi_gene
 

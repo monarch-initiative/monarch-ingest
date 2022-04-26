@@ -1,17 +1,22 @@
+import os, sys, pkgutil
 import logging
-import os
-import sys
-
 import yaml
 
+def get_ingests():
+    return yaml.safe_load(pkgutil.get_data(__name__, 'ingests.yaml'))
 
 def file_exists(file):
     return os.path.exists(file) and os.path.getsize(file) > 0
 
-def ingest_output_exists(ingest_config_file, output_dir):
-    source = f"./monarch_ingest/{ingest_config_file}"
-    with open(source) as sfh:
-        ingest_config = yaml.load(sfh, yaml.FullLoader)
+def ingest_output_exists(source, output_dir):
+    ingests = get_ingests()
+
+    ingest_config = yaml.load(
+        pkgutil.get_data(__name__, ingests[source]['config']),
+        yaml.FullLoader
+        )
+
+    print(f"Ingest config: {ingest_config}\n{type(ingest_config)}")
 
     has_node_properties = "node_properties" in ingest_config
     has_edge_properties = "edge_properties" in ingest_config
