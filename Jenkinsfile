@@ -28,21 +28,21 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    ingest --all
-                    ingest --ontology
+                    poetry run ingest transform --all
+                    poetry run ingest transform --ontology
                 '''
             }
         }
         stage('merge') {
             agent { dockerfile true }
             steps {
-                sh 'ingest --merge'
+                sh 'poetry run ingest merge'
             }
         }
         stage('upload kgx files') {
             agent { dockerfile true }
             steps {
-                sh 'ingest release'
+                sh 'poetry run ingest release'
             }
         }
     }
