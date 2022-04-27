@@ -27,9 +27,11 @@ if ":" in db_object_id:
 else:
     object_id = f"{db}:{db_object_id}"
 
-# The biolink model might be wrong here about all caps, but matching it for now
+# The Biolink Model might be wrong here about all caps, but we're matching it for now
 object_id = object_id.replace('PomBase', 'POMBASE')
 
+# TODO: the NCBI Taxon ID is not really propagated to the output?
+#       Hence, the following parsing operation is useless?
 ncbitaxon = row['Taxon']
 if ncbitaxon:
     # in rare circumstances, multiple taxa may be given as a piped list...
@@ -113,35 +115,35 @@ else:
         else:
             predicate_mapping = lookup_predicate(qualifier_parts[0])
 
-        if not predicate_mapping:
-            logger.error(
-                f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record..."
-            )
+    if not predicate_mapping:
+        logger.error(
+            f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record..."
+        )
 
-        else:
-            # extract the predicate Pydantic class and RO'relation' mapping
-            # TODO: the Biolink Model may soon deprecate the 'relation' field?
-            predicate, relation = predicate_mapping
+    else:
+        # extract the predicate Pydantic class and RO'relation' mapping
+        # TODO: the Biolink Model may soon deprecate the 'relation' field?
+        predicate, relation = predicate_mapping
 
-            # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
-            go_concept_node_class, gene_go_term_association_class = get_biolink_classes(
-                go_aspect
-            )
+        # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
+        go_concept_node_class, gene_go_term_association_class = get_biolink_classes(
+            go_aspect
+        )
 
-            # Instantiate the GO term instance
-            go_term = go_concept_node_class(id=go_id, source="infores:go")
+        # Instantiate the GO term instance
+        go_term = go_concept_node_class(id=go_id, source="infores:go")
 
-            # Instantiate the appropriate Gene-to-GO Term instance
-            association = gene_go_term_association_class(
-                id="uuid:" + str(uuid.uuid1()),
-                subject=object_id,
-                object=go_id,
-                predicate=predicate,
-                negated=negated,
-                relation=relation,
-                has_evidence=eco_term,
-                source="infores:goa",
-            )
+        # Instantiate the appropriate Gene-to-GO Term instance
+        association = gene_go_term_association_class(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=object_id,
+            object=go_id,
+            predicate=predicate,
+            negated=negated,
+            relation=relation,
+            has_evidence=eco_term,
+            source="infores:goa",
+        )
 
-            # Write the captured Association out
-            koza_app.write(association)
+        # Write the captured Association out
+        koza_app.write(association)
