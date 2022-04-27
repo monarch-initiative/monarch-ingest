@@ -35,10 +35,8 @@ pipeline {
                 sh '''
                     pwd
                     ls
-                    which ingest
                     poetry run which ingest
                     poetry run ingest transform --all
-                    poetry run ingest transform --ontology
                 '''
             }
         }
@@ -51,7 +49,7 @@ pipeline {
         stage('upload kgx files') {
             agent { dockerfile true }
             steps {
-                sh 'poetry run ingest release'
+                sh 'poetry run ingest release --update-latest'
             }
         }
     }
