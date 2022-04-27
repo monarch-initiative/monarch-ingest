@@ -77,7 +77,6 @@ def merge(
     """
     Something descriptive
     """
-    LOG.info("Merging knowledge graph...")
     merge_files(input_dir=input_dir, output_dir=output_dir)
 
 

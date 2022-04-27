@@ -17,7 +17,6 @@ pipeline {
             steps {
                 sh 'pwd'
                 sh 'ls'
-                sh 'which ingest'
                 sh 'poetry run which ingest'
             }
         }
