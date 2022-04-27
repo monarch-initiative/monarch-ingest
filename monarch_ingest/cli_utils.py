@@ -185,6 +185,10 @@ def merge_files(
     tar.add(edges_path, arcname=f"{file_root}_edges.tsv")
     tar.close()
 
+    # Clean up
+    os.remove(nodes_path)
+    os.remove(edges_path)
+
 def _set_log_level(
     quiet: bool = False, debug: bool = False, log: bool = False, logfile: str = 'logs/transform.log'
 ):

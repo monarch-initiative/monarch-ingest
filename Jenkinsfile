@@ -9,7 +9,7 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh 'poetry install'
-                sh 'which ingest'
+                sh 'poetry run which ingest'
             }
         }
         stage('check_environment') {
