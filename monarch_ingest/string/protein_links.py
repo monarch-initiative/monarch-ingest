@@ -1,18 +1,28 @@
 import re
 import uuid
+import logging
 
 from biolink_model_pydantic.model import Gene, PairwiseGeneToGeneInteraction, Predicate
 from koza.cli_runner import koza_app
+
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 row = koza_app.get_row()
 entrez_2_string = koza_app.get_map('entrez_2_string')
 
 pid_a = row['protein1']
 gene_ids_a = entrez_2_string[pid_a]['entrez']
+if not gene_ids_a:
+    logger.error(f"protein1 PID '{str(pid_a)}' has no Entrez mappings?")
+
 pid_b = row['protein2']
 gene_ids_b = entrez_2_string[pid_b]['entrez']
+if not gene_ids_b:
+    logger.error(f"protein2 PID '{str(pid_b)}' has no Entrez mappings?")
 
-# Some genes may not be found in the mapping, only process the record if both are found
+# Some proteins may not have gene Entrez ID mappings.
+# Only process the record if both gene id's are found
 if gene_ids_a and gene_ids_b:
 
     entities = []
