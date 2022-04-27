@@ -8,11 +8,16 @@ pipeline {
         stage('setup') {
             agent { dockerfile true }
             steps {
-                sh '''
-                    pwd
-                    ls
-                    poetry install
-                '''
+                sh 'poetry install'
+            }
+        }
+        stage('check_environment') {
+            agent { dockerfile true }
+            steps {
+                sh 'pwd'
+                sh 'ls'
+                sh 'which ingest'
+                sh 'poetry run which ingest'
             }
         }
         stage('download') {
@@ -28,6 +33,10 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
+                    pwd
+                    ls
+                    which ingest
+                    poetry run which ingest
                     poetry run ingest transform --all
                     poetry run ingest transform --ontology
                 '''

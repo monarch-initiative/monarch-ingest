@@ -13,14 +13,6 @@ LOG = logging.getLogger(__name__)
 
 OUTPUT_DIR = "output"
 
-
-@typer_app.command()
-def test():
-    ingests = get_ingests()
-    for i in ingests:
-        print(ingests[i]['config'])
-
-
 @typer_app.command()
 def transform(
     output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to putput data"),
@@ -46,10 +38,10 @@ def transform(
     Something descriptive
     """
     if ontology:
-        LOG.info(f"\n──────────────────────────\nRunning ontology transform...")
+        LOG.info(f"Running ontology transform...")
         transform_ontology(output_dir, force)
-    if all:
-        LOG.info(f"\n──────────────────────────\nRunning all ingests...")
+    elif all:
+        LOG.info(f"Running all ingests...")
         transform_all(
             f"{output_dir}/transform_output",
             row_limit=row_limit,
@@ -61,7 +53,6 @@ def transform(
     elif source:
         if force is None:
             force = True
-        LOG.info(f"\n──────────────────────────\nRunning ingest: {source}...")
         transform_one(
             source,
             f"{output_dir}/transform_output",
@@ -80,13 +71,13 @@ def merge(
     input_dir: str = typer.Option(
         f"{OUTPUT_DIR}/transform_output",
         help="Directory containing nodes and edges to be merged",
-    ),
+        ),
     output_dir: str = typer.Option(f"{OUTPUT_DIR}", help="Directory to output data"),
-):
+    ):
     """
     Something descriptive
     """
-    LOG.info("\n──────────────────────────\nMerging knowledge graph...")
+    LOG.info("Merging knowledge graph...")
     merge_files(input_dir=input_dir, output_dir=output_dir)
 
 
@@ -99,11 +90,11 @@ def release(
     release_name = release_name.strftime("%Y-%m-%d")
 
     LOG.info(
-        f"\n──────────────────────────\nCreating release...\nToday's date: {release_name}"
+        f"Creating release...\nToday's date: {release_name}"
     )
 
     try:
-        LOG.debug(f"\nUploading release to Google bucket...")
+        LOG.debug(f"Uploading release to Google bucket...")
         subprocess.run(['touch', f"output/{release_name}"])
         subprocess.run(
             [
@@ -116,7 +107,7 @@ def release(
             ]
         )
 
-        LOG.debug("\nCleaning up files...")
+        LOG.debug("Cleaning up files...")
         subprocess.run(['rm', f"output/{release_name}"])
 
         LOG.info(f"Successfuly uploaded release: see gs://monarch-ingest/{release_name}")
@@ -124,7 +115,7 @@ def release(
         LOG.error(f"Oh no! Something went wrong:\n{e}")
 
     if update_latest:
-        LOG.debug(f"\nReplacing latest with this release")
+        LOG.debug(f"Replacing latest with this release")
         subprocess.run(['gsutil', '-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
         subprocess.run(['gsutil','-m','cp','-r',f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
         LOG.info(f"Updated 'latest' to current release.")

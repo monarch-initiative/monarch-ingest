@@ -42,12 +42,10 @@ def transform_one(
         raise ValueError(f"Source file {source_file} does not exist")
 
     if ingest_output_exists(source, output_dir) and not force:
-        LOG.info(
-            f"\nTransformed output exists - skipping ingest: {source}\n\nTo run this ingest anyway, use --force"
-        )
+        LOG.info(f"Transformed output exists - skipping ingest: {source} - To run this ingest anyway, use --force")
         return
 
-    LOG.info(f"\n──────────────────────────\nRunning ingest: {source}...")
+    LOG.info(f"Running ingest: {source}...")
 
     transform_source(
         source=source_file,
@@ -104,19 +102,27 @@ def transform_all(
 
     # TODO: check for data - download if missing (maybe y/n prompt?)
 
-    transform_ontology(output_dir=output_dir, force=force)
+    try:
+        transform_ontology(output_dir=output_dir, force=force)
+    except Exception as e:
+        LOG.error(f"Error running ontology ingest:\n{e}")
+        pass
 
     ingests = get_ingests()
     for ingest in ingests:
-        transform_one(
-            source=ingest,
-            output_dir=output_dir,
-            row_limit=row_limit,
-            force=force,
-            log=log,
-            quiet=quiet,
-            debug=debug,
-        )
+        try:
+            transform_one(
+                source=ingest,
+                output_dir=output_dir,
+                row_limit=row_limit,
+                force=force,
+                log=log,
+                quiet=quiet,
+                debug=debug,
+            )
+        except Exception as e:
+            LOG.error(f"Error running ingest {ingest}:\n{e}")
+            pass
 
 
 def merge_files(
@@ -125,8 +131,9 @@ def merge_files(
     output_dir: str = OUTPUT_DIR,
 ):
 
-    os.makedirs(output_dir, exist_ok=True)
+    Path(f"{output_dir}/qc").mkdir(exist_ok=True, parents=True)
 
+    # Get merged node and edge files
     edge_files = glob.glob(os.path.join(os.getcwd(), f"{input_dir}/*_edges.tsv"))
     node_files = glob.glob(os.path.join(os.getcwd(), f"{input_dir}/*_nodes.tsv"))
 
@@ -148,11 +155,10 @@ def merge_files(
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)
 
-    # Clean up nodes, dropping duplicates and merging on the same ID, which causes some weirdness
-    # with OMIM, where different categories use the same ID
-
+    # Clean up nodes, dropping duplicates and merging on the same ID, 
+    # which causes some weirdness with OMIM, where different categories use the same ID
     duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
-    duplicate_nodes.to_csv(f"{output_dir}/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
+    duplicate_nodes.to_csv(f"{output_dir}/qc/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
 
     nodes.drop_duplicates(inplace=True)
     nodes.index.name = 'id'
@@ -166,16 +172,17 @@ def merge_files(
     dangling_edges = edges[
         ~edges.subject.isin(nodes.index) | ~edges.object.isin(nodes.index)
     ]
-    dangling_edges.to_csv(f"{output_dir}/{file_root}-dangling-edges.tsv.gz", sep="\t")
+    dangling_edges.to_csv(f"{output_dir}/qc/{file_root}-dangling-edges.tsv.gz", sep="\t")
 
     edges = edges[edges.subject.isin(nodes.index) & edges.object.isin(nodes.index)]
 
     edges_path = f"{output_dir}/{file_root}_edges.tsv"
     edges.to_csv(edges_path, sep="\t")
 
+    # Tar zip final node and edge files
     tar = tarfile.open(f"{output_dir}/{file_root}.tar.gz", "w:gz")
-    tar.add(nodes_path)
-    tar.add(edges_path)
+    tar.add(nodes_path, arcname=f"{file_root}_nodes.tsv")
+    tar.add(edges_path, arcname=f"{file_root}_edges.tsv")
     tar.close()
 
 def _set_log_level(
@@ -191,7 +198,7 @@ def _set_log_level(
         stream_handler = logging.StreamHandler()
         stream_formatter = logging.Formatter(':%(name)-20s: %(levelname)-8s: %(message)s')
         stream_handler.setFormatter(stream_formatter)
-        stream_handler.setLevel(logging.WARNING)
+        stream_handler.setLevel(logging.ERROR)
         logger.addHandler(stream_handler)
 
         # Set a handler for file output

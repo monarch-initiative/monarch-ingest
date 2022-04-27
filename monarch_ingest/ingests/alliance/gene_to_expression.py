@@ -5,7 +5,7 @@ from biolink_model_pydantic.model import GeneToExpressionSiteAssociation, Predic
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from monarch_ingest.alliance.utils import get_data
+from monarch_ingest.ingests.alliance.utils import get_data
 
 logger = logging.getLogger(__name__)
 

@@ -25,7 +25,7 @@ def ingest_output_exists(source, output_dir):
         pkgutil.get_data(__name__, ingests[source]['config']), yaml.FullLoader
     )
 
-    print(f"Ingest config: {ingest_config}\n{type(ingest_config)}")
+    #print(f"Ingest config: {ingest_config}\n{type(ingest_config)}")
 
     has_node_properties = "node_properties" in ingest_config
     has_edge_properties = "edge_properties" in ingest_config
