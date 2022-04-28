@@ -110,7 +110,7 @@ def transform_all(
     for ingest in ingests:
         try:
             transform_one(
-                source=ingest,
+                tag=ingest,
                 output_dir=output_dir,
                 row_limit=row_limit,
                 force=force,
