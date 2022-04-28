@@ -27,7 +27,7 @@ install-requirements: install-poetry
 
 .PHONY: test
 test:
-	poetry run python -m pytest --ignore=source_template
+	poetry run python -m pytest --ignore=ingest_template
 
 .PHONY: clean
 clean:

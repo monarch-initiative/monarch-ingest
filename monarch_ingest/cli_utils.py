@@ -130,7 +130,8 @@ def merge_files(
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
 ):
-
+    LOG.info("Merging knowledge graph...")
+    
     Path(f"{output_dir}/qc").mkdir(exist_ok=True, parents=True)
 
     # Get merged node and edge files

@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/reactome/pathway.py"
+    return "./monarch_ingest/ingests/reactome/pathway.py"
 
 
 @pytest.fixture

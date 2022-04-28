@@ -12,7 +12,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/ctd/chemical_to_disease.py"
+    return "./monarch_ingest/ingests/ctd/chemical_to_disease.py"
 
 
 @pytest.fixture
