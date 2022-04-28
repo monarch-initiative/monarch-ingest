@@ -1,6 +1,5 @@
 import subprocess, datetime
-
-# from asyncio import subprocess
+from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import *
 
 import typer
@@ -14,10 +13,27 @@ LOG = logging.getLogger(__name__)
 OUTPUT_DIR = "output"
 
 @typer_app.command()
+def download(
+    tags: Optional[List[str]] = typer.Option(None,  help="Which tags to download data for"),
+    all: bool = typer.Option(False, help="Download all ingest datasets")
+    ):
+    if tags:
+        download_from_yaml(
+            yaml_file='monarch_ingest/download.yaml',
+            output_dir='.',
+            tags=tags,
+        )
+    elif all:
+        download_from_yaml(
+            yaml_file='monarch_ingest/download.yaml',
+            output_dir='.'
+        )
+
+@typer_app.command()
 def transform(
-    output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to putput data"),
+    output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to output data"),
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
-    source: str = typer.Option(
+    tag: str = typer.Option(
         None, help="Which ingest to run (see ingests.yaml for a list)"
     ),
     ontology: bool = typer.Option(False, help="Option: pass to run the ontology ingest"),
@@ -50,11 +66,11 @@ def transform(
             debug=debug,
             log=log,
         )
-    elif source:
+    elif tag:
         if force is None:
             force = True
         transform_one(
-            source,
+            tag,
             f"{output_dir}/transform_output",
             row_limit=row_limit,
             force=force,

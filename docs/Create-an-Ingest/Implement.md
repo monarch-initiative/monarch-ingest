@@ -62,14 +62,10 @@ koza_app.write(gene, phenotypicFeature, association)
 
 #### Running your ingest
 
-To execute the ingest from outside of a poetry shell:
-
+To execute your ingest, you can now run:
 ```bash
-poetry run koza transform --global-table monarch_ingest/translation_table.yaml --source monarch_ingest/<YOUR SOURCE>/<YOUR INGEST>.yaml 
+ingest transform --tag <your-ingest-tag>
 ```
 
-### Next
-
-[Testing!](test-ingest.md)
-
-This is also a good time to circle back and update the documentation.
+--  
+**Next step:** [Testing!](Test.md)

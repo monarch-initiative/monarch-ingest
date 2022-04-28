@@ -13,16 +13,14 @@ WGET = /usr/bin/env wget --timestamping --no-verbose
 SHELL := bash
 
 .PHONY: all
-all: install-requirements format test
+all: install format test clean
 
 # https://www.gnu.org/software/make/manual/html_node/Force-Targets.html
 FORCE:
 
-.PHONY: install-poetry
+.PHONY: install
 install-poetry:
 	pip install poetry
-
-install-requirements: install-poetry
 	poetry install
 
 .PHONY: test
@@ -36,12 +34,6 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf dist
 
-.PHONY: lint
-lint:
-	poetry run flake8 --exit-zero --max-line-length 120 monarch_ingest/ tests/
-	poetry run black --check --diff monarch_ingest tests
-	poetry run isort --check-only --diff monarch_ingest tests
-
 .PHONY: format
 format:
 	poetry run autoflake \
@@ -53,6 +45,14 @@ format:
 	poetry run isort monarch_ingest tests
 	poetry run black monarch_ingest tests
 
+##### Do we still need anything below here? #####
+
+.PHONY: lint
+lint:
+	poetry run flake8 --exit-zero --max-line-length 120 monarch_ingest/ tests/
+	poetry run black --check --diff monarch_ingest tests
+	poetry run isort --check-only --diff monarch_ingest tests
+
 data/:
 	mkdir --parents $@
 
@@ -62,9 +62,17 @@ data/omim/: data/
 data/hpoa/:
 	mkdir --parents $@
 
-.PHONY: download
-download:
-	gsutil -m cp -R gs://monarch-ingest/data .
+.PHONY: transform
+transform:
+	poetry run dagster job execute
+
+.PHONY: neo4j-load
+neo4j-load:
+	poetry run kgx transform --stream --transform-config neo-transform.yaml
+
+.PHONY: run_dagster
+run_dagster:
+	 poetry run dagit
 
 .PHONY: download-kozacache
 download-kozacache:
@@ -97,25 +105,3 @@ data/omim/mim2gene.txt: FORCE data/omim/
 
 data/hpoa/phenotype.hpoa: FORCE data/hpoa/
 	cd $(@D) && $(WGET) http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
-
-.PHONY: transform
-transform:
-	poetry run dagster job execute
-
-.PHONY: merge
-merge:
-	poetry run kgx merge --merge-config merge.yaml
-
-.PHONY: neo4j-load
-neo4j-load:
-	poetry run kgx transform --stream --transform-config neo-transform.yaml
-
-.PHONY: upload
-upload:
-	gsutil cp output/merged/monarch-kg.tar.gz gs://monarch-ingest/
-	gsutil cp output/merged/monarch-kg.nt.gz gs://monarch-ingest/
-	gsutil cp merged_graph_stats.yaml gs://monarch-ingest/
-
-.PHONY: run_dagster
-run_dagster:
-	 poetry run dagit

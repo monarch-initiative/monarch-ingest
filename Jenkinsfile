@@ -12,14 +12,6 @@ pipeline {
                 sh 'poetry run which ingest'
             }
         }
-        stage('check_environment') {
-            agent { dockerfile true }
-            steps {
-                sh 'pwd'
-                sh 'ls'
-                sh 'poetry run which ingest'
-            }
-        }
         stage('download') {
             agent { dockerfile true }
             steps {
@@ -33,9 +25,6 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    pwd
-                    ls
-                    poetry run which ingest
                     poetry run ingest transform --all
                 '''
             }

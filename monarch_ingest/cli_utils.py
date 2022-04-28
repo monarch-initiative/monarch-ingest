@@ -10,12 +10,10 @@ from koza.model.config.source_config import OutputFormat
 from monarch_ingest.helper import *
 
 LOG = get_logger(__name__)
-
 OUTPUT_DIR = "output"
 
-
 def transform_one(
-    source,
+    tag,
     output_dir: str = f"{OUTPUT_DIR}/transformed_output",
     row_limit: int = None,
     force: bool = False,
@@ -26,26 +24,26 @@ def transform_one(
 
     if log:
         Path("logs").mkdir(parents=True, exist_ok=True)
-    logfile = Path(f"logs/{source}.log")
+    logfile = Path(f"logs/{tag}.log")
     _set_log_level(quiet, debug, log, logfile)
 
     ingests = get_ingests()
 
-    if source not in ingests:
+    if tag not in ingests:
         raise ValueError(
-            f"{source} is not a valid ingest - see ingests.yaml for a list of options"
+            f"{tag} is not a valid ingest - see ingests.yaml for a list of options"
         )
 
-    source_file = os.path.join(os.path.dirname(__file__), (ingests[source]['config']))
+    source_file = os.path.join(os.path.dirname(__file__), (ingests[tag]['config']))
 
     if not os.path.exists(source_file):
         raise ValueError(f"Source file {source_file} does not exist")
 
-    if ingest_output_exists(source, output_dir) and not force:
-        LOG.info(f"Transformed output exists - skipping ingest: {source} - To run this ingest anyway, use --force")
+    if ingest_output_exists(tag, output_dir) and not force:
+        LOG.info(f"Transformed output exists - skipping ingest: {tag} - To run this ingest anyway, use --force")
         return
 
-    LOG.info(f"Running ingest: {source}...")
+    LOG.info(f"Running ingest: {tag}...")
 
     transform_source(
         source=source_file,
@@ -56,8 +54,8 @@ def transform_one(
         row_limit=row_limit,
     )
 
-    if not ingest_output_exists(source, output_dir):
-        raise ValueError(f"{source} did not produce the the expected output")
+    if not ingest_output_exists(tag, output_dir):
+        raise ValueError(f"{tag} did not produce the the expected output")
 
 
 def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force=False):

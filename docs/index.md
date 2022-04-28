@@ -10,79 +10,54 @@ The Monarch Ingest is built using [Poetry](https://python-poetry.org), which wil
 
 ### Set up the environment
 
-Clone the repo and build the code:
+1. (Optional) Create a Python virtual environment for ingests:
 ```bash
-$ git clone git@github.com/monarch-initiative/monarch-ingest
-$ cd monarch-ingest
-$ make all
+virtualenv ingest-env
+source ./ingest-env/bin/activate
 ```
-This will install Poetry, create the virtual environment and fetch dependencies.
 
-You're ready for ingests!
+1. <a href="https://python-poetry.org/docs/" target="_blank">Install Poetry</a>, if you don't already have it:
+```bash
+pip install poetry
+```
 
-???+ example "Quick commands"
-    - Download the entire Monarch data bucket:
+1. Clone the repo and build the code:
+```bash
+git clone git@github.com/monarch-initiative/monarch-ingest
+cd monarch-ingest
+poetry install
+```
+
+That's it! You're now ready for ingests.  
+
+For a detailed tutorial on ingests and how to make one, see the [Create an Ingest tab](Create-an-Ingest/index.md). 
+
+### Commands
+
+??? tip "Run the whole pipeline!"
+    - Download the source data:
     ```bash
-    make download
+    ingest download --all
     ```
 
     - Run all transforms:  
     ```bash
-    make transform
+    ingest transform --all
     ```
 
-    - Merge all of the transformed files with ontologies into a single pair of node and edge files
+    - Merge all transformed output into a tar.gz containing one node and one edge file
     ```bash
-    make merge # result - output/merged/monarch-kg.tar.gz
+    ingest merge
     ```
 
-    - Or you can do all 3 in one line!
+    - Upload the results to the Monarch Ingest Google bucket
     ```bash
-    make download transform merge
+    ingest release
     ```
-
-### Ingests
-
-!!! info ""
-    For a detailed tutorial on ingests and how to make one, see the [Create an Ingest tab](Create-an-Ingest/1-Configure.md).  
-    Here, we'll go through the general process in broad strokes.
-
-!!! tip "Ingest Overview"
-    An ingest consists of 3 main steps:  
-
-    - Downloading the data  
-    - Transforming the data  
-    - Validating the output
-
-    With a 4th post-processing step:  
-
-    - Merging the output into a KGX knowledge graph
-
-Now let's go through the process for running an existing monarch ingest!
-
-**Step 1. Download**
-
-Download the dataset from the source, for example:
-```bash
-wget http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
-```
-
-Using the Google Cloud CLI you can download the whole Monarch data bucket:
-```bash
-gsutil -m cp -R gs://monarch-ingest/data .
-```
-
-**Step 2. Transform**
-
-Use Koza to transform the dataset, based on a user-designed configuration  
-(See [Create an Ingest](Create-an-Ingest/1-Configure.md) for more info)
-```bash
-poetry run koza transform --source monarch_ingest/mgi/publication_to_gene.yaml --output-format tsv --row-limit 10
-```
-
-**Step 3. Validate**
-
-Make sure the output is valid and has the expected format:
-```bash
-poetry run kgx validate -i tsv output/mgi_publication_to_gene_edges.tsv 
-```
+    
+| Command | Arguments/Options | Usage |
+| :--- | :--- | :--- |
+| `ingest download` | `--tags <tags>`: Which ingest to download dataset for<br>`--all`: Download all datasets | Downloads source data to be transformed |
+| `ingest transform` | `--tag`: Specify an ingest to run<br>`--ontology`: Runs the Monarch ontology ingest<br>`--all`: Runs all ingests `--output_dir`: Directory to output data<br>`--merge`: Merge output directory after transform<br>`--row-limit`: Number of rows to process<br>`--force`: Run ingest, even if output exists<br>`--quiet`: Suppress LOG output<br>`--log`: Write logs to ./logs/ for each ingest run | Perform a transform on source data |
+| `ingest merge` | | Merge output/ into a tar.gz containg a single node and edge file |
+| `ingest release` | `--update-latest`: Also replaces latest/ | Upload results to Monarch Google bucket as dated release |
