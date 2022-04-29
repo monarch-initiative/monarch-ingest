@@ -14,7 +14,7 @@ def source_name():
 # This is the location of the transform code
 @pytest.fixture
 def script():
-    return "./monarch_ingest/somethingbase/something2somethingelse.py"
+    return "./monarch_ingest/ingests/somethingbase/something2somethingelse.py"
 
 
 # If the ingest requires a map, it can be created here with just the entries that are required

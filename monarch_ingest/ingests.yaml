@@ -1,0 +1,52 @@
+alliance_gene:
+  config: 'ingests/alliance/gene.yaml'
+alliance_gene_to_expression:
+  config: 'ingests/alliance/gene_to_expression.yaml'
+alliance_gene_to_phenotype:
+  config: 'ingests/alliance/gene_to_phenotype.yaml'
+# alliance_publication:
+#   config: 'ingests/alliance/publication.yaml'
+ctd_chemical_to_disease:
+  config: 'ingests/ctd/chemical_to_disease.yaml'
+# flybase_publication_to_gene::
+#   config: 'ingests/flybase/publication_to_gene.yaml'
+goa_go_annotation:
+  config: 'ingests/goa/go_annotation.yaml'
+hgnc_gene:
+  config: 'ingests/hgnc/gene.yaml'
+hpoa_disease_phenotype:
+  config: 'ingests/hpoa/disease_phenotype.yaml'
+# mgi_publication_to_gene:
+#   config: 'ingests/mgi/publication_to_gene.yaml'
+ncbi_gene:
+  config: 'ingests/ncbi/gene.yaml'
+omim_gene_to_disease:
+  config: 'ingests/omim/gene_to_disease.yaml'
+panther_ref_genome_orthologs:
+  config: 'ingests/panther/ref_genome_orthologs.yaml'
+pombase_gene:
+  config: 'ingests/pombase/gene.yaml'
+pombase_gene_to_phenotype:
+  config: 'ingests/pombase/gene_to_phenotype.yaml'
+reactome_chemical_to_pathway:
+  config: 'ingests/reactome/chemical_to_pathway.yaml'
+reactome_gene_to_pathway:
+  config: 'ingests/reactome/gene_to_pathway.yaml'
+reactome_pathway:
+  config: 'ingests/reactome/pathway.yaml'
+# rgd_publication_to_gene:
+#   config: 'ingests/rgd/publication_to_gene.yaml'
+# sgd_publication_to_gene:
+#   config: 'ingests/sgd/publication_to_gene.yaml'
+string_protein_links:
+  config: 'ingests/string/protein_links.yaml'
+xenbase_gene:
+  config: 'ingests/xenbase/gene.yaml'
+xenbase_gene_to_phenotype:
+  config: 'ingests/xenbase/gene_to_phenotype.yaml'
+# xenbase_publication_to_gene:
+#   config: 'ingests/xenbase/publication_to_gene.yaml'
+zfin_gene_to_phenotype:
+  config: 'ingests/zfin/gene_to_phenotype.yaml'
+# zfin_publication_to_gene:
+#   config: 'ingests/zfin/publication_to_gene.yaml'

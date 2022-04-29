@@ -18,7 +18,7 @@ on_map_failure: 'error'
 delimiter: '\t'
 
 global_table: './monarch_ingest/translation_table.yaml'
-local_table: './monarch_ingest/omim/omim-translation.yaml'
+local_table: './monarch_ingest/ingests/omim/omim-translation.yaml'
 
 header: 3
 

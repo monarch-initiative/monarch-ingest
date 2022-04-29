@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    downloader
+                    downloader monarch_ingest/download.yaml
                 '''
             }
         }

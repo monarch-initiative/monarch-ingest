@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/hgnc/gene.py"
+    return "./monarch_ingest/ingests/hgnc/gene.py"
 
 
 @pytest.fixture

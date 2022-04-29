@@ -1,15 +1,14 @@
 ### Testing
 
-You may want to start with the test template within `source_template`
+You may want to start with the test template within `ingest_template`
 
 ##### Basic fixtures
 
-Initially, set up your basic fixtures, taking care to set the correct source name and location for the transform code.
+First, set up your basic fixtures, taking care to set the correct source name and location for the transform code.
 
 ```python
 import pytest
 from koza.koza_runner import get_translation_table
-
 
 @pytest.fixture
 def tt():
@@ -23,7 +22,7 @@ def source_name():
 # This is the location of the transform code
 @pytest.fixture
 def script():
-    return "./monarch_ingest/somethingbase/something2somethingelse.py"
+    return "./monarch_ingest/ingests/somethingbase/something2somethingelse.py"
 ```
 
 
@@ -159,9 +158,3 @@ def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tt,
     )
     assert len(entities) == 0
 ```
-
-### Next
-
-[Validate the ingest](validate-output.md)
-
-This is also a good time to circle back and update the documentation.

@@ -18,7 +18,7 @@ def basic_entities(mock_koza, basic_row, global_table):
     return mock_koza(
         "zfin_publication_to_gene",
         iter([basic_row]),
-        "./monarch_ingest/zfin/publication_to_gene.py",
+        "./monarch_ingest/ingests/zfin/publication_to_gene.py",
         global_table=global_table,
     )
 

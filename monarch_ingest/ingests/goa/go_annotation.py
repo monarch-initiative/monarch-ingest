@@ -11,7 +11,7 @@ from typing import List
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.goa.goa_utils import get_biolink_classes, lookup_predicate
+from monarch_ingest.ingests.goa.goa_utils import get_biolink_classes, lookup_predicate
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
