@@ -144,6 +144,18 @@ optional = false
 python-versions = "~=3.7"
 
 [[package]]
+name = "cat-merge"
+version = "0.1.3"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+mkdocs = ">=1.3.0,<2.0.0"
+pandas = ">=1.4.2,<2.0.0"
+
+[[package]]
 name = "certifi"
 version = "2021.10.8"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -355,7 +367,7 @@ pyflakes = ">=2.3.0,<2.4.0"
 name = "ghp-import"
 version = "2.0.2"
 description = "Copy your docs directly to the gh-pages branch."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -895,7 +907,7 @@ dev = ["pytest", "pytest-cov", "mkdocs"]
 name = "markdown"
 version = "3.3.6"
 description = "Python implementation of Markdown."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -970,7 +982,7 @@ python-versions = ">=3.7"
 name = "mergedeep"
 version = "1.3.4"
 description = "A deep merge function for 🐍."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -978,7 +990,7 @@ python-versions = ">=3.6"
 name = "mkdocs"
 version = "1.3.0"
 description = "Project documentation with Markdown."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -1474,7 +1486,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 name = "pyyaml-env-tag"
 version = "0.1"
 description = "A custom YAML tag for referencing environment variables in YAML files. "
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -2023,7 +2035,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "2f54c46f9225077178287124d856fa9edd24758ee7486ea0df26f2eb7c4c7651"
+content-hash = "07d6609616ba4d024707155910a0c9cb020a23ad5665c10de01ca258276742c5"
 
 [metadata.files]
 alabaster = [
@@ -2071,6 +2083,10 @@ bmt = [
 cachetools = [
     {file = "cachetools-5.0.0-py3-none-any.whl", hash = "sha256:8fecd4203a38af17928be7b90689d8083603073622229ca7077b72d8e5a976e4"},
     {file = "cachetools-5.0.0.tar.gz", hash = "sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6"},
+]
+cat-merge = [
+    {file = "cat-merge-0.1.3.tar.gz", hash = "sha256:1917aa6f941defbbcb65c1788a3f9366c012d71e0c585bfac44d051f589fabbc"},
+    {file = "cat_merge-0.1.3-py3-none-any.whl", hash = "sha256:200c1ddeb5c041a437b2885de1a1967d756f85ee7b44b4bb4dce1d205a26d30d"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
