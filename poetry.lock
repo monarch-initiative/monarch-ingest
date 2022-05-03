@@ -145,7 +145,7 @@ python-versions = "~=3.7"
 
 [[package]]
 name = "cat-merge"
-version = "0.1.6"
+version = "0.1.7"
 description = ""
 category = "main"
 optional = false
@@ -2035,7 +2035,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d6c0439b6105189b05fef2cfcd46176f8bb49a889526a2204efb6eae95fdb4de"
+content-hash = "5f1d01de7ed21c9e0b3b8483b8ad75eac2472231ebbd516220652b32aae44c5f"
 
 [metadata.files]
 alabaster = [
@@ -2085,8 +2085,8 @@ cachetools = [
     {file = "cachetools-5.0.0.tar.gz", hash = "sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6"},
 ]
 cat-merge = [
-    {file = "cat-merge-0.1.6.tar.gz", hash = "sha256:abe50e51934ed7f095d125da2ea30afaa5b57ad8d1e27c91f7e531b2bfaa074e"},
-    {file = "cat_merge-0.1.6-py3-none-any.whl", hash = "sha256:8358e005a948ead06825c462626aa615f86912d7ca3ce302181fe765dc60952f"},
+    {file = "cat-merge-0.1.7.tar.gz", hash = "sha256:44b4d2d1b0573b3b0e9de6e46071e4966db063899523a6e3ffc1fcc07e8fd2ad"},
+    {file = "cat_merge-0.1.7-py3-none-any.whl", hash = "sha256:dbfd3bcc55b9d197ff5425151b9e3cded09124ae3176bd3a9f1175f6e6399467"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
