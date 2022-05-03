@@ -1,3 +1,5 @@
+import csv
+
 import os, glob, tarfile, tarfile
 from pathlib import Path
 from typing import List, Optional
@@ -129,7 +131,7 @@ def merge_files(
     output_dir: str = OUTPUT_DIR,
 ):
     LOG.info("Merging knowledge graph...")
-    
+
     Path(f"{output_dir}/qc").mkdir(exist_ok=True, parents=True)
 
     # Get merged node and edge files
@@ -141,20 +143,20 @@ def merge_files(
     for edge_file in edge_files:
         edge_dfs.append(
             pd.read_csv(
-                edge_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'
+                edge_file, sep="\t", dtype="string", lineterminator="\n", index_col='id', quoting=csv.QUOTE_NONE
             )
         )
     for node_file in node_files:
         node_dfs.append(
             pd.read_csv(
-                node_file, sep="\t", dtype="string", lineterminator="\n", index_col='id'
+                node_file, sep="\t", dtype="string", lineterminator="\n", index_col='id', quoting=csv.QUOTE_NONE
             )
         )
 
     edges = pd.concat(edge_dfs, axis=0)
     nodes = pd.concat(node_dfs, axis=0)
 
-    # Clean up nodes, dropping duplicates and merging on the same ID, 
+    # Clean up nodes, dropping duplicates and merging on the same ID,
     # which causes some weirdness with OMIM, where different categories use the same ID
     duplicate_nodes = nodes[nodes.index.duplicated(keep=False)]
     duplicate_nodes.to_csv(f"{output_dir}/qc/{file_root}-duplicate-nodes.tsv.gz", sep="\t")
