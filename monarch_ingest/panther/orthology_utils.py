@@ -48,7 +48,7 @@ def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
 
 def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     """
-    Parse out the Proting identifier
+    Parse out the Protein identifier
     :param gene_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
     """
     if not gene_id_spec:
