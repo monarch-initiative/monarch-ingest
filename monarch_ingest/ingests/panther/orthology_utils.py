@@ -32,7 +32,14 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
         )
 
 
-_db_to_curie = {"FlyBase": "FB", "Ensembl": "ENSEMBL"}
+_db_to_curie = {
+    "FlyBase": "FB",
+    "Ensembl": "ENSEMBL",
+    "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
+    "Gene": None,                  # seems to be the gene symbol - we ignore it for now?
+    "Gene_ORFName": None,          # is the gene orf name from a transcript in Uniprot - we ignore it for now?
+    "Gene_OrderedLocusName": None  # is a gene ordered locus name - we ignore it for now?
+}
 
 
 def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
@@ -59,6 +66,11 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     if len(spec_part) == 2:
         # Map DB to Biolink Model canonical CURIE namespace
         prefix = get_biolink_curie_prefix(spec_part[0])
+
+        if not prefix:
+            raise RuntimeError(
+                f"parse_gene_id(): Namespace '{spec_part[0]}' is not mappable to a canonical namespace? Ignoring..."
+            )
         return f"{prefix}:{spec_part[1]}"
 
     elif len(spec_part) == 3 and spec_part[1] == "MGI":

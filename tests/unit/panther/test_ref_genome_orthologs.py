@@ -73,6 +73,14 @@ result_expected = {
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR12434",
     ],
+    "NCBIGene:395772": [  # CHICK 'GeneID'
+        "HGNC:6445",
+        "NCBITaxon:9606",
+        "NCBITaxon:9031",   # Gallus gallus
+        "biolink:orthologous_to",
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR45616",
+    ]
 }
 
 
@@ -304,10 +312,33 @@ def test_ill_formed_gene_spec_string(ill_formed_gene_spec_string):
 # We need to map the Prefixes to their canonical prefix if possible and identify namespaces to omit.
 # Monarch preferred namespaces:
 # https://docs.google.com/spreadsheets/d/1XrljI1Dk2Tg0teJSbQls5Iq_KCGXMCdyWvqAMfMgJ-M/edit#gid=136453094
+@pytest.fixture
+def gene_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - Ignore 'Gene' (gene symbol) prefixes
+        # since they are transcript gene predictions not mappable to a reference genome?
+        "Gene": "HUMAN|HGNC=6216|UniProtKB=O75449",
+        "Ortholog": "CHICK|Gene=KATNA1|UniProtKB=Q1HGK7",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR23074"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_prefix_gene_spec_string(gene_prefix_gene_spec_string):
+    assert len(gene_prefix_gene_spec_string) == 0
+
 
 @pytest.fixture
-def geneid_gene_spec_string(mock_koza, source_name, script, global_table):
+def geneid_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
     row = {
+        # Monarch Ingest Issue 244 - 'GeneID' namespace maps onto NCBIGene
         "Gene": "HUMAN|HGNC=6445|UniProtKB=P08729",
         "Ortholog": "CHICK|GeneID=395772|UniProtKB=O93532",
         "Type of ortholog": "LDO",
@@ -322,5 +353,54 @@ def geneid_gene_spec_string(mock_koza, source_name, script, global_table):
     )
 
 
-def test_geneid_gene_spec_string(geneid_gene_spec_string):
-    assert len(geneid_gene_spec_string) == 0
+def test_geneid_prefix_gene_spec_string(geneid_prefix_gene_spec_string):
+    data = geneid_prefix_gene_spec_string
+    assert_association(data)
+
+
+@pytest.fixture
+def gene_orfname_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - Ignore 'Gene_ORFName' prefixes
+        # since they are transcript predictions not mappable to a reference genome
+        "Gene": "CHICK|Gene_ORFName=RCJMB04_19l3|UniProtKB=Q5ZJA3",
+        "Ortholog": "DANRE|ZFIN=ZDB-GENE-121214-325|UniProtKB=E7F704",
+        "Type of ortholog": "O",
+        "Common ancestor for the orthologs": "Euteleostomi",
+        "Panther Ortholog ID": "PTHR19232"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_orfname_prefix_gene_spec_string(gene_orfname_prefix_gene_spec_string):
+    assert len(gene_orfname_prefix_gene_spec_string) == 0
+
+
+@pytest.fixture
+def gene_orderedlocusname_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Ignore 'Gene_OrderedLocusName' prefixes for now since they are
+        # transcript predictions not mappable to a reference genome
+        # (Note: the Panther ref genome data uses this namespace for ARATH, ECOLI and CHICK...
+        #       the latter, only a small handful of identical entries in Panther family PTHR13068)
+        "Gene": "HUMAN|HGNC=24258|UniProtKB=Q96E29",
+        "Ortholog": "CHICK|Gene_OrderedLocusName=CGI-12|UniProtKB=Q5ZJC8",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR13068"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_orderedlocusname_gene_spec_string(gene_orderedlocusname_gene_spec_string):
+    assert len(gene_orderedlocusname_gene_spec_string) == 0
