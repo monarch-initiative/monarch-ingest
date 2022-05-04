@@ -292,3 +292,35 @@ def ill_formed_gene_spec_string(mock_koza, source_name, script, global_table):
 
 def test_ill_formed_gene_spec_string(ill_formed_gene_spec_string):
     assert len(ill_formed_gene_spec_string) == 0
+
+
+# Issue 244 - Panther filtering of namespaces
+#
+# "Gene" seems to be the gene symbol
+# "GeneID" seems to be Entrez Gene ID => map onto the NCBIGene: namespace
+# "Gene_ORFName" is the gene orf name from a transcript in Uniprot
+# "Gene_OrderedLocusName" Is a gene ordered locus name
+#
+# We need to map the Prefixes to their canonical prefix if possible and identify namespaces to omit.
+# Monarch preferred namespaces:
+# https://docs.google.com/spreadsheets/d/1XrljI1Dk2Tg0teJSbQls5Iq_KCGXMCdyWvqAMfMgJ-M/edit#gid=136453094
+
+@pytest.fixture
+def geneid_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        "Gene": "HUMAN|HGNC=6445|UniProtKB=P08729",
+        "Ortholog": "CHICK|GeneID=395772|UniProtKB=O93532",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR45616"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_geneid_gene_spec_string(geneid_gene_spec_string):
+    assert len(geneid_gene_spec_string) == 0
