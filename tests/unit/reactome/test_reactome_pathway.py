@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/reactome/pathway.py"
+    return "./monarch_ingest/ingests/reactome/pathway.py"
 
 
 @pytest.fixture
@@ -16,6 +16,7 @@ def basic_row():
     return {
         "ID": "R-BTA-73843",
         "Name": "5-Phosphoribose 1-diphosphate biosynthesis",
+        "species": "Bos taurus"
     }
 
 
@@ -26,6 +27,7 @@ def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
         iter([basic_row]),
         script,
         global_table=global_table,
+        local_table="monarch_ingest/ingests/reactome/taxon_name_to_id_mapping.yaml"
     )
 
 

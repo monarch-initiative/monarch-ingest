@@ -25,9 +25,9 @@ def entities(mock_koza, global_table):
     return mock_koza(
         name="hpoa_disease_phenotype",
         data=row,
-        transform_code="./monarch_ingest/hpoa/disease_phenotype.py",
+        transform_code="./monarch_ingest/ingests/hpoa/disease_phenotype.py",
         global_table=global_table,
-        local_table="./monarch_ingest/hpoa/hpoa-translation.yaml",
+        local_table="./monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
     )
 
 

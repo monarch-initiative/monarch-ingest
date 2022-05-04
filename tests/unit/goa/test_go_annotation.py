@@ -22,7 +22,7 @@ def script():
     """
     :return: string path to GO Annotations ingest script
     """
-    return "./monarch_ingest/goa/go_annotation.py"
+    return "./monarch_ingest/ingests/goa/go_annotation.py"
 
 
 @pytest.fixture(scope="package")
@@ -30,7 +30,7 @@ def local_table():
     """
     :return: string path to Evidence Code to ECO term mappings file
     """
-    return "monarch_ingest/goa/gaf-eco-mapping.yaml"
+    return "monarch_ingest/ingests/goa/gaf-eco-mapping.yaml"
 
 
 @pytest.fixture

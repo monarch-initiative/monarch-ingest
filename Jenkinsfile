@@ -8,11 +8,8 @@ pipeline {
         stage('setup') {
             agent { dockerfile true }
             steps {
-                sh '''
-                pwd
-                ls
-                poetry install
-                '''
+                sh 'poetry install'
+                sh 'poetry run which ingest'
             }
         }
         stage('download') {
@@ -28,14 +25,20 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    poetry run python monarch_ingest/pipeline.py
+                    poetry run ingest transform --all
                 '''
+            }
+        }
+        stage('merge') {
+            agent { dockerfile true }
+            steps {
+                sh 'poetry run ingest merge'
             }
         }
         stage('upload kgx files') {
             agent { dockerfile true }
             steps {
-                sh 'gsutil -m cp -r output/*.tsv gs://monarch-ingest/${RELEASE}/output/'
+                sh 'poetry run ingest release --update-latest'
             }
         }
     }

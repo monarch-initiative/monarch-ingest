@@ -1,9 +1,15 @@
 ### Configure Ingest
 
-1. Make a directory for your ingest, using the source of the data as the name.  
-Format: 
+1. Make a directory for your ingest, using the source of the data as the name:
+```bash
+mkdir monarch_ingest/ingests/<source> 
+```
+For example:
+```bash
+mkdir monarch_ingest/ingests/ncbi
+```
 
-2. Add data sources to `download.yaml`
+2. Add data sources to `monarch_ingest/download.yaml`:
 ```yaml
 # <source>
 -
@@ -19,17 +25,28 @@ For example:
   local_name: data/mgi/MRK_Reference.rpt
   tag: mgi_publication_to_gene   
 ```  
-> **Note:** Your data will now be included in `make download`, and downloaded to the appropriate subdir in `data/`
+> **Note:** You can now use `ingest download --tags <tag>` or `ingest download --all`, and your data will be downloaded to the appropriate subdir in `data/`  
 
-3. Copy the template:
-```bash
-cp source_template/* monarch_ingest/<source>
+3. Add your ingest to `monarch_ingest/ingests.yaml`:
+```yaml
+<ingest_name>:
+  config: 'ingests/<source>/<ingest>.yaml
+```
+For example:
+```yaml
+ncbi_gene:
+  config: 'ingests/ncbi/gene.yaml'
 ```
 
-4. Edit `metadata.yaml`:  
+4. Copy the template:
+```bash
+cp ingest_template/* monarch_ingest/ingests/<source>
+```
+
+5. Edit `metadata.yaml`:  
     * Update the description, rights link, url, etc and then add your source_file
 
-5. Edit the source file yaml
+6. Edit the source file yaml
 
     * Match the columns or required fields with what's available in the file to be ingested
         * If it's an ingest that exists in [Dipper](https://dipper.readthedocs.io/en/latest/sources.html), check out what Dipper does.
@@ -38,5 +55,6 @@ cp source_template/* monarch_ingest/<source>
     * Set the header properties
         * If there is no header at all, set `header: False`
         * If there are comment lines before the header, count them and set `skip_lines: {n}`
-    
+
+--      
 **Next step:  [Adding documentation](Document.md)**

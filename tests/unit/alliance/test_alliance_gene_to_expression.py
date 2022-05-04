@@ -24,7 +24,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/alliance/gene_to_expression.py"
+    return "./monarch_ingest/ingests/alliance/gene_to_expression.py"
 
 
 # The Rat data seems to only have gene expression assigned to cellular components
