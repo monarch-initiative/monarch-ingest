@@ -1,0 +1,20 @@
+name: 'dictybase_gene_to_symbol'
+
+metadata:
+  description:  'Dictybase gene identifiers to gene mutant symbol'
+
+delimiter: '\t'
+
+files:
+  - './data/dictybase/gene_information.txt'
+
+header: 'none'
+
+columns:
+  - 'Gene ID'
+  - 'Gene Name'
+
+key: 'Gene Name'
+
+values:
+  - 'Gene ID'
