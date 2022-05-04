@@ -31,10 +31,14 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
             f"ncbitaxon_by_name(): '{species_name}' is not a taxon of interest to Monarch? Ignoring..."
         )
 
-
+# Entries with Gene/Orthology identifier namespaces
+# with 'None' values below, are filtered out during ingest
 _db_to_curie = {
     "FlyBase": "FB",
     "Ensembl": "ENSEMBL",
+    "EnsemblGenome": None,  # predicated but uncharacterized proteins... TODO: review and fix this later?
+    "PomBase": "POMBASE",
+    "WormBase": "WB",  # Wormbase supports 'WormBase:' but alliancegenome.org and identifiers.org supports 'WB:'
     "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
     "Gene": None,                  # seems to be the gene symbol - we ignore it for now?
     "Gene_ORFName": None,          # is the gene orf name from a transcript in Uniprot - we ignore it for now?
