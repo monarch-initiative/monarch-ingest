@@ -32,6 +32,7 @@ gene = Gene(
     name=row["name"],
     xref=xref_list,
     synonym=synonyms_list,
+    in_taxon="NCBITaxon:9606"
 )
 
 # Excluding pub to gene associations for now

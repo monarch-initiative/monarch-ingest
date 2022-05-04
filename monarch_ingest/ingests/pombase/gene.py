@@ -13,6 +13,7 @@ gene = Gene(
     symbol=row["primary gene name"],
     type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
     source="infores:PomBase",
+    in_taxon="NCBITaxon:4896"
 )
 
 if row["UniProtKB accession"]:
