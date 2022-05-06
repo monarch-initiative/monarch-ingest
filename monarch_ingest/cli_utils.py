@@ -15,8 +15,9 @@ OUTPUT_DIR = "output"
 
 def transform_one(
     tag,
-    output_dir: str = f"{OUTPUT_DIR}/transformed_output",
+    output_dir: str = OUTPUT_DIR,
     row_limit: int = None,
+    rdf: bool = False,
     force: bool = False,
     quiet: bool = False,
     debug: bool = False,
@@ -48,14 +49,37 @@ def transform_one(
 
     transform_source(
         source=source_file,
-        output_dir=output_dir,
+        output_dir=f"{output_dir}/transform_output",
         output_format=OutputFormat.tsv,
         local_table=None,
         global_table=None,
         row_limit=row_limit,
     )
 
-    if not ingest_output_exists(tag, output_dir):
+    if rdf is not None:
+        LOG.info(f"Creating rdf output {output_dir}/rdf/{tag}.nt.gz ...")
+        
+        Path(f"{output_dir}/rdf").mkdir(parents=True, exist_ok=True)
+        
+        src_files = []
+        src_nodes = f"{output_dir}/transform_output/{tag}_nodes.tsv"
+        src_edges = f"{output_dir}/transform_output/{tag}_edges.tsv"
+        if os.path.exists(src_nodes):
+            src_files.append(src_nodes)
+        if os.path.exists(src_edges):
+            src_files.append(src_edges)
+
+        print(src_files)
+        kgx_transform(
+            inputs=src_files,
+            input_format="tsv",
+            stream=True,
+            output=f"{output_dir}/rdf/{tag}.nt.gz",
+            output_format="nt",
+            output_compression="gz",
+        ) 
+
+    if not ingest_output_exists(tag, f"{output_dir}/transform_output"):
         raise ValueError(f"{tag} did not produce the the expected output")
 
 
@@ -92,8 +116,9 @@ def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
 
 
 def transform_all(
-    output_dir: str = f"{OUTPUT_DIR}/transform_output",
+    output_dir: str = OUTPUT_DIR,
     row_limit: Optional[int] = None,
+    rdf: bool = False,
     force: bool = False,
     quiet: bool = False,
     debug: bool = False,
@@ -115,6 +140,7 @@ def transform_all(
                 tag=ingest,
                 output_dir=output_dir,
                 row_limit=row_limit,
+                rdf=rdf,
                 force=force,
                 log=log,
                 quiet=quiet,

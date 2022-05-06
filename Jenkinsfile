@@ -25,7 +25,7 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    poetry run ingest transform --all
+                    poetry run ingest transform --all --rdf
                 '''
             }
         }
