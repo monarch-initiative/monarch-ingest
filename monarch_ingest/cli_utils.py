@@ -59,11 +59,11 @@ def transform_one(
         raise ValueError(f"{tag} did not produce the the expected output")
 
 
-def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force=False):
+def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
     assert os.path.exists('data/monarch/monarch.json')
 
-    edges = f"{output_dir}/monarch_ontology_edges.tsv"
-    nodes = f"{output_dir}/monarch_ontology_nodes.tsv"
+    nodes = f"{output_dir}/transform_output/monarch_ontology_nodes.tsv"
+    edges = f"{output_dir}/transform_output/monarch_ontology_edges.tsv"
 
     # Since this is fairly slow, don't re-do it if the files exist unless forcing transforms
     # This shouldn't affect cloud builds, but will be handy for local runs
@@ -74,13 +74,14 @@ def transform_ontology(output_dir: str = f"{OUTPUT_DIR}/transform_output", force
         and os.path.getsize(edges) > 0
         and os.path.getsize(nodes)
     ):
+        LOG.info("Skipping ontology ingest - output exists. To transform anyway, use --force")
         return
 
     kgx_transform(
         inputs=["data/monarch/monarch.json"],
         input_format="obojson",
-        stream=False,
-        output=f"{output_dir}/monarch_ontology",
+        stream=True,
+        output=f"{output_dir}/transform_output/monarch_ontology",
         output_format="tsv",
     )
 
@@ -148,14 +149,14 @@ def _set_log_level(
 
         # Set a handler for console output
         stream_handler = logging.StreamHandler()
-        stream_formatter = logging.Formatter(':%(name)-20s: %(levelname)-8s: %(message)s')
+        stream_formatter = logging.Formatter(':%(levelname)-4s: %(name)-20s: %(message)s')
         stream_handler.setFormatter(stream_formatter)
         stream_handler.setLevel(logging.ERROR)
         logger.addHandler(stream_handler)
 
         # Set a handler for file output
         file_handler = logging.FileHandler(logfile, mode='w')
-        file_formatter = logging.Formatter("%(name)-26s: %(levelname)-8s: %(message)s")
+        file_formatter = logging.Formatter(":%(levelname)-4s:%(name)-26s: %(message)s")
         file_handler.setFormatter(file_formatter)
         file_handler.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
