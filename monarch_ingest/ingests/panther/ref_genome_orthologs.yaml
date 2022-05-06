@@ -32,5 +32,6 @@ edge_properties:
   - 'category'
   - 'relation'
   - 'source'
+  - 'has_evidence'
 
 transform_mode: 'flat'
