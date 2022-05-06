@@ -127,7 +127,7 @@ def transform_all(
     # TODO: check for data - download if missing (maybe y/n prompt?)
 
     try:
-        transform_ontology(output_dir=output_dir, force=force, rdf=rdf)
+        transform_ontology(output_dir=output_dir, force=force)
     except Exception as e:
         LOG.error(f"Error running ontology ingest:\n{e}")
         pass
