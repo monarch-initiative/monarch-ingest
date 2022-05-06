@@ -1,0 +1,20 @@
+name: 'dictybase_phenotype_names_to_ids'
+
+metadata:
+  description:  'Dictybase phenotype names (descriptions) mappings to identifiers (generated from OBO)'
+
+files:
+  - './data/dictybase/dicty_phenotypes.tsv'
+
+header: 0
+
+delimiter: '\t'
+
+columns:
+  - 'id'
+  - 'name'
+
+key: 'name'
+
+values:
+  - 'id'
