@@ -105,6 +105,11 @@
   local_name: data/dictybase/gene_information.txt
   tag: dictybase_gene_to_phenotype
 
+-  # Mapping file of phenotype ontology (in OBO format... can't be directly used...)
+  url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=pheno_ontology&ID=dicty_phenotypes.obo
+  local_name: data/dictybase/dicty_phenotypes.obo
+  tag: dictybase_gene_to_phenotype
+
 - # Gene<-Strain->Phenotype mappings
   url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=mutant_phenotypes&ID=all-mutants.txt
   local_name: data/dictybase/all-mutants.txt
