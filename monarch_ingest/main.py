@@ -44,6 +44,7 @@ def transform(
         None,
         help="Force ingest, even if output exists (on by default for single ingests)",
     ),
+    rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
     quiet: bool = typer.Option(False, help="Suppress LOG output"),
     debug: bool = typer.Option(False, help="Print additional debug output to console"),
     log: bool = typer.Option(
@@ -55,12 +56,17 @@ def transform(
     """
     if ontology:
         LOG.info(f"Running ontology transform...")
-        transform_ontology(output_dir, force)
+        transform_ontology(
+            output_dir=output_dir,
+            rdf=rdf,
+            force=force
+        )
     elif all:
         LOG.info(f"Running all ingests...")
         transform_all(
-            f"{output_dir}/transform_output",
+            output_dir=output_dir,
             row_limit=row_limit,
+            rdf=rdf,
             force=force,
             quiet=quiet,
             debug=debug,
@@ -70,9 +76,10 @@ def transform(
         if force is None:
             force = True
         transform_one(
-            tag,
-            f"{output_dir}/transform_output",
+            tag=tag,
+            output_dir=output_dir,
             row_limit=row_limit,
+            rdf=rdf,
             force=force,
             quiet=quiet,
             debug=debug,
@@ -80,6 +87,7 @@ def transform(
         )
     if do_merge:
         merge(f"{output_dir}/transform_output", output_dir)
+    
 
 
 @typer_app.command()
