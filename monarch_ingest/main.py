@@ -58,7 +58,6 @@ def transform(
         LOG.info(f"Running ontology transform...")
         transform_ontology(
             output_dir=output_dir,
-            rdf=rdf,
             force=force
         )
     elif all:
