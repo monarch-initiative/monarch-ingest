@@ -1,3 +1,15 @@
+#
+# After downloading the dicty_phenotypes.obo file from:
+#
+# http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=pheno_ontology&ID=dicty_phenotypes.obo
+#
+# then running the robot conversion (http://robot.obolibrary.org/convert.html) to OBO JSON, namely:
+#
+#    robot convert --input ./data/dictybase/dicty_phenotypes.obo --output ./data/dictybase/dicty_phenotypes.obo
+#
+# this script can be run to extract a mapping file for the dictybase gene-to-phenotype ingest.
+#
+
 from typing import Dict
 from json import load
 
