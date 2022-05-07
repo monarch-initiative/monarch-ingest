@@ -1,4 +1,4 @@
-name: 'dictybase_gene_name_to_id'
+name: 'dictybase_gene_names_to_ids'
 
 metadata:
   description:  'Dictybase gene identifiers to gene mutant symbol'
@@ -11,7 +11,7 @@ header: 0
 delimiter: '\t'
 
 columns:
-  - 'Gene ID'
+  - 'GENE ID'
   - 'Gene Name'
   - 'Synonyms'
   - 'Gene products'
@@ -19,4 +19,4 @@ columns:
 key: 'Gene Name'
 
 values:
-  - 'Gene ID'
+  - 'GENE ID'

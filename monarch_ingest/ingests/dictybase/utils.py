@@ -37,7 +37,7 @@ def parse_gene_id(row: Dict, gene_names_to_ids) -> Optional[str]:
 
     # Otherwise, attempt to map the gene symbol given into a gene identifier
     try:
-        gene_id = gene_names_to_ids[gene_name]['Gene ID']
+        gene_id = gene_names_to_ids[gene_name]['GENE ID']
     except KeyError:
         logger.warning(f"Gene Name '{gene_name}' mapping onto a Gene ID is unknown")
         return None
