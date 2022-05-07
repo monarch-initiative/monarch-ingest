@@ -1,18 +1,83 @@
 from typing import Dict, List
 import pytest
 
-from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
+from biolink_model_pydantic.model import GeneToPhenotypicFeatureAssociation
+from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
 
 @pytest.fixture
 def map_cache() -> Dict:
     """
-    :return: Multi-level mock map_cache of test Dictybase Phenotype Names to Identifiers.
+    :return: Multi-level mock map_cache of test Dictybase Gene & Phenotype, Names to Identifiers.
     """
-    return {
+    dictybase_gene_names_to_ids = {
+        "cbpC": {"GENE ID": "DDB_G0283613"},
+        "DDB_G0267364_RTE": {"GENE ID": "DDB_G0267364"},
+        "argE": {"GENE ID": "DDB_G0267380"},
+        "DDB_G0269812": {"GENE ID": "DDB_G0269812"}
+    }
+    dictybase_phenotype_names_to_ids = {
         "decreased slug migration": {"id": "DDPHENO:0000225"},
         "aberrant spore morphology": {"id": "DDPHENO:0000163"}
     }
+    return {
+        "dictybase_gene_names_to_ids": dictybase_gene_names_to_ids,
+        "dictybase_phenotype_names_to_ids": dictybase_phenotype_names_to_ids
+    }
+
+
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        (
+            {
+                # empty gene field
+                "Associated gene(s)": None
+            },
+            None
+        ),
+        (
+            {
+                # Multiple gene mappings - ignored
+                "Associated gene(s)": "zplC-1 | zplC-2"
+            },
+            None
+        ),
+        (
+            {
+                # Multiple gene mappings - ignored
+                "Associated gene(s)": "unknown_gene_name"
+            },
+            None
+        ),
+        (
+            {
+                # gene symbol
+                "Associated gene(s)": "argE"
+            },
+            "dictyBase:DDB_G0267380"
+        ),
+        (
+            {
+                # gene id like (Retro Transposable Element?)
+                "Associated gene(s)": "DDB_G0267364_RTE"
+            },
+            "dictyBase:DDB_G0267364"
+        ),
+        (
+            {
+                # regular gene locus
+                "Associated gene(s)": "DDB_G0269812"
+            },
+            "dictyBase:DDB_G0269812"
+        ),
+    ]
+)
+def test_parse_gene_id(query, map_cache):
+    gene_id: str = parse_gene_id(query[0], map_cache["dictybase_gene_names_to_ids"])
+    assert gene_id == query[1]
 
 
 @pytest.mark.parametrize(
@@ -49,69 +114,84 @@ def map_cache() -> Dict:
     ]
 )
 def test_parse_phenotypes(query, map_cache):
-    phenotypes: List[str] = parse_phenotypes(query[0], map_cache)
+    phenotypes: List[str] = parse_phenotypes(query[0], map_cache["dictybase_phenotype_names_to_ids"])
     assert query[1] in phenotypes if phenotypes else not query[1]  # sample one, unless None expected
 
 
-# from biolink_model_pydantic.model import (
-#     Gene,
-#     GeneToPhenotypicFeatureAssociation,
-#     PhenotypicFeature,
-# )
-#
-#
-# @pytest.fixture
-# def entities(mock_koza, global_table):
-#     row = iter(
-#         [
-#             {
-#                 "Database name": "PomBase",
-#                 "Gene systematic ID": "SPAC24B11.06c",
-#                 "FYPO ID": "FYPO:0004058",
-#                 "Allele description": "",
-#                 "Expression": "",
-#                 "Parental strain": "972 h-",
-#                 "Strain name (background)": "",
-#                 "Genotype description": "",
-#                 "Gene name": "sty1",
-#                 "Allele name": "sty1delta",
-#                 "Allele synonym": "",
-#                 "Allele type": "deletion",
-#                 "Evidence": "cell growth assay evidence",
-#                 "Condition": "",
-#                 "Penetrance": "",
-#                 "Severity": "FYPO_EXT:0000001",
-#                 "Extension": "",
-#                 "Reference": "PMID:19436749",
-#                 "Taxon": "4896",
-#                 "Date": "2014-11-21",
-#             }
-#         ]
-#     )
-#
-#     return mock_koza(
-#         name="pombase_gene_to_phenotype",
-#         data=row,
-#         transform_code="./monarch_ingest/ingests/pombase/gene_to_phenotype.py",
-#         global_table=global_table,
-#     )
-#
-#
-# # TODO: can this test be shared across all g2p loads?
-# @pytest.mark.parametrize(
-#     "cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation]
-# )
-# def confirm_one_of_each_classes(cls, entities):
-#     class_entities = [entity for entity in entities if isinstance(entity, cls)]
-#     assert class_entities
-#     assert len(class_entities) == 1
-#     assert class_entities[0]
-#
-#
-# def test_pombase_g2p_association_publication(entities):
-#     associations = [
-#         association
-#         for association in entities
-#         if isinstance(association, GeneToPhenotypicFeatureAssociation)
-#     ]
-#     assert associations[0].publications[0] == "PMID:19436749"
+@pytest.fixture
+def source_name():
+    """
+    :return: string source name of Dictybase Gene to Phenotype ingest
+    """
+    return "dictybase_gene_to_phenotype"
+
+
+@pytest.fixture
+def script():
+    """
+    :return: string path to Dictybase Gene to Phenotype ingest script
+    """
+    return "./monarch_ingest/ingests/dictybase/gene_to_phenotype.py"
+
+
+@pytest.fixture
+def test_row():
+    """
+    :return: Test Dictybase Gene to Phenotype data row.
+    """
+    return {
+        "Systematic Name": "DBS0235594",
+        "Strain Descriptor": "CHE10",
+        "Associated gene(s)": "cbpC",
+        "Phenotypes": " decreased slug migration | aberrant spore morphology "
+    }
+
+
+@pytest.fixture
+def basic_dictybase(mock_koza, source_name, script, test_row, global_table, map_cache):
+    """
+    Mock Koza run for Dictybase Gene to Phenotype ingest.
+
+    :param mock_koza:
+    :param source_name:
+    :param test_row:
+    :param script:
+    :param global_table:
+    :param map_cache:
+
+    :return: mock_koza application
+    """
+    return mock_koza(
+        name=source_name,
+        data=iter([test_row]),
+        transform_code=script,
+        global_table=global_table,
+        map_cache=map_cache
+    )
+
+
+@pytest.mark.parametrize(
+    "cls", [GeneToPhenotypicFeatureAssociation]
+)
+def confirm_one_of_each_classes(cls, basic_dictybase):
+    class_entities = [entity for entity in basic_dictybase if isinstance(entity, cls)]
+    assert class_entities
+    assert len(class_entities) == 1
+    assert class_entities[0]
+
+
+def test_dictybase_g2p_association(basic_dictybase):
+    associations = [
+        association
+        for association in basic_dictybase
+        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+    ]
+    assert len(associations) == 2
+
+    for association in associations:
+        assert association
+        assert association.subject == "dictyBase:DDB_G0283613"
+        assert association.object in ["DDPHENO:0000225", "DDPHENO:0000163"]
+        assert association.predicate == "biolink:has_phenotype"
+        assert association.relation == "RO:0002200"
+        assert "infores:dictybase" in association.source

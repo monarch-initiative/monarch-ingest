@@ -5,7 +5,7 @@ from biolink_model_pydantic.model import (
     Predicate,
 )
 from koza.cli_runner import koza_app
-from .utils import parse_gene_id, parse_phenotypes
+from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
 source_name = "dictybase_gene_to_phenotype"
 

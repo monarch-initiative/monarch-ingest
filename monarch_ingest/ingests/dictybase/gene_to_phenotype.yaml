@@ -20,7 +20,7 @@ columns:
   - 'Phenotypes'
 
 depends_on:
-  - './monarch_ingest/maps/dictybase_gene_to_symbol.yaml'
+  - './monarch_ingest/maps/dictybase_gene_names_to_ids.yaml'
 
 edge_properties:
   - 'id'
