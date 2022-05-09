@@ -1,5 +1,5 @@
 pipeline {
-   agent { label 'agent-medium-docker-2' }
+   agent { label 'jenkins-medium-beta' }
     stages {
         stage('setup') {            
             steps {
