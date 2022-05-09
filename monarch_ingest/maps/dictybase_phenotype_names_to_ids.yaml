@@ -15,8 +15,8 @@ header: 0
 delimiter: '\t'
 
 columns:
-  - 'id'
   - 'name'
+  - 'id'
 
 key: 'name'
 
