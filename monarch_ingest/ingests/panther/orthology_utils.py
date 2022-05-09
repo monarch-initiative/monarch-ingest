@@ -31,8 +31,19 @@ def ncbitaxon_by_name(species_name: str) -> Optional[str]:
             f"ncbitaxon_by_name(): '{species_name}' is not a taxon of interest to Monarch? Ignoring..."
         )
 
-
-_db_to_curie = {"FlyBase": "FB", "Ensembl": "ENSEMBL"}
+# Entries with Gene/Orthology identifier namespaces
+# with 'None' values below, are filtered out during ingest
+_db_to_curie = {
+    "FlyBase": "FB",
+    "Ensembl": "ENSEMBL",
+    "EnsemblGenome": None,  # predicated but uncharacterized proteins... TODO: review and fix this later?
+    "PomBase": "POMBASE",
+    "WormBase": "WB",  # Wormbase supports 'WormBase:' but alliancegenome.org and identifiers.org supports 'WB:'
+    "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
+    "Gene": None,                  # seems to be the gene symbol - we ignore it for now?
+    "Gene_ORFName": None,          # is the gene orf name from a transcript in Uniprot - we ignore it for now?
+    "Gene_OrderedLocusName": None  # is a gene ordered locus name - we ignore it for now?
+}
 
 
 def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
@@ -48,7 +59,7 @@ def get_biolink_curie_prefix(db_prefix: str) -> Optional[str]:
 
 def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     """
-    Parse out the Proting identifier
+    Parse out the Protein identifier
     :param gene_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
     """
     if not gene_id_spec:
@@ -59,6 +70,11 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     if len(spec_part) == 2:
         # Map DB to Biolink Model canonical CURIE namespace
         prefix = get_biolink_curie_prefix(spec_part[0])
+
+        if not prefix:
+            raise RuntimeError(
+                f"parse_gene_id(): Namespace '{spec_part[0]}' is not mappable to a canonical namespace? Ignoring..."
+            )
         return f"{prefix}:{spec_part[1]}"
 
     elif len(spec_part) == 3 and spec_part[1] == "MGI":

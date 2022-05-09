@@ -41,13 +41,21 @@ result_expected = {
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR12434",
     ],
-    "WormBase:WBGene00007022": [
+    "WB:WBGene00007022": [
         "HGNC:11477",
         "NCBITaxon:9606",
         "NCBITaxon:6239",
         "biolink:orthologous_to",
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR12434",
+    ],
+    "POMBASE:SPAC20G8.06": [
+        "ZFIN:ZDB-GENE-040915-1",
+        "NCBITaxon:7955",
+        "NCBITaxon:4896",
+        "biolink:orthologous_to",
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR13162",
     ],
     "FB:FBgn0052971": [
         "HGNC:11477",
@@ -73,6 +81,14 @@ result_expected = {
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR12434",
     ],
+    "NCBIGene:395772": [  # CHICK 'GeneID'
+        "HGNC:6445",
+        "NCBITaxon:9606",
+        "NCBITaxon:9031",   # Gallus gallus
+        "biolink:orthologous_to",
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR45616",
+    ]
 }
 
 
@@ -119,12 +135,35 @@ def test_well_behaved_record_1(well_behaved_record_1):
 
 
 @pytest.fixture
-def well_behaved_record_3(mock_koza, source_name, script, global_table):
+def well_behaved_record_2(mock_koza, source_name, script, global_table):
     row = {
         "Gene": "HUMAN|HGNC=11477|UniProtKB=Q6GZX4",
         "Ortholog": "DANRE|ZFIN=ZDB-GENE-040625-156|UniProtKB=Q6GZX1",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Euteleostomi",
+        "Panther Ortholog ID": "PTHR12434",
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_well_behaved_record_2(well_behaved_record_2):
+    data = well_behaved_record_2
+    assert_association(data)
+
+
+@pytest.fixture
+def well_behaved_record_3(mock_koza, source_name, script, global_table):
+    row = {
+        #
+        "Gene": "HUMAN|HGNC=11477|UniProtKB=Q6GZX4",
+        "Ortholog": "DROME|FlyBase=FBgn0040339|",
+        "Type of ortholog": "LDO",  # a different type of orthology ...
+        "Common ancestor for the orthologs": "Bilateria",
         "Panther Ortholog ID": "PTHR12434",
     }
     return mock_koza(
@@ -141,29 +180,7 @@ def test_well_behaved_record_3(well_behaved_record_3):
 
 
 @pytest.fixture
-def well_behaved_record_4(mock_koza, source_name, script, global_table):
-    row = {
-        "Gene": "HUMAN|HGNC=11477|UniProtKB=Q6GZX4",
-        "Ortholog": "CAEEL|WormBase=WBGene00007022|UniProtKB=Q197F5",
-        "Type of ortholog": "LDO",
-        "Common ancestor for the orthologs": "Bilateria",
-        "Panther Ortholog ID": "PTHR12434",
-    }
-    return mock_koza(
-        name=source_name,
-        data=iter([row]),
-        transform_code=script,
-        global_table=global_table,
-    )
-
-
-def test_well_behaved_record_4(well_behaved_record_4):
-    data = well_behaved_record_4
-    assert_association(data)
-
-
-@pytest.fixture
-def well_behaved_record_5(mock_koza, source_name, script, global_table):
+def well_behaved_flybase_record(mock_koza, source_name, script, global_table):
     row = {
         "Gene": "HUMAN|HGNC=11477|UniProtKB=Q6GZX4",
         "Ortholog": "DROME|FlyBase=FBgn0052971|UniProtKB=Q6GZX0",
@@ -179,16 +196,17 @@ def well_behaved_record_5(mock_koza, source_name, script, global_table):
     )
 
 
-def test_well_behaved_record_5(well_behaved_record_5):
-    data = well_behaved_record_5
+def test_well_behaved_flybase_record(well_behaved_flybase_record):
+    data = well_behaved_flybase_record
     assert_association(data)
 
 
 @pytest.fixture
-def well_behaved_record_6(mock_koza, source_name, script, global_table):
+def well_behaved_wormbase_record(mock_koza, source_name, script, global_table):
     row = {
         "Gene": "HUMAN|HGNC=11477|UniProtKB=Q6GZX4",
-        "Ortholog": "DROME|FlyBase=FBgn0040339|",
+        # Remaps 'WormBase' prefix to 'WB'
+        "Ortholog": "CAEEL|WormBase=WBGene00007022|UniProtKB=Q197F5",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Bilateria",
         "Panther Ortholog ID": "PTHR12434",
@@ -201,8 +219,31 @@ def well_behaved_record_6(mock_koza, source_name, script, global_table):
     )
 
 
-def test_well_behaved_record_6(well_behaved_record_6):
-    data = well_behaved_record_6
+def test_well_behaved_wormbase_record(well_behaved_wormbase_record):
+    data = well_behaved_wormbase_record
+    assert_association(data)
+
+
+@pytest.fixture
+def well_behaved_pombase_record(mock_koza, source_name, script, global_table):
+    row = {
+        "Gene": "DANRE|ZFIN=ZDB-GENE-040915-1|UniProtKB=A1A5H6",
+        # Remapped prefix 'PomBase' to 'POMBASE' (as in Biolink Model)
+        "Ortholog": "SCHPO|PomBase=SPAC20G8.06|UniProtKB=P87112",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Opisthokonts",
+        "Panther Ortholog ID": "PTHR13162"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_well_behaved_pombase_record(well_behaved_pombase_record):
+    data = well_behaved_pombase_record
     assert_association(data)
 
 
@@ -292,3 +333,122 @@ def ill_formed_gene_spec_string(mock_koza, source_name, script, global_table):
 
 def test_ill_formed_gene_spec_string(ill_formed_gene_spec_string):
     assert len(ill_formed_gene_spec_string) == 0
+
+
+@pytest.fixture
+def gene_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - Ignore 'Gene' (gene symbol) prefixes
+        # since they are transcript gene predictions not mappable to a reference genome?
+        "Gene": "HUMAN|HGNC=6216|UniProtKB=O75449",
+        "Ortholog": "CHICK|Gene=KATNA1|UniProtKB=Q1HGK7",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR23074"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_prefix_gene_spec_string(gene_prefix_gene_spec_string):
+    assert len(gene_prefix_gene_spec_string) == 0
+
+
+@pytest.fixture
+def geneid_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - 'GeneID' namespace maps onto NCBIGene
+        "Gene": "HUMAN|HGNC=6445|UniProtKB=P08729",
+        "Ortholog": "CHICK|GeneID=395772|UniProtKB=O93532",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR45616"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_geneid_prefix_gene_spec_string(geneid_prefix_gene_spec_string):
+    data = geneid_prefix_gene_spec_string
+    assert_association(data)
+
+
+@pytest.fixture
+def gene_orfname_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - Ignore 'Gene_ORFName' prefixes
+        # since they are transcript predictions not mappable to a reference genome
+        "Gene": "CHICK|Gene_ORFName=RCJMB04_19l3|UniProtKB=Q5ZJA3",
+        "Ortholog": "DANRE|ZFIN=ZDB-GENE-121214-325|UniProtKB=E7F704",
+        "Type of ortholog": "O",
+        "Common ancestor for the orthologs": "Euteleostomi",
+        "Panther Ortholog ID": "PTHR19232"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_orfname_prefix_gene_spec_string(gene_orfname_prefix_gene_spec_string):
+    assert len(gene_orfname_prefix_gene_spec_string) == 0
+
+
+@pytest.fixture
+def gene_orderedlocusname_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Monarch Ingest Issue 244 - Ignore 'Gene_OrderedLocusName' prefixes
+        # since the Panther ref genome data uses this namespace for ARATH, ECOLI and CHICK...
+        # but the latter, only a small number of identical entries in one Panther family: PTHR13068)
+        "Gene": "HUMAN|HGNC=24258|UniProtKB=Q96E29",
+        "Ortholog": "CHICK|Gene_OrderedLocusName=CGI-12|UniProtKB=Q5ZJC8",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Amniota",
+        "Panther Ortholog ID": "PTHR13068"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_gene_orderedlocusname_gene_spec_string(gene_orderedlocusname_prefix_gene_spec_string):
+    assert len(gene_orderedlocusname_prefix_gene_spec_string) == 0
+
+
+# TODO: The scientific value of EnsemblGenome entries requires closer review.
+#       (Note: the required recoding to sort of handle them sensibly will be slightly tricky...
+#              see https://github.com/monarch-initiative/monarch-ingest/issues/244#issuecomment-1117905786)
+@pytest.fixture
+def ensemblgenome_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
+    row = {
+        # Ignore 'EnsemblGenome' prefixes for now since they are
+        # protein predictions of uncharacterized proteins
+        "Gene": "DANRE|ZFIN=ZDB-GENE-090112-5|UniProtKB=E9QCN7",
+        "Ortholog": "DICDI|EnsemblGenome=DDB_G0277073|UniProtKB=Q550K4",
+        "Type of ortholog": "O",
+        "Common ancestor for the orthologs": "Unikonts",
+        "Panther Ortholog ID": "PTHR21324"
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_ensemblgenome_prefix_gene_spec_string(ensemblgenome_prefix_gene_spec_string):
+    assert len(ensemblgenome_prefix_gene_spec_string) == 0
