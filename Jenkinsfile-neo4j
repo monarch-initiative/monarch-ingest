@@ -1,5 +1,5 @@
 pipeline {
-   agent any
+   agent { label 'jenkins-medium-beta' }
     stages {
         stage('setup') {            
             steps {
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh 'which poetry'
                 sh 'poetry run which kgx'
-                sh 'poetry run kgx transform --transform-config transform.yaml'
+                sh 'poetry run kgx transform --transform-config neo4j-transform.yaml'
             }
         }
         stage('package') {
