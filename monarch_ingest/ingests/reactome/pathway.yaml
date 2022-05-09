@@ -20,9 +20,11 @@ columns:
 
 node_properties:
   - 'id'
+  - 'category'
   - 'name'
   - 'type'
   - 'source'
+
 
 
 transform_mode: 'flat'
