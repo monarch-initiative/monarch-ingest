@@ -50,14 +50,14 @@ def gene_association_entities(mock_koza, gene_association_row, global_table, map
 def test_gene_association_transform(gene_association_entities):
     entities = gene_association_entities
     assert entities
-    assert len(entities) == 3
+    assert len(entities) == 1
     genes = [entity for entity in entities if isinstance(entity, Gene)]
     diseases = [entity for entity in entities if isinstance(entity, Disease)]
     associations = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ]
-    assert len(genes) == 1
-    assert len(diseases) == 1
+    assert len(genes) == 0
+    assert len(diseases) == 0
     assert len(associations) == 1
 
 
@@ -82,7 +82,8 @@ def test_ignore_phenotype_modifiers(
         map_cache=map_cache,
     )
 
-    # A gene or genomic entity is ok, but no disease or association
+    # No association should be made
+    assert(len(entities) == 0)
     for entity in entities:
         assert isinstance(entity, Disease) is False
         assert isinstance(entity, GeneToDiseaseAssociation) is False
@@ -106,15 +107,7 @@ def test_genomic_entity_row(mock_koza, global_table, map_cache):
     )
 
     assert entities
-    assert len(entities) == 3
-    genomic_entity = [
-        entity for entity in entities if isinstance(entity, NucleicAcidEntity)
-    ][0]
-    assert genomic_entity
-    assert genomic_entity.id == 'NCBIGene:65077'
-    disease = [entity for entity in entities if isinstance(entity, Disease)][0]
-    assert disease
-    assert disease.id == 'OMIM:605572'
+    assert len(entities) == 1
     association = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]
@@ -133,7 +126,7 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
         local_table="./monarch_ingest/ingests/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
-    assert len(entities) == 3
+    assert len(entities) == 1
     association = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]

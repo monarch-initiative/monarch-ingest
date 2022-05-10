@@ -67,7 +67,6 @@ if disorder_match is not None:
     disorder_id = 'OMIM:' + disorder_num
 
     gene = Gene(id=gene_id, source='infores:omim')
-    koza_app.write(gene)
 
 elif no_disease_id_match is not None:
     # this is a case where the disorder
@@ -88,7 +87,6 @@ elif no_disease_id_match is not None:
         type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
         source='infores:omim',
     )
-    koza_app.write(genomic_entity)
 
 else:
     # In dipper we created anonymous nodes for these cases, but for now we will skip these
@@ -159,4 +157,4 @@ association = GeneToDiseaseAssociation(
     source='infores:omim',
 )
 
-koza_app.write(disease, association)
+koza_app.write(association)
