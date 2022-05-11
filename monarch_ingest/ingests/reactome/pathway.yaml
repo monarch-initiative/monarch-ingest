@@ -1,0 +1,30 @@
+name: 'reactome_pathway'
+
+files:
+  - './data/reactome/ReactomePathways.txt'
+
+metadata: './monarch_ingest/reactome/metadata.yaml'
+
+global_table: './monarch_ingest/translation_table.yaml'
+local_table: './monarch_ingest/ingests/reactome/taxon_name_to_id_mapping.yaml'
+header: none
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+    - 'ID'
+    - 'Name'
+    - 'species'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'name'
+  - 'type'
+  - 'source'
+
+
+transform_mode: 'flat'
+

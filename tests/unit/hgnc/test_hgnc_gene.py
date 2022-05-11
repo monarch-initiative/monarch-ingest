@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/hgnc/gene.py"
+    return "./monarch_ingest/ingests/hgnc/gene.py"
 
 
 @pytest.fixture
@@ -56,14 +56,15 @@ def test_gene_information_xref(pax2a):
     assert gene.xref == ['ENSEMBL:ENSG00000148584', 'OMIM:618199']
 
 
-def test_publication(pax2a):
-    publication = pax2a[1]
-    assert publication
-    assert publication.id == "PMID:11072063"
-
-
-def test_association(pax2a):
-    association = pax2a[2]
-    assert association
-    assert association.subject == "HGNC:24086"
-    assert association.object == "PMID:11072063"
+# Commenting out publication ingests at least temporarily
+# def test_publication(pax2a):
+#     publication = pax2a[1]
+#     assert publication
+#     assert publication.id == "PMID:11072063"
+#
+#
+# def test_association(pax2a):
+#     association = pax2a[2]
+#     assert association
+#     assert association.subject == "HGNC:24086"
+#     assert association.object == "PMID:11072063"

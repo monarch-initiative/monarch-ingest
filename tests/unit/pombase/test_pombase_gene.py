@@ -18,7 +18,7 @@ def gene_information_entities(mock_koza, global_table):
     return mock_koza(
         "pombase_gene",
         iter([row]),
-        "./monarch_ingest/pombase/gene.py",
+        "./monarch_ingest/ingests/pombase/gene.py",
         global_table=global_table,
     )
 
