@@ -5,7 +5,7 @@ The Alliance of Genome Resources contains a subset of model organism data from m
 
 ### Gene Information
 
-Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast) are loaded using the [BGI formatted](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/gene) ingest files, as there are no Gene export files.
+Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog) are loaded using the [BGI formatted](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/gene) ingest files, as there are no Gene export files.
 
 #### Biolink captured
 
@@ -24,12 +24,6 @@ Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast) are l
 Phenotype for the subset of Alliance species which use phenotype ontologies (Human, Rat, Mouse, Worm) are loaded using the [phenotype ingest format](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/phenotype), since there is not yet a phenotype export file from the Alliance. This file contains both Gene and Allele phenotypes, so a single column TSV is produced from BGI files listing Gene IDs to check the category and only genes are included. Environmental conditions are present for some species and are captured using the qualifier.
 
 #### Biolink captured
-
-* biolink:Gene
-    * id 
-
-* biolink:PhenotypicFeature
-    * id
 
 * biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
@@ -61,12 +55,6 @@ Need a predicate for each kind of relationship:
 | is_not_implicated_in | biolink:contributes_to + negated=true | "RO:0003302"|
 
 #### Biolink captured
-
-* biolink:Gene
-    * id (row['DBObjectID'])
-
-* biolink:Disease
-    * id (row['DOID'])
 
 * biolink:GeneToDiseaseAssociation
     * id (random uuid)
