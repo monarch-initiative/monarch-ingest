@@ -46,12 +46,12 @@ if gene_ids_a and gene_ids_b:
             else:
                 gene_b = Gene(id=gene_id_b, source="infores:entrez")
 
+            # relation = koza_app.translation_table.global_table['interacts with']
             association = PairwiseGeneToGeneInteraction(
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene_a.id,
                 object=gene_b.id,
                 predicate="biolink:interacts_with",
-                relation=koza_app.translation_table.global_table['interacts with'],
                 source="infores:string",
             )
 

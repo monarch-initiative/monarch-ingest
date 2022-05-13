@@ -35,5 +35,4 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'has_evidence'

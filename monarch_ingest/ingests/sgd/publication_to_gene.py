@@ -20,12 +20,12 @@ publication = Publication(
     source="infores:sgd",
 )
 
+relation = koza_app.translation_table.resolve_term("mentions")
 association = InformationContentEntityToNamedThingAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
     predicate="biolink:mentions",
     object=publication.id,
-    relation=koza_app.translation_table.resolve_term("mentions"),
     source="infores:sgd",
 )
 

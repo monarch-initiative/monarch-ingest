@@ -28,7 +28,7 @@ try:
     #       However, this may result in KGX record duplication?
     # ortholog_type = row["Type of ortholog"]
     predicate = "biolink:orthologous_to"
-    relation = koza_app.translation_table.resolve_term("in orthology relationship with")
+    #relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # Instantiate the instance of Gene-to-Gene Homology Association
     panther_ortholog_id = row["Panther Ortholog ID"]
@@ -37,7 +37,6 @@ try:
         subject=gene_id,
         object=ortholog_id,
         predicate=predicate,
-        relation=relation,
         source="infores:panther",
         has_evidence=f"PANTHER.FAMILY:{panther_ortholog_id}",
     )

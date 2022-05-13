@@ -28,13 +28,13 @@ publication = Publication(
     type=koza_app.translation_table.resolve_term("publication"),
     source="infores:flybase",
 )
+relation = koza_app.translation_table.resolve_term("mentions")
 
 association = InformationContentEntityToNamedThingAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
     predicate="biolink:mentions",
     object=publication.id,
-    relation=koza_app.translation_table.resolve_term("mentions"),
     source="infores:flybase",
 )
 

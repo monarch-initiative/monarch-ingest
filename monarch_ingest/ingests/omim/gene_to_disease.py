@@ -147,7 +147,6 @@ association = GeneToDiseaseAssociation(
     subject=gene_id,
     predicate=predicate,
     object=disorder_id,
-    relation=relation,
     has_evidence=evidence,
     source='infores:omim',
 )

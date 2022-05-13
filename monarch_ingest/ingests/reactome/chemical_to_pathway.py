@@ -17,12 +17,13 @@ pathway = Pathway(
     source="infores:reactome",
 )
 
+
+#relation = koza_app.translation_table.resolve_term("participates_in")
 association = ChemicalToPathwayAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=chemical.id,
     predicate="biolink:participates_in",
     object=pathway.id,
-    relation=koza_app.translation_table.resolve_term("participates_in"),
     source="infores:reactome",
 )
 

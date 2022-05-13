@@ -26,7 +26,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'provided_by'
   - 'source'
 

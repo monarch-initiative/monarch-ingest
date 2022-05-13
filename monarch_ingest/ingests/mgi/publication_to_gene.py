@@ -18,6 +18,7 @@ gene = Gene(
     type=koza_app.translation_table.resolve_term("gene"),
 )
 
+relation = koza_app.translation_table.resolve_term("mentions")
 pub_ids = row["PubMed IDs"].split("|")
 for pub_id in pub_ids:
     pmid = "PMID:" + pub_id
@@ -26,13 +27,12 @@ for pub_id in pub_ids:
         type=koza_app.translation_table.resolve_term("publication"),
         source="infores:mgi",
     )
-
+    
     association = InformationContentEntityToNamedThingAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=pmid,
         predicate="biolink:mentions",
         object=gene.id,
-        relation=koza_app.translation_table.resolve_term("mentions"),
         source="infores:mgi",
     )
 

@@ -17,13 +17,13 @@ gene = Gene(id=row["SUBJECT"], source="Xenbase")
 
 phenotype = PhenotypicFeature(id=row["OBJECT"], source="Xenbase")
 
+# relation = row["RELATION"].replace("_", ":"),
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
     predicate="biolink:has_phenotype",
     object=phenotype.id,
     publications=row["SOURCE"],
-    relation=row["RELATION"].replace("_", ":"),
     source="infores:xenbase",
 )
 

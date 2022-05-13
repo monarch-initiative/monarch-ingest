@@ -48,7 +48,6 @@ if row["DBobjectType"] == "gene" and predicate:
         predicate=predicate,
         object=disease.id,
         publications=[row["Reference"]],
-        relation=relation,
         source=source,
     )
 

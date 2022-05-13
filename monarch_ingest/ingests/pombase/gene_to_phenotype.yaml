@@ -40,7 +40,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'qualifiers'
   - 'publications'
   - 'provided_by'

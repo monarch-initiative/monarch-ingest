@@ -103,12 +103,12 @@ phenotypic_feature = PhenotypicFeature(
 #     koza_app.write(publication)
 
 # Associations/Edges
+relation = koza_app.translation_table.resolve_term("has phenotype")
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
     predicate="biolink:has_phenotype",
     object=phenotypic_feature.id,
-    relation=koza_app.translation_table.resolve_term("has phenotype"),
     publications=row["Reference"].split(";"),
     has_evidence=evidence_curie,
     sex_qualifier=sex_qualifier,

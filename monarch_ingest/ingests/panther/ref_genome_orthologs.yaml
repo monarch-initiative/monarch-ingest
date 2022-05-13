@@ -30,7 +30,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'source'
   - 'has_evidence'
 
