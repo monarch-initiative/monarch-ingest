@@ -7,7 +7,7 @@ import uuid
 from koza.cli_runner import koza_app
 
 from model.biolink import Gene, GeneToGeneHomologyAssociation
-from monarch_ingest.panther.orthology_utils import parse_gene
+from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
 

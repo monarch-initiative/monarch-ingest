@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 from pydantic.dataclasses import dataclass
 
 metamodel_version = "None"
-version = "2.2.16"
+version = "2.3.0"
 
 # Pydantic config and validators
 class PydanticConfig:
@@ -152,12 +152,12 @@ class QuantityValue(Annotation):
 
 
 @dataclass(config=PydanticConfig)
-class Attribute(Annotation):
+class Attribute(Annotation, OntologyClass):
     """
     A property or characteristic of an entity. For example, an apple may have properties such as color, shape, age, crispiness. An environmental sample may have attributes such as depth, lat, long, material.
     """
     name: Optional[str] = Field(None, description="""The human-readable 'attribute name' can be set to a string which reflects its context of interpretation, e.g. SEPIO evidence/provenance/confidence annotation or it can default to the name associated with the 'has attribute type' slot ontology term.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -169,7 +169,7 @@ class Attribute(Annotation):
 class ChemicalRole(Attribute):
     
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -181,7 +181,7 @@ class ChemicalRole(Attribute):
 class BiologicalSex(Attribute):
     
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -195,7 +195,7 @@ class PhenotypicSex(BiologicalSex):
     An attribute corresponding to the phenotypic sex of the individual, based upon the reproductive organs present.
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -209,7 +209,7 @@ class GenotypicSex(BiologicalSex):
     An attribute corresponding to the genotypic sex of the individual, based upon genotypic composition of sex chromosomes.
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -223,7 +223,7 @@ class SeverityValue(Attribute):
     describes the severity of a phenotypic feature or disease
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -304,6 +304,7 @@ class NamedThing(Entity):
     a databased entity or concept/class
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:NamedThing"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -361,6 +362,7 @@ class OrganismTaxon(NamedThing):
     A classification of a set of organisms. Example instances: NCBITaxon:9606 (Homo sapiens), NCBITaxon:2 (Bacteria). Can also be used to represent strains or subspecies.
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:OrganismTaxon"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -382,6 +384,7 @@ class Event(NamedThing):
     Something that happens at a given place and time.
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Event"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -401,6 +404,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class AdministrativeEntity(NamedThing):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:AdministrativeEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -421,9 +425,10 @@ class Agent(AdministrativeEntity):
     """
     person, group, organization or project that provides a piece of information (i.e. a knowledge association)
     """
-    affiliation: Optional[List[str]] = Field(None, description="""a professional relationship between one provider (often a person) within another provider (often an organization). Target provider identity should be specified by a CURIE. Providers may have multiple affiliations.""")
+    affiliation: Optional[List[str]] = Field(default_factory=list, description="""a professional relationship between one provider (often a person) within another provider (often an organization). Target provider identity should be specified by a CURIE. Providers may have multiple affiliations.""")
     address: Optional[str] = Field(None, description="""the particulars of the place where someone or an organization is situated.  For now, this slot is a simple text \"blob\" containing all relevant details of the given location for fitness of purpose. For the moment, this \"address\" can include other contact details such as email and phone number(?).""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""Different classes of agents have distinct preferred identifiers. For publishers, use the ISBN publisher code. See https://grp.isbn-international.org/ for publisher code lookups. For editors, authors and  individual providers, use the individual's ORCID if available; Otherwise, a ScopusID, ResearchID or Google Scholar ID ('GSID') may be used if the author ORCID is unknown. Institutional agents could be identified by an International Standard Name Identifier ('ISNI') code.""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Agent"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -449,6 +454,7 @@ class InformationContentEntity(NamedThing):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:InformationContentEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -474,6 +480,7 @@ class Dataset(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Dataset"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -500,6 +507,7 @@ class DatasetDistribution(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:DatasetDistribution"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -528,6 +536,7 @@ class DatasetVersion(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:DatasetVersion"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -555,6 +564,7 @@ class DatasetSummary(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:DatasetSummary"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -580,6 +590,7 @@ class ConfidenceLevel(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ConfidenceLevel"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -605,6 +616,7 @@ class EvidenceType(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:EvidenceType"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -630,6 +642,7 @@ class InformationResource(InformationContentEntity):
     format: Optional[str] = Field(None)
     creation_date: Optional[date] = Field(None, description="""date on which an entity was created. This can be applied to nodes or edges""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:InformationResource"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -650,12 +663,12 @@ class Publication(InformationContentEntity):
     """
     Any published piece of information. Can refer to a whole publication, its encompassing publication (i.e. journal or book) or to a part of a publication, if of significant knowledge scope (e.g. a figure, figure legend, or section highlighted by NLP). The scope is intended to be general and include information published on the web, as well as printed materials, either directly or in one of the Publication Biolink category subclasses.
     """
-    authors: Optional[List[str]] = Field(None, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
-    pages: Optional[List[str]] = Field(None, description="""When a 2-tuple of page numbers are provided, they represent the start and end page of the publication within its parent publication context. For books, this may be set to the total number of pages of the book.""")
+    authors: Optional[List[str]] = Field(default_factory=list, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
+    pages: Optional[List[str]] = Field(default_factory=list, description="""When a 2-tuple of page numbers are provided, they represent the start and end page of the publication within its parent publication context. For books, this may be set to the total number of pages of the book.""")
     summary: Optional[str] = Field(None, description="""executive  summary of a publication""")
-    keywords: Optional[List[str]] = Field(None, description="""keywords tagging a publication""")
+    keywords: Optional[List[str]] = Field(default_factory=list, description="""keywords tagging a publication""")
     mesh_terms: Optional[List[str]] = Field(None, description="""mesh terms tagging a publication""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     license: Optional[str] = Field(None)
     rights: Optional[str] = Field(None)
     format: Optional[str] = Field(None)
@@ -681,12 +694,12 @@ class Book(Publication):
     """
     This class may rarely be instantiated except if use cases of a given knowledge graph support its utility.
     """
-    authors: Optional[List[str]] = Field(None, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
-    pages: Optional[List[str]] = Field(None, description="""page number of source referenced for statement or publication""")
+    authors: Optional[List[str]] = Field(default_factory=list, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
+    pages: Optional[List[str]] = Field(default_factory=list, description="""page number of source referenced for statement or publication""")
     summary: Optional[str] = Field(None, description="""executive  summary of a publication""")
-    keywords: Optional[List[str]] = Field(None, description="""keywords tagging a publication""")
+    keywords: Optional[List[str]] = Field(default_factory=list, description="""keywords tagging a publication""")
     mesh_terms: Optional[List[str]] = Field(None, description="""mesh terms tagging a publication""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     license: Optional[str] = Field(None)
     rights: Optional[str] = Field(None)
     format: Optional[str] = Field(None)
@@ -713,12 +726,12 @@ class BookChapter(Publication):
     published_in: str = Field(None, description="""The enclosing parent book containing the chapter should have industry-standard identifier from ISBN.""")
     volume: Optional[str] = Field(None, description="""volume of a book or music release in a collection/series or a published collection of journal issues in a serial publication""")
     chapter: Optional[str] = Field(None, description="""chapter of a book""")
-    authors: Optional[List[str]] = Field(None, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
-    pages: Optional[List[str]] = Field(None, description="""page number of source referenced for statement or publication""")
+    authors: Optional[List[str]] = Field(default_factory=list, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
+    pages: Optional[List[str]] = Field(default_factory=list, description="""page number of source referenced for statement or publication""")
     summary: Optional[str] = Field(None, description="""executive  summary of a publication""")
-    keywords: Optional[List[str]] = Field(None, description="""keywords tagging a publication""")
+    keywords: Optional[List[str]] = Field(default_factory=list, description="""keywords tagging a publication""")
     mesh_terms: Optional[List[str]] = Field(None, description="""mesh terms tagging a publication""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     license: Optional[str] = Field(None)
     rights: Optional[str] = Field(None)
     format: Optional[str] = Field(None)
@@ -747,12 +760,12 @@ class Serial(Publication):
     iso_abbreviation: Optional[str] = Field(None, description="""Standard abbreviation for periodicals in the International Organization for Standardization (ISO) 4 system See https://www.issn.org/services/online-services/access-to-the-ltwa/. If the 'published in' property is set, then the iso abbreviation pertains to the broader publication context (the journal) within which the given publication node is embedded, not the publication itself.""")
     volume: Optional[str] = Field(None, description="""volume of a book or music release in a collection/series or a published collection of journal issues in a serial publication""")
     issue: Optional[str] = Field(None, description="""issue of a newspaper, a scientific journal or magazine for reference purpose""")
-    authors: Optional[List[str]] = Field(None, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
-    pages: Optional[List[str]] = Field(None, description="""page number of source referenced for statement or publication""")
+    authors: Optional[List[str]] = Field(default_factory=list, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
+    pages: Optional[List[str]] = Field(default_factory=list, description="""page number of source referenced for statement or publication""")
     summary: Optional[str] = Field(None, description="""executive  summary of a publication""")
-    keywords: Optional[List[str]] = Field(None, description="""keywords tagging a publication""")
+    keywords: Optional[List[str]] = Field(default_factory=list, description="""keywords tagging a publication""")
     mesh_terms: Optional[List[str]] = Field(None, description="""mesh terms tagging a publication""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     license: Optional[str] = Field(None)
     rights: Optional[str] = Field(None)
     format: Optional[str] = Field(None)
@@ -780,12 +793,12 @@ class Article(Publication):
     iso_abbreviation: Optional[str] = Field(None, description="""Optional value, if used locally as a convenience, is set to the iso abbreviation of the 'published in' parent.""")
     volume: Optional[str] = Field(None, description="""volume of a book or music release in a collection/series or a published collection of journal issues in a serial publication""")
     issue: Optional[str] = Field(None, description="""issue of a newspaper, a scientific journal or magazine for reference purpose""")
-    authors: Optional[List[str]] = Field(None, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
-    pages: Optional[List[str]] = Field(None, description="""page number of source referenced for statement or publication""")
+    authors: Optional[List[str]] = Field(default_factory=list, description="""connects an publication to the list of authors who contributed to the publication. This property should be a comma-delimited list of author names. It is recommended that an author's name be formatted as \"surname, firstname initial.\".   Note that this property is a node annotation expressing the citation list of authorship which might typically otherwise be more completely documented in biolink:PublicationToProviderAssociation defined edges which point to full details about an author and possibly, some qualifiers which clarify the specific status of a given author in the publication.""")
+    pages: Optional[List[str]] = Field(default_factory=list, description="""page number of source referenced for statement or publication""")
     summary: Optional[str] = Field(None, description="""executive  summary of a publication""")
-    keywords: Optional[List[str]] = Field(None, description="""keywords tagging a publication""")
+    keywords: Optional[List[str]] = Field(default_factory=list, description="""keywords tagging a publication""")
     mesh_terms: Optional[List[str]] = Field(None, description="""mesh terms tagging a publication""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     license: Optional[str] = Field(None)
     rights: Optional[str] = Field(None)
     format: Optional[str] = Field(None)
@@ -825,11 +838,12 @@ class PhysicalEssence(PhysicalEssenceOrOccurrent):
 
 
 @dataclass(config=PydanticConfig)
-class PhysicalEntity(NamedThing):
+class PhysicalEntity(PhysicalEssence, NamedThing):
     """
     An entity that has material reality (a.k.a. physical essence).
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PhysicalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -864,11 +878,12 @@ class ActivityAndBehavior(Occurrent):
 
 
 @dataclass(config=PydanticConfig)
-class Activity(NamedThing):
+class Activity(ActivityAndBehavior, NamedThing):
     """
     An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities.
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Activity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -885,11 +900,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Procedure(NamedThing):
+class Procedure(ActivityAndBehavior, NamedThing):
     """
     A series of actions conducted in a certain order or manner
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Procedure"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -906,11 +922,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Phenomenon(NamedThing):
+class Phenomenon(Occurrent, NamedThing):
     """
     a fact or situation that is observed to exist or happen, especially one whose cause or explanation is in question
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Phenomenon"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -932,6 +949,7 @@ class Device(NamedThing):
     A thing made or adapted for a particular purpose, especially a piece of mechanical or electronic equipment
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Device"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -957,11 +975,12 @@ class SubjectOfInvestigation:
 
 
 @dataclass(config=PydanticConfig)
-class MaterialSample(PhysicalEntity):
+class MaterialSample(SubjectOfInvestigation, PhysicalEntity):
     """
     A sample is a limited quantity of something (e.g. an individual or set of individuals from a population, or a portion of a substance) to be used for testing, analysis, inspection, investigation, demonstration, or trial use. [SIO]
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:MaterialSample"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -983,6 +1002,7 @@ class PlanetaryEntity(NamedThing):
     Any entity or process that exists at the level of the whole planet
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PlanetaryEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -999,9 +1019,10 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class EnvironmentalProcess(PlanetaryEntity):
+class EnvironmentalProcess(PlanetaryEntity, Occurrent):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:EnvironmentalProcess"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1021,6 +1042,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class EnvironmentalFeature(PlanetaryEntity):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:EnvironmentalFeature"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1044,6 +1066,7 @@ class GeographicLocation(PlanetaryEntity):
     latitude: Optional[float] = Field(None, description="""latitude""")
     longitude: Optional[float] = Field(None, description="""longitude""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:GeographicLocation"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1068,6 +1091,7 @@ class GeographicLocationAtTime(GeographicLocation):
     latitude: Optional[float] = Field(None, description="""latitude""")
     longitude: Optional[float] = Field(None, description="""longitude""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:GeographicLocationAtTime"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1087,6 +1111,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class BiologicalEntity(NamedThing):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:BiologicalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1127,7 +1152,7 @@ class ChemicalSubstance:
 
 
 @dataclass(config=PydanticConfig)
-class BiologicalProcessOrActivity(BiologicalEntity):
+class BiologicalProcessOrActivity(BiologicalEntity, Occurrent, OntologyClass):
     """
     Either an individual molecular activity, or a collection of causally connected molecular activities in a biological system.
     """
@@ -1135,6 +1160,7 @@ class BiologicalProcessOrActivity(BiologicalEntity):
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:BiologicalProcessOrActivity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1151,14 +1177,15 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class MolecularActivity(BiologicalProcessOrActivity):
+class MolecularActivity(BiologicalProcessOrActivity, Occurrent, OntologyClass):
     """
     An execution of a molecular function carried out by a gene product or macromolecular complex.
     """
     has_input: Optional[List[str]] = Field(None, description="""A chemical entity that is the input for the reaction""")
     has_output: Optional[List[str]] = Field(None, description="""A chemical entity that is the output for the reaction""")
-    enabled_by: Optional[List[MacromolecularMachineMixin]] = Field(None, description="""The gene product, gene, or complex that catalyzes the reaction""")
+    enabled_by: Optional[List[str]] = Field(None, description="""The gene product, gene, or complex that catalyzes the reaction""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:MolecularActivity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1175,7 +1202,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class BiologicalProcess(BiologicalProcessOrActivity):
+class BiologicalProcess(BiologicalProcessOrActivity, Occurrent, OntologyClass):
     """
     One or more causally connected executions of molecular functions
     """
@@ -1183,6 +1210,7 @@ class BiologicalProcess(BiologicalProcessOrActivity):
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:BiologicalProcess"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1199,12 +1227,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Pathway(BiologicalProcess):
+class Pathway(BiologicalProcess, OntologyClass):
     
     has_input: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an input into the process""")
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Pathway"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1221,12 +1250,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class PhysiologicalProcess(BiologicalProcess):
+class PhysiologicalProcess(BiologicalProcess, OntologyClass):
     
     has_input: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an input into the process""")
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PhysiologicalProcess"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1243,12 +1273,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Behavior(BiologicalProcess):
+class Behavior(BiologicalProcess, ActivityAndBehavior, OntologyClass):
     
     has_input: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an input into the process""")
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Behavior"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1270,7 +1301,7 @@ class OrganismAttribute(Attribute):
     describes a characteristic of an organismal entity.
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -1284,7 +1315,7 @@ class PhenotypicQuality(OrganismAttribute):
     A property of a phenotype
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -1298,7 +1329,7 @@ class Inheritance(OrganismAttribute):
     The pattern or 'mode' in which a particular genetic trait or disorder is passed from one generation to the next, e.g. autosomal dominant, autosomal recessive, etc.
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -1312,6 +1343,7 @@ class OrganismalEntity(BiologicalEntity):
     A named entity that is either a part of an organism, a whole organism, population or clade of organisms, excluding chemical entities
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:OrganismalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1328,12 +1360,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class LifeStage(OrganismalEntity):
+class LifeStage(OrganismalEntity, ThingWithTaxon):
     """
     A stage of development or growth of an organism, including post-natal adult stages
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:LifeStage"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1350,12 +1383,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class IndividualOrganism(OrganismalEntity):
+class IndividualOrganism(OrganismalEntity, ThingWithTaxon):
     """
     An instance of an organism. For example, Richard Nixon, Charles Darwin, my pet cat. Example ID: ORCID:0000-0002-5355-2576
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:IndividualOrganism"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1372,12 +1406,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class PopulationOfIndividualOrganisms(OrganismalEntity):
+class PopulationOfIndividualOrganisms(OrganismalEntity, ThingWithTaxon):
     """
     A collection of individuals from the same taxonomic class distinguished by one or more characteristics.  Characteristics can include, but are not limited to, shared geographic location, genetics, phenotypes.
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PopulationOfIndividualOrganisms"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1400,6 +1435,7 @@ class StudyPopulation(PopulationOfIndividualOrganisms):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:StudyPopulation"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1416,12 +1452,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseOrPhenotypicFeature(BiologicalEntity):
+class DiseaseOrPhenotypicFeature(ThingWithTaxon, BiologicalEntity):
     """
     Either one of a disease or an individual phenotypic feature. Some knowledge resources such as Monarch treat these as distinct, others such as MESH conflate.
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:DiseaseOrPhenotypicFeature"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1442,6 +1479,7 @@ class Disease(DiseaseOrPhenotypicFeature):
     
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Disease"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1464,6 +1502,7 @@ class PhenotypicFeature(DiseaseOrPhenotypicFeature):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PhenotypicFeature"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1486,6 +1525,7 @@ class BehavioralFeature(PhenotypicFeature):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:BehavioralFeature"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1502,12 +1542,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class AnatomicalEntity(OrganismalEntity):
+class AnatomicalEntity(OrganismalEntity, ThingWithTaxon, PhysicalEssence):
     """
     A subcellular location, cell type or gross anatomical part
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:AnatomicalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1530,6 +1571,7 @@ class CellularComponent(AnatomicalEntity):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:CellularComponent"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1550,6 +1592,7 @@ class Cell(AnatomicalEntity):
     
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Cell"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1569,6 +1612,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class CellLine(OrganismalEntity):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:CellLine"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1589,6 +1633,7 @@ class GrossAnatomicalStructure(AnatomicalEntity):
     
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:GrossAnatomicalStructure"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1623,7 +1668,7 @@ class ChemicalEntityOrProteinOrPolypeptide:
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalEntity(NamedThing):
+class ChemicalEntity(ChemicalEntityOrProteinOrPolypeptide, ChemicalEntityOrGeneOrGeneProduct, PhysicalEssence, NamedThing, ChemicalOrDrugOrTreatment):
     """
     A chemical entity is a physical entity that pertains to chemistry or biochemistry.
     """
@@ -1633,6 +1678,7 @@ class ChemicalEntity(NamedThing):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ChemicalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1660,6 +1706,7 @@ class MolecularEntity(ChemicalEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:MolecularEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1687,6 +1734,7 @@ class SmallMolecule(MolecularEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:SmallMolecule"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1717,6 +1765,7 @@ class ChemicalMixture(ChemicalEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ChemicalMixture"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1733,7 +1782,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class NucleicAcidEntity(MolecularEntity):
+class NucleicAcidEntity(MolecularEntity, GenomicEntity, PhysicalEssence, OntologyClass):
     """
     A nucleic acid entity is a molecular entity characterized by availability in gene databases of nucleotide-based sequence representations of its precise sequence; for convenience of representation, partial sequences of various kinds are included.
     """
@@ -1745,6 +1794,7 @@ class NucleicAcidEntity(MolecularEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:NucleicAcidEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1776,6 +1826,7 @@ class MolecularMixture(ChemicalMixture):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:MolecularMixture"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1806,6 +1857,7 @@ class ComplexMolecularMixture(ChemicalMixture):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ComplexMolecularMixture"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1836,6 +1888,7 @@ class ProcessedMaterial(ChemicalMixture):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ProcessedMaterial"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1852,7 +1905,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Drug(MolecularMixture):
+class Drug(MolecularMixture, ChemicalOrDrugOrTreatment, OntologyClass):
     """
     A substance intended for use in the diagnosis, cure, mitigation, treatment, or prevention of disease
     """
@@ -1866,6 +1919,7 @@ class Drug(MolecularMixture):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Drug"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1890,6 +1944,7 @@ class EnvironmentalFoodContaminant(ChemicalEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:EnvironmentalFoodContaminant"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1914,6 +1969,7 @@ class FoodAdditive(ChemicalEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:FoodAdditive"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1938,6 +1994,7 @@ class Nutrient(ChemicalEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Nutrient"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1962,6 +2019,7 @@ class Macronutrient(Nutrient):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Macronutrient"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -1986,6 +2044,7 @@ class Micronutrient(Nutrient):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Micronutrient"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2010,6 +2069,7 @@ class Vitamin(Micronutrient):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Vitamin"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2040,6 +2100,7 @@ class Food(ChemicalMixture):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Food"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2074,13 +2135,13 @@ class GeneOrGeneProduct(MacromolecularMachineMixin):
 
 
 @dataclass(config=PydanticConfig)
-class Gene(BiologicalEntity):
+class Gene(GeneOrGeneProduct, ChemicalEntityOrGeneOrGeneProduct, GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. A gene locus may include regulatory regions, transcribed regions and/or other functional sequence regions.
     """
     symbol: Optional[str] = Field(None, description="""Symbol for a particular thing""")
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
@@ -2104,8 +2165,8 @@ class GeneProductMixin(GeneOrGeneProduct):
     """
     The functional molecular product of a single gene locus. Gene products are either proteins or functional RNA molecules.
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
     
 
@@ -2115,8 +2176,8 @@ class GeneProductIsoformMixin(GeneProductMixin):
     """
     This is an abstract class that can be mixed in with different kinds of gene products to indicate that the gene product is intended to represent a specific isoform rather than a canonical or reference or generic product. The designation of canonical or reference may be arbitrary, or it may represent the superclass of all isoforms.
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
     
 
@@ -2131,12 +2192,13 @@ class MacromolecularComplexMixin(MacromolecularMachineMixin):
 
 
 @dataclass(config=PydanticConfig)
-class Genome(BiologicalEntity):
+class Genome(GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     A genome is the sum of genetic material within a cell or virion.
     """
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Genome"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2166,6 +2228,7 @@ class Exon(NucleicAcidEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Exon"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2195,6 +2258,7 @@ class Transcript(NucleicAcidEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Transcript"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2222,6 +2286,7 @@ class CodingSequence(NucleicAcidEntity):
     is_toxic: Optional[bool] = Field(None)
     has_chemical_role: Optional[List[ChemicalRole]] = Field(None, description="""	A role is particular behaviour which a material entity may exhibit.""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:CodingSequence"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2239,12 +2304,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Polypeptide(BiologicalEntity):
+class Polypeptide(ChemicalEntityOrProteinOrPolypeptide, ChemicalEntityOrGeneOrGeneProduct, ThingWithTaxon, BiologicalEntity):
     """
     A polypeptide is a molecular entity characterized by availability in protein databases of amino-acid-based sequence representations of its precise primary structure; for convenience of representation, partial sequences of various kinds are included, even if they do not represent a physical molecule.
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Polypeptide"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2261,12 +2327,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Protein(Polypeptide):
+class Protein(Polypeptide, GeneProductMixin, ThingWithTaxon):
     """
     A gene product that is composed of a chain of amino acid sequences and is produced by ribosome-mediated translation of mRNA
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
@@ -2285,12 +2351,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ProteinIsoform(Protein):
+class ProteinIsoform(Protein, GeneProductIsoformMixin):
     """
     Represents a protein that is a specific isoform of the canonical or reference protein. See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4114032/
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
@@ -2314,6 +2380,7 @@ class NucleicAcidSequenceMotif(BiologicalEntity):
     A linear nucleotide sequence pattern that is widespread and has, or is conjectured to have, a biological significance. e.g. the TATA box promoter motif, transcription factor binding consensus sequences.
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:NucleicAcidSequenceMotif"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2330,10 +2397,10 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class RNAProduct(Transcript):
+class RNAProduct(Transcript, GeneProductMixin):
     
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     is_metabolite: Optional[bool] = Field(None, description="""indicates whether a molecular entity is a metabolite""")
     trade_name: Optional[str] = Field(None)
@@ -2359,12 +2426,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class RNAProductIsoform(RNAProduct):
+class RNAProductIsoform(RNAProduct, GeneProductIsoformMixin):
     """
     Represents a protein that is a specific isoform of the canonical or reference RNA
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     is_metabolite: Optional[bool] = Field(None, description="""indicates whether a molecular entity is a metabolite""")
     trade_name: Optional[str] = Field(None)
@@ -2392,8 +2459,8 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 @dataclass(config=PydanticConfig)
 class NoncodingRNAProduct(RNAProduct):
     
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     is_metabolite: Optional[bool] = Field(None, description="""indicates whether a molecular entity is a metabolite""")
     trade_name: Optional[str] = Field(None)
@@ -2421,8 +2488,8 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 @dataclass(config=PydanticConfig)
 class MicroRNA(NoncodingRNAProduct):
     
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     is_metabolite: Optional[bool] = Field(None, description="""indicates whether a molecular entity is a metabolite""")
     trade_name: Optional[str] = Field(None)
@@ -2452,8 +2519,8 @@ class SiRNA(NoncodingRNAProduct):
     """
     A small RNA molecule that is the product of a longer exogenous or endogenous dsRNA, which is either a bimolecular duplex or very long hairpin, processed (via the Dicer pathway) such that numerous siRNAs accumulate from both strands of the dsRNA. SRNAs trigger the cleavage of their target molecules.
     """
-    synonym: Optional[List[str]] = Field(None, description="""Alternate human-readable names for a thing""")
-    xref: Optional[List[str]] = Field(None, description="""Alternate CURIEs for a thing""")
+    synonym: Optional[List[str]] = Field(default_factory=list, description="""Alternate human-readable names for a thing""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     is_metabolite: Optional[bool] = Field(None, description="""indicates whether a molecular entity is a metabolite""")
     trade_name: Optional[str] = Field(None)
@@ -2488,12 +2555,13 @@ class GeneGroupingMixin:
 
 
 @dataclass(config=PydanticConfig)
-class ProteinDomain(BiologicalEntity):
+class ProteinDomain(GeneGroupingMixin, ChemicalEntityOrGeneOrGeneProduct, BiologicalEntity):
     """
     A conserved part of protein sequence and (tertiary) structure that can evolve, function, and exist independently of the rest of the protein chain. Protein domains maintain their structure and function independently of the proteins in which they are found. e.g. an SH3 domain.
     """
     has_gene_or_gene_product: Optional[List[str]] = Field(None, description="""connects an entity with one or more gene or gene products""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ProteinDomain"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2510,10 +2578,11 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ProteinFamily(BiologicalEntity):
+class ProteinFamily(GeneGroupingMixin, ChemicalEntityOrGeneOrGeneProduct, BiologicalEntity):
     
     has_gene_or_gene_product: Optional[List[str]] = Field(None, description="""connects an entity with one or more gene or gene products""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ProteinFamily"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2530,12 +2599,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class GeneFamily(BiologicalEntity):
+class GeneFamily(GeneGroupingMixin, ChemicalEntityOrGeneOrGeneProduct, BiologicalEntity):
     """
     any grouping of multiple genes or gene products related by common descent
     """
     has_gene_or_gene_product: Optional[List[str]] = Field(None, description="""connects an entity with one or more gene or gene products""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:GeneFamily"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2555,7 +2625,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class Zygosity(Attribute):
     
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2564,13 +2634,14 @@ class Zygosity(Attribute):
 
 
 @dataclass(config=PydanticConfig)
-class Genotype(BiologicalEntity):
+class Genotype(GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     An information content entity that describes a genome by specifying the total variation in genomic sequence and/or gene expression, relative to some established background
     """
     has_zygosity: Optional[Zygosity] = Field(None)
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Genotype"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2588,12 +2659,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class Haplotype(BiologicalEntity):
+class Haplotype(GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     A set of zero or more Alleles on a single instance of a Sequence[VMC]
     """
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Haplotype"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2611,13 +2683,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class SequenceVariant(BiologicalEntity):
+class SequenceVariant(GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     An allele that varies in its sequence from what is considered the reference allele at that locus.
     """
     has_gene: Optional[List[str]] = Field(None, description="""Each allele can be associated with any number of genes""")
     has_biological_sequence: Optional[str] = Field(None, description="""The state of the sequence w.r.t a reference sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:SequenceVariant"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2642,6 +2715,7 @@ class Snv(SequenceVariant):
     has_gene: Optional[List[str]] = Field(None, description="""connects an entity associated with one or more genes""")
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Snv"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2659,12 +2733,13 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ReagentTargetedGene(BiologicalEntity):
+class ReagentTargetedGene(GenomicEntity, BiologicalEntity, PhysicalEssence, OntologyClass):
     """
     A gene altered in its expression level in the context of some experiment as a result of being targeted by gene-knockdown reagent(s) such as a morpholino or RNAi.
     """
     has_biological_sequence: Optional[str] = Field(None, description="""connects a genomic feature to its sequence""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ReagentTargetedGene"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2687,7 +2762,7 @@ class ClinicalAttribute(Attribute):
     Attributes relating to a clinical manifestation
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2701,7 +2776,7 @@ class ClinicalMeasurement(ClinicalAttribute):
     A clinical measurement is a special kind of attribute which results from a laboratory observation from a subject individual or sample. Measurements can be connected to their subject by the 'has attribute' slot.
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2715,7 +2790,7 @@ class ClinicalModifier(ClinicalAttribute):
     Used to characterize and specify the phenotypic abnormalities defined in the phenotypic abnormality sub-ontology, with respect to severity, laterality, and other aspects
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2729,7 +2804,7 @@ class ClinicalCourse(ClinicalAttribute):
     The course a disease typically takes from its onset, progression in time, and eventual resolution or death of the affected individual
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2743,7 +2818,7 @@ class Onset(ClinicalCourse):
     The age group in which (disease) symptom manifestations appear
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2757,6 +2832,7 @@ class ClinicalEntity(NamedThing):
     Any entity or process that exists in the clinical domain and outside the biological realm. Diseases are placed under biological entities
     """
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ClinicalEntity"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2776,6 +2852,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class ClinicalTrial(ClinicalEntity):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ClinicalTrial"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2795,6 +2872,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class ClinicalIntervention(ClinicalEntity):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ClinicalIntervention"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2817,6 +2895,7 @@ class ClinicalFinding(PhenotypicFeature):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:ClinicalFinding"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2836,6 +2915,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class Hospitalization(ClinicalIntervention):
     
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Hospitalization"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2857,7 +2937,7 @@ class SocioeconomicAttribute(Attribute):
     Attributes relating to a socioeconomic manifestation
     """
     name: Optional[str] = Field(None, description="""A human-readable name for an attribute or entity.""")
-    has_attribute_type: OntologyClass = Field(None, description="""connects an attribute to a class that describes it""")
+    has_attribute_type: str = Field(None, description="""connects an attribute to a class that describes it""")
     has_quantitative_value: Optional[List[QuantityValue]] = Field(None, description="""connects an attribute to a value""")
     has_qualitative_value: Optional[str] = Field(None, description="""connects an attribute to a value""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
@@ -2872,6 +2952,7 @@ class Case(IndividualOrganism):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Case"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2894,6 +2975,7 @@ class Cohort(StudyPopulation):
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Cohort"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2919,7 +3001,7 @@ class ExposureEvent:
 
 
 @dataclass(config=PydanticConfig)
-class GenomicBackgroundExposure:
+class GenomicBackgroundExposure(ExposureEvent, GeneGroupingMixin, GenomicEntity, PhysicalEssence, OntologyClass):
     """
     A genomic background exposure is where an individual's specific genomic background of genes, sequence variants or other pre-existing genomic conditions constitute a kind of 'exposure' to the organism, leading to or influencing an outcome.
     """
@@ -2940,7 +3022,7 @@ class PathologicalEntityMixin:
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalProcess(BiologicalProcess):
+class PathologicalProcess(PathologicalEntityMixin, BiologicalProcess):
     """
     A biologic function or a process having an abnormal or deleterious effect at the subcellular, cellular, multicellular, or organismal level.
     """
@@ -2948,6 +3030,7 @@ class PathologicalProcess(BiologicalProcess):
     has_output: Optional[List[str]] = Field(None, description="""holds between a process and a continuant, where the continuant is an output of the process""")
     enabled_by: Optional[List[str]] = Field(None, description="""holds between a process and a physical entity, where the physical entity executes the process""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PathologicalProcess"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2964,7 +3047,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalProcessExposure:
+class PathologicalProcessExposure(ExposureEvent):
     """
     A pathological process, when viewed as an exposure, representing a precondition, leading to or influencing an outcome, e.g. autoimmunity leading to disease.
     """
@@ -2973,12 +3056,13 @@ class PathologicalProcessExposure:
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalAnatomicalStructure(AnatomicalEntity):
+class PathologicalAnatomicalStructure(PathologicalEntityMixin, AnatomicalEntity):
     """
     An anatomical structure with the potential of have an abnormal or deleterious effect at the subcellular, cellular, multicellular, or organismal level.
     """
     in_taxon: Optional[List[str]] = Field(None, description="""connects an entity to its taxonomic classification. Only certain kinds of entities can be taxonomically classified; see 'thing with taxon'""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:PathologicalAnatomicalStructure"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -2995,7 +3079,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalAnatomicalExposure:
+class PathologicalAnatomicalExposure(ExposureEvent):
     """
     An abnormal anatomical structure, when viewed as an exposure, representing an precondition, leading to or influencing an outcome, e.g. thrombosis leading to an ischemic disease outcome.
     """
@@ -3004,7 +3088,7 @@ class PathologicalAnatomicalExposure:
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseOrPhenotypicFeatureExposure:
+class DiseaseOrPhenotypicFeatureExposure(PathologicalEntityMixin, ExposureEvent):
     """
     A disease or phenotypic feature state, when viewed as an exposure, represents an precondition, leading to or influencing an outcome, e.g. HIV predisposing an individual to infections; a relative deficiency of skin pigmentation predisposing an individual to skin cancer.
     """
@@ -3013,7 +3097,7 @@ class DiseaseOrPhenotypicFeatureExposure:
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalExposure:
+class ChemicalExposure(ExposureEvent):
     """
     A chemical exposure is an intake of a particular chemical entity.
     """
@@ -3032,7 +3116,7 @@ class ComplexChemicalExposure:
 
 
 @dataclass(config=PydanticConfig)
-class DrugExposure(ChemicalExposure):
+class DrugExposure(ChemicalExposure, ExposureEvent):
     """
     A drug exposure is an intake of a particular drug.
     """
@@ -3042,7 +3126,7 @@ class DrugExposure(ChemicalExposure):
 
 
 @dataclass(config=PydanticConfig)
-class DrugToGeneInteractionExposure(DrugExposure):
+class DrugToGeneInteractionExposure(DrugExposure, GeneGroupingMixin):
     """
     drug to gene interaction exposure is a drug exposure is where the interactions of the drug with specific genes are known to constitute an 'exposure' to the organism, leading to or influencing an outcome.
     """
@@ -3053,7 +3137,7 @@ class DrugToGeneInteractionExposure(DrugExposure):
 
 
 @dataclass(config=PydanticConfig)
-class Treatment(NamedThing):
+class Treatment(ExposureEvent, NamedThing, ChemicalOrDrugOrTreatment):
     """
     A treatment is targeted at a disease or phenotype and may involve multiple drug 'exposures', medical devices and/or procedures
     """
@@ -3062,6 +3146,7 @@ class Treatment(NamedThing):
     has_procedure: Optional[List[str]] = Field(None, description="""connects an entity to one or more (medical) procedures""")
     timepoint: Optional[str] = Field(None, description="""a point in time""")
     provided_by: Optional[List[str]] = Field(None, description="""The value in this node property represents the knowledge provider that created or assembled the node and all of its attributes.  Used internally to represent how a particular node made its way into a knowledge provider or graph.""")
+    xref: Optional[List[str]] = Field(default_factory=list, description="""Alternate CURIEs for a thing""")
     id: str = Field(None, description="""A unique identifier for an entity. Must be either a CURIE shorthand for a URI or a complete URI""")
     iri: Optional[str] = Field(None, description="""An IRI for an entity. This is determined by the id using expansion rules.""")
     category: List[str] = Field(["biolink:Treatment"], description="""Name of the high level ontology class in which this entity is categorized. Corresponds to the label for the biolink entity type class.
@@ -3078,7 +3163,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class BioticExposure:
+class BioticExposure(ExposureEvent):
     """
     An external biotic exposure is an intake of (sometimes pathological) biological organisms (including viruses).
     """
@@ -3087,7 +3172,7 @@ class BioticExposure:
 
 
 @dataclass(config=PydanticConfig)
-class EnvironmentalExposure:
+class EnvironmentalExposure(ExposureEvent):
     """
     A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants.
     """
@@ -3096,7 +3181,7 @@ class EnvironmentalExposure:
 
 
 @dataclass(config=PydanticConfig)
-class GeographicExposure(EnvironmentalExposure):
+class GeographicExposure(EnvironmentalExposure, ExposureEvent):
     """
     A geographic exposure is a factor relating to geographic proximity to some impactful entity.
     """
@@ -3105,7 +3190,7 @@ class GeographicExposure(EnvironmentalExposure):
 
 
 @dataclass(config=PydanticConfig)
-class BehavioralExposure:
+class BehavioralExposure(ExposureEvent):
     """
     A behavioral exposure is a factor relating to behavior impacting an individual.
     """
@@ -3114,7 +3199,7 @@ class BehavioralExposure:
 
 
 @dataclass(config=PydanticConfig)
-class SocioeconomicExposure:
+class SocioeconomicExposure(ExposureEvent):
     """
     A socioeconomic exposure is a factor relating to social and financial status of an affected individual (e.g. poverty).
     """
@@ -3132,7 +3217,7 @@ class Outcome:
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalProcessOutcome:
+class PathologicalProcessOutcome(Outcome):
     """
     An outcome resulting from an exposure event which is the manifestation of a pathological process.
     """
@@ -3141,7 +3226,7 @@ class PathologicalProcessOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class PathologicalAnatomicalOutcome:
+class PathologicalAnatomicalOutcome(Outcome):
     """
     An outcome resulting from an exposure event which is the manifestation of an abnormal anatomical structure.
     """
@@ -3150,7 +3235,7 @@ class PathologicalAnatomicalOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseOrPhenotypicFeatureOutcome:
+class DiseaseOrPhenotypicFeatureOutcome(Outcome):
     """
     Physiological outcomes resulting from an exposure event which is the manifestation of a disease or other characteristic phenotype.
     """
@@ -3159,7 +3244,7 @@ class DiseaseOrPhenotypicFeatureOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class BehavioralOutcome:
+class BehavioralOutcome(Outcome):
     """
     An outcome resulting from an exposure event which is the manifestation of human behavior.
     """
@@ -3168,7 +3253,7 @@ class BehavioralOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class HospitalizationOutcome:
+class HospitalizationOutcome(Outcome):
     """
     An outcome resulting from an exposure event which is the increased manifestation of acute (e.g. emergency room visit) or chronic (inpatient) hospitalization.
     """
@@ -3177,7 +3262,7 @@ class HospitalizationOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class MortalityOutcome:
+class MortalityOutcome(Outcome):
     """
     An outcome of death from resulting from an exposure event.
     """
@@ -3186,7 +3271,7 @@ class MortalityOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class EpidemiologicalOutcome:
+class EpidemiologicalOutcome(Outcome):
     """
     An epidemiological outcome, such as societal disease burden, resulting from an exposure event.
     """
@@ -3195,7 +3280,7 @@ class EpidemiologicalOutcome:
 
 
 @dataclass(config=PydanticConfig)
-class SocioeconomicOutcome:
+class SocioeconomicOutcome(Outcome):
     """
     An general social or economic outcome, such as healthcare costs, utilization, etc., resulting from an exposure event
     """
@@ -3211,10 +3296,9 @@ class Association(Entity):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3243,10 +3327,9 @@ class ContributorAssociation(Association):
     subject: str = Field(None, description="""information content entity which an agent has helped realise""")
     predicate: str = Field(None, description="""generally one of the predicate values 'provider', 'publisher', 'editor' or 'author'""")
     object: str = Field(None, description="""agent helping to realise the given entity (e.g. such as a publication)""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""this field can be used to annotate special characteristics of an agent relationship, such as the fact that a given author agent of a publication is the 'corresponding author'""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""this field can be used to annotate special characteristics of an agent relationship, such as the fact that a given author agent of a publication is the 'corresponding author'""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3275,10 +3358,9 @@ class GenotypeToGenotypePartAssociation(Association):
     subject: str = Field(None, description="""parent genotype""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""child genotype""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3307,10 +3389,9 @@ class GenotypeToGeneAssociation(Association):
     subject: str = Field(None, description="""parent genotype""")
     predicate: str = Field(None, description="""the relationship type used to connect genotype to gene""")
     object: str = Field(None, description="""gene implicated in genotype""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3339,10 +3420,9 @@ class GenotypeToVariantAssociation(Association):
     subject: str = Field(None, description="""parent genotype""")
     predicate: str = Field(None, description="""the relationship type used to connect genotype to gene""")
     object: str = Field(None, description="""gene implicated in genotype""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3368,13 +3448,12 @@ class GeneToGeneAssociation(Association):
     """
     abstract parent class for different kinds of gene-gene or gene product to gene product relationships. Includes homology and interaction.
     """
-    subject: GeneOrGeneProduct = Field(None, description="""the subject gene in the association. If the relation is symmetric, subject vs object is arbitrary. We allow a gene product to stand as a proxy for the gene or vice versa.""")
+    subject: str = Field(None, description="""the subject gene in the association. If the relation is symmetric, subject vs object is arbitrary. We allow a gene product to stand as a proxy for the gene or vice versa.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOrGeneProduct = Field(None, description="""the object gene in the association. If the relation is symmetric, subject vs object is arbitrary. We allow a gene product to stand as a proxy for the gene or vice versa.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""the object gene in the association. If the relation is symmetric, subject vs object is arbitrary. We allow a gene product to stand as a proxy for the gene or vice versa.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3400,13 +3479,12 @@ class GeneToGeneHomologyAssociation(GeneToGeneAssociation):
     """
     A homology association between two genes. May be orthology (in which case the species of subject and object should differ) or paralogy (in which case the species may be the same)
     """
-    subject: GeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""homology relationship type""")
-    object: GeneOrGeneProduct = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3432,7 +3510,7 @@ class GeneExpressionMixin:
     """
     Observed gene expression intensity, context (site, stage) and associated phenotypic status within which the expression occurs.
     """
-    quantifier_qualifier: Optional[OntologyClass] = Field(None, description="""Optional quantitative value indicating degree of expression.""")
+    quantifier_qualifier: Optional[str] = Field(None, description="""Optional quantitative value indicating degree of expression.""")
     expression_site: Optional[str] = Field(None, description="""location in which gene or protein expression takes place. May be cell, tissue, or organ.""")
     stage_qualifier: Optional[str] = Field(None, description="""stage during which gene or protein expression of takes place.""")
     phenotypic_state: Optional[str] = Field(None, description="""in experiments (e.g. gene expression) assaying diseased or unhealthy tissue, the phenotypic state can be put here, e.g. MONDO ID. For healthy tissues, use XXX.""")
@@ -3440,21 +3518,20 @@ class GeneExpressionMixin:
 
 
 @dataclass(config=PydanticConfig)
-class GeneToGeneCoexpressionAssociation(GeneToGeneAssociation):
+class GeneToGeneCoexpressionAssociation(GeneExpressionMixin, GeneToGeneAssociation):
     """
     Indicates that two genes are co-expressed, generally under the same conditions.
     """
-    quantifier_qualifier: Optional[OntologyClass] = Field(None, description="""A measurable quantity for the object of the association""")
+    quantifier_qualifier: Optional[str] = Field(None, description="""A measurable quantity for the object of the association""")
     expression_site: Optional[str] = Field(None, description="""location in which gene or protein expression takes place. May be cell, tissue, or organ.""")
     stage_qualifier: Optional[str] = Field(None, description="""stage during which gene or protein expression of takes place.""")
     phenotypic_state: Optional[str] = Field(None, description="""in experiments (e.g. gene expression) assaying diseased or unhealthy tissue, the phenotypic state can be put here, e.g. MONDO ID. For healthy tissues, use XXX.""")
-    subject: GeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOrGeneProduct = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3480,13 +3557,12 @@ class PairwiseGeneToGeneInteraction(GeneToGeneAssociation):
     """
     An interaction between two genes or two gene products. May be physical (e.g. protein binding) or genetic (between genes). May be symmetric (e.g. protein interaction) or directed (e.g. phosphorylation)
     """
-    subject: GeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""interaction relationship type""")
-    object: GeneOrGeneProduct = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3512,14 +3588,13 @@ class PairwiseMolecularInteraction(PairwiseGeneToGeneInteraction):
     """
     An interaction at the molecular level between two physical entities
     """
-    interacting_molecules_category: Optional[OntologyClass] = Field(None)
+    interacting_molecules_category: Optional[str] = Field(None)
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""interaction relationship type""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3586,17 +3661,16 @@ class CaseToEntityAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalToChemicalAssociation(Association):
+class ChemicalToChemicalAssociation(ChemicalToEntityAssociationMixin, Association):
     """
     A relationship between two chemical entities. This can encompass actual interactions as well as temporal causal edges, e.g. one chemical converted to another.
     """
-    subject: ChemicalEntityOrGeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the chemical element that is the target of the statement""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3626,10 +3700,9 @@ class ReactionToParticipantAssociation(ChemicalToChemicalAssociation):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3658,11 +3731,10 @@ class ReactionToCatalystAssociation(ReactionToParticipantAssociation):
     reaction_side: Optional[ReactionSideEnum] = Field(None, description="""the side of a reaction being modeled (ie: left or right)""")
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOrGeneProduct = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3695,14 +3767,13 @@ class ChemicalToChemicalDerivationAssociation(ChemicalToChemicalAssociation):
   THEN
   C1 derives-into C2 <<catalyst qualifier P>>
     """
-    catalyst_qualifier: Optional[List[MacromolecularMachineMixin]] = Field(None, description="""this connects the derivation edge to the chemical entity that catalyzes the reaction that causes the subject chemical to transform into the object chemical.""")
+    catalyst_qualifier: Optional[List[str]] = Field(None, description="""this connects the derivation edge to the chemical entity that catalyzes the reaction that causes the subject chemical to transform into the object chemical.""")
     subject: str = Field(None, description="""the upstream chemical entity""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the downstream chemical entity""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3724,17 +3795,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalToPathwayAssociation(Association):
+class ChemicalToPathwayAssociation(ChemicalToEntityAssociationMixin, Association):
     """
     An interaction between a chemical entity and a biological process or pathway.
     """
-    subject: ChemicalEntityOrGeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""the chemical entity that is affecting the pathway""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the pathway that is affected by the chemical""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3756,17 +3826,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalToGeneAssociation(Association):
+class ChemicalToGeneAssociation(ChemicalToEntityAssociationMixin, Association):
     """
     An interaction between a chemical entity and a gene or gene product.
     """
-    subject: ChemicalEntityOrGeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOrGeneProduct = Field(None, description="""the gene or gene product that is affected by the chemical.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""the gene or gene product that is affected by the chemical.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3788,17 +3857,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class DrugToGeneAssociation(Association):
+class DrugToGeneAssociation(DrugToEntityAssociationMixin, Association):
     """
     An interaction between a drug and a gene or gene product.
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOrGeneProduct = Field(None, description="""the gene or gene product that is affected by the drug""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""the gene or gene product that is affected by the drug""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3836,10 +3904,9 @@ class MaterialSampleDerivationAssociation(Association):
     subject: str = Field(None, description="""the material sample being described""")
     predicate: str = Field(None, description="""derivation relationship""")
     object: str = Field(None, description="""the material entity the sample was derived from. This may be another material sample, or any other material entity, including for example an organism, a geographic feature, or some environmental material.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3877,17 +3944,16 @@ class EntityToExposureEventAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseToExposureEventAssociation(Association):
+class DiseaseToExposureEventAssociation(EntityToExposureEventAssociationMixin, DiseaseToEntityAssociationMixin, Association):
     """
     An association between an exposure event and a disease.
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: ExposureEvent = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3925,7 +3991,7 @@ class EntityToOutcomeAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class ExposureEventToOutcomeAssociation(Association):
+class ExposureEventToOutcomeAssociation(EntityToOutcomeAssociationMixin, ExposureEventToEntityAssociationMixin, Association):
     """
     An association between an exposure event and an outcome.
     """
@@ -3933,11 +3999,10 @@ class ExposureEventToOutcomeAssociation(Association):
     has_temporal_context: Optional[str] = Field(None, description="""a constraint of time placed upon the truth value of an association.""")
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: Outcome = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -3996,10 +4061,9 @@ class InformationContentEntityToNamedThingAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4039,17 +4103,16 @@ class DiseaseOrPhenotypicFeatureToEntityAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseOrPhenotypicFeatureToLocationAssociation(Association):
+class DiseaseOrPhenotypicFeatureToLocationAssociation(DiseaseOrPhenotypicFeatureToEntityAssociationMixin, Association):
     """
     An association between either a disease or a phenotypic feature and an anatomical entity, where the disease/feature manifests in that site.
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""anatomical entity in which the disease or feature is found.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4078,17 +4141,16 @@ class EntityToDiseaseOrPhenotypicFeatureAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class CellLineToDiseaseOrPhenotypicFeatureAssociation(Association):
+class CellLineToDiseaseOrPhenotypicFeatureAssociation(EntityToDiseaseOrPhenotypicFeatureAssociationMixin, CellLineToEntityAssociationMixin, Association):
     """
     An relationship between a cell line and a disease or a phenotype, where the cell line is derived from an individual with that disease or phenotype.
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4110,17 +4172,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalToDiseaseOrPhenotypicFeatureAssociation(Association):
+class ChemicalToDiseaseOrPhenotypicFeatureAssociation(EntityToDiseaseOrPhenotypicFeatureAssociationMixin, ChemicalToEntityAssociationMixin, Association):
     """
     An interaction between a chemical entity and a phenotype or disease, where the presence of the chemical gives rise to or exacerbates the phenotype.
     """
-    subject: ChemicalEntityOrGeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the disease or phenotype that is affected by the chemical""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4142,17 +4203,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class MaterialSampleToDiseaseOrPhenotypicFeatureAssociation(Association):
+class MaterialSampleToDiseaseOrPhenotypicFeatureAssociation(EntityToDiseaseOrPhenotypicFeatureAssociationMixin, MaterialSampleToEntityAssociationMixin, Association):
     """
     An association between a material sample and a disease or phenotype.
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4181,7 +4241,7 @@ class GenotypeToEntityAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class GenotypeToPhenotypicFeatureAssociation(Association):
+class GenotypeToPhenotypicFeatureAssociation(GenotypeToEntityAssociationMixin, EntityToPhenotypicFeatureAssociationMixin, Association):
     """
     Any association between one genotype and a phenotypic feature, where having the genotype confers the phenotype, either in isolation or through environment
     """
@@ -4189,10 +4249,9 @@ class GenotypeToPhenotypicFeatureAssociation(Association):
     subject: str = Field(None, description="""genotype that is associated with the phenotypic feature""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4217,18 +4276,17 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class ExposureEventToPhenotypicFeatureAssociation(Association):
+class ExposureEventToPhenotypicFeatureAssociation(EntityToPhenotypicFeatureAssociationMixin, Association):
     """
     Any association between an environment and a phenotypic feature, where being in the environment influences the phenotype.
     """
     sex_qualifier: Optional[BiologicalSex] = Field(None, description="""a qualifier used in a phenotypic association to state whether the association is specific to a particular sex.""")
-    subject: ExposureEvent = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4253,7 +4311,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class DiseaseToPhenotypicFeatureAssociation(Association):
+class DiseaseToPhenotypicFeatureAssociation(EntityToPhenotypicFeatureAssociationMixin, DiseaseToEntityAssociationMixin, Association):
     """
     An association between a disease and a phenotypic feature in which the phenotypic feature is associated with the disease in some way.
     """
@@ -4261,10 +4319,9 @@ class DiseaseToPhenotypicFeatureAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4289,7 +4346,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class CaseToPhenotypicFeatureAssociation(Association):
+class CaseToPhenotypicFeatureAssociation(EntityToPhenotypicFeatureAssociationMixin, CaseToEntityAssociationMixin, Association):
     """
     An association between a case (e.g. individual patient) and a phenotypic feature in which the individual has or has had the phenotype.
     """
@@ -4297,10 +4354,9 @@ class CaseToPhenotypicFeatureAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4325,7 +4381,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class BehaviorToBehavioralFeatureAssociation(Association):
+class BehaviorToBehavioralFeatureAssociation(EntityToPhenotypicFeatureAssociationMixin, Association):
     """
     An association between an mixture behavior and a behavioral feature manifested by the individual exhibited or has exhibited the behavior.
     """
@@ -4333,10 +4389,9 @@ class BehaviorToBehavioralFeatureAssociation(Association):
     subject: str = Field(None, description="""behavior that is the subject of the association""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""behavioral feature that is the object of the association""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4375,16 +4430,15 @@ class VariantToEntityAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class GeneToPhenotypicFeatureAssociation(Association):
+class GeneToPhenotypicFeatureAssociation(GeneToEntityAssociationMixin, EntityToPhenotypicFeatureAssociationMixin, Association):
     
     sex_qualifier: Optional[BiologicalSex] = Field(None, description="""a qualifier used in a phenotypic association to state whether the association is specific to a particular sex.""")
-    subject: GeneOrGeneProduct = Field(None, description="""gene in which variation is correlated with the phenotypic feature""")
+    subject: str = Field(None, description="""gene in which variation is correlated with the phenotypic feature""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4409,15 +4463,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class GeneToDiseaseAssociation(Association):
+class GeneToDiseaseAssociation(GeneToEntityAssociationMixin, EntityToDiseaseAssociationMixin, Association):
     
-    subject: GeneOrGeneProduct = Field(None, description="""gene in which variation is correlated with the disease, may be protective or causative or associative, or as a model""")
+    subject: str = Field(None, description="""gene in which variation is correlated with the disease, may be protective or causative or associative, or as a model""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4442,15 +4495,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class DruggableGeneToDiseaseAssociation(GeneToDiseaseAssociation):
+class DruggableGeneToDiseaseAssociation(GeneToDiseaseAssociation, GeneToEntityAssociationMixin, EntityToDiseaseAssociationMixin):
     
-    subject: GeneOrGeneProduct = Field(None, description="""gene in which variation is correlated with the disease in a protective manner, or if the product produced by the gene can be targeted by a small molecule and this leads to a protective or improving disease state.""")
+    subject: str = Field(None, description="""gene in which variation is correlated with the disease in a protective manner, or if the product produced by the gene can be targeted by a small molecule and this leads to a protective or improving disease state.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[DruggableGeneCategoryEnum]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4475,17 +4527,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantToGeneAssociation(Association):
+class VariantToGeneAssociation(VariantToEntityAssociationMixin, Association):
     """
     An association between a variant and a gene, where the variant has a genetic association with the gene (i.e. is in linkage disequilibrium)
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4507,21 +4558,20 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantToGeneExpressionAssociation(VariantToGeneAssociation):
+class VariantToGeneExpressionAssociation(VariantToGeneAssociation, GeneExpressionMixin):
     """
     An association between a variant and expression of a gene (i.e. e-QTL)
     """
-    quantifier_qualifier: Optional[OntologyClass] = Field(None, description="""A measurable quantity for the object of the association""")
+    quantifier_qualifier: Optional[str] = Field(None, description="""A measurable quantity for the object of the association""")
     expression_site: Optional[str] = Field(None, description="""location in which gene or protein expression takes place. May be cell, tissue, or organ.""")
     stage_qualifier: Optional[str] = Field(None, description="""stage during which gene or protein expression of takes place.""")
     phenotypic_state: Optional[str] = Field(None, description="""in experiments (e.g. gene expression) assaying diseased or unhealthy tissue, the phenotypic state can be put here, e.g. MONDO ID. For healthy tissues, use XXX.""")
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4543,7 +4593,7 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantToPopulationAssociation(Association):
+class VariantToPopulationAssociation(VariantToEntityAssociationMixin, FrequencyQualifierMixin, Association, FrequencyQuantifier):
     """
     An association between a variant and a population, where the variant has particular frequency in the population
     """
@@ -4555,10 +4605,9 @@ class VariantToPopulationAssociation(Association):
     subject: str = Field(None, description="""an allele that has a certain frequency in a given population""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the population that is observed to have the frequency""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4587,10 +4636,9 @@ class PopulationToPopulationAssociation(Association):
     subject: str = Field(None, description="""the population that form the subject of the association""")
     predicate: str = Field(None, description="""A relationship type that holds between the subject and object populations. Standard mereological relations can be used. E.g. subject part-of object, subject overlaps object. Derivation relationships can also be used""")
     object: str = Field(None, description="""the population that form the object of the association""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4612,16 +4660,15 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantToPhenotypicFeatureAssociation(Association):
+class VariantToPhenotypicFeatureAssociation(VariantToEntityAssociationMixin, EntityToPhenotypicFeatureAssociationMixin, Association):
     
     sex_qualifier: Optional[BiologicalSex] = Field(None, description="""a qualifier used in a phenotypic association to state whether the association is specific to a particular sex.""")
     subject: str = Field(None, description="""a sequence variant in which the allele state is associated in some way with the phenotype state""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4646,15 +4693,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantToDiseaseAssociation(Association):
+class VariantToDiseaseAssociation(VariantToEntityAssociationMixin, EntityToDiseaseAssociationMixin, Association):
     
     subject: str = Field(None, description="""a sequence variant in which the allele state is associated in some way with the disease state""")
     predicate: str = Field(None, description="""E.g. is pathogenic for""")
     object: str = Field(None, description="""a disease that is associated with that variant""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4679,15 +4725,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class GenotypeToDiseaseAssociation(Association):
+class GenotypeToDiseaseAssociation(GenotypeToEntityAssociationMixin, EntityToDiseaseAssociationMixin, Association):
     
     subject: str = Field(None, description="""a genotype that is associated in some way with a disease state""")
     predicate: str = Field(None, description="""E.g. is pathogenic for""")
     object: str = Field(None, description="""a disease that is associated with that genotype""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4721,15 +4766,14 @@ class ModelToDiseaseAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class GeneAsAModelOfDiseaseAssociation(GeneToDiseaseAssociation):
+class GeneAsAModelOfDiseaseAssociation(ModelToDiseaseAssociationMixin, GeneToDiseaseAssociation, EntityToDiseaseAssociationMixin):
     
-    subject: GeneOrGeneProduct = Field(None, description="""A gene that has a role in modeling the disease. This may be a model organism ortholog of a known disease gene, or it may be a gene whose mutants recapitulate core features of the disease.""")
+    subject: str = Field(None, description="""A gene that has a role in modeling the disease. This may be a model organism ortholog of a known disease gene, or it may be a gene whose mutants recapitulate core features of the disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4754,15 +4798,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class VariantAsAModelOfDiseaseAssociation(VariantToDiseaseAssociation):
+class VariantAsAModelOfDiseaseAssociation(ModelToDiseaseAssociationMixin, VariantToDiseaseAssociation, EntityToDiseaseAssociationMixin):
     
     subject: str = Field(None, description="""A variant that has a role in modeling the disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4787,15 +4830,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class GenotypeAsAModelOfDiseaseAssociation(GenotypeToDiseaseAssociation):
+class GenotypeAsAModelOfDiseaseAssociation(ModelToDiseaseAssociationMixin, GenotypeToDiseaseAssociation, EntityToDiseaseAssociationMixin):
     
     subject: str = Field(None, description="""A genotype that has a role in modeling the disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4820,15 +4862,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class CellLineAsAModelOfDiseaseAssociation(CellLineToDiseaseOrPhenotypicFeatureAssociation):
+class CellLineAsAModelOfDiseaseAssociation(ModelToDiseaseAssociationMixin, CellLineToDiseaseOrPhenotypicFeatureAssociation, EntityToDiseaseAssociationMixin):
     
     subject: str = Field(None, description="""A cell line derived from an organismal entity with a disease state that is used as a model of that disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4853,15 +4894,14 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class OrganismalEntityAsAModelOfDiseaseAssociation(Association):
+class OrganismalEntityAsAModelOfDiseaseAssociation(ModelToDiseaseAssociationMixin, EntityToDiseaseAssociationMixin, Association):
     
     subject: str = Field(None, description="""A organismal entity (strain, breed) with a predisposition to a disease, or bred/created specifically to model a disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4891,10 +4931,9 @@ class OrganismToOrganismAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""An association between two individual organisms.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4921,10 +4960,9 @@ class TaxonToTaxonAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""An association between individuals of different taxa.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4949,13 +4987,12 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 class GeneHasVariantThatContributesToDiseaseAssociation(GeneToDiseaseAssociation):
     
     sequence_variant_qualifier: Optional[str] = Field(None, description="""a qualifier used in an association with the variant""")
-    subject: GeneOrGeneProduct = Field(None, description="""A gene that has a role in modeling the disease. This may be a model organism ortholog of a known disease gene, or it may be a gene whose mutants recapitulate core features of the disease.""")
+    subject: str = Field(None, description="""A gene that has a role in modeling the disease. This may be a model organism ortholog of a known disease gene, or it may be a gene whose mutants recapitulate core features of the disease.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -4985,14 +5022,13 @@ class GeneToExpressionSiteAssociation(Association):
     An association between a gene and a gene expression site, possibly qualified by stage/timing info.
     """
     stage_qualifier: Optional[str] = Field(None, description="""stage at which the gene is expressed in the site""")
-    quantifier_qualifier: Optional[OntologyClass] = Field(None, description="""can be used to indicate magnitude, or also ranking""")
-    subject: GeneOrGeneProduct = Field(None, description="""Gene or gene product positively within the specified anatomical entity (or subclass, i.e. cellular component) location.""")
+    quantifier_qualifier: Optional[str] = Field(None, description="""can be used to indicate magnitude, or also ranking""")
+    subject: str = Field(None, description="""Gene or gene product positively within the specified anatomical entity (or subclass, i.e. cellular component) location.""")
     predicate: str = Field(None, description="""expression relationship""")
     object: str = Field(None, description="""location in which the gene is expressed""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5021,10 +5057,9 @@ class SequenceVariantModulatesTreatmentAssociation(Association):
     subject: str = Field(None, description="""variant that modulates the treatment of some disease""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""treatment whose efficacy is modulated by the subject variant""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5050,13 +5085,12 @@ class FunctionalAssociation(Association):
     """
     An association between a macromolecular machine mixin (gene, gene product or complex of gene products) and either a molecular activity, a biological process or a cellular location in which a function is executed.
     """
-    subject: MacromolecularMachineMixin = Field(None, description="""gene, product or macromolecular complex mixin that has the function associated with the GO term""")
+    subject: str = Field(None, description="""gene, product or macromolecular complex mixin that has the function associated with the GO term""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOntologyClass = Field(None, description="""class describing the activity, process or localization of the gene product""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""class describing the activity, process or localization of the gene product""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5087,17 +5121,16 @@ class MacromolecularMachineToEntityAssociationMixin:
 
 
 @dataclass(config=PydanticConfig)
-class MacromolecularMachineToMolecularActivityAssociation(FunctionalAssociation):
+class MacromolecularMachineToMolecularActivityAssociation(MacromolecularMachineToEntityAssociationMixin, FunctionalAssociation):
     """
     A functional association between a macromolecular machine (gene, gene product or complex) and a molecular activity (as represented in the GO molecular function branch), where the entity carries out the activity, or contributes to its execution.
     """
-    subject: MacromolecularMachineMixin = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5119,17 +5152,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class MacromolecularMachineToBiologicalProcessAssociation(FunctionalAssociation):
+class MacromolecularMachineToBiologicalProcessAssociation(MacromolecularMachineToEntityAssociationMixin, FunctionalAssociation):
     """
     A functional association between a macromolecular machine (gene, gene product or complex) and a biological process or pathway (as represented in the GO biological process branch), where the entity carries out some part of the process, regulates it, or acts upstream of it.
     """
-    subject: MacromolecularMachineMixin = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5151,17 +5183,16 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class MacromolecularMachineToCellularComponentAssociation(FunctionalAssociation):
+class MacromolecularMachineToCellularComponentAssociation(MacromolecularMachineToEntityAssociationMixin, FunctionalAssociation):
     """
     A functional association between a macromolecular machine (gene, gene product or complex) and a cellular component (as represented in the GO cellular component branch), where the entity carries out its function in the cellular component.
     """
-    subject: MacromolecularMachineMixin = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5190,10 +5221,9 @@ class MolecularActivityToChemicalEntityAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5222,10 +5252,9 @@ class MolecularActivityToMolecularActivityAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5251,11 +5280,10 @@ class GeneToGoTermAssociation(FunctionalAssociation):
     
     subject: str = Field(None, description="""gene, product or macromolecular complex that has the function associated with the GO term""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneOntologyClass = Field(None, description="""class describing the activity, process or localization of the gene product""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""class describing the activity, process or localization of the gene product""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5283,10 +5311,9 @@ class EntityToDiseaseAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5314,10 +5341,9 @@ class EntityToPhenotypicFeatureAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5346,10 +5372,9 @@ class SequenceAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5383,10 +5408,9 @@ class GenomicSequenceLocalization(SequenceAssociation):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5415,10 +5439,9 @@ class SequenceFeatureRelationship(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5447,10 +5470,9 @@ class TranscriptToGeneRelationship(SequenceFeatureRelationship):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5478,11 +5500,10 @@ class GeneToGeneProductRelationship(SequenceFeatureRelationship):
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
-    object: GeneProductMixin = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5511,10 +5532,9 @@ class ExonToTranscriptRelationship(SequenceFeatureRelationship):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5540,13 +5560,12 @@ class GeneRegulatoryRelationship(Association):
     """
     A regulatory relationship between two genes
     """
-    subject: GeneOrGeneProduct = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
+    subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""the direction is always from regulator to regulated""")
-    object: GeneOrGeneProduct = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
+    object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5573,10 +5592,9 @@ class AnatomicalEntityToAnatomicalEntityAssociation(Association):
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5605,10 +5623,9 @@ class AnatomicalEntityToAnatomicalEntityPartOfAssociation(AnatomicalEntityToAnat
     subject: str = Field(None, description="""the part""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the whole""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5637,10 +5654,9 @@ class AnatomicalEntityToAnatomicalEntityOntogenicAssociation(AnatomicalEntityToA
     subject: str = Field(None, description="""the structure at a later time""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the structure at an earlier time""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5671,17 +5687,16 @@ class OrganismTaxonToEntityAssociation:
 
 
 @dataclass(config=PydanticConfig)
-class OrganismTaxonToOrganismTaxonAssociation(Association):
+class OrganismTaxonToOrganismTaxonAssociation(OrganismTaxonToEntityAssociation, Association):
     """
     A relationship between two organism taxon nodes
     """
     subject: str = Field(None, description="""connects an association to the subject of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""connects an association to the object of the association. For example, in a gene-to-phenotype association, the gene is subject and phenotype is object.""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5710,10 +5725,9 @@ class OrganismTaxonToOrganismTaxonSpecialization(OrganismTaxonToOrganismTaxonAss
     subject: str = Field(None, description="""the more specific taxon""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the more general taxon""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5743,10 +5757,9 @@ class OrganismTaxonToOrganismTaxonInteraction(OrganismTaxonToOrganismTaxonAssoci
     subject: str = Field(None, description="""the taxon that is the subject of the association""")
     predicate: str = Field(None, description="""A high-level grouping for the relationship type. AKA minimal predicate. This is analogous to category for nodes.""")
     object: str = Field(None, description="""the taxon that is the subject of the association""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")
@@ -5768,16 +5781,15 @@ In an RDF database, nodes will typically have an rdf:type triples. This can be t
 
 
 @dataclass(config=PydanticConfig)
-class OrganismTaxonToEnvironmentAssociation(Association):
+class OrganismTaxonToEnvironmentAssociation(OrganismTaxonToEntityAssociation, Association):
     
     subject: str = Field(None, description="""the taxon that is the subject of the association""")
     predicate: str = Field(None, description="""predicate describing the relationship between the taxon and the environment
  """)
     object: str = Field(None, description="""the environment in which the organism occurs""")
-    relation: Optional[str] = Field(None)
     negated: Optional[bool] = Field(None, description="""if set to true, then the association is negated i.e. is not true""")
-    qualifiers: Optional[List[OntologyClass]] = Field(None, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
-    publications: Optional[List[str]] = Field(None, description="""connects an association to publications supporting the association""")
+    qualifiers: Optional[List[str]] = Field(default_factory=list, description="""connects an association to qualifiers that modify or qualify the meaning of that association""")
+    publications: Optional[List[str]] = Field(default_factory=list, description="""connects an association to publications supporting the association""")
     has_evidence: Optional[List[str]] = Field(None, description="""connects an association to an instance of supporting evidence""")
     knowledge_source: Optional[List[str]] = Field(None, description="""An Information Resource from which the knowledge expressed in an Association was retrieved, directly or indirectly. This can be any resource through which the knowledge passed on its way to its currently serialized form. In practice, implementers should use one of the more specific subtypes of this generic property.""")
     original_knowledge_source: Optional[List[str]] = Field(None, description="""The Information Resource that created the original record of the knowledge expressed in an Association (e.g. via curation of the knowledge from the literature, or generation of the knowledge de novo through computation, reasoning, inference over data).""")

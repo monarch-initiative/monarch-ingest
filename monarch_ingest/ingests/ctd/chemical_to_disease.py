@@ -29,7 +29,7 @@ if row['DirectEvidence'] in ['therapeutic']:
         subject=chemical.id,
         predicate=predicate,
         object=disease.id,
-        relation=relation,
+        #relation=relation,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
         source="infores:ctd",
     )
