@@ -69,6 +69,10 @@
   local_name: data/alliance/BGI_WB.json.gz
   tag: alliance_gene
 -
+  url: https://fms.alliancegenome.org/download/BGI_XB.json.gz
+  local_name: data/alliance/BGI_XB.json.gz
+  tag: alliance_gene
+-
   url: https://fms.alliancegenome.org/download/EXPRESSION_RGD.json.gz
   local_name: data/alliance/EXPRESSION_RGD.json.gz
   tag: alliance_gene_to_expression
@@ -91,6 +95,10 @@
 -
   url: https://fms.alliancegenome.org/download/EXPRESSION_SGD.json.gz
   local_name: data/alliance/EXPRESSION_SGD.json.gz
+  tag: alliance_gene_to_expression
+-
+  url: https://fms.alliancegenome.org/download/EXPRESSION_XB.json.gz
+  local_name: data/alliance/EXPRESSION_XB.json.gz
   tag: alliance_gene_to_expression
 
 # ctd
@@ -340,19 +348,11 @@
 
 # Xenbase
 -
-#  temporarily commenting due to some Xenbase downtime
-#  url: http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz
-  url: gs://koza-cache/data/xenbase/xenbase.gpi.gz
-  local_name: data/xenbase/xenbase.gpi.gz
-  tag: xenbase_gene
--
-#  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
-  url: gs://koza-cache/data/xenbase/XenbaseGenepageToGeneIdMapping.txt
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
   tag: xenbase_publication_to_gene
 -
-# url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
-  url: gs://koza-cache/data/xenbase/LiteratureMatchedGenesByPaper.txt
+  url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
   local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
   tag: xenbase_publication_to_gene
 -
