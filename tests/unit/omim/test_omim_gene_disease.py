@@ -108,8 +108,6 @@ def test_genomic_entity_row(mock_koza, global_table, map_cache):
     ][0]
     assert association
     assert association.predicate == "biolink:gene_associated_with_condition"
-    assert association.relation == 'RO:0003303'
-
 
 def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_cache):
     gene_association_row['Phenotype'] = '{' + gene_association_row['Phenotype'] + '}'
@@ -126,4 +124,3 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]
     assert association
-    assert association.relation == 'RO:0019501'

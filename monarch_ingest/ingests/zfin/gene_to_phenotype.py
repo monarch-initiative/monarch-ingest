@@ -38,7 +38,7 @@ if row["Phenotype Tag"] == "abnormal":
         subject=gene.id,
         predicate="biolink:has_phenotype",
         object=phenotypicFeature.id,
-        publications="ZFIN:" + row["Publication ID"],
+        publications=["ZFIN:" + row["Publication ID"]],
         source="infores:zfin",
     )
 

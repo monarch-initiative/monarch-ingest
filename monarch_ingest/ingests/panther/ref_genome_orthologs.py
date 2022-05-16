@@ -38,7 +38,7 @@ try:
         object=ortholog_id,
         predicate=predicate,
         source="infores:panther",
-        has_evidence=f"PANTHER.FAMILY:{panther_ortholog_id}",
+        has_evidence=[f"PANTHER.FAMILY:{panther_ortholog_id}"],
     )
 
     # Write the captured Association out

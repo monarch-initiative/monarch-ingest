@@ -41,5 +41,5 @@ def test_association(basic_entities):
         if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
     print(association)
-    assert association.subject == "ZFIN:ZDB-PUB-140801-12"
-    assert association.object == "ZFIN:ZDB-GENE-060526-342"
+    assert association[0].subject == "ZFIN:ZDB-PUB-140801-12"
+    assert association[0].object == "ZFIN:ZDB-GENE-060526-342"

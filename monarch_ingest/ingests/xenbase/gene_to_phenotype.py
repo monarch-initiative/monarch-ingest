@@ -23,7 +23,7 @@ association = GeneToPhenotypicFeatureAssociation(
     subject=gene.id,
     predicate="biolink:has_phenotype",
     object=phenotype.id,
-    publications=row["SOURCE"],
+    publications=[row["SOURCE"]],
     source="infores:xenbase",
 )
 

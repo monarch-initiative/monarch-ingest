@@ -426,7 +426,6 @@ def test_association(basic_goa):
 
     assert association.object == result_expected[association.subject][2]
     assert association.predicate == result_expected[association.subject][5]
-    assert association.relation == result_expected[association.subject][6]
     assert association.negated == result_expected[association.subject][7]
     assert result_expected[association.subject][8] in association.has_evidence
 
