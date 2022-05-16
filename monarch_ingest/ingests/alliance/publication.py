@@ -1,5 +1,5 @@
 from koza.cli_runner import koza_app
-
+from dateutil.parser import parse
 from model.biolink import Publication
 
 source_name = "alliance_publication"
@@ -12,13 +12,20 @@ xrefs = [
     xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")
 ]
 
+# Parse creation date for different time formats
+creation_date = row["datePublished"]
+try:
+    creation_date = parse(creation_date)
+except:
+    creation_date = None
+
 pub = Publication(
     id=row["primaryId"],
     name=row["title"],
     summary=row["abstract"] if "abstract" in row.keys() else None,
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
-    creation_date=row["datePublished"],
+    creation_date=creation_date,
     source="infores:alliance-of-genome-resources",
 )
 
