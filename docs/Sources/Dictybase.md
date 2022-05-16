@@ -5,7 +5,7 @@ Dictybase is a comprehensive database for the ameboid protozoan _Dictyostelium d
 
 ### Gene Information
 
-Dictybase genes in the Gene to Phenotype ingest (below) are either directly identified from their gene identifier, or mapped indirectly from the Dictybase (identifier, names and synonyms mappings)[http://dictybase.org/Downloads/gene_information.html] , with synonyms being populated as available (note: associated mappings of gene product information are not captured at this time).
+Dictybase genes in the Gene to Phenotype ingest (below) are either directly identified from their gene identifier, or mapped indirectly from the [Dictybase identifier, names and synonyms mappings](http://dictybase.org/Downloads/gene_information.html), with synonyms being populated as available (Note: full gene product information is not captured at this time).
 
 ### Gene to Phenotype
 
@@ -14,7 +14,12 @@ Data is available in a well-documented easy-to-parse GAF-like format with associ
 #### Biolink captured
 
 * biolink:Gene
-    * id
+    * 'id'
+    * 'category'
+    * 'name'
+    * 'symbol'
+    * 'in_taxon'
+    * 'source'
 
 * biolink:PhenotypicFeature
     * id
