@@ -1,7 +1,8 @@
 import logging
 
-from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
+
+from model.biolink import Gene
 
 LOG = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ gene = Gene(
     symbol=row["primary gene name"],
     type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
     source="infores:PomBase",
-    in_taxon="NCBITaxon:4896"
+    in_taxon=["NCBITaxon:4896"]
 )
 
 if row["UniProtKB accession"]:

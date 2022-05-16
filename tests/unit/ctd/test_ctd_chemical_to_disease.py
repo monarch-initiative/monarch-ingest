@@ -1,8 +1,6 @@
 import pytest
-from biolink_model_pydantic.model import (
-    ChemicalToDiseaseOrPhenotypicFeatureAssociation,
-    Predicate,
-)
+
+from model.biolink import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -101,6 +99,6 @@ def test_therapeutic_entities(therapeutic):
         if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)
     ][0]
     assert association
-    assert association.predicate == Predicate.treats
+    assert association.predicate == "biolink:treats"
     assert 'PMID:17516704' in association.publications
     assert 'PMID:123' in association.publications

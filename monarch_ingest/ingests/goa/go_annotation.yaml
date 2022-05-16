@@ -60,6 +60,5 @@ edge_properties:
   - 'negated'
   - 'object'
   - 'category'
-  - 'relation'
 
 transform_mode: 'flat'

@@ -3,13 +3,8 @@ OMIM Morbid map tests to
 """
 
 import pytest
-from biolink_model_pydantic.model import (
-    Disease,
-    Gene,
-    GeneToDiseaseAssociation,
-    NucleicAcidEntity,
-    Predicate,
-)
+
+from model.biolink import Disease, Gene, GeneToDiseaseAssociation, NucleicAcidEntity
 
 
 @pytest.fixture
@@ -112,9 +107,7 @@ def test_genomic_entity_row(mock_koza, global_table, map_cache):
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]
     assert association
-    assert association.predicate == Predicate.gene_associated_with_condition
-    assert association.relation == 'RO:0003303'
-
+    assert association.predicate == "biolink:gene_associated_with_condition"
 
 def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_cache):
     gene_association_row['Phenotype'] = '{' + gene_association_row['Phenotype'] + '}'
@@ -131,4 +124,3 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]
     assert association
-    assert association.relation == 'RO:0019501'

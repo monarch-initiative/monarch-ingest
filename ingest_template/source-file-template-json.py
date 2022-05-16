@@ -1,11 +1,10 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
+from model.biolink import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,
-    Predicate,
 )
 from koza.cli_runner import koza_app
 
@@ -32,7 +31,7 @@ phenotypicFeature = PhenotypicFeature(id=row["phenotype"]["id"])
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
-    predicate=Predicate.has_phenotype,
+    predicate="biolink:has_phenotype",
     object=phenotypicFeature.id,
     relation=koza_app.translation_table.resolve_term("has phenotype"),
 )

@@ -51,7 +51,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'negated'
   - 'publications'
   - 'provided_by'

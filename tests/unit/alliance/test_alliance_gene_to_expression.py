@@ -68,7 +68,6 @@ def test_rattus_association(rattus):
     assert associations[0].subject == "RGD:3143"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "GO:0030141"
-    assert associations[0].relation == "RO:0002206"
     assert not associations[0].stage_qualifier
     assert "PMID:12615975" in associations[0].publications
     assert "MMO:0000640" in associations[0].has_evidence
@@ -123,7 +122,6 @@ def test_mouse_association(mouse):
     assert associations[0].subject == "MGI:99180"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "EMAPA:16039"
-    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier is None
     assert "MGI:1199209" in associations[0].publications
     assert "MMO:0000655" in associations[0].has_evidence
@@ -182,7 +180,6 @@ def test_zebrafish_association(zebrafish):
     assert associations[0].subject == "ZFIN:ZDB-GENE-031222-3"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "ZFA:0001094"
-    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier == "ZFS:0000035"
     assert "PMID:18544660" in associations[0].publications
     assert "MMO:0000655" in associations[0].has_evidence
@@ -232,7 +229,6 @@ def test_drosophila_association(drosophila):
     assert associations[0].subject == "FB:FBgn0010339"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "FBbt:00003007"
-    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier == "FBdv:00005369"
     assert "FB:FBrf0231198" in associations[0].publications
     assert "MMO:0000534" in associations[0].has_evidence
@@ -287,7 +283,6 @@ def test_worm_association(worm):
     assert associations[0].subject == "WB:WBGene00001386"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "WBbt:0000100"
-    assert associations[0].relation == "RO:0002206"
     assert associations[0].stage_qualifier == "WBls:0000057"
     assert associations[0].publications[0] == "PMID:1782857"
     assert "MMO:0000670" in associations[0].has_evidence
@@ -335,7 +330,6 @@ def test_yeast_association(yeast):
     assert associations[0].subject == "SGD:S000002429"
     assert associations[0].predicate == "biolink:expressed_in"
     assert associations[0].object == "GO:1990316"
-    assert associations[0].relation == "RO:0002206"
     assert not associations[0].stage_qualifier
     assert associations[0].publications[0] == "PMID:26753620"
     assert "MMO:0000642" in associations[0].has_evidence

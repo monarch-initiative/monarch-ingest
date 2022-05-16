@@ -43,12 +43,12 @@ gene = Gene(
 #         id=publication_id,
 #         type=koza_app.translation_table.resolve_term("publication"),
 #     )
+#     relation = koza_app.translation_table.resolve_term("mentions"),
 #     association = InformationContentEntityToNamedThingAssociation(
 #         id="uuid:" + str(uuid.uuid1()),
 #         subject=gene.id,
 #         predicate=Predicate.mentions,
 #         object=publication.id,
-#         relation=koza_app.translation_table.resolve_term("mentions"),
 #     )
 
 koza_app.write(gene)

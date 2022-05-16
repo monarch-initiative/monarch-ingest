@@ -2,8 +2,9 @@ import re
 import uuid
 import logging
 
-from biolink_model_pydantic.model import Gene, PairwiseGeneToGeneInteraction, Predicate
 from koza.cli_runner import koza_app
+
+from model.biolink import Gene, PairwiseGeneToGeneInteraction
 
 logger = logging.getLogger(__name__)
 
@@ -34,23 +35,23 @@ if gene_ids_a and gene_ids_b:
             ncbitaxon_match_a = re.match(r'\d+', pid_a)
             if ncbitaxon_match_a:
                 ncbitaxon_a = "NCBITaxon:" + ncbitaxon_match_a.group(0)
-                gene_a = Gene(id=gene_id_a, in_taxon=ncbitaxon_a, source="infores:entrez")
+                gene_a = Gene(id=gene_id_a, in_taxon=[ncbitaxon_a], source="infores:entrez")
             else:
                 gene_a = Gene(id=gene_id_a, source="infores:entrez")
 
             ncbitaxon_match_b = re.match(r'\d+', pid_b)
             if ncbitaxon_match_b:
                 ncbitaxon_b = "NCBITaxon:" + ncbitaxon_match_b.group(0)
-                gene_b = Gene(id=gene_id_b, in_taxon=ncbitaxon_b, source="infores:entrez")
+                gene_b = Gene(id=gene_id_b, in_taxon=[ncbitaxon_b], source="infores:entrez")
             else:
                 gene_b = Gene(id=gene_id_b, source="infores:entrez")
 
+            # relation = koza_app.translation_table.global_table['interacts with']
             association = PairwiseGeneToGeneInteraction(
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene_a.id,
                 object=gene_b.id,
-                predicate=Predicate.interacts_with,
-                relation=koza_app.translation_table.global_table['interacts with'],
+                predicate="biolink:interacts_with",
                 source="infores:string",
             )
 

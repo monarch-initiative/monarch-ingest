@@ -2,7 +2,8 @@
 Unit tests for STRING protein links ingest
 """
 import pytest
-from biolink_model_pydantic.model import PairwiseGeneToGeneInteraction
+
+from model.biolink import PairwiseGeneToGeneInteraction
 
 
 @pytest.fixture
@@ -114,7 +115,6 @@ def test_association(basic_pl):
     assert association.subject == "NCBIGene:14679"
     assert association.object == "NCBIGene:56480"
     assert association.predicate == "biolink:interacts_with"
-    assert association.relation == "RO:0002434"
 
     assert "infores:string" in association.source
 

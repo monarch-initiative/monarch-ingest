@@ -1,5 +1,6 @@
 import pytest
-from biolink_model_pydantic.model import InformationContentEntityToNamedThingAssociation
+
+from model.biolink import InformationContentEntityToNamedThingAssociation
 
 pubmed_ids = (
     "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"

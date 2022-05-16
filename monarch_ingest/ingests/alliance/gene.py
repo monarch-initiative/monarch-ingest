@@ -1,6 +1,7 @@
-from biolink_model_pydantic.model import Gene
 from koza.cli_runner import koza_app
 from source_translation import source_map
+
+from model.biolink import Gene
 
 source_name = "alliance_gene"
 
@@ -16,7 +17,7 @@ gene = Gene(
     symbol=row["symbol"],
     name=row["name"],
     type=row["soTermId"],
-    in_taxon=row["basicGeneticEntity"]["taxonId"],
+    in_taxon=[row["basicGeneticEntity"]["taxonId"]],
     source=source,
 )
 

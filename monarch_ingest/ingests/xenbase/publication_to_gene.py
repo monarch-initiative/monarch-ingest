@@ -1,13 +1,13 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
+from koza.cli_runner import koza_app
+
+from model.biolink import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
-    Predicate,
     Publication,
 )
-from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
@@ -38,12 +38,12 @@ for gene_page in gene_pages.split(","):
     for gene_id in gene_ids:
         gene = Gene(id=gene_id, source="infores:xenbase")
 
+        # relation = "IAO:0000142",  # Mentions
         association = InformationContentEntityToNamedThingAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene.id,
-            predicate=Predicate.mentions,
+            predicate="biolink:mentions",
             object=publication.id,
-            relation="IAO:0000142",  # Mentions
             source="infores:xenbase",
         )
 

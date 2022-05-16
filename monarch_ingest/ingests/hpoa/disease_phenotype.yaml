@@ -55,7 +55,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'relation'
   - 'publications'
   - 'onset_qualifier'
   - 'frequency_qualifier'

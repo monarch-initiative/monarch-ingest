@@ -140,8 +140,7 @@ else:
             object=go_id,
             predicate=predicate,
             negated=negated,
-            relation=relation,
-            has_evidence=eco_term,
+            has_evidence=[eco_term],
             source="infores:goa",
         )
 

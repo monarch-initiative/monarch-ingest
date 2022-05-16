@@ -80,7 +80,6 @@ edge_properties:
   - 'object'
   - 'stage_qualifier'
   - 'category'
-  - 'relation'
   - 'has_evidence'
   - 'publications'
   - 'provided_by'

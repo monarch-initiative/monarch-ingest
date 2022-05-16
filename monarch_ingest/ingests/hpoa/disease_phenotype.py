@@ -26,13 +26,14 @@ poetry run koza transform \
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
+from koza.cli_runner import koza_app
+
+from model.biolink import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
-    Predicate,
+    Publication,
 )
-from koza.cli_runner import koza_app
 
 LOG = logging.getLogger(__name__)
 
@@ -102,16 +103,16 @@ phenotypic_feature = PhenotypicFeature(
 #     koza_app.write(publication)
 
 # Associations/Edges
+relation = koza_app.translation_table.resolve_term("has phenotype")
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
-    predicate=Predicate.has_phenotype,
+    predicate="biolink:has_phenotype",
     object=phenotypic_feature.id,
-    relation=koza_app.translation_table.resolve_term("has phenotype"),
     publications=row["Reference"].split(";"),
-    has_evidence=evidence_curie,
+    has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
-    onset_qualifier=row["Onset"],
+    onset_qualifier=[row["Onset"]],
     frequency_qualifier=row["Frequency"],
 )
 
