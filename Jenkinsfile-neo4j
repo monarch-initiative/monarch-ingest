@@ -1,5 +1,5 @@
 pipeline {
-   agent any //{ label 'jenkins-medium-beta' }
+   agent { label 'jenkins-medium-beta' }
     stages {
         stage('setup') {
             steps {
