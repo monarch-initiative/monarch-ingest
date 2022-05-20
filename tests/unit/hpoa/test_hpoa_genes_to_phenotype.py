@@ -8,7 +8,7 @@ def source_name():
     """
     :return: string source name of HPOA Gene to Phenotype ingest
     """
-    return "hpoa_gene_to_phenotype"
+    return "hpoa_genes_to_phenotype"
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def script():
     """
     :return: string path to HPOA Gene to Phenotype ingest script
     """
-    return "./monarch_ingest/ingests/hpoa/gene_to_phenotype.py"
+    return "./monarch_ingest/ingests/hpoa/genes_to_phenotype.py"
 
 
 @pytest.fixture
