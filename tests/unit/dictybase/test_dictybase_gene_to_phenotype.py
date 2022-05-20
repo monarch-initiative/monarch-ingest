@@ -26,8 +26,6 @@ def map_cache() -> Dict:
     }
 
 
-
-
 @pytest.mark.parametrize(
     "query",
     [

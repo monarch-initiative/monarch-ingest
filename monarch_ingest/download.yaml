@@ -213,6 +213,11 @@
   local_name: data/hpoa/phenotype.hpoa
   tag: hpoa_disease_phenotype
 
+-
+  url: http://purl.obolibrary.org/obo/hp/hpoa/gene_to_phenotype.txt
+  local_name: data/hpoa/phenotype.gene_to_phenotype.txt
+  tag: hpoa_gene_to_phenotype
+
 # omim
 #  This should eventually pull from the source using the API key
 -

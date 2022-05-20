@@ -112,7 +112,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
     publications=row["Reference"].split(";"),
     has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
-    onset_qualifier=[row["Onset"]],
+    onset_qualifier=row["Onset"],
     frequency_qualifier=row["Frequency"],
 )
 
