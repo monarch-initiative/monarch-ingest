@@ -3,11 +3,13 @@ curates and assembles over 115,000 annotations to hereditary diseases
 using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
-The parser currently only processes the "abnormal" annotations.
+
+There are two HPOA ingests: gene-to-disease and gene-to-phenotype.
+
+The gene-to-disease parser currently only processes the "abnormal" annotations.
 Association to "remarkable normality" will be added in the near future.
 
 [HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa)
-
 
 ### Disease to Phenotype
 
@@ -77,4 +79,37 @@ ORPHA:447788	Cerebral visual impairment		HP:0025315	ORPHA:447788	TAS		HP:0040283
     * relation (RO:0002200)
     * publication (publication.id)
     * evidence 
-    
+
+### Gene to Phenotype (with Disease and HPO Frequency Context)
+
+The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/gene_to_phenotype.txt) file, which has the following fields:
+
+  - entrez-gene-id
+  - entrez-gene-symbol
+  - HPO-Term-ID
+  - HPO-Term-Name
+  - Frequency-Raw
+  - Frequency-HPO
+  - Additional Info from G-D source
+  - G-D source
+  - disease-ID for link
+
+#### Biolink captured
+
+* biolink:Gene
+    * id ("NCBIGene:<entrez-gene-id>")
+
+* biolink:PhenotypicFeature
+    * id ("<HPO-Term-ID>")
+
+* biolink:Disease
+    * id ("<disease-ID for link>")
+
+* biolink:GeneToPhenotypicFeatureAssociation
+    * id (random uuid)
+    * subject (gene.id)
+    * predicate (has_phenotype)
+    * object (phenotypicFeature.id)
+    * qualifiers (disease.id, (optional - phenotypicFeature.id, where the id is a given "<Frequency-HPO term>"))
+    * has_evidence (<G-D source name>)
+ 
