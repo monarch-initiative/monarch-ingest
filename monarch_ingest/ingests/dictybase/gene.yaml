@@ -1,0 +1,34 @@
+name: 'dictybase_gene'
+
+files:
+  - './data/dictybase/all-mutants.txt'
+
+metadata: './monarch_ingest/dictybase/metadata.yaml'
+
+global_table: './monarch_ingest/translation_table.yaml'
+
+header: 0
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - 'Systematic Name'
+  - 'Strain Descriptor'
+  - 'Associated gene(s)'
+  - 'Phenotypes'
+
+depends_on:
+  - './monarch_ingest/maps/dictybase_gene_names_to_ids.yaml'
+  - './monarch_ingest/maps/dictybase_phenotype_names_to_ids.yaml'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'name'
+  - 'symbol'
+  - 'in_taxon'
+  - 'source'
+
+transform_mode: 'flat'
