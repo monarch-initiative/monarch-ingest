@@ -1,9 +1,7 @@
 name: 'hpoa_gene_to_phenotype'
 
 files:
-  - './data/hpoa/phenotype.gene_to_phenotype.txt'
-
-metadata: './monarch_ingest/hpoa/metadata.yaml'
+  - './data/hpoa/genes_to_phenotype.txt'
 
 header: 'none'
 

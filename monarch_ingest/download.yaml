@@ -214,8 +214,8 @@
   tag: hpoa_disease_phenotype
 
 -
-  url: http://purl.obolibrary.org/obo/hp/hpoa/gene_to_phenotype.txt
-  local_name: data/hpoa/phenotype.gene_to_phenotype.txt
+  url: http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt
+  local_name: data/hpoa/genes_to_phenotype.txt
   tag: hpoa_gene_to_phenotype
 
 # omim

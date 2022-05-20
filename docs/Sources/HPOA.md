@@ -82,7 +82,7 @@ ORPHA:447788	Cerebral visual impairment		HP:0025315	ORPHA:447788	TAS		HP:0040283
 
 ### Gene to Phenotype (with Disease and HPO Frequency Context)
 
-The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/gene_to_phenotype.txt) file, which has the following fields:
+The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt) file, which has the following fields:
 
   - entrez-gene-id
   - entrez-gene-symbol
