@@ -1,13 +1,17 @@
-name: 'hgnc_gene'
+name: 'hgnc_symbol_2_id'
 
-files:
-  - './data/hgnc/hgnc_complete_set.txt'
+metadata:
+  description: 'Mapping HGNC Gene Symbols to their corresponding HGNC Identifiers'
 
 format: 'csv'
 
 delimiter: '\t'
 
-global_table: './monarch_ingest/translation_table.yaml'
+#  http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
+files:
+  - './data/hgnc/hgnc_complete_set.txt'
+
+header: 0
 
 columns:
   - hgnc_id
@@ -65,25 +69,7 @@ columns:
   - mane_select
   - gencc
 
+key: 'hgnc_id'
 
-node_properties:
-  - 'id'
-  - 'category'
-  - 'provided_by'
-  - 'name'
+values:
   - 'symbol'
-  - 'in_taxon'
-  - 'xref'
-  - 'synonym'
-  - 'source'
-
-# Commented out while we're not bringing in publication associations
-#edge_properties:
-#  - 'id'
-#  - 'subject'
-#  - 'predicate'
-#  - 'object'
-#  - 'category'
-#  - 'provided_by'
-
-transform_mode: 'flat'
