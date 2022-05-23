@@ -9,7 +9,7 @@ pipeline {
                     pip --version
                     python3 --version
                     pip install poetry
-                    export $PATH=~/.local/bin/poetry:$PATH
+                    export $PATH=$HOME/.local/bin/poetry:$PATH
                     poetry install
                 '''
             }
