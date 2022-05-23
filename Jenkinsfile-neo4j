@@ -8,8 +8,7 @@ pipeline {
                 sh 'pip --version'
                 sh 'python3 --version'
                 sh 'pip install poetry'
-                sh 'export PATH=/home/ubuntu/.local/bin:$PATH'
-                sh 'poetry install'
+                sh '~/.local/bin/poetry install'
             }
         }
         stage('download') {
