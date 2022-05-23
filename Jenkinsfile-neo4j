@@ -1,0 +1,37 @@
+pipeline {
+   agent { label 'jenkins-medium-beta' }
+    stages {
+        stage('setup') {
+            steps {
+                sh 'docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15'
+                sh 'pip --version'
+                sh 'python3 --version'
+                sh 'pip install poetry'
+                sh 'poetry install'
+            }
+        }
+        stage('download') {
+            steps {
+                sh 'gsutil cp gs://monarch-ingest/latest/monarch-kg.tar.gz .'
+            }
+        }
+        stage('transform') {
+            steps {
+                sh 'which poetry'
+                sh 'poetry run which kgx'
+                sh 'poetry run kgx transform --transform-config neo4j-transform.yaml'
+            }
+        }
+        stage('package') {
+            steps {
+                sh 'docker cp neo:/data .'
+                sh 'tar czf neo4j.tar.gz data'
+            }
+        }
+        stage('upload') {
+            steps {
+                sh 'gsutil cp neo4j.tar.gz gs://monarch-ingest/latest/'
+            }
+        }
+    }
+}
