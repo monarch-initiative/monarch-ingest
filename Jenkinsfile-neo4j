@@ -3,12 +3,14 @@ pipeline {
     stages {
         stage('setup') {
             steps {
-                sh 'docker rm -f neo || True'
-                sh 'docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15'
-                sh 'pip --version'
-                sh 'python3 --version'
-                sh 'pip install poetry'
-                sh '~/.local/bin/poetry install'
+                sh '''
+                    docker rm -f neo || True'
+                    docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15
+                    pip --version
+                    python3 --version
+                    pip install poetry
+                    ~/.local/bin/poetry install
+                '''
             }
         }
         stage('download') {
@@ -18,9 +20,11 @@ pipeline {
         }
         stage('transform') {
             steps {
-                sh 'which poetry'
-                sh 'poetry run which kgx'
-                sh 'poetry run kgx transform --transform-config neo4j-transform.yaml'
+                sh '''
+                    which poetry
+                    poetry run which kgx
+                    poetry run kgx transform --transform-config neo4j-transform.yaml
+                '''
             }
         }
         stage('package') {
