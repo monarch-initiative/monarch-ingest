@@ -9,7 +9,7 @@ pipeline {
                     pip --version
                     python3 --version
                     pip install poetry
-                    export $PATH=$HOME/.local/bin/poetry:$PATH
+                    alias poetry="~/.local/bin/poetry"
                     poetry install
                 '''
             }
@@ -22,7 +22,6 @@ pipeline {
         stage('transform') {
             steps {
                 sh '''
-                    which poetry
                     poetry run which kgx
                     poetry run kgx transform --transform-config neo4j-transform.yaml
                 '''
