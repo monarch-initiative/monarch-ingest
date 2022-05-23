@@ -1,0 +1,33 @@
+name: 'hpoa_genes_to_phenotype'
+
+files:
+  - './data/hpoa/genes_to_phenotype.txt'
+
+header: 'none'
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - entrez-gene-id
+  - entrez-gene-symbol
+  - HPO-Term-ID
+  - HPO-Term-Name
+  - Frequency-Raw
+  - Frequency-HPO
+  - Additional Info from G-D source
+  - G-D source
+  - disease-ID for link
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'category'
+  - 'source'
+  - 'qualifiers'
+  - 'evidence'
+
+transform_mode: 'flat'

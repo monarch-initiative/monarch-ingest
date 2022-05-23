@@ -32,7 +32,7 @@ from model.biolink import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
     PhenotypicFeature,
-    Publication,
+    Publication, Onset,
 )
 
 LOG = logging.getLogger(__name__)
@@ -67,6 +67,8 @@ disease = Disease(
 phenotypic_feature = PhenotypicFeature(
     id=row["HPO_ID"],
 )
+
+onset = Onset(name=row["Onset"])
 
 #    Avoiding creating publication nodes within ingests, at least temporarily
 
@@ -112,7 +114,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
     publications=row["Reference"].split(";"),
     has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
-    onset_qualifier=[row["Onset"]],
+    onset_qualifier=onset,
     frequency_qualifier=row["Frequency"],
 )
 

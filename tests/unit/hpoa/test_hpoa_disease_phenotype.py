@@ -1,11 +1,6 @@
 import pytest
 
-from model.biolink import (
-    Disease,
-    DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Publication,
-)
+from model.biolink import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
