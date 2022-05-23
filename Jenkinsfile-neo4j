@@ -4,7 +4,7 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    docker rm -f neo || True'
+                    docker rm -f neo || True
                     docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15
                     pip --version
                     python3 --version
