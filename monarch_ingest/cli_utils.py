@@ -1,7 +1,5 @@
-import os, glob, tarfile, tarfile
 from pathlib import Path
 from typing import List, Optional
-import pandas as pd
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -58,9 +56,9 @@ def transform_one(
 
     if rdf is not None:
         LOG.info(f"Creating rdf output {output_dir}/rdf/{tag}.nt.gz ...")
-        
+
         Path(f"{output_dir}/rdf").mkdir(parents=True, exist_ok=True)
-        
+
         src_files = []
         src_nodes = f"{output_dir}/transform_output/{tag}_nodes.tsv"
         src_edges = f"{output_dir}/transform_output/{tag}_edges.tsv"
@@ -77,7 +75,7 @@ def transform_one(
             output=f"{output_dir}/rdf/{tag}.nt.gz",
             output_format="nt",
             output_compression="gz",
-        ) 
+        )
 
     if not ingest_output_exists(tag, f"{output_dir}/transform_output"):
         raise ValueError(f"{tag} did not produce the the expected output")
@@ -157,11 +155,11 @@ def merge_files(
     output_dir: str = OUTPUT_DIR,
 ):
     LOG.info("Merging knowledge graph...")
-    
+
     merge(
-        name = name,
-        input_dir = input_dir,
-        output_dir = output_dir
+        name=name,
+        input_dir=input_dir,
+        output_dir=output_dir
     )
 
 def _set_log_level(

@@ -5,5 +5,6 @@ source_map = {
     "HGNC": "infores:rgd",  # Alliance contains RGD curation of human genes
     "SGD": "infores:sgd",
     "WB": "infores:wormbase",
+    "Xenbase": "infores:xenbase",
     "ZFIN": "infores:zfin",
 }
