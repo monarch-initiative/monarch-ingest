@@ -1,5 +1,5 @@
 from typing import Optional, Tuple
-from biolink_model_pydantic.model import Gene
+from model.biolink import Gene
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
@@ -16,7 +16,7 @@ if gene_identifier:
         id=gene_identifier[0],
         symbol=gene_identifier[1],
         name=gene_identifier[1],
-        in_taxon="NCBITaxon:44689",
+        in_taxon=["NCBITaxon:44689"],
         source="infores:dictybase"
     )
 

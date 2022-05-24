@@ -1,12 +1,6 @@
 import pytest
 
-from model.biolink import (
-    Disease,
-    DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Publication,
-)
-
+from biolink_model_pydantic.model import DiseaseToPhenotypicFeatureAssociation
 
 @pytest.fixture
 def entities(mock_koza, global_table):

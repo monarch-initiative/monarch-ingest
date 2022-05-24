@@ -1,4 +1,4 @@
-from biolink_model_pydantic.model import Gene
+from model.biolink import Gene
 from koza.cli_runner import koza_app
 
 source_name = "hgnc_gene"
@@ -32,7 +32,7 @@ gene = Gene(
     name=row["name"],
     xref=xref_list,
     synonym=synonyms_list,
-    in_taxon="NCBITaxon:9606"
+    in_taxon=["NCBITaxon:9606"]
 )
 
 # Excluding pub to gene associations for now

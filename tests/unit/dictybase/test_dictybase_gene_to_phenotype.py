@@ -1,7 +1,7 @@
 from typing import Dict, List
 import pytest
 
-from biolink_model_pydantic.model import GeneToPhenotypicFeatureAssociation
+from model.biolink import GeneToPhenotypicFeatureAssociation
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
 
@@ -139,5 +139,4 @@ def test_dictybase_g2p_association(basic_dictybase):
         assert association.subject == "dictyBase:DDB_G0283613"
         assert association.object in ["DDPHENO:0000225", "DDPHENO:0000163"]
         assert association.predicate == "biolink:has_phenotype"
-        assert association.relation == "RO:0002200"
         assert "infores:dictybase" in association.source
