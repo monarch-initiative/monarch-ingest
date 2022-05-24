@@ -46,11 +46,13 @@ pipeline {
                     pip install poetry
                     alias poetry="~/.local/bin/poetry"
                     poetry install
-                    gsutil cp gs://monarch-ingest/latest/monarch-kg.tar.gz .
                     poetry run which kgx
+                    ls -la
+                    ls -la output/
                     poetry run kgx transform --transform-config neo4j-transform.yaml
                     docker cp neo:/data .
                     tar czf neo4j.tar.gz data
+                    mv neo4j.tar.gz output/
                 '''
             }
         }

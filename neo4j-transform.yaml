@@ -9,7 +9,7 @@ transform:
         format: tsv
         compression: tar.gz
         filename:
-          - monarch-kg.tar.gz
+          - output/monarch-kg.tar.gz
       output:
         format: neo4j
         uri: neo4j://localhost:7687
