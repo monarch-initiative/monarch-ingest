@@ -35,6 +35,27 @@ pipeline {
                 sh 'poetry run ingest merge'
             }
         }
+        stage('neo-transform'){
+            agent any
+            steps {
+                sh '''
+                    docker rm -f neo || True
+                    docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15
+                    pip --version
+                    python3 --version
+                    pip install poetry
+                    alias poetry="~/.local/bin/poetry"
+                    poetry install
+                    poetry run which kgx
+                    ls -la
+                    ls -la output/
+                    poetry run kgx transform --transform-config neo4j-transform.yaml
+                    docker cp neo:/data .
+                    tar czf neo4j.tar.gz data
+                    mv neo4j.tar.gz output/
+                '''
+            }
+        }
         stage('upload kgx files') {
             agent { dockerfile true }
             steps {
