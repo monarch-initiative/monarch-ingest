@@ -1,10 +1,7 @@
 import uuid
 from typing import Optional, Tuple
 
-from biolink_model_pydantic.model import (
-    GeneToPhenotypicFeatureAssociation,
-    Predicate,
-)
+from model.biolink import GeneToPhenotypicFeatureAssociation
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
@@ -28,9 +25,8 @@ if gene_identifier:
         association = GeneToPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene_identifier[0],  # gene[0] is the resolved gene ID
-            predicate=Predicate.has_phenotype,
+            predicate='biolink:has_phenotype',
             object=phenotype_id,
-            relation=koza_app.translation_table.resolve_term("has phenotype"),
             source="infores:dictybase"
         )
 

@@ -7,13 +7,17 @@ source_name = "alliance_gene"
 
 row = koza_app.get_row(source_name)
 # curie prefix as source?
-source = source_map[row["basicGeneticEntity"]["primaryId"].split(":")[0]]
+gene_id = row["basicGeneticEntity"]["primaryId"]
+# Not sure if Alliance will stick with this prefix for Xenbase, but for now...
+gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
+
+source = source_map[gene_id.split(":")[0]]
 
 if "name" not in row.keys():
     row["name"] = row["symbol"]
 
 gene = Gene(
-    id=row["basicGeneticEntity"]["primaryId"],
+    id=gene_id,
     symbol=row["symbol"],
     name=row["name"],
     type=row["soTermId"],

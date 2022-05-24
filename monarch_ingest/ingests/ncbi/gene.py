@@ -1,4 +1,4 @@
-from biolink_model_pydantic.model import Gene
+from model.biolink import Gene
 from koza.cli_runner import koza_app
 
 source_name = "ncbi_gene"
@@ -9,7 +9,7 @@ gene = Gene(
     id='NCBIGene:' + row["GeneID"],
     symbol=row["Symbol"],
     description=row["description"],
-    in_taxon='NCBITaxon:' + row["tax_id"],
+    in_taxon=['NCBITaxon:' + row["tax_id"]],
     source="infores:ncbi-gene",
 )
 

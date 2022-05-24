@@ -6,6 +6,7 @@ files:
     - "./data/alliance/BGI_SGD.json.gz"
     - "./data/alliance/BGI_RGD.json.gz"
     - "./data/alliance/BGI_WB.json.gz"
+    - "./data/alliance/BGI_XB.json.gz"
     - "./data/alliance/BGI_ZFIN.json.gz"
 
 metadata: './monarch_ingest/alliance/metadata.yaml'

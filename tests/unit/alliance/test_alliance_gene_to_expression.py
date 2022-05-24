@@ -1,5 +1,5 @@
 import pytest
-from biolink_model_pydantic.model import GeneToExpressionSiteAssociation
+from model.biolink import GeneToExpressionSiteAssociation
 
 #
 # test of utility function - proven to work, unless modified in the future?

@@ -1,4 +1,4 @@
-from biolink_model_pydantic.model import Pathway
+from model.biolink import Pathway
 from koza.cli_runner import koza_app
 
 source_name = "reactome_pathway"
@@ -12,7 +12,7 @@ pathway = Pathway(
     name=row["Name"],
     type=koza_app.translation_table.resolve_term("pathway"),
     source="infores:reactome",
-    # in_taxon=taxon_id TODO: this isn't an allowed attribute on pathway.  We need to request adding in biolink if we do need this
+    # in_taxon=[taxon_id] TODO: this isn't an allowed attribute on pathway.  We need to request adding in biolink if we do need this
 )
 
 koza_app.write(pathway)

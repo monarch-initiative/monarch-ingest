@@ -28,11 +28,10 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from model.biolink import (
+from biolink_model_pydantic.model import (
     Disease,
     DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Publication, Onset,
+    PhenotypicFeature
 )
 
 LOG = logging.getLogger(__name__)
@@ -68,7 +67,7 @@ phenotypic_feature = PhenotypicFeature(
     id=row["HPO_ID"],
 )
 
-onset = Onset(name=row["Onset"])
+onset = row["Onset"]
 
 #    Avoiding creating publication nodes within ingests, at least temporarily
 

@@ -1,8 +1,6 @@
-import os, glob, tarfile, tarfile
 import subprocess
 from pathlib import Path
 from typing import List, Optional
-import pandas as pd
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -165,9 +163,9 @@ def merge_files(
     LOG.info("Merging knowledge graph...")
 
     merge(
-        name = name,
-        input_dir = input_dir,
-        output_dir = output_dir
+        name=name,
+        input_dir=input_dir,
+        output_dir=output_dir
     )
 
 def _set_log_level(
