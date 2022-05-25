@@ -12,6 +12,8 @@ pipeline {
                     pip --version
                     python3 --version
                     pip install poetry
+                    echo $PATH
+                    ls -la ~/.local/bin/
                     poetry install
                     poetry run which ingest
                 '''
