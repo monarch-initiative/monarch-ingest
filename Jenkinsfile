@@ -14,8 +14,6 @@ pipeline {
                     python3 --version
                     echo $PATH
                     whoami
-                    cat ~/.profile
-                    source ~/.profile
                     poetry install
                     poetry run which ingest
                 '''
