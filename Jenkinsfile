@@ -57,10 +57,10 @@ pipeline {
                 sh 'poetry run ingest release --update-latest'
             }
         }
-        post {
-            always {
-                sh 'docker rm -f neo || True'
-            }
+    }
+    post {
+        always {
+            sh 'docker rm -f neo || True'
         }
     }
 }
