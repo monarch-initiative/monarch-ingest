@@ -3,6 +3,8 @@ pipeline {
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
+        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+
     }
     stages {
         stage('setup') {
