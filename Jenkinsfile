@@ -11,6 +11,7 @@ pipeline {
                     pip --version
                     python3 --version
                     echo $PATH
+                    whoami
                     poetry install
                     poetry run which ingest
                 '''
