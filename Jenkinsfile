@@ -3,7 +3,7 @@ pipeline {
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
-        PATH = "${env.PATH}:~/.local/bin/poetry"
+        PATH = "${env.PATH}:~/.local/bin/"
     }
     stages {
         stage('setup') {
