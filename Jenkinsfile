@@ -3,7 +3,6 @@ pipeline {
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
-        PATH = "${env.PATH}:~/.local/bin/"
     }
     stages {
         stage('setup') {
@@ -11,9 +10,7 @@ pipeline {
                 sh '''
                     pip --version
                     python3 --version
-                    pip install poetry
                     echo $PATH
-                    ls -la ~/.local/bin/
                     poetry install
                     poetry run which ingest
                 '''
