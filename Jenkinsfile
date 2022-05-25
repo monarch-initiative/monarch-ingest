@@ -3,6 +3,7 @@ pipeline {
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
+        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
     }
     stages {
         stage('setup') {
@@ -11,7 +12,6 @@ pipeline {
                     pip --version
                     python3 --version
                     echo $PATH
-                    cat /etc/environment
                     poetry install
                     poetry run which ingest
                 '''
