@@ -22,7 +22,7 @@ poetry run koza transform \
   --source monarch_ingest/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
-
+from typing import Optional
 import logging
 import uuid
 
@@ -39,25 +39,6 @@ LOG = logging.getLogger(__name__)
 source_name = "hpoa_disease_phenotype"
 row = koza_app.get_row(source_name)
 
-# Filters
-
-# Skipping NOTs for now but we'll want to come back and add them
-# Could also add this to the yaml filters but leaving here as the
-# intention is to bring these in
-if row["Qualifier"] == "NOT":
-    koza_app.next_row()
-
-
-# Translations to curies
-# Three letter ECO code to ECO class based on hpo documentation
-evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
-
-# female -> PATO:0000383
-# male -> PATO:0000384
-sex_qualifier = (
-    koza_app.translation_table.resolve_term(row["Sex"]) if row["Sex"] else None
-)
-
 # Nodes
 disease = Disease(
     id=row["DatabaseID"],
@@ -66,6 +47,31 @@ disease = Disease(
 phenotypic_feature = PhenotypicFeature(
     id=row["HPO_ID"],
 )
+
+# Predicate negation
+negated: Optional[bool]
+if row["Qualifier"] == "NOT":
+    negated = True
+else:
+    negated = None
+
+# Annotations
+
+# Translations to curies
+# Three letter ECO code to ECO class based on hpo documentation
+evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
+
+#
+# TODO: Upon review of the input data, *none* of the target Aspect (C or I) records have a non-empty row["Sex"] value.
+#       Furthermore, the row["Sex"] values given in the phenotype.hpoa are all UPPER CASE thus the way the code was
+#       originally written, they would not have properly onto the PATO mappings noted below in the translation_table!!
+#
+# female -> PATO:0000383
+# male -> PATO:0000384
+# sex: Optional[str] = row["Sex"]
+# sex_qualifier = (
+#     koza_app.translation_table.resolve_term(sex.upper()) if sex else None
+# )
 
 onset = row["Onset"]
 
@@ -109,12 +115,13 @@ association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease.id,
     predicate="biolink:has_phenotype",
+    negated=negated,
     object=phenotypic_feature.id,
     publications=row["Reference"].split(";"),
     has_evidence=[evidence_curie],
-    sex_qualifier=sex_qualifier,
+    # sex_qualifier=sex_qualifier,
     onset_qualifier=onset,
-    frequency_qualifier=row["Frequency"],
+    frequency_qualifier=row["Frequency"]
 )
 
 koza_app.write(association)

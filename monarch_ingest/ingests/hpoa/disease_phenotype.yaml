@@ -38,7 +38,7 @@ columns:
   - 'Evidence'
   - 'Onset'
   - 'Frequency'
-  - 'Sex'
+  # - 'Sex'  # See notes in code file... Records with Aspect "C" and "I" don't see, tp have any 'sex' values?
   - 'Modifier'
   - 'Aspect'
   - 'Biocuration'
@@ -58,6 +58,6 @@ edge_properties:
   - 'publications'
   - 'onset_qualifier'
   - 'frequency_qualifier'
-  - 'sex_qualifier'
+  # - 'sex_qualifier' # see 'sex' comment above
   - 'has_evidence'
   - 'provided_by'
