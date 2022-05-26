@@ -22,6 +22,7 @@ header: 4
 global_table: './monarch_ingest/translation_table.yaml'
 local_table: './monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
 
+# We only concern ourselves with Aspect == 'P' records in this ingest.
 filters:
   - inclusion: 'include'
     column: 'Aspect'
@@ -38,7 +39,7 @@ columns:
   - 'Evidence'
   - 'Onset'
   - 'Frequency'
-  # - 'Sex'  # See notes in code file... Records with Aspect "C" and "I" don't see, tp have any 'sex' values?
+  - 'Sex'
   - 'Modifier'
   - 'Aspect'
   - 'Biocuration'
@@ -53,11 +54,12 @@ edge_properties:
   - 'id'
   - 'subject'
   - 'predicate'
+  - 'negated'
   - 'object'
   - 'category'
   - 'publications'
   - 'onset_qualifier'
   - 'frequency_qualifier'
-  # - 'sex_qualifier' # see 'sex' comment above
+  - 'sex_qualifier'
   - 'has_evidence'
   - 'provided_by'

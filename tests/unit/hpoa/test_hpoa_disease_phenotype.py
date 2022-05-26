@@ -14,9 +14,9 @@ def entities(mock_koza, global_table):
                 "HPO_ID": "HP:0000343",
                 "Reference": "OMIM:614856",
                 "Evidence": "TAS",
-                "Onset": "",
-                "Frequency": "HP:0040283",
-                "Sex": "",
+                "Onset": "HP:0003593",
+                "Frequency": "1/1",
+                "Sex": "FEMALE",
                 "Modifier": "",
                 "Aspect": "C",  # assert 'Clinical' test record
                 "Biocuration": "HPO:skoehler[2012-11-16]",
@@ -32,7 +32,7 @@ def entities(mock_koza, global_table):
     )
 
 
-def test_gene2_phenotype_transform(entities):
+def test_gene_2_phenotype_transform(entities):
     assert entities
     assert len(entities) == 1
     associations = [
@@ -46,10 +46,10 @@ def test_gene2_phenotype_transform(entities):
     assert associations[0].negated is True
     assert associations[0].object == "HP:0000343"
     assert "OMIM:614856" in associations[0].publications
-    assert "ECO:0000033" in associations[0].has_evidence  # TAS == "traceable author statement" -> "ECO:0000033"
-    # assert associations[0].sex_qualifier is None
-    assert associations[0].onset_qualifier is None
-    assert associations[0].frequency_qualifier == "HP:0040283"
+    assert "ECO:0000304" in associations[0].has_evidence  # from local HPOA translation table
+    assert associations[0].sex_qualifier == "PATO:0000383"
+    assert associations[0].onset_qualifier == "HP:0003593"
+    assert associations[0].frequency_qualifier == "1/1"
 
 
 # Commenting out publication node generation in edge ingests, at least temporarily
