@@ -6,7 +6,8 @@ files:
 metadata: './monarch_ingest/reactome/metadata.yaml'
 
 global_table: './monarch_ingest/translation_table.yaml'
-local_table: './monarch_ingest/ingests/reactome/taxon_name_to_id_mapping.yaml'
+local_table: './monarch_ingest/ingests/reactome/reactome_id_mapping.yaml'
+
 header: none
 
 format: 'csv'
