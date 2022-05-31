@@ -11,9 +11,8 @@ row = koza_app.get_row(source_name)
 species = row["species_nam"]
 taxon_id = koza_app.translation_table.local_table[species]
 
-# We only continue of the species is in
-# our local taxon_name_to_id_mapping table
-if species:
+# We only continue of the species is in our local reactome_id_mapping table
+if taxon_id:
 
     chemical_id = "CHEBI:" + row["component"]
     pathway_id = "REACT:" + row["pathway_id"]  # pathways themselves are an independent ingest now...
