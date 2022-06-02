@@ -22,8 +22,9 @@ greenlet = "^1.1.2"
 typer = "^0.4"
 click = "8.0.4"
 # force specific version of click for now, because typer 0.4.1 is busted
-cat-merge = "0.1.10"
+cat-merge = "^0.1.12"
 linkml = "^1.2.11"
+monarch-gene-mapping = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
