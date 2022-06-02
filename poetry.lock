@@ -145,7 +145,7 @@ python-versions = "~=3.7"
 
 [[package]]
 name = "cat-merge"
-version = "0.1.10"
+version = "0.1.12"
 description = ""
 category = "main"
 optional = false
@@ -1032,6 +1032,20 @@ description = "Extension pack for Python Markdown."
 category = "dev"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "monarch-gene-mapping"
+version = "0.1.1"
+description = "Project for mapping source namespaces to preffered namespaces in Monarch Initiative"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+click = "8.0.4"
+kghub-downloader = ">=0.1.14,<0.2.0"
+pandas = ">=1.4.2,<2.0.0"
+typer = "0.4"
 
 [[package]]
 name = "mypy"
@@ -2034,7 +2048,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9fc65b9962a384020b3f1062eddcc52ff38816a29fd4f9d7ff5b8ee313a36803"
+content-hash = "8bf7ff196c00e6299f990216d9caf6b8bdb77ea853853277cf8002e2f9b082eb"
 
 [metadata.files]
 alabaster = [
@@ -2084,8 +2098,8 @@ cachetools = [
     {file = "cachetools-5.0.0.tar.gz", hash = "sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6"},
 ]
 cat-merge = [
-    {file = "cat-merge-0.1.10.tar.gz", hash = "sha256:965863edac60a24a1a3472e794d05fd85889df0e159744139974b7ec2017ad19"},
-    {file = "cat_merge-0.1.10-py3-none-any.whl", hash = "sha256:d5e99c5ae51eea6632eb6180d5f9947a1cfc8274b772fb46bd74ba8f5c967c8b"},
+    {file = "cat-merge-0.1.12.tar.gz", hash = "sha256:87796afa8af3c23ed7c6844eb25e86a89fd5b3774050fd61884d1b43401bca0d"},
+    {file = "cat_merge-0.1.12-py3-none-any.whl", hash = "sha256:96404a9b7475485b9aa1552c6bc360387572096bcca7572cf8df493a38184225"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
@@ -2537,6 +2551,10 @@ mkdocs-material = [
 mkdocs-material-extensions = [
     {file = "mkdocs-material-extensions-1.0.3.tar.gz", hash = "sha256:bfd24dfdef7b41c312ede42648f9eb83476ea168ec163b613f9abd12bbfddba2"},
     {file = "mkdocs_material_extensions-1.0.3-py3-none-any.whl", hash = "sha256:a82b70e533ce060b2a5d9eb2bc2e1be201cf61f901f93704b4acf6e3d5983a44"},
+]
+monarch-gene-mapping = [
+    {file = "monarch_gene_mapping-0.1.1-py3-none-any.whl", hash = "sha256:e1877d8ccb335c4f22dc1aee80e2e0800cd73c751d2331d9484b5ace89546973"},
+    {file = "monarch_gene_mapping-0.1.1.tar.gz", hash = "sha256:a6fd6e78bfb0e9f79f1e8242523b11546a6ab7381fb3f38b2cd7bfeb1d19dfea"},
 ]
 mypy = [
     {file = "mypy-0.950-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:cf9c261958a769a3bd38c3e133801ebcd284ffb734ea12d01457cb09eacf7d7b"},
