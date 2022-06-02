@@ -45,10 +45,13 @@ pipeline {
                     poetry run which kgx
                     ls -la
                     ls -la output/
-                    poetry run kgx transform --transform-config neo4j-transform.yaml
-                    docker cp neo:/data .
+                    time poetry run kgx transform --transform-config neo4j-transform.yaml
+                    sleep 300
+                    mkdir neo4j || true
+                    docker cp neo:/data ./neo4j/data
+                    cd neo4j
                     tar czf neo4j.tar.gz data
-                    mv neo4j.tar.gz output/
+                    mv neo4j.tar.gz ../output/
                 '''
             }
         }
