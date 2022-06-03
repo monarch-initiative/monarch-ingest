@@ -37,7 +37,7 @@ pipeline {
                 sh 'poetry run ingest merge'
             }
         }
-        stage('neo-transform'){
+        stage('neo-3-4-transform'){
             steps {
                 sh '''
                     docker rm -f neo || True
@@ -45,17 +45,37 @@ pipeline {
                     poetry run which kgx
                     ls -la
                     ls -la output/
-                    time poetry run kgx transform --transform-config neo4j-transform.yaml
-                    sleep 300
-                    mkdir neo4j || true
-                    docker cp neo:/data ./neo4j/data
-                    cd neo4j
-                    tar czf neo4j.tar.gz data
-                    mv neo4j.tar.gz ../output/
+                    python -mvenv venv
+                    ./venv/bin/activate && pip install kgx==1.5.2
+                    ./venv/bin/kgx kgx transform --stream --transform-config neo4j-v3-transform.yaml
+                    sleep 30s
+                    mkdir neo4j-v3 || true
+                    docker cp neo:/data ./neo4j-v3/data
+                    cd neo4j-v3
+                    tar czf neo4j-v3.tar.gz data
+                    mv neo4j-v3.tar.gz ../output/
                 '''
             }
         }
-        stage('upload kgx files') {
+        stage('neo-4-3-transform'){
+            steps {
+                sh '''
+                    docker rm -f neo || True
+                    docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:4.3
+                    poetry run which kgx
+                    ls -la
+                    ls -la output/
+                    poetry run kgx transform --stream --transform-config neo4j-v4-transform.yaml
+                    sleep 30s
+                    mkdir neo4j-v4 || true
+                    docker cp neo:/data ./neo4j-v4/data
+                    cd neo4j-v4
+                    tar czf neo4j-v4.tar.gz data
+                    mv neo4j-v4.tar.gz ../output/
+                '''
+            }
+        }
+        stage('upload files') {
             steps {
                 sh 'poetry run ingest release --update-latest'
             }
