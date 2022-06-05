@@ -1,12 +1,12 @@
 name: 'alliance_gene'
 
 files:
-    - "./data/alliance/BGI_MGI.json.gz"
     - "./data/alliance/BGI_FB.json.gz"
-    - "./data/alliance/BGI_SGD.json.gz"
+    - "./data/alliance/BGI_MGI.json.gz"
     - "./data/alliance/BGI_RGD.json.gz"
+    - "./data/alliance/BGI_SGD.json.gz"
     - "./data/alliance/BGI_WB.json.gz"
-    - "./data/alliance/BGI_XB.json.gz"
+    #- "./data/alliance/BGI_XB.json.gz"
     - "./data/alliance/BGI_ZFIN.json.gz"
 
 metadata: './monarch_ingest/alliance/metadata.yaml'
@@ -21,9 +21,8 @@ required_properties:
   - 'basicGeneticEntity'
   - 'symbol'
   - 'soTermId'
-  # Nested properties that are also required, but can't be specified yet
-  #  - 'basicGeneticEntity.primaryId'
-  #  - 'basicGeneticEntity.taxonId'
+  - 'basicGeneticEntity.primaryId'
+  - 'basicGeneticEntity.taxonId'
 
 node_properties:
   - 'id'

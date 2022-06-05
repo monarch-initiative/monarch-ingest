@@ -4,7 +4,7 @@ import logging
 
 from koza.cli_runner import koza_app
 
-from model.biolink import Gene, PairwiseGeneToGeneInteraction
+from monarch_ingest.model.biolink import Gene, PairwiseGeneToGeneInteraction
 
 logger = logging.getLogger(__name__)
 

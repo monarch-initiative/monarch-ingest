@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from model.biolink import ChemicalToPathwayAssociation, Gene, Pathway
+from monarch_ingest.model.biolink import ChemicalToPathwayAssociation, Gene, Pathway
 
 source_name = "reactome_gene_to_pathway"
 
