@@ -29,7 +29,7 @@ pipeline {
         }
         stage('transform') {
             steps {
-                sh 'poetry run ingest transform --all --rdf'
+                sh 'poetry run ingest transform --all --rdf --log'
             }
         }
         stage('merge') {
