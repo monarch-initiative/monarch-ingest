@@ -82,7 +82,6 @@ pipeline {
         }
     }
     post {
-        agent any
         always {
             sh 'docker rm -f neo || True'
         }
