@@ -45,7 +45,7 @@ pipeline {
                     poetry run which kgx
                     ls -la
                     ls -la output/
-                    python -mvenv venv
+                    python3 -mvenv venv
                     ./venv/bin/activate && pip install kgx==1.5.2
                     ./venv/bin/kgx kgx transform --stream --transform-config neo4j-v3-transform.yaml
                     sleep 30s
