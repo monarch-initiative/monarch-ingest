@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir data || true
-                    gsutil -m cp -r gs://monarch-ingest/data-cache/* data/
+                    gsutil -q -m cp -r gs://monarch-ingest/data-cache/* data/
                     ls -la
                     ls -la data
                 '''
@@ -46,7 +46,7 @@ pipeline {
                     ls -la
                     ls -la output/
                     python3 -mvenv venv
-                    ./venv/bin/activate && pip install kgx==1.5.2
+                    ./venv/bin/pip install kgx==1.5.2
                     ./venv/bin/kgx kgx transform --stream --transform-config neo4j-v3-transform.yaml
                     sleep 30s
                     mkdir neo4j-v3 || true
