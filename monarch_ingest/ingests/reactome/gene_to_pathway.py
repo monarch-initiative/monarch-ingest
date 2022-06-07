@@ -1,10 +1,12 @@
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.model.biolink import ChemicalToPathwayAssociation, Gene, Pathway
 
 source_name = "reactome_gene_to_pathway"
+
+koza_app = get_koza_app(source_name)
 
 row = koza_app.get_row(source_name)
 

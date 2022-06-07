@@ -4,12 +4,16 @@ Ingest of Reference Genome Orthologs from Panther
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.model.biolink import GeneToGeneHomologyAssociation
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
+
+source_name = "panther_ref_genome_orthology"
+
+koza_app = get_koza_app(source_name)
 
 row = koza_app.get_row()
 

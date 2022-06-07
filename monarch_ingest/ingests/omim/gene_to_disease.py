@@ -10,7 +10,7 @@ import logging
 import re
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.model.biolink import Disease, Gene, GeneToDiseaseAssociation, NucleicAcidEntity
 
@@ -18,6 +18,7 @@ LOG = logging.getLogger(__name__)
 
 
 source_name = "omim_gene_to_disease"
+koza_app = get_koza_app(source_name)
 row = koza_app.get_row(source_name)
 omim_to_gene = koza_app.get_map('mim2gene')
 

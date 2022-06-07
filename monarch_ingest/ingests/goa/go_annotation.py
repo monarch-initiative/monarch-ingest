@@ -9,12 +9,16 @@ import re
 import uuid
 from typing import List
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.ingests.goa.goa_utils import get_biolink_classes, lookup_predicate
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
+source_name = "goa_go_annotation"
+
+koza_app = get_koza_app(source_name)
 
 row = koza_app.get_row()
 

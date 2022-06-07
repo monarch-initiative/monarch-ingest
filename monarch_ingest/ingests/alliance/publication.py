@@ -1,8 +1,10 @@
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from dateutil.parser import parse
 from monarch_ingest.model.biolink import Publication
 
 source_name = "alliance_publication"
+
+koza_app = get_koza_app(source_name)
 
 row = koza_app.get_row(source_name)
 

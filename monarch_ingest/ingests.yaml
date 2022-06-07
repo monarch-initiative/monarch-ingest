@@ -16,8 +16,8 @@ hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
 hpoa_disease_phenotype:
   config: 'ingests/hpoa/disease_phenotype.yaml'
-# mgi_publication_to_gene:
-#   config: 'ingests/mgi/publication_to_gene.yaml'
+mgi_publication_to_gene:
+  config: 'ingests/mgi/publication_to_gene.yaml'
 ncbi_gene:
   config: 'ingests/ncbi/gene.yaml'
 omim_gene_to_disease:

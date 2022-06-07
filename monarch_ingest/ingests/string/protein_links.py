@@ -2,11 +2,15 @@ import re
 import uuid
 import logging
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.model.biolink import Gene, PairwiseGeneToGeneInteraction
 
 logger = logging.getLogger(__name__)
+
+source_name = "string_protein_links"
+
+koza_app = get_koza_app(source_name)
 
 row = koza_app.get_row()
 entrez_2_string = koza_app.get_map('entrez_2_string')

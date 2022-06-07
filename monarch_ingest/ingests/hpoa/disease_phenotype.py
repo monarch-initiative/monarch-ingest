@@ -26,7 +26,7 @@ poetry run koza transform \
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink_model_pydantic.model import (
     Disease,
@@ -37,6 +37,9 @@ from biolink_model_pydantic.model import (
 LOG = logging.getLogger(__name__)
 
 source_name = "hpoa_disease_phenotype"
+
+koza_app = get_koza_app(source_name)
+
 row = koza_app.get_row(source_name)
 
 # Filters
