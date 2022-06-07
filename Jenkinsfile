@@ -47,7 +47,7 @@ pipeline {
                     ls -la output/
                     python3 -mvenv venv
                     ./venv/bin/pip install kgx==1.5.2
-                    ./venv/bin/kgx kgx transform --stream --transform-config neo4j-v3-transform.yaml
+                    ./venv/bin/kgx transform --stream --transform-config neo4j-v3-transform.yaml
                     sleep 30s
                     mkdir neo4j-v3 || true
                     docker cp neo:/data ./neo4j-v3/data
