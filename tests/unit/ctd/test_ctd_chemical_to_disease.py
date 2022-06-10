@@ -1,6 +1,6 @@
 import pytest
 
-from model.biolink import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from monarch_ingest.model.biolink import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
 
 @pytest.fixture

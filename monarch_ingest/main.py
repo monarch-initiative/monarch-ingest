@@ -86,7 +86,7 @@ def transform(
         )
     if do_merge:
         merge(f"{output_dir}/transform_output", output_dir)
-    
+
 
 
 @typer_app.command()

@@ -1,5 +1,5 @@
 ---
-# hpoanotations
+# HPO anotations
 
 "IEA": "evidence used in automatic assertion"  # "ECO:0000501",
 "PCS": "experimental evidence used in manual assertion"  # "ECO:0000269",

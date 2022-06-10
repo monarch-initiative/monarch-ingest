@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from model.biolink import GeneToExpressionSiteAssociation
+from monarch_ingest.model.biolink import GeneToExpressionSiteAssociation
 from koza.cli_runner import koza_app
 from source_translation import source_map
 

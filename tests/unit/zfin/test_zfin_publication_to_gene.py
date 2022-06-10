@@ -1,6 +1,6 @@
 import pytest
 
-from model.biolink import InformationContentEntityToNamedThingAssociation
+from monarch_ingest.model.biolink import InformationContentEntityToNamedThingAssociation
 
 
 @pytest.fixture

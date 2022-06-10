@@ -6,6 +6,7 @@ from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
+from monarch_gene_mapping.gene_mapping import main as generate_gene_mapping
 
 from monarch_ingest.helper import *
 
@@ -160,13 +161,21 @@ def merge_files(
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
 ):
+    LOG.info("Generate mappings...")
+
+    mapping_output_dir = f"{OUTPUT_DIR}/mappings"
+    generate_gene_mapping(output_dir=mapping_output_dir)
+    mapping_file = f"{mapping_output_dir}/gene_mappings.tsv"
+
     LOG.info("Merging knowledge graph...")
 
     merge(
         name=name,
         input_dir=input_dir,
-        output_dir=output_dir
+        output_dir=output_dir,
+        mapping=mapping_file
     )
+
 
 def _set_log_level(
     quiet: bool = False, debug: bool = False, log: bool = False, logfile: str = 'logs/transform.log'

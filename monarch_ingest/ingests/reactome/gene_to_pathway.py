@@ -1,8 +1,6 @@
 import uuid
-
 from koza.cli_runner import koza_app
-
-from model.biolink import GeneToPathwayAssociation
+from monarch_ingest.model.biolink import ChemicalToPathwayAssociation
 
 source_name = "reactome_gene_to_pathway"
 

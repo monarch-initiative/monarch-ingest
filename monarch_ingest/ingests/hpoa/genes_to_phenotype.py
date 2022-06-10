@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from model.biolink import GeneToPhenotypicFeatureAssociation
+from monarch_ingest.model.biolink import GeneToPhenotypicFeatureAssociation
 
 source_name = "hpoa_genes_to_phenotype"
 row = koza_app.get_row(source_name)
