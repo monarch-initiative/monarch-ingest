@@ -1,6 +1,6 @@
 from koza.cli_runner import koza_app
 from dateutil.parser import parse
-from model.biolink import Publication
+from monarch_ingest.model.biolink import Publication
 
 source_name = "alliance_publication"
 

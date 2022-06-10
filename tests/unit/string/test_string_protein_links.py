@@ -3,7 +3,7 @@ Unit tests for STRING protein links ingest
 """
 import pytest
 
-from model.biolink import PairwiseGeneToGeneInteraction
+from monarch_ingest.model.biolink import PairwiseGeneToGeneInteraction
 
 
 @pytest.fixture

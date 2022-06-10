@@ -4,7 +4,7 @@ import uuid
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from model.biolink import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from monarch_ingest.model.biolink import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
 
 LOG = logging.getLogger(__name__)
 

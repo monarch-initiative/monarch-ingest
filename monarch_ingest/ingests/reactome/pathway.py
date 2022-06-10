@@ -1,4 +1,4 @@
-from model.biolink import Pathway
+from monarch_ingest.model.biolink import Pathway
 from koza.cli_runner import koza_app
 
 source_name = "reactome_pathway"
