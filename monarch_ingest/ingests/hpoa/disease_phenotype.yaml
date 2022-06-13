@@ -22,6 +22,7 @@ header: 4
 global_table: './monarch_ingest/translation_table.yaml'
 local_table: './monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
 
+# We only concern ourselves with Aspect == 'P' records in this ingest.
 filters:
   - inclusion: 'include'
     column: 'Aspect'
@@ -53,6 +54,7 @@ edge_properties:
   - 'id'
   - 'subject'
   - 'predicate'
+  - 'negated'
   - 'object'
   - 'category'
   - 'publications'

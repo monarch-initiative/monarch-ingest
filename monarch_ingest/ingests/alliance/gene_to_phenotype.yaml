@@ -18,8 +18,7 @@ required_properties:
   - 'objectId'
   - 'phenotypeTermIdentifiers'
   - 'evidence'
-  # Nested properties that are also required, but can't be specified yet
-  # - 'phenotypeTermIdentifiers[0]['termId']
+  # - 'phenotypeTermIdentifiers[0]["termId"]'
   # - 'evidence.publicationId'
 
 
