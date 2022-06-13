@@ -148,7 +148,8 @@ association = GeneToDiseaseAssociation(
     predicate=predicate,
     object=disorder_id,
     has_evidence=[evidence],
-    source='infores:omim',
+    aggregating_knowledge_source="infores:monarchinitiative",
+    primary_knowledge_source='infores:omim'
 )
 
 koza_app.write(association)

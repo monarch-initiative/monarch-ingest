@@ -52,7 +52,8 @@ if gene_ids_a and gene_ids_b:
                 subject=gene_a.id,
                 object=gene_b.id,
                 predicate="biolink:interacts_with",
-                source="infores:string",
+                aggregating_knowledge_source="infores:monarchinitiative",
+                primary_knowledge_source="infores:string"
             )
 
             # entities.append(gene_a)

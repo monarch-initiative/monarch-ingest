@@ -121,7 +121,9 @@ association = DiseaseToPhenotypicFeatureAssociation(
     has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
     onset_qualifier=onset,
-    frequency_qualifier=frequency_qualifier
+    frequency_qualifier=frequency_qualifier,
+    aggregating_knowledge_source="infores:monarchinitiative",
+    primary_knowledge_source="infores:hpoa"
 )
 
 koza_app.write(association)

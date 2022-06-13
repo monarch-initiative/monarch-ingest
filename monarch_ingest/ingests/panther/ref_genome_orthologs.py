@@ -37,7 +37,8 @@ try:
         subject=gene_id,
         object=ortholog_id,
         predicate=predicate,
-        source="infores:panther",
+        aggregating_knowledge_source="infores:monarchinitiative",
+        primary_knowledge_source="infores:panther",
         has_evidence=[f"PANTHER.FAMILY:{panther_ortholog_id}"],
     )
 

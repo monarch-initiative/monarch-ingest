@@ -30,7 +30,8 @@ if row['DirectEvidence'] in ['therapeutic']:
         predicate=predicate,
         object=disease.id,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
-        source="infores:ctd",
+        aggregating_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source=["infores:ctd"]
     )
 
     koza_app.write(association)

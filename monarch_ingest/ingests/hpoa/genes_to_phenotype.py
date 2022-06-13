@@ -22,7 +22,8 @@ association = GeneToPhenotypicFeatureAssociation(
     subject=gene_id,
     predicate="biolink:has_phenotype",
     object=phenotype_id,
-    source="infores:hpoa",
+    aggregating_knowledge_source="infores:monarchinitiative",
+    primary_knowledge_source="infores:hpoa",
     qualifiers=qualifiers,
     has_evidence=evidence
 )

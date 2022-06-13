@@ -33,7 +33,8 @@ for pub_id in pub_ids:
         subject=pmid,
         predicate="biolink:mentions",
         object=gene.id,
-        source="infores:mgi",
+        aggregating_knowledge_source="infores:monarchinitiative",
+        primary_knowledge_source="infores:mgi"
     )
 
     koza_app.write(association)

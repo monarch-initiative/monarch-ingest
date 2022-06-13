@@ -23,7 +23,8 @@ association = ChemicalToPathwayAssociation(
     subject=gene.id,
     predicate="biolink:participates_in",
     object=pathway.id,
-    source="infores:reactome",
+    aggregating_knowledge_source="infores:monarchinitiative",
+    primary_knowledge_source="infores:reactome",
 )
 
 koza_app.write(association)

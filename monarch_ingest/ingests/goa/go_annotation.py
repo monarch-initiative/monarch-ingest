@@ -141,7 +141,8 @@ else:
             predicate=predicate,
             negated=negated,
             has_evidence=[eco_term],
-            source="infores:goa",
+            aggregating_knowledge_source="infores:monarchinitiative",
+            primary_knowledge_source="infores:goa",
         )
 
         # Write the captured Association out

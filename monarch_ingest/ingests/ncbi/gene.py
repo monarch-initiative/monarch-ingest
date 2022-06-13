@@ -10,7 +10,7 @@ gene = Gene(
     symbol=row["Symbol"],
     description=row["description"],
     in_taxon=['NCBITaxon:' + row["tax_id"]],
-    source="infores:ncbi-gene",
+    source="infores:ncbi-gene"
 )
 
 koza_app.write(gene)
