@@ -34,8 +34,6 @@ from biolink_model_pydantic.model import (
     PhenotypicFeature
 )
 
-from model.biolink import Onset
-
 LOG = logging.getLogger(__name__)
 
 source_name = "hpoa_disease_phenotype"
