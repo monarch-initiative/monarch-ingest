@@ -111,8 +111,8 @@ def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
 
     # This is a hack to get make a few pseudo-predicates that come out of the ontology transform
     # compatible with Plater's pydantic model
-    subprocess.call(["sed", "-i", "'s@subPropertyOf@sub_property_of@g'", edges])
-    subprocess.call(["sed", "-i", "'s@inverseOf@inverse_of@g'", edges])
+    subprocess.call(["sed", "-i", "s@subPropertyOf@sub_property_of@g", edges])
+    subprocess.call(["sed", "-i", "s@inverseOf@inverse_of@g", edges])
 
     if not file_exists(edges):
         raise ValueError("Ontology transform did not produce an edges file")

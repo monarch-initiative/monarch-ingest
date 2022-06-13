@@ -138,8 +138,8 @@ def release(
 
     if update_latest:
         LOG.debug(f"Replacing latest with this release")
-        subprocess.run(['gsutil', '-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
-        subprocess.run(['gsutil','-m','cp','-r',f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
+        subprocess.run(['gsutil','-q','-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
+        subprocess.run(['gsutil','-q','-m','cp','-r',f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
         LOG.info(f"Updated 'latest' to current release.")
 
 if __name__ == "__main__":
