@@ -1,5 +1,5 @@
 from koza.cli_runner import koza_app
-from dateutil.parser import parse
+from dateutil.parser import parse, ParserError
 from monarch_ingest.model.biolink import Publication
 
 source_name = "alliance_publication"
@@ -16,8 +16,10 @@ xrefs = [
 creation_date = row["datePublished"]
 try:
     creation_date = parse(creation_date)
-except:
+except (ParserError, OverflowError):
     creation_date = None
+
+source = row['source']
 
 pub = Publication(
     id=row["primaryId"],
@@ -26,7 +28,8 @@ pub = Publication(
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
     creation_date=creation_date,
-    source="infores:alliance-of-genome-resources",
+    aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+    primary_knowledge_source=source
 )
 
 if "authors" in row.keys():

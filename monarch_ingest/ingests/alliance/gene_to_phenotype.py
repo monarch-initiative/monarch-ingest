@@ -37,7 +37,8 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         predicate="biolink:has_phenotype",
         object=phenotypicFeature.id,
         publications=[row["evidence"]["publicationId"]],
-        source=source,
+        aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+        primary_knowledge_source=source
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:

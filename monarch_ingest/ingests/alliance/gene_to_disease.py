@@ -48,8 +48,8 @@ if row["DBobjectType"] == "gene" and predicate:
         predicate=predicate,
         object=disease.id,
         publications=[row["Reference"]],
-        aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliance"],
-        primary_knowledge_source=[source],
+        aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+        primary_knowledge_source=source
     )
 
     if negated:
