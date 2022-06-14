@@ -141,7 +141,7 @@ else:
             predicate=predicate,
             negated=negated,
             has_evidence=[eco_term],
-            aggregating_knowledge_source="infores:monarchinitiative",
+            aggregating_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:goa",
         )
 

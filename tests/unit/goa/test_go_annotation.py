@@ -472,3 +472,5 @@ def test_mgi_curie(mgi_entities):
     ][0]
     assert association
     assert association.subject == "MGI:1918911"
+    assert association.primary_knowledge_source == "infores:goa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

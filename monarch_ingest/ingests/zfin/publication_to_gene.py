@@ -28,7 +28,7 @@ association = InformationContentEntityToNamedThingAssociation(
     predicate="biolink:mentions",
     object=gene.id,
     aggregating_knowledge_source=["infores:monarchinitiative"],
-    primary_knowledge_source=["infores:zfin"]
+    primary_knowledge_source="infores:zfin"
 )
 
 koza_app.write(association)

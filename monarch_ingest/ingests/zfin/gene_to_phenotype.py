@@ -40,5 +40,5 @@ if row["Phenotype Tag"] == "abnormal":
             object=phenotypicFeature.id,
             publications=["ZFIN:" + row["Publication ID"]],
             aggregating_knowledge_source=["infores:monarchinitiative"],
-            primary_knowledge_source=["infores:zfin"]
+            primary_knowledge_source="infores:zfin"
         )

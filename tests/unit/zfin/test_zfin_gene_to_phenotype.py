@@ -84,7 +84,8 @@ def test_association(basic_g2p):
     assert association.object == "ZP:0004225"
     assert association.publications
     assert association.publications[0] == "ZFIN:ZDB-PUB-970210-19"
-
+    assert association.primary_knowledge_source == "infores:zfin"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 # @pytest.fixture
 # def postcomposed(mock_koza, source_name, basic_row, script, map_cache, global_table):

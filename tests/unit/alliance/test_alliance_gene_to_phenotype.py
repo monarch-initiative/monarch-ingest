@@ -47,12 +47,12 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
 
 
 def test_association_publication(rat):
-    associations = [
+    association = [
         association
         for association in rat
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
-    ]
-    assert associations[0].publications[0] == "PMID:11549339"
+    ][0]
+    assert association.publications[0] == "PMID:11549339"
 
 
 @pytest.fixture
@@ -89,12 +89,12 @@ def conditions_entities(
 
 
 def test_conditions(conditions_entities):
-    associations = [
+    association = [
         association
         for association in conditions_entities
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
-    ]
-    assert "ZECO:0000111" in associations[0].qualifiers
+    ][0]
+    assert "ZECO:0000111" in association.qualifiers
 
 
 # TODO: can this test be shared across all g2p loads?

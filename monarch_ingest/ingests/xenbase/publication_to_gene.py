@@ -45,7 +45,7 @@ for gene_page in gene_pages.split(","):
             predicate="biolink:mentions",
             object=publication.id,
             aggregating_knowledge_source=["infores:monarchinitiative"],
-            primary_knowledge_source=["infores:xenbase"]
+            primary_knowledge_source="infores:xenbase"
         )
 
         entities.append(association)

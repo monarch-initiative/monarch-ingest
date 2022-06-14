@@ -38,10 +38,5 @@ def test_association(basic_g2p):
     assert association
     assert association.subject == "RGD:2533"
     assert association.object == "PMID:8106108"
-
-
-def test_association_duplicates(basic_g2p):
-    association = basic_g2p[0]
-    assert association
-    assert association.subject == "RGD:2533"
-    assert association.object == "PMID:8106108"
+    assert association.primary_knowledge_source == "infores:rgd"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

@@ -34,3 +34,5 @@ def test_association(basic_g2p):
     assert association
     assert association.subject == "ENSEMBL:27890"
     assert association.object == "REACT:R-BTA-8853659"
+    assert association.primary_knowledge_source == "infores:reactome"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

@@ -102,3 +102,6 @@ def test_therapeutic_entities(therapeutic):
     assert association.predicate == "biolink:treats"
     assert 'PMID:17516704' in association.publications
     assert 'PMID:123' in association.publications
+    assert association.primary_knowledge_source == "infores:ctd"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
+

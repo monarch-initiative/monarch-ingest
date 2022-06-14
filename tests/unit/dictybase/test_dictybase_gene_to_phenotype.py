@@ -139,4 +139,5 @@ def test_dictybase_g2p_association(basic_dictybase):
         assert association.subject == "dictyBase:DDB_G0283613"
         assert association.object in ["DDPHENO:0000225", "DDPHENO:0000163"]
         assert association.predicate == "biolink:has_phenotype"
-        assert "infores:dictybase" in association.source
+        assert association.primary_knowledge_source == "infores:dictybase"
+        assert "infores:monarchinitiative" in association.aggregator_knowledge_source

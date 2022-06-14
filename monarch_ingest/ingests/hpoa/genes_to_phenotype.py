@@ -22,10 +22,10 @@ association = GeneToPhenotypicFeatureAssociation(
     subject=gene_id,
     predicate="biolink:has_phenotype",
     object=phenotype_id,
-    aggregating_knowledge_source="infores:monarchinitiative",
-    primary_knowledge_source="infores:hpoa",
     qualifiers=qualifiers,
-    has_evidence=evidence
+    has_evidence=evidence,
+    aggregating_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:hpoa"
 )
 
 koza_app.write(association)

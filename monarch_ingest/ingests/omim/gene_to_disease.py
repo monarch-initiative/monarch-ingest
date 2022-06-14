@@ -148,7 +148,7 @@ association = GeneToDiseaseAssociation(
     predicate=predicate,
     object=disorder_id,
     has_evidence=[evidence],
-    aggregating_knowledge_source="infores:monarchinitiative",
+    aggregating_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source='infores:omim'
 )
 

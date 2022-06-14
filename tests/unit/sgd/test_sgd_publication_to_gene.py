@@ -34,3 +34,5 @@ def test_association(basic_g2p):
     assert association
     assert association.subject == "SGD:YHR030C"
     assert association.object == "PMID:9770551"
+    assert association.primary_knowledge_source == "infores:sgd"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

@@ -31,7 +31,7 @@ for each_id in id_list:
         subject=gene.id,
         predicate="biolink:mentions",
         object=publication.id,
-        aggregating_knowledge_source="infores:monarchinitiative",
+        aggregating_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:rgd"
     )
 

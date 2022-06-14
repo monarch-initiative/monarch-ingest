@@ -52,9 +52,14 @@ def confirm_one_of_each_classes(cls, entities):
 
 
 def test_pombase_g2p_association_publication(entities):
-    associations = [
+    association = [
         association
         for association in entities
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
-    ]
-    assert associations[0].publications[0] == "PMID:19436749"
+    ][0]
+    assert association.subject == "Pombase:SPAC24B11.06c"
+    assert association.predicate == "biolink:has_phenotype"
+    assert association.object == "FYPO:0004058"
+    assert association.publications[0] == "PMID:19436749"
+    assert association.primary_knowledge_source == "infores:pombase"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

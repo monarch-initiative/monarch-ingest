@@ -23,7 +23,7 @@ association = ChemicalToPathwayAssociation(
     subject=gene.id,
     predicate="biolink:participates_in",
     object=pathway.id,
-    aggregating_knowledge_source="infores:monarchinitiative",
+    aggregating_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source="infores:reactome",
 )
 

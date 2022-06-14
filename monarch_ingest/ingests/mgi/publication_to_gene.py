@@ -33,7 +33,7 @@ for pub_id in pub_ids:
         subject=pmid,
         predicate="biolink:mentions",
         object=gene.id,
-        aggregating_knowledge_source="infores:monarchinitiative",
+        aggregating_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:mgi"
     )
 

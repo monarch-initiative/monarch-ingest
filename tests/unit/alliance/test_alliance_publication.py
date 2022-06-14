@@ -92,6 +92,7 @@ def test_single_xref(mock_koza, source_name, row, script, global_table):
     pub = entities[0]
     assert pub.xref == ["SGD:S000185012"]
 
+
 @pytest.mark.parametrize(
     "creation_date", ["2021 Jan 23", "2005", "2021-09-24", "2010-09-15T00:00:00.000-05:00", "09, February 2007"]
 )
@@ -101,6 +102,7 @@ def test_time_parser(mock_koza, source_name, row, script, global_table, creation
     pub = entities[0]
     d = pub.creation_date
     assert isinstance(d, datetime.date) or isinstance(d, datetime.datetime)
+
 
 @pytest.mark.parametrize(
     "creation_date", ["Unknown", "2016 Jul-Aug", "2003 ?%p?\b\bhP\u0007 19", "2000 Dec 14-28"]

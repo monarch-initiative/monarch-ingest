@@ -115,9 +115,8 @@ def test_association(basic_pl):
     assert association.subject == "NCBIGene:14679"
     assert association.object == "NCBIGene:56480"
     assert association.predicate == "biolink:interacts_with"
-
-    assert "infores:string" in association.source
-
+    assert association.primary_knowledge_source == "infores:string"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 @pytest.fixture
 def multigene_row():
