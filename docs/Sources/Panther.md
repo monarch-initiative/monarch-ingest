@@ -27,13 +27,13 @@ Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther anal
 
 #### Panther Data Model of RefGenomeOrthologs
 
-| Data Field | Content                                     | 
-|------------|---------------------------------------------| 
+| Data Field | Content                                     |
+|------------|---------------------------------------------|
 | Gene       | species1 &#124; DB=id1 &#124; protdb=pdbid1|
-| Ortholog   | species2 &#124; DB=id2 &#124; protdb=pdbid2| 
-| Type of ortholog   | [LDO, O, P, X ,LDX]  see [README](http://data.pantherdb.org/ftp/ortholog/current_release/README). | 
+| Ortholog   | species2 &#124; DB=id2 &#124; protdb=pdbid2|
+| Type of ortholog   | [LDO, O, P, X ,LDX]  see [README](http://data.pantherdb.org/ftp/ortholog/current_release/README). |
 | Common ancestor for the orthologs   | taxon name of common ancestor|
-| Panther Ortholog ID   | Panther (sub)family identifier| 
+| Panther Ortholog ID   | Panther (sub)family identifier|
 
 The `DB=id#` fields - where DB == database namespace and id# is the object identifier - are directly translated, by internal namespace mapping, into gene CURIEs.
 

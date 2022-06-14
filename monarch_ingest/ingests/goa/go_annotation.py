@@ -32,7 +32,7 @@ object_id = object_id.replace('PomBase', 'POMBASE')
 
 # TODO: the NCBI Taxon ID is not really propagated to the output?
 #       Hence, the following parsing operation is useless?
-ncbitaxon = row['Taxon']
+ncbitaxon: str = row['Taxon']
 if ncbitaxon:
     # in rare circumstances, multiple taxa may be given as a piped list...
     taxa = ncbitaxon.split("|")

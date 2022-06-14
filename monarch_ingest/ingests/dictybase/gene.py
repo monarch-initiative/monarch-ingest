@@ -1,7 +1,9 @@
 from typing import Optional, Tuple
-from monarch_ingest.model.biolink import Gene
+
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
+
+from biolink_model.pydantic.model import Gene
 
 source_name = "dictybase_gene"
 

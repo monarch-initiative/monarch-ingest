@@ -1,7 +1,7 @@
 import pytest
 from koza.cli_runner import get_translation_table
 
-from monarch_ingest.model.biolink import (
+from biolink_model.pydantic.model import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
     Publication,
@@ -77,7 +77,7 @@ def test_gene_literature_entity_types(gene_literature_entities):
     publications = [
         entity for entity in gene_literature_entities if isinstance(entity, Publication)
     ]
-    [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
+    genes = [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
     associations = [
         entity
         for entity in gene_literature_entities

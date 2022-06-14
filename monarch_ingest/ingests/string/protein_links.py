@@ -4,7 +4,10 @@ import logging
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.model.biolink import Gene, PairwiseGeneToGeneInteraction
+from biolink_model.pydantic.model import (
+    Gene,
+    PairwiseGeneToGeneInteraction
+)
 
 logger = logging.getLogger(__name__)
 

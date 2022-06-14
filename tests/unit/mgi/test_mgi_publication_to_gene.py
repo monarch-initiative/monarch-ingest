@@ -1,6 +1,6 @@
 import pytest
 
-from monarch_ingest.model.biolink import InformationContentEntityToNamedThingAssociation
+from biolink_model.pydantic.model import InformationContentEntityToNamedThingAssociation
 
 pubmed_ids = (
     "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"

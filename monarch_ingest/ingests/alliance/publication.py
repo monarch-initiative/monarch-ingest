@@ -1,6 +1,7 @@
 from koza.cli_runner import koza_app
-from dateutil.parser import parse
-from monarch_ingest.model.biolink import Publication
+from dateutil.parser import parse, ParserError
+
+from biolink_model.pydantic.model import Publication
 
 source_name = "alliance_publication"
 
@@ -16,7 +17,7 @@ xrefs = [
 creation_date = row["datePublished"]
 try:
     creation_date = parse(creation_date)
-except:
+except (ParserError, OverflowError):
     creation_date = None
 
 pub = Publication(

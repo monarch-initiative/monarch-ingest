@@ -1,9 +1,10 @@
 import uuid
 from typing import Optional, Tuple
 
-from monarch_ingest.model.biolink import GeneToPhenotypicFeatureAssociation
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
+
+from biolink_model.pydantic.model import GeneToPhenotypicFeatureAssociation
 
 source_name = "dictybase_gene_to_phenotype"
 

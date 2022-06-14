@@ -2,7 +2,7 @@ import logging
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.model.biolink import Gene
+from biolink_model.pydantic.model import Gene
 
 LOG = logging.getLogger(__name__)
 

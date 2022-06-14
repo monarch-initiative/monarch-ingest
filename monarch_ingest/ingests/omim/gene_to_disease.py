@@ -12,7 +12,12 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.model.biolink import Disease, Gene, GeneToDiseaseAssociation, NucleicAcidEntity
+from biolink_model.pydantic.model import (
+    Disease,
+    Gene,
+    GeneToDiseaseAssociation,
+    NucleicAcidEntity
+)
 
 LOG = logging.getLogger(__name__)
 

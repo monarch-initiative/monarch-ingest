@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -12,6 +12,7 @@ from monarch_ingest.helper import *
 
 LOG = get_logger(__name__)
 OUTPUT_DIR = "output"
+
 
 def transform_one(
     tag,
