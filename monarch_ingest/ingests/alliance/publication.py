@@ -28,8 +28,7 @@ pub = Publication(
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
     creation_date=creation_date,
-    aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
-    primary_knowledge_source=source
+    source=source
 )
 
 if "authors" in row.keys():

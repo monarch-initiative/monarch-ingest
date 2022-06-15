@@ -108,7 +108,8 @@ def assert_association(data):
     # Evidence is a list
     assert result_expected[association.object][5] in association.has_evidence
 
-    assert "infores:panther" in association.source
+    assert association.primary_knowledge_source == "infores:panther"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture

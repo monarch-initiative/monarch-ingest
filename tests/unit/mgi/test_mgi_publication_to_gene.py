@@ -79,3 +79,6 @@ def test_association_values(basic_entities):
 
     assert associations[8].subject == "PMID:31504408"
     assert associations[8].object == "MGI:1920971"
+
+    assert associations[0].primary_knowledge_source == "infores:mgi"
+    assert "infores:monarchinitiative" in associations[0].aggregator_knowledge_source

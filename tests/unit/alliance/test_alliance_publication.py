@@ -50,6 +50,8 @@ def test_research_article(mock_koza, source_name, row, script, global_table):
     pub = entities[0]
     assert pub
     assert pub.id == "PMID:27653487"
+    assert pub.name == "The Effect of Temperature on Microtubule-Based Transport " +\
+                       "by Cytoplasmic Dynein and Kinesin-1 Motors."
 
 
 @pytest.mark.parametrize(

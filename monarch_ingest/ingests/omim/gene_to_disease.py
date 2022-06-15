@@ -115,7 +115,7 @@ else:
 # reference: https://omim.org/help/faq#1_6
 
 predicate = "biolink:gene_associated_with_condition"
-relation = koza_app.translation_table.global_table['causes condition']
+# relation = koza_app.translation_table.global_table['causes condition']
 
 if disorder_label.startswith('['):
     # predicate = "biolink:related_condition"
@@ -123,9 +123,9 @@ if disorder_label.startswith('['):
     koza_app.next_row()
 elif disorder_label.startswith('{'):
     predicate = "biolink:risk_affected_by"
-    relation = koza_app.translation_table.global_table[
-        'confers susceptibility to condition'
-    ]
+    # relation = koza_app.translation_table.global_table[
+    #     'confers susceptibility to condition'
+    # ]
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
     # predicate = "biolink:related_condition"

@@ -95,6 +95,9 @@ def test_conditions(conditions_entities):
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ][0]
     assert "ZECO:0000111" in association.qualifiers
+    assert association.primary_knowledge_source == "infores:rgd"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
+    assert "infores:alliancegenome" in association.aggregator_knowledge_source
 
 
 # TODO: can this test be shared across all g2p loads?

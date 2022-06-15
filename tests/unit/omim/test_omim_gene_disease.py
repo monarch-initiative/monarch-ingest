@@ -48,13 +48,15 @@ def test_gene_association_transform(gene_association_entities):
     assert len(entities) == 1
     genes = [entity for entity in entities if isinstance(entity, Gene)]
     diseases = [entity for entity in entities if isinstance(entity, Disease)]
-    associations = [
+    association = [
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
-    ]
+    ][0]
     assert len(genes) == 0
     assert len(diseases) == 0
-    assert len(associations) == 1
 
+    assert association
+    assert association.primary_knowledge_source == "infores:omim"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 @pytest.mark.parametrize(
     "phenotype",
@@ -109,6 +111,7 @@ def test_genomic_entity_row(mock_koza, global_table, map_cache):
     assert association
     assert association.predicate == "biolink:gene_associated_with_condition"
 
+
 def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_cache):
     gene_association_row['Phenotype'] = '{' + gene_association_row['Phenotype'] + '}'
     entities = mock_koza(
@@ -124,3 +127,9 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
         entity for entity in entities if isinstance(entity, GeneToDiseaseAssociation)
     ][0]
     assert association
+    #     subject=gene_id,
+    #     predicate=predicate,
+    #     object=disorder_id,
+    #     has_evidence=[evidence],
+    assert association.primary_knowledge_source == "infores:omim"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
