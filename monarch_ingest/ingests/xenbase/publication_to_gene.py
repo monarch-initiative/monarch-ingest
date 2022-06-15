@@ -3,7 +3,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.model.biolink import (
+from biolink_model.pydantic.model import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
     Publication,

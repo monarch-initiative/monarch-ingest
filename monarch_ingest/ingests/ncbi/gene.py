@@ -1,5 +1,6 @@
-from monarch_ingest.model.biolink import Gene
 from koza.cli_runner import koza_app
+
+from biolink_model.pydantic.model import Gene
 
 source_name = "ncbi_gene"
 

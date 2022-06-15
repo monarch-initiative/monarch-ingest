@@ -2,12 +2,15 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from monarch_ingest.model.biolink import ChemicalToPathwayAssociation, Gene, Pathway
+from biolink_model.pydantic.model import (
+    ChemicalToPathwayAssociation,
+    Gene,
+    Pathway
+)
 
 source_name = "reactome_gene_to_pathway"
 
 row = koza_app.get_row(source_name)
-
 
 gene = Gene(id='ENSEMBL:' + row["component"], source="infores:reactome")
 

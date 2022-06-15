@@ -1,7 +1,7 @@
 import pytest
 from koza.cli_runner import get_translation_table
 
-from monarch_ingest.model.biolink import (
+from biolink_model.pydantic.model import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
     Publication,

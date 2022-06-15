@@ -1,9 +1,10 @@
 import logging
 import uuid
 
-from monarch_ingest.model.biolink import GeneToExpressionSiteAssociation
 from koza.cli_runner import koza_app
 from source_translation import source_map
+
+from biolink_model.pydantic.model import GeneToExpressionSiteAssociation
 
 from monarch_ingest.ingests.alliance.utils import get_data
 

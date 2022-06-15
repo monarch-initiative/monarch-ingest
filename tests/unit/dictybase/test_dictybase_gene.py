@@ -1,7 +1,7 @@
 from typing import Dict, List
 import pytest
 
-from monarch_ingest.model.biolink import Gene
+from biolink_model_pydantic.model import Gene
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
 

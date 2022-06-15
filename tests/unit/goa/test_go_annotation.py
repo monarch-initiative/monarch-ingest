@@ -5,7 +5,7 @@ import logging
 
 import pytest
 
-from monarch_ingest.model.biolink import Association
+from biolink_model.pydantic.model import Association
 
 logger = logging.getLogger(__name__)
 

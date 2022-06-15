@@ -1,16 +1,17 @@
-import subprocess, datetime
+import datetime
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import *
 
 import typer
+import logging
 
 typer_app = typer.Typer()
 
-import logging
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 OUTPUT_DIR = "output"
+
 
 @typer_app.command()
 def download(

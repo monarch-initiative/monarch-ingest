@@ -1,6 +1,10 @@
 import pytest
 
-from monarch_ingest.model.biolink import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from biolink_model.pydantic.model import (
+    Gene,
+    GeneToPhenotypicFeatureAssociation,
+    PhenotypicFeature
+)
 
 
 @pytest.fixture

@@ -7,6 +7,7 @@ Most Koza scripts can run in flat mode, which means that the transform code itse
 Start with the imports, and make sure to set the source_name, which will be used for communicating with the reader and writer.
 
 ```python
+from koza.cli_runner import koza_app
 from biolink_model_pydantic.model import Gene
 
 # The source name is used for reading and writing
@@ -30,8 +31,6 @@ curie_cleaner = koza_app.curie_cleaner
 eqe2zp = koza_app.get_map("eqe2zp")
 translation_table = koza_app.translation_table
 ```
-
-
 
 #### Creating entities 
 
