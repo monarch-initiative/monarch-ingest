@@ -56,7 +56,8 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=[publication_ids],
-                source=source
+                aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+                primary_knowledge_source=source
             )
         )
 
@@ -73,7 +74,7 @@ try:
                 has_evidence=evidence,
                 publications=[publication_ids],
                 aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
-                primary_knowledge_source=source,
+                primary_knowledge_source=source
             )
         )
     else:

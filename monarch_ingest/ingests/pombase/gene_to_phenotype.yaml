@@ -42,6 +42,7 @@ edge_properties:
   - 'category'
   - 'qualifiers'
   - 'publications'
-  - 'provided_by'
+  - 'aggregating_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

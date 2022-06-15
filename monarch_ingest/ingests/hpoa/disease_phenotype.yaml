@@ -62,4 +62,5 @@ edge_properties:
   - 'frequency_qualifier'
   - 'sex_qualifier'
   - 'has_evidence'
-  - 'provided_by'
+  - 'aggregating_knowledge_source'
+  - 'primary_knowledge_source'

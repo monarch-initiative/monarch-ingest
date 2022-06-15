@@ -25,6 +25,4 @@ node_properties:
   - 'type'
   - 'source'
 
-
 transform_mode: 'flat'
-

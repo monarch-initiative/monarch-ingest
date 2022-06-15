@@ -30,7 +30,6 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
     * publications
     * qualifiers (condition terms)
 

@@ -27,6 +27,7 @@ edge_properties:
   - 'object'
   - 'category'
   - 'pathway'
-  - 'provided_by'
+  - 'aggregating_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

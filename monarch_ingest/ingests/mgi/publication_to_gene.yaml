@@ -26,8 +26,8 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'category'
-  - 'provided_by'
-  - 'source'
+  - 'aggregating_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'
 
