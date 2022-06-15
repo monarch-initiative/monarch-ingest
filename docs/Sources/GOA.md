@@ -48,8 +48,8 @@ There is a ReadMe.txt file that explains the different annotation files availabl
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 OR
 
@@ -58,24 +58,24 @@ OR
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
     
 * **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
     * id (random uuid)
     * subject (gene.id)
     * predicate (participates_in)
     * object (go_term.id)
-    * relation (RO:0000056)
-    * provided_by (infores:goa)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 * **biolink:MacromolecularMachineToCellularComponentAssociation**:
     * id (random uuid)
     * subject (gene.id)
     * predicate (located_in)
     * object (go_term.id)
-    * relation (RO:0001025)
-    * provided_by (infores:goa)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 ##### Possible Additional Gene to Gene Ontology Term Association?
 
@@ -84,5 +84,5 @@ OR
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)

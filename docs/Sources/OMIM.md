@@ -43,6 +43,7 @@ from ClinVar.
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (disease.id)
-    * relation (RO:0002200)
     * publication (publication.id)
     * evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:omim)

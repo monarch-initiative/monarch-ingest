@@ -9,7 +9,7 @@ This ingest uses HGNC's "complete set" download file, which only contains associ
 #### Biolink captured
 
 * biolink:Gene
-    * id
+    * id (HGNC identifier)
     * symbol
     * name
     * synonym
@@ -20,13 +20,5 @@ This ingest uses HGNC's "complete set" download file, which only contains associ
     * xref
       * ensembl gene id
       * omim id
-
-* biolink:Publication
-    * id
-
-* biolink:InformationContentEntityToNamedThingAssociation
-    * id (random uuid)
-    * subject (gene.id)
-    * predicate (mentions)
-    * object (publication.id)
-    * relation (mentions)
+    * in_taxon (["NCBITaxon:9606"])
+    * source  (infores:hgnc)

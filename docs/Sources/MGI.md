@@ -23,5 +23,6 @@ This ingest uses MGI's Reference download file, which contains genes and a tab-d
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * relation (has phenotype)
     * publication
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:mgi)

@@ -32,6 +32,8 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
     * object (phenotypicFeature.id)
     * publications
     * qualifiers (condition terms)
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])
 
 ### Gene to Disease
 
@@ -63,7 +65,8 @@ Need a predicate for each kind of relationship:
     * negated (for 'is not implicated in')
     * relation (see predicate table above? )
     * publications (row['Reference'])
-    * source (row['source'])
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])
 
 ### Literature
 
@@ -169,4 +172,5 @@ https://www.alliancegenome.org/downloads#expression
     * stage qualifier (LifeStage.id)  # if specified; None otherwise
     * has evidence (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
     * publications (row['Reference'])
-    * source (`infores` mapped from row['Source'])
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])

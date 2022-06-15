@@ -30,6 +30,6 @@ Data is available in a well-documented easy-to-parse GAF-like format with associ
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
     * category (GeneToPhenotypicFeatureAssociation)
-    * relation (has phenotype)
-    * source
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:dictybase)
 

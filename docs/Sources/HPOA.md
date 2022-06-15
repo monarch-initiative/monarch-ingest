@@ -47,6 +47,8 @@ which will be brought in via the Mondo ingest and published ontology file).
     * sex_qualifier (Note [2])  # 
     * onset_qualifier (Onset.id)
     * frequency_qualifier (Note [3])
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:hpoa)
 
 Notes:
 1. CURIE of [Evidence and Conclusion Ontology(https://bioportal.bioontology.org/ontologies/ECO)] term
@@ -85,4 +87,6 @@ The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype
     * object (phenotypicFeature.id)
     * qualifiers (disease.id, (optional - phenotypicFeature.id, where the id is a given "<Frequency-HPO term>"))
     * has_evidence (<G-D source name>)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:hpoa)
  
