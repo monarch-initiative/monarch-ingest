@@ -163,9 +163,14 @@ def merge_files(
 ):
     LOG.info("Generate mappings...")
 
+    mappings = []
+
+    mappings.append("data/monarch/mondo.sssom.tsv")
+
     mapping_output_dir = f"{OUTPUT_DIR}/mappings"
     generate_gene_mapping(output_dir=mapping_output_dir)
-    mapping_file = f"{mapping_output_dir}/gene_mappings.tsv"
+    mappings.append(f"{mapping_output_dir}/gene_mappings.tsv")
+
 
     LOG.info("Merging knowledge graph...")
 
@@ -173,7 +178,7 @@ def merge_files(
         name=name,
         input_dir=input_dir,
         output_dir=output_dir,
-        mapping=mapping_file
+        mappings=mappings
     )
 
 

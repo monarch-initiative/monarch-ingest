@@ -145,13 +145,14 @@ python-versions = "~=3.7"
 
 [[package]]
 name = "cat-merge"
-version = "0.1.12"
+version = "0.1.15"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
+click = ">=8,<9"
 mkdocs = ">=1.3.0,<2.0.0"
 pandas = ">=1.4.2,<2.0.0"
 
@@ -2048,7 +2049,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "1ce4c3c97d8b46e47802ee098adb2453254cedb1e5064fc283a7dcc02b768758"
+content-hash = "4165df2ae754fd5ad9b865f20bc7af0393d4fa407c6a3a4db9b29b213d28963a"
 
 [metadata.files]
 alabaster = [
@@ -2098,8 +2099,8 @@ cachetools = [
     {file = "cachetools-5.2.0.tar.gz", hash = "sha256:6a94c6402995a99c3970cc7e4884bb60b4a8639938157eeed436098bf9831757"},
 ]
 cat-merge = [
-    {file = "cat-merge-0.1.12.tar.gz", hash = "sha256:87796afa8af3c23ed7c6844eb25e86a89fd5b3774050fd61884d1b43401bca0d"},
-    {file = "cat_merge-0.1.12-py3-none-any.whl", hash = "sha256:96404a9b7475485b9aa1552c6bc360387572096bcca7572cf8df493a38184225"},
+    {file = "cat-merge-0.1.15.tar.gz", hash = "sha256:89ebb49494db3f64c71197f8139be382414a48b0e8c8d691d1a28f8205c8c747"},
+    {file = "cat_merge-0.1.15-py3-none-any.whl", hash = "sha256:dcdfdb156d2ca8e8e10b90f086682eec1ecf2f0e1725c4bbcb6509c0285743d1"},
 ]
 certifi = [
     {file = "certifi-2022.5.18.1-py3-none-any.whl", hash = "sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a"},
@@ -2327,7 +2328,6 @@ ijson = [
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:fa10a1d88473303ec97aae23169d77c5b92657b7fb189f9c584974c00a79f383"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:9a5bf5b9d8f2ceaca131ee21fc7875d0f34b95762f4f32e4d65109ca46472147"},
     {file = "ijson-3.1.4-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:81cc8cee590c8a70cca3c9aefae06dd7cb8e9f75f3a7dc12b340c2e332d33a2a"},
-    {file = "ijson-3.1.4-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:4ea5fc50ba158f72943d5174fbc29ebefe72a2adac051c814c87438dc475cf78"},
     {file = "ijson-3.1.4-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3b98861a4280cf09d267986cefa46c3bd80af887eae02aba07488d80eb798afa"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:068c692efba9692406b86736dcc6803e4a0b6280d7f0b7534bff3faec677ff38"},
     {file = "ijson-3.1.4-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:86884ac06ac69cea6d89ab7b84683b3b4159c4013e4a20276d3fc630fe9b7588"},

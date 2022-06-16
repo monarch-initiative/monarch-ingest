@@ -400,6 +400,10 @@
   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
   local_name: data/monarch/monarch.json
   tag: monarch_ontology
+-
+  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
+  local_name: data/monarch/mondo.sssom.tsv
+  tag: mapping
 
 # reactome
 -
