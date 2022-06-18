@@ -1,7 +1,7 @@
 from koza.cli_runner import koza_app
 from dateutil.parser import parse, ParserError
 
-from biolink_model.pydantic.model import Publication
+from biolink.model import Publication
 
 source_name = "alliance_publication"
 

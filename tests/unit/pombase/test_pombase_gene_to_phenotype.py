@@ -1,6 +1,6 @@
 import pytest
 
-from biolink_model.pydantic.model import (
+from biolink.model import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature
