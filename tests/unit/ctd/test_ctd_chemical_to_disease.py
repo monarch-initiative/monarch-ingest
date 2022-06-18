@@ -1,6 +1,6 @@
 import pytest
 
-from biolink_model_pydantic.model import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from biolink.model import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
 
 @pytest.fixture

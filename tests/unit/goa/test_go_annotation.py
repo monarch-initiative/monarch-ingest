@@ -5,7 +5,7 @@ import logging
 
 import pytest
 
-from biolink_model.pydantic.model import Association
+from biolink.model import Association
 
 logger = logging.getLogger(__name__)
 

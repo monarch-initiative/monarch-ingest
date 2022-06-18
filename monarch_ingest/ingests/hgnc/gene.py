@@ -1,6 +1,6 @@
 from koza.cli_runner import koza_app
 
-from biolink_model.pydantic.model import Gene
+from biolink.model import Gene
 
 source_name = "hgnc_gene"
 
