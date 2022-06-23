@@ -30,34 +30,9 @@ def transform(ingest_config, row_limit=None):
 
 
 @task()
-def ontology_transform():
-    assert os.path.exists('data/monarch/monarch.json')
+def phenio():
+    pass
 
-    edges = 'output/monarch_ontology_edges.tsv'
-    nodes = 'output/monarch_ontology_nodes.tsv'
-
-    # Since this is fairly slow, don't re-do it if the files exist
-    # This shouldn't affect cloud builds, but will be handy for local runs
-    if (
-        os.path.exists(edges)
-        and os.path.exists(nodes)
-        and os.path.getsize(edges) > 0
-        and os.path.getsize(nodes)
-    ):
-        return
-
-    kgx.cli.cli_utils.transform(
-        inputs=["data/monarch/monarch.json"],
-        input_format="obojson",
-        stream=False,
-        output="output/monarch_ontology",
-        output_format="tsv",
-    )
-
-    assert os.path.exists(edges)
-    assert os.path.getsize(edges) > 0
-    assert os.path.exists(nodes)
-    assert os.path.getsize(nodes) > 0
 
 
 @task()
@@ -92,7 +67,7 @@ def run_ingests(row_limit: Optional[int] = None):
     with open("ingests.yaml", "r") as stream:
         ingests = yaml.safe_load(stream)
 
-    ontology_transform()
+    phenio()
 
     for ingest in ingests:
         print(ingest)

@@ -36,7 +36,7 @@ def transform(
     tag: str = typer.Option(
         None, help="Which ingest to run (see ingests.yaml for a list)"
     ),
-    ontology: bool = typer.Option(False, help="Option: pass to run the ontology ingest"),
+    phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
     all: bool = typer.Option(False, help="Ingest all sources"),
     row_limit: int = typer.Option(None, help="Number of rows to process"),
     do_merge: bool = typer.Option(False, "--merge", help="Merge output dir after ingest"),
@@ -54,9 +54,9 @@ def transform(
     """
     Something descriptive
     """
-    if ontology:
+    if phenio:
         LOG.info(f"Running ontology transform...")
-        transform_ontology(
+        transform_phenio(
             output_dir=output_dir,
             force=force
         )

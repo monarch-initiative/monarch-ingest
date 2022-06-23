@@ -1,6 +1,6 @@
-import subprocess
 from pathlib import Path
 from typing import List, Optional
+import tarfile, pandas
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -12,6 +12,7 @@ from monarch_ingest.helper import *
 
 LOG = get_logger(__name__)
 OUTPUT_DIR = "output"
+
 
 def transform_one(
     tag,
@@ -83,41 +84,30 @@ def transform_one(
         raise ValueError(f"{tag} did not produce the the expected output")
 
 
-def transform_ontology(output_dir: str = OUTPUT_DIR, force=False):
-    assert os.path.exists('data/monarch/monarch.json')
+def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
+    
+    phenio_tar = 'data/phenio/kg-phenio.tar.gz'
+    assert os.path.exists(phenio_tar)
+    
+    nodefile = 'merged-kg_nodes.tsv'
+    edgefile = 'merged-kg_edges.tsv'
 
-    nodes = f"{output_dir}/transform_output/monarch_ontology_nodes.tsv"
-    edges = f"{output_dir}/transform_output/monarch_ontology_edges.tsv"
+    tar = tarfile.open(phenio_tar)
+    tar.extract(nodefile, 'data/phenio')
+    tar.extract(edgefile, 'data/phenio')
 
-    # Since this is fairly slow, don't re-do it if the files exist unless forcing transforms
-    # This shouldn't affect cloud builds, but will be handy for local runs
-    if (
-        not force
-        and os.path.exists(edges)
-        and os.path.exists(nodes)
-        and os.path.getsize(edges) > 0
-        and os.path.getsize(nodes)
-    ):
-        LOG.info("Skipping ontology ingest - output exists. To transform anyway, use --force")
-        return
+    nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
+    edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    kgx_transform(
-        inputs=["data/monarch/monarch.json"],
-        input_format="obojson",
-        stream=True,
-        output=f"{output_dir}/transform_output/monarch_ontology",
-        output_format="tsv",
-    )
+    nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', usecols=range(7), low_memory=False)
+    nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
+    nodes_df.to_csv(nodes, sep='\t', index=False)
 
-    # This is a hack to get make a few pseudo-predicates that come out of the ontology transform
-    # compatible with Plater's pydantic model
-    subprocess.call(["sed", "-i", "s@subPropertyOf@sub_property_of@g", edges])
-    subprocess.call(["sed", "-i", "s@inverseOf@inverse_of@g", edges])
+    edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', usecols=range(7), low_memory=False)
+    edges_df.to_csv(edges, sep='\t', index=False)
 
-    if not file_exists(edges):
-        raise ValueError("Ontology transform did not produce an edges file")
-    if not file_exists(nodes):
-        raise ValueError("Ontology transform did not produce a nodes file")
+    os.remove(f"data/phenio/{nodefile}")
+    os.remove(f"data/phenio/{edgefile}")
 
 
 def transform_all(
@@ -133,7 +123,7 @@ def transform_all(
     # TODO: check for data - download if missing (maybe y/n prompt?)
 
     try:
-        transform_ontology(output_dir=output_dir, force=force)
+        transform_phenio(output_dir=output_dir, force=force)
     except Exception as e:
         LOG.error(f"Error running ontology ingest:\n{e}")
         pass
