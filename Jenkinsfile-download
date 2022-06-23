@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         HOME = "${env.WORKSPACE}"
+        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
     }
     stages {
         stage('setup') {
@@ -13,10 +14,10 @@ pipeline {
                 // This step could (and maybe should) do a poetry install like the ingest Jenkinsfile
                 // and then run downloader from within a poetry run command
                 sh '''
-                    python3 -mvenv venv
-                    . venv/bin/activate
-                    pip install click==8.0.4
-                    pip install kghub-downloader
+                    pip --version
+                    python3 --version
+                    echo $PATH
+                    poetry install
                 '''
             }
         }
@@ -24,8 +25,7 @@ pipeline {
             agent { dockerfile true }
             steps {
                 sh '''
-                    . venv/bin/activate
-                    downloader monarch_ingest/download.yaml
+                    poetry run downloader monarch_ingest/download.yaml
                 '''
             }
         }
