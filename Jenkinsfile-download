@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     triggers {
         cron('H H * * 7')  //sometime on Sundays
     }
@@ -9,7 +9,7 @@ pipeline {
     }
     stages {
         stage('setup') {
-            agent { dockerfile true }
+            agent any
             steps {
                 // This step could (and maybe should) do a poetry install like the ingest Jenkinsfile
                 // and then run downloader from within a poetry run command
@@ -22,7 +22,7 @@ pipeline {
             }
         }
         stage('download') {
-            agent { dockerfile true }
+            agent any
             steps {
                 sh '''
                     poetry run downloader monarch_ingest/download.yaml
@@ -30,7 +30,7 @@ pipeline {
             }
         }
         stage('post-process') {
-            agent { dockerfile true }
+            agent any
             steps {
                 sh '''
                     zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | gzip > data/alliance/alliance_gene_ids.txt.gz
@@ -38,7 +38,7 @@ pipeline {
             }
         }
         stage('upload') {
-            agent { label 'worker' }
+            agent any
             steps {
                 sh '''
                     gsutil -m cp -r data gs://monarch-ingest/data-cache
