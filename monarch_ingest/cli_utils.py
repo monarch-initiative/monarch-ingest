@@ -99,11 +99,13 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', usecols=range(7), low_memory=False)
+    nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', low_memory=False)
+    nodes_df = nodes_df[['id', 'category', 'name', 'description', 'xref', 'provided_by', 'synonym']]
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
-    edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', usecols=range(7), low_memory=False)
+    edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', low_memory=False)
+    edges_df = edges_df[['id', 'subject', 'predicate', 'object', 'category', 'relation', 'knowledge_source']]
     edges_df.to_csv(edges, sep='\t', index=False)
 
     os.remove(f"data/phenio/{nodefile}")
