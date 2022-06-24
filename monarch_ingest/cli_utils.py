@@ -85,16 +85,18 @@ def transform_one(
 
 
 def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
-    
+
     phenio_tar = 'data/phenio/kg-phenio.tar.gz'
     assert os.path.exists(phenio_tar)
-    
+
     nodefile = 'merged-kg_nodes.tsv'
     edgefile = 'merged-kg_edges.tsv'
 
     tar = tarfile.open(phenio_tar)
     tar.extract(nodefile, 'data/phenio')
     tar.extract(edgefile, 'data/phenio')
+
+    os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
 
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
