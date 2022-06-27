@@ -236,9 +236,6 @@
 #   local_name: data/monarch/monarch.json
 #   tag: monarch_ontology
 # -
-#   url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
-#   local_name: data/monarch/mondo.sssom.tsv
-#   tag: mapping
 
 # omim
 #  This should eventually pull from the source using the API key
@@ -313,11 +310,15 @@
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_budding_yeast
 #  local_name: data/panther/4932.sequence_classifications.tsv
 
-### Phenio
+### Monarch
 -
   url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
   local_name: data/phenio/kg-phenio.tar.gz
   tag: phenio
+-
+  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
+  local_name: data/monarch/mondo.sssom.tsv
+  tag: mapping
 
 ### Pombase
 -
