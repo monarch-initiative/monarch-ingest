@@ -4,8 +4,8 @@ alliance_gene_to_expression:
   config: 'ingests/alliance/gene_to_expression.yaml'
 alliance_gene_to_phenotype:
   config: 'ingests/alliance/gene_to_phenotype.yaml'
-alliance_publication:
-  config: 'ingests/alliance/publication.yaml'
+#alliance_publication:
+#  config: 'ingests/alliance/publication.yaml'
 ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
 # flybase_publication_to_gene::
@@ -40,8 +40,6 @@ reactome_pathway:
 #   config: 'ingests/sgd/publication_to_gene.yaml'
 string_protein_links:
   config: 'ingests/string/protein_links.yaml'
-# xenbase_gene:
-#   config: 'ingests/xenbase/gene.yaml'
 xenbase_gene_to_phenotype:
   config: 'ingests/xenbase/gene_to_phenotype.yaml'
 # xenbase_publication_to_gene:
