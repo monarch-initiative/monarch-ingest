@@ -110,6 +110,16 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
         inplace=True
     )
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
+    nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
+
+    # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
+    # associations that we'll also need
+    prefixes = ["MONDO", "HP", "ZP", "MP", "CHEBI", "FBbt",
+                "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
+                "ZFA", "UBERON", "WBbt", "ORPHA"]
+
+    nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
+
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
     edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', dtype="string",
@@ -120,6 +130,9 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
         axis=1,
         inplace=True
     )
+
+    edges_df = edges_df[edges_df["predicate"].str.contains(":")]
+
 
     edges_df.to_csv(edges, sep='\t', index=False)
     os.remove(f"data/phenio/{nodefile}")
