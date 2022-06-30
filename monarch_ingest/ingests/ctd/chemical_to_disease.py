@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.model import (
+from biolink.pydantic.model import (
     ChemicalEntity,
     ChemicalToDiseaseOrPhenotypicFeatureAssociation,
     Disease,

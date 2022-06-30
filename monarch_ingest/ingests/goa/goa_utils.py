@@ -4,7 +4,7 @@ Some Gene Ontology Annotation ingest utility functions.
 import logging
 from typing import Any, Optional, Tuple
 
-from biolink.model import (
+from biolink.pydantic.model import (
     BiologicalProcess,
     CellularComponent,
     MacromolecularMachineToBiologicalProcessAssociation,

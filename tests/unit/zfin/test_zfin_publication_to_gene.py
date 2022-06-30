@@ -1,6 +1,6 @@
 import pytest
 
-from biolink.model import InformationContentEntityToNamedThingAssociation
+from biolink.pydantic.model import InformationContentEntityToNamedThingAssociation
 
 
 @pytest.fixture

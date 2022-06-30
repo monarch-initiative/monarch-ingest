@@ -1,7 +1,7 @@
 from typing import Dict, List
 import pytest
 
-from biolink.model import GeneToPhenotypicFeatureAssociation
+from biolink.pydantic.model import GeneToPhenotypicFeatureAssociation
 from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
 
 

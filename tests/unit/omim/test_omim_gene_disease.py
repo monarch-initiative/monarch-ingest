@@ -4,7 +4,11 @@ OMIM Morbid map tests to
 
 import pytest
 
-from biolink.model import Disease, Gene, GeneToDiseaseAssociation
+from biolink.pydantic.model import (
+    Disease,
+    Gene,
+    GeneToDiseaseAssociation
+)
 
 
 @pytest.fixture
