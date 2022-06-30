@@ -27,9 +27,6 @@ if ":" in db_object_id:
 else:
     object_id = f"{db}:{db_object_id}"
 
-# The Biolink Model might be wrong here about all caps, but we're matching it for now
-object_id = object_id.replace('PomBase', 'POMBASE')
-
 # TODO: the NCBI Taxon ID is not really propagated to the output?
 #       Hence, the following parsing operation is useless?
 ncbitaxon = row['Taxon']
