@@ -4,7 +4,7 @@ import uuid
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from  biolink.model import Disease, Gene, GeneToDiseaseAssociation
+from biolink.pydantic.model import Disease, Gene, GeneToDiseaseAssociation
 
 LOG = logging.getLogger(__name__)
 
