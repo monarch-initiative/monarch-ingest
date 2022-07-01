@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 from typing import List, Optional
 import tarfile
@@ -8,6 +9,8 @@ from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
 from monarch_gene_mapping.gene_mapping import main as generate_gene_mapping
+from closurizer.closurizer import add_closure
+from linkml_solr.cli import start_server, add_cores, create_schema, bulkload
 
 from monarch_ingest.helper import *
 
@@ -199,6 +202,51 @@ def merge_files(
         output_dir=output_dir,
         mappings=mappings
     )
+
+
+def apply_closure(
+        name: str = "monarch-kg",
+        closure_file: str = f"data/phenio/phenio-relations-non-redundant.tsv",
+        output_dir: str = OUTPUT_DIR
+):
+    add_closure(node_file=f"{name}_nodes.tsv",
+                edge_file=f"{name}_edges.tsv",
+                kg_archive=f"{name}.tar.gz",
+                closure_file=closure_file,
+                path=output_dir,
+                output_file=f"{name}-with-closure_edges.tsv",
+                fields=["subject", "object"])
+
+
+def load_solr(node_schema,
+              edge_schema,
+              node_file,
+              edge_file,
+              output_dir: str = OUTPUT_DIR):
+
+    node_core = "entity"
+    edge_core = "association"
+
+    # awkwardly handle there not being a closurized/solrized version of the nodes file yet
+    subprocess.call(['tar', 'zxf', f"{output_dir}/monarch-kg.tar.gz", 'monarch-kg_nodes.tsv'])
+    subprocess.call(['mv', 'monarch-kg_nodes.tsv', output_dir])
+
+    # Start the server without specifying a schema
+    subprocess.call(['lsolr', 'start-server'])
+    subprocess.call(['lsolr', 'add-cores', node_core, edge_core])
+    subprocess.call(['lsolr', 'create-schema', '--schema', node_schema])
+    subprocess.call(['lsolr', 'create-schema', '--schema', edge_schema])
+    subprocess.call(['lsolr', 'bulkload', node_file, '--core', 'entity', '--schema', node_schema])
+    subprocess.call(['lsolr', 'bulkload', edge_file, '--core', 'association', '--schema', edge_schema])
+    subprocess.call(['docker', 'cp', 'my_solr:/var/solr/', 'output/'])
+    subprocess.call(['tar', 'czf', 'solr.tar.gz', 'solr'], cwd='output')
+
+    # clean up the nodes file that was pulled out of the tar
+    os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
+
+    # stop and remove the solr docker container
+    subprocess.call(['docker', 'stop', 'my_solr'])
+    subprocess.call(['docker', 'rm', 'my_solr'])
 
 
 def _set_log_level(
