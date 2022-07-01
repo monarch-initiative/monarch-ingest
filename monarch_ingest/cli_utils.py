@@ -244,9 +244,8 @@ def load_solr(node_schema,
     # clean up the nodes file that was pulled out of the tar
     os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
 
-    # stop and remove the solr docker container
-    subprocess.call(['docker', 'stop', 'my_solr'])
-    subprocess.call(['docker', 'rm', 'my_solr'])
+    # remove the solr docker container
+    subprocess.call(['docker', 'rm', '-f', 'my_solr'])
 
 
 def _set_log_level(
