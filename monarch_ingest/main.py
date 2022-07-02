@@ -101,12 +101,13 @@ def closure():
 
 
 @typer_app.command()
-def solr():
+def solr(run: bool = typer.option(False, help="Load and run solr, no artifact created")):
     # TODO: node file is in the tar file, maybe we just need to tar-gz after merge..
     load_solr(node_schema="solr/entity-index.yaml",
               edge_schema="solr/association-index.yaml",
               node_file=f"{OUTPUT_DIR}/monarch-kg_nodes.tsv",
-              edge_file=f"{OUTPUT_DIR}/monarch-kg-with-closure_edges.tsv")
+              edge_file=f"{OUTPUT_DIR}/monarch-kg-with-closure_edges.tsv",
+              run=run)
 
 
 @typer_app.command()

@@ -222,7 +222,8 @@ def load_solr(node_schema,
               edge_schema,
               node_file,
               edge_file,
-              output_dir: str = OUTPUT_DIR):
+              output_dir: str = OUTPUT_DIR,
+              run: bool = False):
 
     node_core = "entity"
     edge_core = "association"
@@ -238,14 +239,17 @@ def load_solr(node_schema,
     subprocess.call(['lsolr', 'create-schema', '--schema', edge_schema])
     subprocess.call(['lsolr', 'bulkload', node_file, '--core', 'entity', '--schema', node_schema])
     subprocess.call(['lsolr', 'bulkload', edge_file, '--core', 'association', '--schema', edge_schema])
-    subprocess.call(['docker', 'cp', 'my_solr:/var/solr/', 'output/'])
-    subprocess.call(['tar', 'czf', 'solr.tar.gz', 'solr'], cwd='output')
 
-    # clean up the nodes file that was pulled out of the tar
-    os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
+    # Run mode just loads into the docker container, doesn't export and shut down
+    if not run:
+        subprocess.call(['docker', 'cp', 'my_solr:/var/solr/', 'output/'])
+        subprocess.call(['tar', 'czf', 'solr.tar.gz', 'solr'], cwd='output')
 
-    # remove the solr docker container
-    subprocess.call(['docker', 'rm', '-f', 'my_solr'])
+        # clean up the nodes file that was pulled out of the tar
+        os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
+
+        # remove the solr docker container
+        subprocess.call(['docker', 'rm', '-f', 'my_solr'])
 
 
 def _set_log_level(
