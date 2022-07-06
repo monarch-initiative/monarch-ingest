@@ -10,11 +10,15 @@ classes:
     slots:
       -  id
       -  subject
+      -  subject_namespace
+      -  subject_category
       -  subject_closure
       -  subject_label
       -  subject_closure_label
       -  predicate
       -  object
+      -  object_namespace
+      -  object_category
       -  object_closure
       -  object_label
       -  object_closure_label
