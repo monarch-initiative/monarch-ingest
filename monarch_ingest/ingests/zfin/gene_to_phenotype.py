@@ -43,6 +43,6 @@ if row["Phenotype Tag"] == "abnormal":
             predicate="biolink:has_phenotype",
             object=phenotypicFeature.id,
             publications=["ZFIN:" + row["Publication ID"]],
-            aggregating_knowledge_source=["infores:monarchinitiative"],
+            aggregator_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:zfin"
         )

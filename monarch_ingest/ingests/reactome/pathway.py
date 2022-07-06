@@ -12,8 +12,10 @@ pathway = Pathway(
     id="REACT:" + row["ID"],
     name=row["Name"],
     type=koza_app.translation_table.resolve_term("pathway"),
-    source="infores:reactome"
-    # in_taxon=[taxon_id] TODO: this isn't an allowed attribute on pathway.  We need to request adding in biolink if we do need this
+    source="infores:reactome",
+    # TODO: this isn't an allowed attribute on pathway.
+    #       We need to request adding in biolink if we do need this...
+    in_taxon=[taxon_id]
 )
 
 koza_app.write(pathway)

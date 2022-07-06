@@ -55,7 +55,7 @@ if gene_ids_a and gene_ids_b:
                 subject=gene_a.id,
                 object=gene_b.id,
                 predicate="biolink:interacts_with",
-                aggregating_knowledge_source=["infores:monarchinitiative"],
+                aggregator_knowledge_source=["infores:monarchinitiative"],
                 primary_knowledge_source="infores:string"
             )
 

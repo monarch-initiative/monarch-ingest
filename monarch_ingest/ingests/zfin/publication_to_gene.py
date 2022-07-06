@@ -27,7 +27,7 @@ association = InformationContentEntityToNamedThingAssociation(
     subject=publication.id,
     predicate="biolink:mentions",
     object=gene.id,
-    aggregating_knowledge_source=["infores:monarchinitiative"],
+    aggregator_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source="infores:zfin"
 )
 

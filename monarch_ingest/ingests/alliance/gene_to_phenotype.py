@@ -41,7 +41,7 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         predicate="biolink:has_phenotype",
         object=phenotypicFeature.id,
         publications=[row["evidence"]["publicationId"]],
-        aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+        aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
         primary_knowledge_source=source
     )
 

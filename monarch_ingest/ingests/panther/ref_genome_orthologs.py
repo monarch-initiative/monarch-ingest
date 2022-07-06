@@ -38,7 +38,7 @@ try:
         object=ortholog_id,
         predicate=predicate,
         has_evidence=[f"PANTHER.FAMILY:{panther_ortholog_id}"],
-        aggregating_knowledge_source=["infores:monarchinitiative"],
+        aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:panther"
     )
 

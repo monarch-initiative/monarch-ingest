@@ -122,7 +122,7 @@ association = DiseaseToPhenotypicFeatureAssociation(
     sex_qualifier=sex_qualifier,
     onset_qualifier=onset,
     frequency_qualifier=frequency_qualifier,
-    aggregating_knowledge_source=["infores:monarchinitiative"],
+    aggregator_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source="infores:hpoa"
 )
 

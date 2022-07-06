@@ -22,7 +22,7 @@ try:
     gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
 
     # TODO: Biolink Model provenance likely needs to be changed
-    #       soon to something like "aggregating_knowledge_source"
+    #       soon to something like "aggregator_knowledge_source"
     db = gene_id.split(":")[0]
     source = source_map[db]
 
@@ -57,7 +57,7 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=[publication_ids],
-                aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+                aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
                 primary_knowledge_source=source
             )
         )
@@ -74,7 +74,7 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=[publication_ids],
-                aggregating_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+                aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
                 primary_knowledge_source=source
             )
         )

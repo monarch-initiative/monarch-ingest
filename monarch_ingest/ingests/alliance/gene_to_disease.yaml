@@ -53,7 +53,7 @@ edge_properties:
   - 'category'
   - 'negated'
   - 'publications'
-  - 'aggregating_knowledge_source'
+  - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 
 transform_mode: 'flat'

@@ -33,5 +33,5 @@ edge_properties:
   - 'object'
   - 'category'
   - 'publications'
-  - 'aggregating_knowledge_source'
+  - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
