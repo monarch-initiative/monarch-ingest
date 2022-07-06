@@ -235,8 +235,8 @@ def load_solr(node_schema,
     # Start the server without specifying a schema
     subprocess.call(['lsolr', 'start-server'])
     subprocess.call(['lsolr', 'add-cores', node_core, edge_core])
-    subprocess.call(['lsolr', 'create-schema', '--schema', node_schema])
-    subprocess.call(['lsolr', 'create-schema', '--schema', edge_schema])
+    subprocess.call(['lsolr', 'create-schema', '--core', node_core, '--schema', node_schema])
+    subprocess.call(['lsolr', 'create-schema', '--core', edge_core, '--schema', edge_schema])
     subprocess.call(['lsolr', 'bulkload', node_file, '--core', 'entity', '--schema', node_schema])
     subprocess.call(['lsolr', 'bulkload', edge_file, '--core', 'association', '--schema', edge_schema])
 
