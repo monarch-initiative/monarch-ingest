@@ -41,6 +41,10 @@ slots:
     identifier: true
   subject:
     range: string
+  subject_namespace:
+    range: string
+  subject_category:
+    multivalued: true
   subject_label:
     range: string
   subject_closure:
@@ -51,6 +55,10 @@ slots:
     range: string
   object:
     range: string
+  object_namespace:
+    range: string
+  object_category:
+    multivalued: true
   object_label:
     range: string
   object_closure:
