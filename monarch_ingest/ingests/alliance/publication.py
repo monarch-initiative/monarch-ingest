@@ -2,7 +2,7 @@ from koza.cli_runner import koza_app
 from dateutil.parser import parse, ParserError
 
 from biolink.pydantic.model import Publication
-
+from source_translation import source_map
 
 source_name = "alliance_publication"
 
@@ -21,7 +21,14 @@ try:
 except (ParserError, OverflowError):
     creation_date = None
 
-source = row['source']
+source: str
+if 'MODReferenceTypes' in row and \
+        len(row['MODReferenceTypes']) > 0 and \
+        'source' in row['MODReferenceTypes'][0] and \
+        row['MODReferenceTypes'][0]['source'] in source_map:
+    source = source_map[row['MODReferenceTypes'][0]['source']]
+else:  # default source
+    source = "infores:alliancegenome"
 
 pub = Publication(
     id=row["primaryId"],

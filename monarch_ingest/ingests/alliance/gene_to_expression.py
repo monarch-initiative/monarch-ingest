@@ -4,7 +4,7 @@ import uuid
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from biolink.pydantic.model import GeneToExpressionSiteAssociation
+from biolink.pydantic.model import Gene, GeneToExpressionSiteAssociation
 
 from monarch_ingest.ingests.alliance.utils import get_data
 
@@ -18,8 +18,11 @@ EXPRESSED_IN_RELATION = koza_app.translation_table.resolve_term("expressed in")
 
 try:
     gene_id = get_data(row, "geneId")
+
     # Not sure if Alliance will stick with this prefix for Xenbase, but for now...
     gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
+
+    gene = Gene(id=gene_id)
 
     # TODO: Biolink Model provenance likely needs to be changed
     #       soon to something like "aggregator_knowledge_source"
@@ -51,7 +54,7 @@ try:
         koza_app.write(
             GeneToExpressionSiteAssociation(
                 id="uuid:" + str(uuid.uuid1()),
-                subject=gene_id,
+                subject=gene,
                 predicate='biolink:expressed_in',
                 object=anatomical_entity_id,
                 stage_qualifier=stage_term_id,
@@ -68,7 +71,7 @@ try:
         koza_app.write(
             GeneToExpressionSiteAssociation(
                 id="uuid:" + str(uuid.uuid1()),
-                subject=gene_id,
+                subject=gene,
                 predicate='biolink:expressed_in',
                 object=cellular_component_id,
                 stage_qualifier=stage_term_id,

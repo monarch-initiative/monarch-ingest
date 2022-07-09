@@ -2135,7 +2135,14 @@ class GeneOrGeneProduct(MacromolecularMachineMixin):
 
 
 @dataclass(config=PydanticConfig)
-class Gene(BiologicalEntity):
+class Gene(
+    BiologicalEntity,
+    GeneOrGeneProduct,
+    GenomicEntity,
+    ChemicalEntityOrGeneOrGeneProduct,
+    PhysicalEssence,
+    OntologyClass
+):
     """
     A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. A gene locus may include regulatory regions, transcribed regions and/or other functional sequence regions.
     """
