@@ -12,17 +12,13 @@ source_name = "gene-information"
 # inject a single row from the source
 row = koza_app.get_row(source_name)
 
-# Optionally, add publications
-publications: List[str] =["PMID:1", "PMID:2"]
-
 # create your entities
 gene = Gene(
     id='somethingbase:'+row['ID'],
     name=row['Name'],
     symbol="SOME_GENE",
     in_taxon=["NCBITaxon:9606"],
-    publications=publications,
-    provided_by=["infores:monarchinitiative"]
+    source=["infores:monarchinitiative"]
 )
 
 # populate any additional optional properties

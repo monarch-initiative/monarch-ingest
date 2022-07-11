@@ -38,4 +38,4 @@ node_properties:
   - 'category'
   - 'symbol'
   - 'in_taxon'
-  - 'provided_by'
+  - 'source'
