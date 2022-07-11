@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from biolink.pydantic.model import (
+from biolink.pydanticmodel import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,

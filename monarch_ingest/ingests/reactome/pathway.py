@@ -1,6 +1,6 @@
 from koza.cli_runner import koza_app
 
-from biolink.pydantic.model import Pathway
+from biolink.pydanticmodel import Pathway
 
 source_name = "reactome_pathway"
 

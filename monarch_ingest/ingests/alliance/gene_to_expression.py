@@ -4,7 +4,7 @@ import uuid
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from biolink.pydantic.model import Gene, GeneToExpressionSiteAssociation
+from biolink.pydanticmodel import Gene, GeneToExpressionSiteAssociation
 
 from monarch_ingest.ingests.alliance.utils import get_data
 

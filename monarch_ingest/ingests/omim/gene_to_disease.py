@@ -12,7 +12,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydantic.model import (
+from biolink.pydanticmodel import (
     Disease,
     Gene,
     GeneToDiseaseAssociation,

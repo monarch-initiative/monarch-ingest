@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydantic.model import GeneToExpressionSiteAssociation
+from biolink.pydanticmodel import GeneToExpressionSiteAssociation
 
 #
 # test of utility function - proven to work, unless modified in the future?
@@ -74,7 +74,7 @@ def test_rattus_association(rattus):
         for association in rattus
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "RGD:3143"
+    assert association.subject == "RGD:3143"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "GO:0030141"
     assert not association.stage_qualifier
@@ -129,7 +129,7 @@ def test_mouse_association(mouse):
         for association in mouse
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "MGI:99180"
+    assert association.subject == "MGI:99180"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "EMAPA:16039"
     assert association.stage_qualifier is None
@@ -187,7 +187,7 @@ def test_zebrafish_association(zebrafish):
         for association in zebrafish
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "ZFIN:ZDB-GENE-031222-3"
+    assert association.subject == "ZFIN:ZDB-GENE-031222-3"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "ZFA:0001094"
     assert association.stage_qualifier == "ZFS:0000035"
@@ -237,7 +237,7 @@ def test_drosophila_association(drosophila):
         for association in drosophila
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "FB:FBgn0010339"
+    assert association.subject == "FB:FBgn0010339"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "FBbt:00003007"
     assert association.stage_qualifier == "FBdv:00005369"
@@ -292,7 +292,7 @@ def test_worm_association(worm):
         for association in worm
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "WB:WBGene00001386"
+    assert association.subject == "WB:WBGene00001386"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "WBbt:0000100"
     assert association.stage_qualifier == "WBls:0000057"
@@ -340,7 +340,7 @@ def test_yeast_association(yeast):
         for association in yeast
         if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
-    assert association.subject.id == "SGD:S000002429"
+    assert association.subject == "SGD:S000002429"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "GO:1990316"
     assert not association.stage_qualifier

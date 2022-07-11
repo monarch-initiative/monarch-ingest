@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
-from biolink.pydantic.model import Gene
+from biolink.pydanticmodel import Gene
 
 source_name = "dictybase_gene"
 

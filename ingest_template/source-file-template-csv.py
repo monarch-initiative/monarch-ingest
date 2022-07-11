@@ -1,4 +1,4 @@
-from biolink.pydantic.model import Gene
+from biolink.pydanticmodel import Gene
 from koza.cli_runner import koza_app
 
 # You've got 'NCBI_Gene:' and you want 'NCBIGene:'? clean it up.

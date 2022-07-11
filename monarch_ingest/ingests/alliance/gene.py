@@ -1,7 +1,7 @@
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from biolink.pydantic.model import Gene
+from biolink.pydanticmodel import Gene
 
 source_name = "alliance_gene"
 
