@@ -26,7 +26,7 @@ if row['DirectEvidence'] in ['therapeutic']:
 
     association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=chemical.id,
+        subject=chemical,
         predicate=predicate,
         object=disease.id,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],

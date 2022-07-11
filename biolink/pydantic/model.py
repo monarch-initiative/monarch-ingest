@@ -1668,7 +1668,7 @@ class ChemicalEntityOrProteinOrPolypeptide:
 
 
 @dataclass(config=PydanticConfig)
-class ChemicalEntity(NamedThing):
+class ChemicalEntity(NamedThing, PhysicalEssence, ChemicalOrDrugOrTreatment, ChemicalEntityOrGeneOrGeneProduct, ChemicalEntityOrProteinOrPolypeptide):
     """
     A chemical entity is a physical entity that pertains to chemistry or biochemistry.
     """
