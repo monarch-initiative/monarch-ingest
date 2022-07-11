@@ -26,7 +26,7 @@ gene = Gene(
 )
 
 if row["basicGeneticEntity"]["crossReferences"]:
-    gene.xrefs = [
+    gene.xref = [
         koza_app.curie_cleaner.clean(xref["id"])
         for xref in row["basicGeneticEntity"]["crossReferences"]
     ]
