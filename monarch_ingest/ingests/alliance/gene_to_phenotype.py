@@ -6,7 +6,6 @@ from koza.cli_runner import koza_app
 from source_translation import source_map
 
 from biolink.pydanticmodel import (
-    Gene,
     OntologyClass,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature
@@ -29,18 +28,19 @@ if len(row["phenotypeTermIdentifiers"]) > 1:
 # limit to only genes
 if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:
 
-    source = source_map[row["objectId"].split(':')[0]]
+    gene_id = row["objectId"]
 
     pheno_id = row["phenotypeTermIdentifiers"][0]["termId"]
     # Remove the extra WB: prefix if necessary
     pheno_id = pheno_id.replace("WB:WBPhenotype:", "WBPhenotype:")
 
-    gene = Gene(id=row["objectId"], source=source)
+    source = source_map[row["objectId"].split(':')[0]]
+
     phenotypicFeature = PhenotypicFeature(id=pheno_id, source=source)
-    #relation = koza_app.translation_table.resolve_term("has phenotype"),
+
     association = GeneToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=gene,
+        subject=gene_id,
         predicate="biolink:has_phenotype",
         object=phenotypicFeature.id,
         publications=[row["evidence"]["publicationId"]],
@@ -53,7 +53,7 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
         for conditionRelation in row["conditionRelations"]:
             for condition in conditionRelation["conditions"]:
                 if condition["conditionClassId"]:
-                    qualifier_term = OntologyClass(id=condition["conditionClassId"])
+                    qualifier_term = condition["conditionClassId"]
                     qualifiers.append(qualifier_term)
 
         association.qualifiers = qualifiers

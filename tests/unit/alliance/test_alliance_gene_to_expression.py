@@ -139,6 +139,7 @@ def test_mouse_association(mouse):
     assert association.primary_knowledge_source == "infores:mgi"
     assert aggregator_knowledge_sources(association)
 
+
 # Zebrafish has rich gene expression associations with
 # tissue level and above anatomical entities
 @pytest.fixture
@@ -335,6 +336,7 @@ def yeast(sgd_row, mock_koza, source_name, script, global_table):
 
 
 def test_yeast_association(yeast):
+    assert len(yeast) > 0
     association = [
         association
         for association in yeast

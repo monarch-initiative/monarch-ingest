@@ -16,7 +16,7 @@ phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")
 gene_identifier: Optional[Tuple[str, str]] = parse_gene_id(row, gene_names_to_ids)
 if gene_identifier:
 
-    gene = Gene(id=gene_identifier[0])  # gene[0] is the resolved gene ID
+    gene_id=gene_identifier[0]  # gene[0] is the resolved gene ID
     # Parse out list of phenotypes...
     phenotypes = parse_phenotypes(row, phenotype_names_to_ids)
 
@@ -26,7 +26,7 @@ if gene_identifier:
         #       Dictylostelium via which a (mutant) gene (allele) is tied to its phenotype?
         association = GeneToPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
-            subject=gene,
+            subject=gene_id,
             predicate='biolink:has_phenotype',
             object=phenotype_id,
             aggregator_knowledge_source=["infores:monarchinitiative"],

@@ -98,7 +98,7 @@ def test_conditions(conditions_entities):
         for association in conditions_entities
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ][0]
-    assert any(["ZECO:0000111" == term.id for term in association.qualifiers])
+    assert "ZECO:0000111"  in association.qualifiers
     assert association.primary_knowledge_source == "infores:rgd"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
     assert "infores:alliancegenome" in association.aggregator_knowledge_source

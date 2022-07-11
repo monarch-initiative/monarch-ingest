@@ -14,11 +14,9 @@ row = koza_app.get_row(source_name)
 
 if row['DirectEvidence'] in ['therapeutic']:
 
-    chemical = ChemicalEntity(
-        id='MESH:' + row['ChemicalID'], name=row['ChemicalName'], source='infores:ctd'
-    )
+    chemical_id = 'MESH:' + row['ChemicalID']
 
-    disease = Disease(id=row['DiseaseID'], source="infores:ctd")
+    disease_id = row['DiseaseID']
 
     # Update this if we start bringing in marker/mechanism records
     predicate = "biolink:treats"
@@ -26,9 +24,9 @@ if row['DirectEvidence'] in ['therapeutic']:
 
     association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=chemical,
+        subject=chemical_id,
         predicate=predicate,
-        object=disease.id,
+        object=disease_id,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:ctd"
