@@ -78,6 +78,7 @@ def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, global_table
 
 
 def test_association(basic_g2p):
+    assert len(basic_g2p) > 0
     association = basic_g2p[0]
     assert association
     assert association.subject == "ZFIN:ZDB-GENE-990415-8"

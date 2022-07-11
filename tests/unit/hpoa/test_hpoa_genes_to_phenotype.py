@@ -82,6 +82,5 @@ def test_hpoa_g2p_association(basic_hpoa):
     assert "OMIM:614129" in basic_hpoa[0].qualifiers  # Disease term
     assert "HP:0040283" in basic_hpoa[0].qualifiers   # Frequency term
     assert "mim2gene" in basic_hpoa[0].has_evidence
-    assert "infores:hpoa" in basic_hpoa[0].source
     assert association.primary_knowledge_source == "infores:hpoa"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

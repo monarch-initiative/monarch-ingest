@@ -127,9 +127,6 @@ else:
             go_aspect
         )
 
-        # Instantiate the GO term instance
-        go_term = go_concept_node_class(id=go_id, source="infores:go")
-
         # Instantiate the appropriate Gene-to-GO Term instance
         association = gene_go_term_association_class(
             id="uuid:" + str(uuid.uuid1()),

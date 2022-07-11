@@ -429,7 +429,8 @@ def test_association(basic_goa):
     assert association.negated == result_expected[association.subject][7]
     assert result_expected[association.subject][8] in association.has_evidence
 
-    assert "infores:goa" in association.source
+    assert association.primary_knowledge_source == "infores:goa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture

@@ -61,7 +61,7 @@ def test_pombase_g2p_association_publication(entities):
         for association in entities
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ][0]
-    assert association.subject == "Pombase:SPAC24B11.06c"
+    assert association.subject == "PomBase:SPAC24B11.06c"
     assert association.predicate == "biolink:has_phenotype"
     assert association.object == "FYPO:0004058"
     assert association.publications[0] == "PMID:19436749"
