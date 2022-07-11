@@ -1,4 +1,5 @@
-import logging
+from typing import List
+
 import uuid
 
 from koza.cli_runner import koza_app
@@ -6,10 +7,12 @@ from source_translation import source_map
 
 from biolink.pydantic.model import (
     Gene,
+    OntologyClass,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature
 )
 
+import logging
 LOG = logging.getLogger(__name__)
 
 source_name = "alliance_gene_to_phenotype"
@@ -46,11 +49,13 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
-        qualifiers = []
+        qualifiers: List[OntologyClass] = []
         for conditionRelation in row["conditionRelations"]:
             for condition in conditionRelation["conditions"]:
                 if condition["conditionClassId"]:
-                    qualifiers.append(condition["conditionClassId"])
+                    qualifier_term = OntologyClass(id=condition["conditionClassId"])
+                    qualifiers.append(qualifier_term)
+
         association.qualifiers = qualifiers
 
     koza_app.write(association)
