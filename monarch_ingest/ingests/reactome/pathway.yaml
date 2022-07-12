@@ -22,7 +22,7 @@ node_properties:
   - 'id'
   - 'category'
   - 'name'
-  - 'type'
-  - 'source'
+  - 'in_taxon'
+  - 'provided_by'
 
 transform_mode: 'flat'

@@ -2,24 +2,21 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 source_name = "pombase_gene_to_phenotype"
 
 row = koza_app.get_row(source_name)
 
-gene = Gene(id="PomBase:" + row["Gene systematic ID"], source="infores:pombase")
-phenotype = PhenotypicFeature(id=row["FYPO ID"], source="infores:pombase")
-#relation = koza_app.translation_table.resolve_term("has phenotype")
+gene_id = "PomBase:" + row["Gene systematic ID"]
+
+phenotype_id = row["FYPO ID"]
+
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=gene.id,
+    subject=gene_id,
     predicate="biolink:has_phenotype",
-    object=phenotype.id,
+    object=phenotype_id,
     publications=[row["Reference"]],
     aggregator_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source="infores:pombase"

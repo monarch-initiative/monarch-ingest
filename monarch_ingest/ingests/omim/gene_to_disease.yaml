@@ -30,10 +30,10 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
   - 'has_evidence'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'

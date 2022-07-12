@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 from koza.cli_runner import koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
-from biolink.pydanticmodel import Gene, GeneToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 source_name = "dictybase_gene_to_phenotype"
 
@@ -16,7 +16,6 @@ phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")
 gene_identifier: Optional[Tuple[str, str]] = parse_gene_id(row, gene_names_to_ids)
 if gene_identifier:
 
-    gene_id=gene_identifier[0]  # gene[0] is the resolved gene ID
     # Parse out list of phenotypes...
     phenotypes = parse_phenotypes(row, phenotype_names_to_ids)
 
@@ -26,7 +25,7 @@ if gene_identifier:
         #       Dictylostelium via which a (mutant) gene (allele) is tied to its phenotype?
         association = GeneToPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
-            subject=gene_id,
+            subject=gene_identifier[0],  # gene[0] is the resolved gene ID
             predicate='biolink:has_phenotype',
             object=phenotype_id,
             aggregator_knowledge_source=["infores:monarchinitiative"],

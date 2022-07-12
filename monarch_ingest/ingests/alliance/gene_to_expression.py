@@ -14,8 +14,6 @@ source_name = "alliance_gene_to_expression"
 
 row = koza_app.get_row(source_name)
 
-EXPRESSED_IN_RELATION = koza_app.translation_table.resolve_term("expressed in")
-
 try:
     gene_id = get_data(row, "geneId")
 

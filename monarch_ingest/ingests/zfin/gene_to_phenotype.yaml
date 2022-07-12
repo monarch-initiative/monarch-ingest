@@ -45,10 +45,10 @@ depends_on:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
   - 'publications'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'

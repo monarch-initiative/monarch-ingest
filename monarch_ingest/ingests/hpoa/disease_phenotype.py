@@ -23,30 +23,25 @@ poetry run koza transform \
   --output-format tsv
 """
 from typing import Optional, List
-import logging
+
 import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Disease,
-    DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
+import logging
 LOG = logging.getLogger(__name__)
 
 source_name = "hpoa_disease_phenotype"
 row = koza_app.get_row(source_name)
 
 # Nodes
-disease = Disease(
-    id=row["DatabaseID"],
-)
-predicate="biolink:has_phenotype"
-phenotypic_feature = PhenotypicFeature(
-    id=row["HPO_ID"],
-)
+disease_id = row["DatabaseID"]
+
+predicate = "biolink:has_phenotype"
+
+phenotypic_feature_id = row["HPO_ID"]
 
 # Predicate negation
 negated: Optional[bool]
@@ -113,10 +108,10 @@ publications = [p for p in publications if not p.startswith("http")]
 # Associations/Edges
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=disease.id,
+    subject=disease_id,
     predicate=predicate,
     negated=negated,
-    object=phenotypic_feature.id,
+    object=phenotypic_feature_id,
     publications=publications,
     has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,

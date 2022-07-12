@@ -55,11 +55,12 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'negated'
+  - 'has_evidence'
   - 'object'
-  - 'category'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 

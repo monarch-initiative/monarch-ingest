@@ -43,8 +43,6 @@ The `species#` are abridged labels currently filtered and mapped onto NCBI Taxon
 
 - **biolink:Gene**
   * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (infores:panther) 
 
 Note that the Gene `source` is currently given as Panther, although the real source of a Gene identifier is given by its CURIE namespace.
 

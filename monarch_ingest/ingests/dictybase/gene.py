@@ -19,7 +19,7 @@ if gene_identifier:
         symbol=gene_identifier[1],
         name=gene_identifier[1],
         in_taxon=["NCBITaxon:44689"],
-        source="infores:dictybase"
+        provided_by=["infores:dictybase"]
     )
 
     koza_app.write(gene)

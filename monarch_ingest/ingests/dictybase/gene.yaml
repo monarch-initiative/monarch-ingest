@@ -29,6 +29,6 @@ node_properties:
   - 'name'
   - 'symbol'
   - 'in_taxon'
-  - 'source'
+  - 'provided_by'
 
 transform_mode: 'flat'

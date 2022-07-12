@@ -5,22 +5,15 @@ Usage:
 poetry run koza transform \
   --source monarch_ingest/omim/gene_to_disease.yaml \
 """
-
-import logging
 import re
 import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Disease,
-    Gene,
-    GeneToDiseaseAssociation,
-    NucleicAcidEntity
-)
+from biolink.pydanticmodel import GeneToDiseaseAssociation
 
+import logging
 LOG = logging.getLogger(__name__)
-
 
 source_name = "omim_gene_to_disease"
 row = koza_app.get_row(source_name)
@@ -66,12 +59,10 @@ if disorder_match is not None:
     gene_id = 'OMIM:' + str(gene_num)
     disorder_id = 'OMIM:' + disorder_num
 
-    gene = Gene(id=gene_id, source='infores:omim')
-
 elif no_disease_id_match is not None:
     # this is a case where the disorder
     # a blended gene/phenotype
-    # we lookup the NCBIGene feature and make the association
+    # we look up the NCBIGene feature and make the association
     disorder_label, association_key = no_disease_id_match.groups()
     # make what's in the gene column the disease
     disorder_id = 'OMIM:' + gene_num
@@ -81,12 +72,6 @@ elif no_disease_id_match is not None:
     if ncbi_id == '':
         koza_app.next_row()
     gene_id = 'NCBIGene:' + ncbi_id
-
-    genomic_entity = NucleicAcidEntity(
-        id=gene_id,
-        type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
-        source='infores:omim',
-    )
 
 else:
     # In dipper we created anonymous nodes for these cases, but for now we will skip these
@@ -143,8 +128,6 @@ if association_key is not None:
     evidence = koza_app.translation_table.resolve_term(association_key, False)
     if evidence == association_key:
         evidence = None
-
-disease = Disease(id=disorder_id, source='infores:omim')
 
 # Association
 association = GeneToDiseaseAssociation(

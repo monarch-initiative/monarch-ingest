@@ -32,8 +32,6 @@ A separate Entrez to String identifier mapping file is not available for _Rattus
 
 * **biolink:Gene**
   * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (entrez)
 
 #### Associations
 

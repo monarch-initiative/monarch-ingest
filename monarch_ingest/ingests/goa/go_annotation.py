@@ -4,15 +4,13 @@ Gene Ontology Annotations Ingest module.
 Gene to GO term Associations
 (to MolecularActivity, BiologicalProcess and CellularComponent)
 """
-import logging
-import re
 import uuid
-from typing import List
 
 from koza.cli_runner import koza_app
 
 from monarch_ingest.ingests.goa.goa_utils import get_biolink_classes, lookup_predicate
 
+import logging
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
@@ -23,22 +21,22 @@ db_object_id = row['DB_Object_ID']
 
 # This check is to avoid MGI:MGI:123
 if ":" in db_object_id:
-    object_id = db_object_id
+    gene_id = db_object_id
 else:
-    object_id = f"{db}:{db_object_id}"
+    gene_id = f"{db}:{db_object_id}"
 
-# TODO: the NCBI Taxon ID is not really propagated to the output?
+# TODO: the NCBI Taxon ID is not currently propagated to the output?
 #       Hence, the following parsing operation is useless?
-ncbitaxon: str = row['Taxon']
-if ncbitaxon:
-    # in rare circumstances, multiple taxa may be given as a piped list...
-    taxa = ncbitaxon.split("|")
-    ncbitaxon: List[str] = list()
-    for taxon in taxa:
-        ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
-else:
-    # Unlikely to happen, but...
-    logger.warning(f"Missing taxon for '{object_id}'?")
+# ncbitaxon: str = row['Taxon']
+# if ncbitaxon:
+#     # in rare circumstances, multiple taxa may be given as a piped list...
+#     taxa = ncbitaxon.split("|")
+#     ncbitaxon: List[str] = list()
+#     for taxon in taxa:
+#         ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
+# else:
+#     # Unlikely to happen, but...
+#     logger.warning(f"Missing taxon for '{gene_id}'?")
 
 
 # Grab the Gene Ontology ID
@@ -130,7 +128,7 @@ else:
         # Instantiate the appropriate Gene-to-GO Term instance
         association = gene_go_term_association_class(
             id="uuid:" + str(uuid.uuid1()),
-            subject=object_id,
+            subject=gene_id,
             object=go_id,
             predicate=predicate,
             negated=negated,

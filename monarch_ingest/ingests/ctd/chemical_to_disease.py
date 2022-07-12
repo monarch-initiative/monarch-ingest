@@ -2,11 +2,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    ChemicalEntity,
-    ChemicalToDiseaseOrPhenotypicFeatureAssociation,
-    Disease,
-)
+from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
 source_name = "ctd_chemical_to_disease"
 

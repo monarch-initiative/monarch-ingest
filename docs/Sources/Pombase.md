@@ -15,8 +15,8 @@ PomBase genes are captured directly from the PomBase (names and identifiers)[htt
   * symbol
   * type (SO term ids mapped through the global translation table)
   * xref (UniProfKB curie if provided)
-  * synonyms
-  * source
+  * synonym
+  * provided_by(["infores:pombase"])
 
 ### Gene to Phenotype
 
@@ -38,6 +38,6 @@ Penetrance and Severity columns are available, but not captured as a part of thi
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
     * publications
-    * qualifers (optionally included from condition row)
+    * qualifiers (optionally included from condition row)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:pombase)

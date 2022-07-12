@@ -3,11 +3,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 LOG = logging.getLogger(__name__)
 
@@ -34,15 +30,14 @@ if row["Phenotype Tag"] == "abnormal":
     if not zp_term:
         LOG.debug("ZP concatenation " + zp_key + " did not match a ZP term")
     else:
-        gene_id = "ZFIN:" + row["Gene ID"]
 
-        phenotypicFeature_id=zp_term
+        gene_id = "ZFIN:" + row["Gene ID"]
 
         association = GeneToPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene_id,
             predicate="biolink:has_phenotype",
-            object=phenotypicFeature_id,
+            object=zp_term,
             publications=["ZFIN:" + row["Publication ID"]],
             aggregator_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:zfin"

@@ -20,7 +20,7 @@ This ingest is built against a one-off OBAN formatted file, which makes for a tr
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * publication
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:xenbase)
     

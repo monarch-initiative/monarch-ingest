@@ -52,11 +52,11 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'negated'
   - 'object'
-  - 'category'
   - 'publications'
   - 'onset_qualifier'
   - 'frequency_qualifier'

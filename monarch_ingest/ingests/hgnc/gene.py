@@ -34,7 +34,7 @@ gene = Gene(
     xref=xref_list,
     synonym=synonyms_list,
     in_taxon=["NCBITaxon:9606"],
-    source="infores:hgnc"
+    provided_by=["infores:hgnc"]
 )
 
 # Excluding pub to gene associations for now

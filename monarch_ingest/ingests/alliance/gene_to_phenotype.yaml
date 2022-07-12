@@ -27,10 +27,10 @@ depends_on:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
   - 'qualifiers'
   - 'publications'
   - 'aggregator_knowledge_source'

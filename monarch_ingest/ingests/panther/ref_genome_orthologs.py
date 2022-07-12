@@ -7,6 +7,7 @@ import uuid
 from koza.cli_runner import koza_app
 
 from biolink.pydanticmodel import GeneToGeneHomologyAssociation
+
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
@@ -14,6 +15,9 @@ logger = logging.getLogger(__name__)
 row = koza_app.get_row()
 
 try:
+    # TODO: we don't current capture the taxon of the subject gene
+    #       nor the object ortholog. Maybe as a qualifier in Biolink 3.0?
+
     species_and_gene_id = parse_gene(row['Gene'])
 
     # unpack the species and gene id
@@ -28,7 +32,6 @@ try:
     #       However, this may result in KGX record duplication?
     # ortholog_type = row["Type of ortholog"]
     predicate = "biolink:orthologous_to"
-    #relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # Instantiate the instance of Gene-to-Gene Homology Association
     panther_ortholog_id = row["Panther Ortholog ID"]

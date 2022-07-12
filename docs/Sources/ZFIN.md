@@ -19,7 +19,7 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * publication
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:zfin)
 

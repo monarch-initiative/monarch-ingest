@@ -21,4 +21,4 @@ This ingest uses HGNC's "complete set" download file, which only contains associ
       * ensembl gene id
       * omim id
     * in_taxon (["NCBITaxon:9606"])
-    * source  (infores:hgnc)
+    * provided_by  (["infores:hgnc"])

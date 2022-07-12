@@ -22,10 +22,10 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
   - 'qualifiers'
   - 'evidence'
   - 'aggregator_knowledge_source'

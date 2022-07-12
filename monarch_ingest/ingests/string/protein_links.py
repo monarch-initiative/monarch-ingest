@@ -1,13 +1,9 @@
-import re
 import uuid
 import logging
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Gene,
-    PairwiseGeneToGeneInteraction
-)
+from biolink.pydanticmodel import PairwiseGeneToGeneInteraction
 
 logger = logging.getLogger(__name__)
 
@@ -31,36 +27,22 @@ if gene_ids_a and gene_ids_b:
     entities = []
 
     for gid_a in gene_ids_a.split("|"):
+
         for gid_b in gene_ids_b.split("|"):
+
             gene_id_a = 'NCBIGene:' + gid_a
+
             gene_id_b = 'NCBIGene:' + gid_b
 
-            ncbitaxon_match_a = re.match(r'\d+', pid_a)
-            if ncbitaxon_match_a:
-                ncbitaxon_a = "NCBITaxon:" + ncbitaxon_match_a.group(0)
-                gene_a = Gene(id=gene_id_a, in_taxon=[ncbitaxon_a], source="infores:entrez")
-            else:
-                gene_a = Gene(id=gene_id_a, source="infores:entrez")
-
-            ncbitaxon_match_b = re.match(r'\d+', pid_b)
-            if ncbitaxon_match_b:
-                ncbitaxon_b = "NCBITaxon:" + ncbitaxon_match_b.group(0)
-                gene_b = Gene(id=gene_id_b, in_taxon=[ncbitaxon_b], source="infores:entrez")
-            else:
-                gene_b = Gene(id=gene_id_b, source="infores:entrez")
-
-            # relation = koza_app.translation_table.global_table['interacts with']
             association = PairwiseGeneToGeneInteraction(
                 id="uuid:" + str(uuid.uuid1()),
-                subject=gene_a.id,
-                object=gene_b.id,
+                subject=gene_id_a,
+                object=gene_id_b,
                 predicate="biolink:interacts_with",
                 aggregator_knowledge_source=["infores:monarchinitiative"],
                 primary_knowledge_source="infores:string"
             )
 
-            # entities.append(gene_a)
-            # entities.append(gene_b)
             entities.append(association)
 
     koza_app.write(*entities)

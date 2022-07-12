@@ -5,11 +5,7 @@ import uuid
 from koza.cli_runner import koza_app
 from source_translation import source_map
 
-from biolink.pydanticmodel import (
-    OntologyClass,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 import logging
 LOG = logging.getLogger(__name__)
@@ -30,26 +26,25 @@ if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) =
 
     gene_id = row["objectId"]
 
-    pheno_id = row["phenotypeTermIdentifiers"][0]["termId"]
+    phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]
+
     # Remove the extra WB: prefix if necessary
-    pheno_id = pheno_id.replace("WB:WBPhenotype:", "WBPhenotype:")
+    phenotypic_feature_id = phenotypic_feature_id.replace("WB:WBPhenotype:", "WBPhenotype:")
 
     source = source_map[row["objectId"].split(':')[0]]
-
-    phenotypicFeature = PhenotypicFeature(id=pheno_id, source=source)
 
     association = GeneToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene_id,
         predicate="biolink:has_phenotype",
-        object=phenotypicFeature.id,
+        object=phenotypic_feature_id,
         publications=[row["evidence"]["publicationId"]],
         aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
         primary_knowledge_source=source
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
-        qualifiers: List[OntologyClass] = []
+        qualifiers: List[str] = []
         for conditionRelation in row["conditionRelations"]:
             for condition in conditionRelation["conditions"]:
                 if condition["conditionClassId"]:

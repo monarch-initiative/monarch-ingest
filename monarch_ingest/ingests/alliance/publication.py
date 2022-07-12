@@ -8,7 +8,6 @@ source_name = "alliance_publication"
 
 row = koza_app.get_row(source_name)
 
-
 # TODO: remove DOI exclusion once curie regex can handle them
 xrefs = [
     xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")
@@ -37,7 +36,7 @@ pub = Publication(
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
     creation_date=creation_date,
-    source=source
+    provided_by=[source]
 )
 
 if "authors" in row.keys():

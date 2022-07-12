@@ -10,19 +10,14 @@ This ingest uses MGI's Reference download file, which contains genes and a tab-d
 
 * biolink:Gene
     * id
-    * source
-    * type
 
 * biolink:Publication
     * id
-    * type
-    * source
 
 * biolink:InformationContentEntityToNamedThingAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * publication
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:mgi)

@@ -13,5 +13,4 @@ Genes for all NCBI species (Dog, Cow, Pig, Chicken) are loaded using the ingest 
     * symbol
     * description
     * in_taxon
-    * source (infores:ncbi-gene)
-      
+    * provided_by (["infores:ncbi-gene"])

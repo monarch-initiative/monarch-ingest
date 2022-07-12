@@ -11,8 +11,8 @@ This ingest uses Reactome's pathway download file.
 * biolink:Pathway
     * id
     * name
-    * type
-    * source
+    * in_taxon
+    * provided_by (["infores:reactome"])
 
 ### Gene to Pathway
 

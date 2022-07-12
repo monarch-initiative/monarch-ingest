@@ -8,7 +8,6 @@ This ingest uses RGD's gene file which contains publication assocations that are
 
 Note, there will be a column mismatch warning on this transform because there are two (UNUSED) columns.
 
-
 #### Biolink captured
 
 * biolink:Gene

@@ -7,15 +7,14 @@ source_name = "reactome_pathway"
 row = koza_app.get_row(source_name)
 
 species = row['species']
+
 taxon_id = koza_app.translation_table.local_table[species]
+
 pathway = Pathway(
     id="REACT:" + row["ID"],
     name=row["Name"],
-    type=koza_app.translation_table.resolve_term("pathway"),
-    source="infores:reactome",
-    # TODO: this isn't an allowed attribute on pathway.
-    #       We need to request adding in biolink if we do need this...
-    in_taxon=[taxon_id]
+    in_taxon=[taxon_id],
+    provided_by=["infores:reactome"]
 )
 
 koza_app.write(pathway)

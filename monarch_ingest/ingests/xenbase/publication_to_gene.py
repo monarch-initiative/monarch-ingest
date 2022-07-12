@@ -3,11 +3,7 @@ import uuid
 
 from koza.cli_runner import koza_app
 
-from biolink.pydanticmodel import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Publication,
-)
+from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
 LOG = logging.getLogger(__name__)
 
@@ -20,13 +16,10 @@ entities = []
 
 gene_pages = row["gene_pages"]
 
-publication = Publication(
-    id="PMID:" + row["pmid"],
-    type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:xenbase",
-)
+publication_id = "PMID:" + row["pmid"]
 
 for gene_page in gene_pages.split(","):
+
     gene_page_id = gene_page.split(" ")[0]
     try:
         gene_ids = map(
@@ -35,15 +28,14 @@ for gene_page in gene_pages.split(","):
     except KeyError:
         LOG.debug(f"Could not locate genepage_id: {gene_page_id} in row {row}")
         continue
-    for gene_id in gene_ids:
-        gene = Gene(id=gene_id, source="infores:xenbase")
 
-        # relation = "IAO:0000142",  # Mentions
+    for gene_id in gene_ids:
+
         association = InformationContentEntityToNamedThingAssociation(
             id="uuid:" + str(uuid.uuid1()),
-            subject=gene.id,
+            subject=gene_id,
             predicate="biolink:mentions",
-            object=publication.id,
+            object=publication_id,
             aggregator_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:xenbase"
         )
