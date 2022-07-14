@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "monarch-ingest"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
 authors = [
     "Kevin Schaper <kevinschaper@gmail.com>",
@@ -17,12 +17,12 @@ importlib-metadata = "^4.6.1"
 koza = "0.1.14"
 biolink_model_pydantic = "^0.1.11"
 kghub-downloader = "0.1.14"
-kgx = "^1.5.6"
+kgx = "1.5.8"
 greenlet = "^1.1.2"
 typer = "^0.4"
 click = "8.0.4"
 # force specific version of click for now, because typer 0.4.1 is busted
-cat-merge = "^0.1.12"
+cat-merge = "0.1.15"
 linkml = "^1.2.11"
 monarch-gene-mapping = "^0.1.1"
 

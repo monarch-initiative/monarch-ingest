@@ -28,18 +28,18 @@ if row["Phenotype Tag"] == "abnormal":
     zp_term = eqe2zp[zp_key]["iri"]
 
     if not zp_term:
-        LOG.warning("ZP concatenation " + zp_key + " did not match a ZP term")
+        LOG.debug("ZP concatenation " + zp_key + " did not match a ZP term")
+    else:
+        gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
+        phenotypicFeature = PhenotypicFeature(id=zp_term, source="infores:zfin")  # ...or?
+        # relation = koza_app.translation_table.resolve_term("has phenotype")
+        association = GeneToPhenotypicFeatureAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gene.id,
+            predicate="biolink:has_phenotype",
+            object=phenotypicFeature.id,
+            publications=["ZFIN:" + row["Publication ID"]],
+            source="infores:zfin",
+        )
 
-    gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
-    phenotypicFeature = PhenotypicFeature(id=zp_term, source="infores:zfin")  # ...or?
-    # relation = koza_app.translation_table.resolve_term("has phenotype")
-    association = GeneToPhenotypicFeatureAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
-        predicate="biolink:has_phenotype",
-        object=phenotypicFeature.id,
-        publications=["ZFIN:" + row["Publication ID"]],
-        source="infores:zfin",
-    )
-
-    koza_app.write(association)
+        koza_app.write(association)

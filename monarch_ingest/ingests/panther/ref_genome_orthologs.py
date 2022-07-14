@@ -45,4 +45,4 @@ try:
     koza_app.write(association)
 
 except RuntimeError as rte:
-    logger.error(f"{str(rte)} in data row:\n\t'{str(row)}'")
+    logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")

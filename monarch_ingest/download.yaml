@@ -1,5 +1,5 @@
 ---
-# alliance:
+### Alliance:
 -
   url: https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz
   local_name: data/alliance/PHENOTYPE_RGD.json.gz
@@ -101,13 +101,13 @@
   local_name: data/alliance/EXPRESSION_XB.json.gz
   tag: alliance_gene_to_expression
 
-# ctd
+### CTD
 -
   url: http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
   local_name: data/ctd/CTD_chemicals_diseases.tsv.gz
   tag: ctd_chemical_to_disease
 
-# dictybase
+### Dictybase
 -  # Mapping file of gene locus identifiers onto symbols
   url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=general&ID=gene_information.txt
   local_name: data/dictybase/gene_information.txt
@@ -123,13 +123,13 @@
   local_name: data/dictybase/all-mutants.txt
   tag: dictybase_gene_to_phenotype
 
-# flybase
+### Flybase
 -
   url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
   local_name: data/flybase/entity_publication_fb.tsv.gz
   tag: flybase_publication_to_gene
 
-# goa
+### GOA
 
 # Homo sapiens (human)
 - url: http://current.geneontology.org/annotations/goa_human.gaf.gz
@@ -218,6 +218,25 @@
   local_name: data/hpoa/genes_to_phenotype.txt
   tag: hpoa_gene_to_phenotype
 
+### MGI
+-
+  url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
+  local_name: data/mgi/MRK_Reference.rpt
+  tag: mgi_publication_to_gene
+
+### NCBI
+-
+  url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
+  local_name: data/ncbi/gene_info.gz
+  tag: ncbi_gene
+
+### monarch
+# -
+#   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
+#   local_name: data/monarch/monarch.json
+#   tag: monarch_ontology
+# -
+
 # omim
 #  This should eventually pull from the source using the API key
 -
@@ -229,7 +248,7 @@
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
 
-# Panther Gene Orthology (from www.pantherdb.org)
+### Panther Gene Orthology (from www.pantherdb.org)
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
@@ -291,8 +310,17 @@
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_budding_yeast
 #  local_name: data/panther/4932.sequence_classifications.tsv
 
+### Monarch
+-
+  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
+  local_name: data/phenio/kg-phenio.tar.gz
+  tag: phenio
+-
+  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
+  local_name: data/monarch/mondo.sssom.tsv
+  tag: mapping
 
-# pombase
+### Pombase
 -
   url: https://www.pombase.org/data/annotations/Phenotype_annotations/phenotype_annotations.pombase.phaf.gz
   local_name: data/pombase/phenotype_annotations.pombase.phaf.gz
@@ -302,19 +330,33 @@
   local_name: data/pombase/gene_IDs_names_products.tsv
   tag: pombase_gene
 
-# rgd
+### RGD
 -
   url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
   local_name: data/rgd/GENES_RAT.txt
   tag: rgd_publication_to_gene
 
-# sgd
+### SGD
 -
   url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
   local_name: data/sgd/gene2pmid.tab
   tag: sgd_publication_to_gene
 
-# STRING db
+### Reactome
+-
+  url: https://reactome.org/download/current/NCBI2Reactome.txt
+  local_name: data/reactome/NCBI2Reactome.txt
+  tag: reactome_gene_to_pathway
+-
+  url: https://reactome.org/download/current/ChEBI2Reactome.txt
+  local_name: data/reactome/ChEBI2Reactome.txt
+  tag: reactome_chemical_to_pathway
+-
+  url: https://reactome.org/download/current/ReactomePathways.txt
+  local_name: data/reactome/ReactomePathways.txt
+  tag: reactome_pathway
+
+### STRING db
 
 # Homo sapiens (human)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9606.protein.links.detailed.v11.5.txt.gz
@@ -367,7 +409,7 @@
 #    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
 #    gzip 10116.entrez_2_string.tsv
 
-# Xenbase
+### Xenbase
 -
   url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
@@ -381,7 +423,7 @@
   local_name: data/xenbase/xb_xpo_spo_v_v1.tab
   tag: xenbase_gene_to_phenotype
 
-# zfin
+### Zfin
 -
   url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt
   local_name: data/zfin/phenoGeneCleanData_fish.txt
@@ -394,36 +436,3 @@
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: data/zfin/id_map_zfin.tsv
   tag: zfin_gene_to_phenotype
-
-# monarch
--
-  url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
-  local_name: data/monarch/monarch.json
-  tag: monarch_ontology
-
-# reactome
--
-  url: https://reactome.org/download/current/NCBI2Reactome.txt
-  local_name: data/reactome/NCBI2Reactome.txt
-  tag: reactome_gene_to_pathway
--
-  url: https://reactome.org/download/current/ChEBI2Reactome.txt
-  local_name: data/reactome/ChEBI2Reactome.txt
-  tag: reactome_chemical_to_pathway
--
-  url: https://reactome.org/download/current/ReactomePathways.txt
-  local_name: data/reactome/ReactomePathways.txt
-  tag: reactome_pathway
-
-# mgi
--
-  url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
-  local_name: data/mgi/MRK_Reference.rpt
-  tag: mgi_publication_to_gene
-
-# ncbi
--
-  url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
-  local_name: data/ncbi/gene_info.gz
-  tag: ncbi_gene
-

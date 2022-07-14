@@ -14,10 +14,10 @@ row = koza_app.get_row(source_name)
 gene_ids = koza_app.get_map("alliance-gene")
 
 if len(row["phenotypeTermIdentifiers"]) == 0:
-    LOG.warning("Phenotype ingest record has 0 phenotype terms: " + str(row))
+    LOG.debug("Phenotype ingest record has 0 phenotype terms: " + str(row))
 
 if len(row["phenotypeTermIdentifiers"]) > 1:
-    LOG.warning("Phenotype ingest record has >1 phenotype terms: " + str(row))
+    LOG.debug("Phenotype ingest record has >1 phenotype terms: " + str(row))
 
 # limit to only genes
 if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:

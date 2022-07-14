@@ -33,30 +33,23 @@ def download(
 def transform(
     output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to output data"),
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
-    tag: str = typer.Option(
-        None, help="Which ingest to run (see ingests.yaml for a list)"
-    ),
-    ontology: bool = typer.Option(False, help="Option: pass to run the ontology ingest"),
+    tag: str = typer.Option(None, help="Which ingest to run (see ingests.yaml for a list)"),
+    phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
     all: bool = typer.Option(False, help="Ingest all sources"),
     row_limit: int = typer.Option(None, help="Number of rows to process"),
     do_merge: bool = typer.Option(False, "--merge", help="Merge output dir after ingest"),
-    force: bool = typer.Option(
-        None,
-        help="Force ingest, even if output exists (on by default for single ingests)",
-    ),
+    force: bool = typer.Option(None,help="Force ingest, even if output exists (on by default for single ingests)"),
     rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
     quiet: bool = typer.Option(False, help="Suppress LOG output"),
     debug: bool = typer.Option(False, help="Print additional debug output to console"),
-    log: bool = typer.Option(
-        False, help="Write DEBUG level logs to ./logs/ for each ingest run"
-    ),
+    log: bool = typer.Option(False, help="Write DEBUG level logs to ./logs/ for each ingest run"),
 ):
     """
     Something descriptive
     """
-    if ontology:
-        LOG.info(f"Running ontology transform...")
-        transform_ontology(
+    if phenio:
+        LOG.info(f"Running phenio transform...")
+        transform_phenio(
             output_dir=output_dir,
             force=force
         )
@@ -138,8 +131,8 @@ def release(
 
     if update_latest:
         LOG.debug(f"Replacing latest with this release")
-        subprocess.run(['gsutil', '-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
-        subprocess.run(['gsutil','-m','cp','-r',f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
+        subprocess.run(['gsutil','-q','-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
+        subprocess.run(['gsutil','-q','-m','cp','-r',f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
         LOG.info(f"Updated 'latest' to current release.")
 
 if __name__ == "__main__":
