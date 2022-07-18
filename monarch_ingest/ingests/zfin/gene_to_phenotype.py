@@ -7,7 +7,7 @@ from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 LOG = logging.getLogger(__name__)
 
-koza_app = get_koza_app("zfin_gene_to_phenotype"
+koza_app = get_koza_app("zfin_gene_to_phenotype")
 
 row = koza_app.get_row()
 eqe2zp = koza_app.get_map("eqe2zp")

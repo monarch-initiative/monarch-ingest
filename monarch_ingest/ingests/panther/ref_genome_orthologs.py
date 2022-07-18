@@ -12,7 +12,7 @@ from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
 
-koza_app = get_koza_app("ref_genome_orthologs")
+koza_app = get_koza_app("panther_ref_genome_orthologs")
 
 row = koza_app.get_row()
 

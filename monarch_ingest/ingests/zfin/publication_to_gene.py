@@ -7,7 +7,7 @@ from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociatio
 
 LOG = logging.getLogger(__name__)
 
-koza_app = get_koza_app("zfin_publication_to_gene"
+koza_app = get_koza_app("zfin_publication_to_gene")
 
 row = koza_app.get_row()
 
