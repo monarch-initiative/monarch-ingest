@@ -344,8 +344,8 @@
 
 ### Reactome
 -
-  url: https://reactome.org/download/current/Ensembl2Reactome.txt
-  local_name: data/reactome/Ensembl2Reactome.txt
+  url: https://reactome.org/download/current/NCBI2Reactome.txt
+  local_name: data/reactome/NCBI2Reactome.txt
   tag: reactome_gene_to_pathway
 -
   url: https://reactome.org/download/current/ChEBI2Reactome.txt

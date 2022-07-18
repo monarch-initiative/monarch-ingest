@@ -1,13 +1,13 @@
 from typing import Optional, Tuple
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
 from biolink.pydanticmodel import Gene
 
-source_name = "dictybase_gene"
+koza_app = get_koza_app("dictybase_gene")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
 

@@ -15,7 +15,7 @@ authors = [
 [tool.poetry.dependencies]
 python = "^3.8"
 importlib-metadata = "^4.6.1"
-koza = "0.1.14"
+koza = "^0.2.1"
 biolink_model = "^2.4.5"
 kghub-downloader = "0.1.14"
 kgx = "1.5.8"

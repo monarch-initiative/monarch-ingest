@@ -1,12 +1,12 @@
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
-source_name = "sgd_publication_to_gene"
+koza_app = get_koza_app("sgd_publication_to_gene")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 gene_id = "SGD:" + row["gene name"]
 

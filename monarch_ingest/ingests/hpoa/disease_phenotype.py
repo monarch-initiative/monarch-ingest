@@ -26,15 +26,15 @@ from typing import Optional, List
 
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
 import logging
 LOG = logging.getLogger(__name__)
 
-source_name = "hpoa_disease_phenotype"
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("hpoa_disease_phenotype")
+row = koza_app.get_row()
 
 # Nodes
 disease_id = row["DatabaseID"]

@@ -1,4 +1,4 @@
-# Ingests
+# What is an Ingest?
 
 !!! tip "Ingest Overview"
     An ingest consists of 2 main steps:  

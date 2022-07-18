@@ -6,13 +6,15 @@ Gene to GO term Associations
 """
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.ingests.goa.goa_utils import get_biolink_classes, lookup_predicate
 
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
+koza_app = get_koza_app("goa_go_annotation")
 
 row = koza_app.get_row()
 

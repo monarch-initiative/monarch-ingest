@@ -1,16 +1,16 @@
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
 from biolink.pydanticmodel import GeneToDiseaseAssociation
 
 LOG = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_disease"
+koza_app = get_koza_app("alliance_gene_to_disease")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 associationType = row["AssociationType"]
 
 source = source_map[row["Source"]]

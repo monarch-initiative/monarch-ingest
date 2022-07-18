@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
 from biolink.pydanticmodel import GeneToExpressionSiteAssociation
@@ -10,9 +10,9 @@ from monarch_ingest.ingests.alliance.utils import get_data
 
 logger = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_expression"
+koza_app = get_koza_app("alliance_gene_to_expression")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 try:
     gene_id = get_data(row, "geneId")

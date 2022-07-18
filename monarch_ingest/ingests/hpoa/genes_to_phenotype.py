@@ -1,11 +1,11 @@
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
-source_name = "hpoa_genes_to_phenotype"
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("hpoa_genes_to_phenotype")
+row = koza_app.get_row()
 
 gene_id = "NCBIGene:" + row["entrez-gene-id"]
 phenotype_id = row["HPO-Term-ID"]

@@ -11,6 +11,14 @@ def script():
     return "./monarch_ingest/ingests/reactome/pathway.py"
 
 
+@pytest.fixture(scope="package")
+def local_table():
+    """
+    :return: string path to Reactome annotation term mappings file
+    """
+    return "monarch_ingest/ingests/reactome/reactome_id_mapping.yaml"
+
+
 @pytest.fixture
 def basic_row():
     return {
@@ -21,16 +29,18 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
+def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
     return mock_koza(
         source_name,
         iter([basic_row]),
         script,
         global_table=global_table,
-        local_table="monarch_ingest/ingests/reactome/taxon_name_to_id_mapping.yaml"
+        local_table=local_table
     )
 
 
 def test_pathway_id(basic_g2p):
     pathway = basic_g2p[0]
     assert pathway.id == "REACT:R-BTA-73843"
+    assert pathway.type == "PW:0000001"
+    assert pathway.source == "infores:reactome"

@@ -8,15 +8,15 @@ poetry run koza transform \
 import re
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import GeneToDiseaseAssociation
 
 import logging
 LOG = logging.getLogger(__name__)
 
-source_name = "omim_gene_to_disease"
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("omim_gene_to_disease")
+row = koza_app.get_row()
 omim_to_gene = koza_app.get_map('mim2gene')
 
 disorder = row['Phenotype']

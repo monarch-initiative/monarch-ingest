@@ -4,13 +4,15 @@ Ingest of Reference Genome Orthologs from Panther
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import GeneToGeneHomologyAssociation
 
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
+
+koza_app = get_koza_app("ref_genome_orthologs")
 
 row = koza_app.get_row()
 

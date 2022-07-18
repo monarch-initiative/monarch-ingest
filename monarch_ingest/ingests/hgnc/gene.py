@@ -1,13 +1,10 @@
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import Gene
 
-source_name = "hgnc_gene"
+koza_app = get_koza_app("hgnc_gene")
 
-row = koza_app.get_row(source_name)
-
-if not row["pubmed_id"]:
-    koza_app.next_row()
+row = koza_app.get_row()
 
 xref_list = []
 if row['ensembl_gene_id']:

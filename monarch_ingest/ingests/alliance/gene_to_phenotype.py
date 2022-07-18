@@ -2,7 +2,7 @@ from typing import List
 
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
@@ -10,9 +10,9 @@ from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 import logging
 LOG = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_phenotype"
+koza_app = get_koza_app("alliance_gene_to_phenotype")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 gene_ids = koza_app.get_map("alliance-gene")
 
 if len(row["phenotypeTermIdentifiers"]) == 0:

@@ -1,10 +1,10 @@
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import Gene
 
-source_name = "ncbi_gene"
+koza_app = get_koza_app("ncbi_gene")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 gene = Gene(
     id='NCBIGene:' + row["GeneID"],

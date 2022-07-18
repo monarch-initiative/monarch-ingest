@@ -1,14 +1,14 @@
 import uuid
 from typing import Optional, Tuple
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
-source_name = "dictybase_gene_to_phenotype"
+koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
 phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")

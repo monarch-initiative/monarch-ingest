@@ -1,11 +1,11 @@
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
 from biolink.pydanticmodel import Gene
 
-source_name = "alliance_gene"
+koza_app = get_koza_app("alliance_gene")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 # curie prefix as source?
 gene_id = row["basicGeneticEntity"]["primaryId"]
 # Not sure if Alliance will stick with this prefix for Xenbase, but for now...

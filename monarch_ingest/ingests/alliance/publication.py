@@ -1,12 +1,12 @@
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from dateutil.parser import parse, ParserError
 
 from biolink.pydanticmodel import Publication
 from source_translation import source_map
 
-source_name = "alliance_publication"
+koza_app = get_koza_app("alliance_publication")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 # TODO: remove DOI exclusion once curie regex can handle them
 xrefs = [

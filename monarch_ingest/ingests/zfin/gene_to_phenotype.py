@@ -1,15 +1,15 @@
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 LOG = logging.getLogger(__name__)
 
-source_name = "zfin_gene_to_phenotype"
+koza_app = get_koza_app("zfin_gene_to_phenotype"
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 eqe2zp = koza_app.get_map("eqe2zp")
 
 if row["Phenotype Tag"] == "abnormal":
