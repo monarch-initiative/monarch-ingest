@@ -17,7 +17,7 @@ Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog)
     * in_taxon
     * source
     * synonyms
-    * xrefs
+    * xref
 
 ### Gene to Phenotype
 
@@ -30,9 +30,10 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
     * publications
     * qualifiers (condition terms)
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])
 
 ### Gene to Disease
 
@@ -45,14 +46,14 @@ Still needs to be updated to handle the ECO terms when supported by the biolink 
 
 Need a predicate for each kind of relationship:
 
-| Alliance AssociationType | predicate | relation | 
-|  ----------------------- | --------- | ------- |
-| biomarker_via_orthology  | biolink:biomarker_for |_currently excluded, is this is_marker_for, but with a qualifier?_ |
-| implicated_via_orthology  | biolink:contributes_to | _currently excluded, is this is_implicated_in, but with a qualifier?_ |
-| is_implicated_in | biolink:contributes_to | "RO:0003302" |
-| is_marker_for | biolink:biomarker_for | "RO:0002607" |
-| is_model_of | biolink:model_of | "RO:0003301" |
-| is_not_implicated_in | biolink:contributes_to + negated=true | "RO:0003302"|
+| Alliance AssociationType | predicate | 
+|  ----------------------- | --------- |
+| biomarker_via_orthology  | biolink:biomarker_for |
+| implicated_via_orthology  | biolink:contributes_to |
+| is_implicated_in | biolink:contributes_to |
+| is_marker_for | biolink:biomarker_for |
+| is_model_of | biolink:model_of |
+| is_not_implicated_in | biolink:contributes_to + negated=true |
 
 #### Biolink captured
 
@@ -62,9 +63,9 @@ Need a predicate for each kind of relationship:
     * predicates (see table above)
     * object (disease.id)
     * negated (for 'is not implicated in')
-    * relation (see predicate table above? )
     * publications (row['Reference'])
-    * source (row['source'])
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])
 
 ### Literature
 
@@ -170,4 +171,5 @@ https://www.alliancegenome.org/downloads#expression
     * stage qualifier (LifeStage.id)  # if specified; None otherwise
     * has evidence (row['AssayID'])  # e.g. taken from MMO - "measurement method ontology"
     * publications (row['Reference'])
-    * source (`infores` mapped from row['Source'])
+    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
+    * primary_knowledge_source (`infores` mapped from row['Source'])

@@ -25,5 +25,6 @@ If the direct evidence field is 'therapeutic' the `biolink:treats` predicate is 
   * predicate (mapping from DirectEvidence column)
   * object (disease id)
   * publication (pubmed ids provided by file)
-  * relation 
+  * aggregating_knowledge_source (["infores:monarchinitiative"])
+  * primary_knowledge_source (infores:ctd)
 

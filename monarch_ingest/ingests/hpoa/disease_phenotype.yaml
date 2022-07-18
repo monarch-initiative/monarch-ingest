@@ -52,14 +52,15 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'negated'
   - 'object'
-  - 'category'
   - 'publications'
   - 'onset_qualifier'
   - 'frequency_qualifier'
   - 'sex_qualifier'
   - 'has_evidence'
-  - 'provided_by'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'

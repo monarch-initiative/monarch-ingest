@@ -1,10 +1,11 @@
 import uuid
-from koza.cli_runner import koza_app
-from monarch_ingest.model.biolink import GeneToPathwayAssociation
+from koza.cli_runner import get_koza_app
 
-source_name = "reactome_gene_to_pathway"
+from biolink.pydanticmodel import GeneToPathwayAssociation
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("reactome_gene_to_pathway")
+
+row = koza_app.get_row()
 
 species = row["species_nam"]
 try:
@@ -28,7 +29,8 @@ if taxon_id:
         predicate="biolink:participates_in",
         object=pathway_id,
         has_evidence=[evidence_code_term],
-        source="infores:reactome"
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:reactome",
     )
 
-    koza_app.write(association)
+koza_app.write(association)

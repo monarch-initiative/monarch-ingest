@@ -23,7 +23,6 @@ required_properties:
 node_properties:
   - 'id'
   - 'category'
-  - 'provided_by'
   - 'name'
   - 'summary'
   - 'authors'
@@ -32,6 +31,6 @@ node_properties:
   - 'type'
   - 'creation_date'
   - 'keywords'
-  - 'source'
+  - 'provided_by'
 
 transform_mode: 'flat'

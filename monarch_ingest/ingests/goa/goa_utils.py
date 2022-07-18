@@ -4,7 +4,7 @@ Some Gene Ontology Annotation ingest utility functions.
 import logging
 from typing import Any, Optional, Tuple
 
-from monarch_ingest.model.biolink import (
+from biolink.pydanticmodel import (
     BiologicalProcess,
     CellularComponent,
     MacromolecularMachineToBiologicalProcessAssociation,

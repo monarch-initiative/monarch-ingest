@@ -1,7 +1,7 @@
 from typing import Dict, List
 import pytest
 
-from monarch_ingest.model.biolink import Gene
+from biolink.pydanticmodel import Gene
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
 
@@ -148,4 +148,4 @@ def test_dictybase_gene_ingest(basic_dictybase):
     assert entity[0].symbol == "cbpC"
     assert entity[0].name == "cbpC"
     assert "NCBITaxon:44689" in entity[0].in_taxon
-    assert "infores:dictybase" in entity[0].source
+    assert "infores:dictybase" in entity[0].provided_by

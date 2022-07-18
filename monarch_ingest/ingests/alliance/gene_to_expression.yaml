@@ -48,7 +48,7 @@ edge_properties:
   - 'category'
   - 'has_evidence'
   - 'publications'
-  - 'provided_by'
-  - 'source'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

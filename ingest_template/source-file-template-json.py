@@ -1,7 +1,8 @@
 import logging
 import uuid
+from typing import List
 
-from model.biolink import (
+from biolink.pydanticmodel import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,
@@ -24,17 +25,21 @@ if row["some"]["property"] != 'what I expected':
     LOG.warning("Whoa dude, let's log it")
 
 # create entities
-gene = Gene(id=row["gene_id"])
-phenotypicFeature = PhenotypicFeature(id=row["phenotype"]["id"])
+gene_id = row["gene_id"]
+phenotypicFeature_id = row["phenotype"]["id"]
+
+# Optionally, add publications
+publications: List[str] =["PMID:1", "PMID:2"]
 
 # create the association
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=gene.id,
+    subject=gene_id,
     predicate="biolink:has_phenotype",
-    object=phenotypicFeature.id,
-    relation=koza_app.translation_table.resolve_term("has phenotype"),
+    object=phenotypicFeature_id,
+    publications=publications,
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:model_organism_db"
 )
 
-# don't forget to pass the source_name as the first argument, followed by entities
-koza_app.write(gene, phenotypicFeature, association)
+koza_app.write(association)

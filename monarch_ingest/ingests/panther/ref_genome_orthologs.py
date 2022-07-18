@@ -4,16 +4,22 @@ Ingest of Reference Genome Orthologs from Panther
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-from monarch_ingest.model.biolink import GeneToGeneHomologyAssociation
+from biolink.pydanticmodel import GeneToGeneHomologyAssociation
+
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
 
+koza_app = get_koza_app("panther_ref_genome_orthologs")
+
 row = koza_app.get_row()
 
 try:
+    # TODO: we don't current capture the taxon of the subject gene
+    #       nor the object ortholog. Maybe as a qualifier in Biolink 3.0?
+
     species_and_gene_id = parse_gene(row['Gene'])
 
     # unpack the species and gene id
@@ -28,7 +34,6 @@ try:
     #       However, this may result in KGX record duplication?
     # ortholog_type = row["Type of ortholog"]
     predicate = "biolink:orthologous_to"
-    #relation = koza_app.translation_table.resolve_term("in orthology relationship with")
 
     # Instantiate the instance of Gene-to-Gene Homology Association
     panther_ortholog_id = row["Panther Ortholog ID"]
@@ -37,8 +42,9 @@ try:
         subject=gene_id,
         object=ortholog_id,
         predicate=predicate,
-        source="infores:panther",
         has_evidence=[f"PANTHER.FAMILY:{panther_ortholog_id}"],
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:panther"
     )
 
     # Write the captured Association out

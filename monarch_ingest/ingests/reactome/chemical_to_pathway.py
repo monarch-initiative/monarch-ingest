@@ -1,13 +1,17 @@
 import uuid
-from koza.cli_runner import koza_app
-from monarch_ingest.model.biolink import ChemicalToPathwayAssociation
+from koza.cli_runner import get_koza_app
+from biolink.pydanticmodel import ChemicalToPathwayAssociation
 
-source_name = "reactome_chemical_to_pathway"
+koza_app = get_koza_app("reactome_chemical_to_pathway")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 species = row["species_nam"]
-taxon_id = koza_app.translation_table.local_table[species]
+try:
+    taxon_id = koza_app.translation_table.local_table[species]
+except KeyError:
+    # Move on if the taxon name isn't in the translation table
+    koza_app.next_row()
 
 # We only continue of the species is in our local reactome_id_mapping table
 if taxon_id:
@@ -24,7 +28,8 @@ if taxon_id:
         predicate="biolink:participates_in",
         object=pathway_id,
         has_evidence=[evidence_code_term],
-        source="infores:reactome"
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:reactome"
     )
 
     koza_app.write(association)

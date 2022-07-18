@@ -2,8 +2,7 @@ import types
 from typing import Iterable
 
 import pytest
-from koza.app import KozaApp
-from koza.cli_runner import get_translation_table, set_koza
+from koza.cli_runner import get_translation_table, get_koza_app, test_koza, set_koza_app
 from koza.model.config.source_config import PrimaryFileConfig
 from koza.model.source import Source
 
@@ -40,22 +39,25 @@ def mock_koza():
         mock_source_file = Source(mock_source_file_config)
         mock_source_file._reader = data
 
-        koza = KozaApp(mock_source_file)
+        set_koza_app(source=mock_source_file,
+                     translation_table=get_translation_table(global_table, local_table))
+        koza = get_koza_app(name)
+
         # TODO filter mocks
-        koza.translation_table = get_translation_table(global_table, local_table)
         koza._map_cache = map_cache
         koza.write = types.MethodType(_mock_write, koza)
 
         return koza
 
+
     def _transform(
-        name: str,
-        data: Iterable,
-        transform_code: str,
-        map_cache=None,
-        filters=None,
-        global_table=None,
-        local_table=None,
+            name: str,
+            data: Iterable,
+            transform_code: str,
+            map_cache=None,
+            filters=None,
+            global_table=None,
+            local_table=None,
     ):
         koza_app = _make_mock_koza_app(
             name,
@@ -64,10 +66,12 @@ def mock_koza():
             map_cache=map_cache,
             filters=filters,
             global_table=global_table,
-            local_table=local_table,
+            local_table=local_table
         )
-        set_koza(koza_app)
+        test_koza(koza_app)
         koza_app.process_sources()
-        return koza_app._entities if hasattr(koza_app, "_entities") else list()
+        if not hasattr(koza_app, '_entities'):
+            koza_app._entities = []
+        return koza_app._entities
 
     return _transform

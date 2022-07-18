@@ -8,14 +8,15 @@ authors = [
     "Glass Elsarboukh <g.elsarboukh@gmail.com>",
     "Kent Shefchek <kent@tislab.org>",
     "Glass Elsarboukh <g.elsarboukh@gmail.com>",
+    "Richard Bruskiewich <richard.bruskiewich@delphinai.com>",
     "The Monarch Initiative <info@monarchinitiative.org>"
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 importlib-metadata = "^4.6.1"
-koza = "0.1.14"
-biolink_model_pydantic = "^0.1.11"
+koza = "^0.2.1"
+biolink_model = "^2.4.5"
 kghub-downloader = "0.1.14"
 kgx = "1.5.8"
 greenlet = "^1.1.2"

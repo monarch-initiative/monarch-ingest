@@ -1,36 +1,31 @@
 import logging
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from monarch_ingest.model.biolink import Disease, Gene, GeneToDiseaseAssociation
+from biolink.pydanticmodel import GeneToDiseaseAssociation
 
 LOG = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_disease"
+koza_app = get_koza_app("alliance_gene_to_disease")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 associationType = row["AssociationType"]
 
 source = source_map[row["Source"]]
 
 predicate = None
-relation = None
 negated = False
 
 if associationType == "is_model_of":
     predicate = "biolink:model_of"
-    relation = koza_app.translation_table.resolve_term("is model of")
 elif associationType == "is_marker_of":
     predicate = "biolink:biomarker_for"
-    relation = koza_app.translation_table.resolve_term("is marker for")
 elif associationType == "is_implicated_in":
     predicate = "biolink:contributes_to"
-    relation = koza_app.translation_table.resolve_term("causes_or_contributes")
 elif associationType == "is_not_implicated_in":
     predicate = "biolink:contributes_to"
-    relation = koza_app.translation_table.resolve_term("causes_or_contributes")
     negated = True
 
 # elif associationType == 'biomarker_via_orthology':
@@ -39,16 +34,19 @@ elif associationType == "is_not_implicated_in":
 #    likely this should be contributes_to with some extra qualifier
 
 if row["DBobjectType"] == "gene" and predicate:
-    gene = Gene(id=row["DBObjectID"], source=source)
-    disease = Disease(id=row["DOID"], source=source)
+
+    gene_id = row["DBObjectID"]
+
+    disease_id = row["DOID"]
 
     association = GeneToDiseaseAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
+        subject=gene_id,
         predicate=predicate,
-        object=disease.id,
+        object=disease_id,
         publications=[row["Reference"]],
-        source=source,
+        aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+        primary_knowledge_source=source
     )
 
     if negated:

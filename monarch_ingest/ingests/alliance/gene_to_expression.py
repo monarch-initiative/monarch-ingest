@@ -1,27 +1,27 @@
 import logging
 import uuid
 
-from monarch_ingest.model.biolink import GeneToExpressionSiteAssociation
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
+
+from biolink.pydanticmodel import GeneToExpressionSiteAssociation
 
 from monarch_ingest.ingests.alliance.utils import get_data
 
 logger = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_expression"
+koza_app = get_koza_app("alliance_gene_to_expression")
 
-row = koza_app.get_row(source_name)
-
-EXPRESSED_IN_RELATION = koza_app.translation_table.resolve_term("expressed in")
+row = koza_app.get_row()
 
 try:
     gene_id = get_data(row, "geneId")
+
     # Not sure if Alliance will stick with this prefix for Xenbase, but for now...
     gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
 
     # TODO: Biolink Model provenance likely needs to be changed
-    #       soon to something like "aggregating_knowledge_source"
+    #       soon to something like "aggregator_knowledge_source"
     db = gene_id.split(":")[0]
     source = source_map[db]
 
@@ -56,7 +56,8 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=[publication_ids],
-                source=source
+                aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+                primary_knowledge_source=source
             )
         )
 
@@ -72,7 +73,8 @@ try:
                 stage_qualifier=stage_term_id,
                 has_evidence=evidence,
                 publications=[publication_ids],
-                source=source,
+                aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+                primary_knowledge_source=source
             )
         )
     else:

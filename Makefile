@@ -27,7 +27,7 @@ install-poetry:
 generate-biolink-model:
 	mkdir -p model
 	wget https://raw.githubusercontent.com/biolink/biolink-model/master/biolink-model.yaml -O model/biolink-model.yaml
-	poetry run gen-pydantic model/biolink-model.yaml > monarch_ingest/model/biolink.py
+	poetry run gen-pydantic model/biolink-model.yaml > model/biolink.py
 
 .PHONY: test
 test:
