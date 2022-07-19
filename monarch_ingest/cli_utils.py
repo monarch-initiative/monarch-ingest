@@ -119,7 +119,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
-    prefixes = ["MONDO", "HP", "ZP", "MP", "CHEBI", "FBbt",
+    prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
                 "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
                 "ZFA", "UBERON", "WBbt", "ORPHA"]
 
