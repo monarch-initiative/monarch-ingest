@@ -316,6 +316,11 @@
   local_name: data/phenio/kg-phenio.tar.gz
   tag: phenio
 -
+  # TODO: eventually, this should come from kg-phenio itself
+  url: https://storage.googleapis.com/monarch-ingest/phenio-relations-non-redundant.tsv
+  local_name: data/phenio/phenio-relations-non-redundant.tsv
+  tag: phenio
+-
   url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
   local_name: data/monarch/mondo.sssom.tsv
   tag: mapping

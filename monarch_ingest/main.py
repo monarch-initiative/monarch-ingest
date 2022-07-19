@@ -83,7 +83,6 @@ def transform(
         merge(f"{output_dir}/transform_output", output_dir)
 
 
-
 @typer_app.command()
 def merge(
     input_dir: str = typer.Option(
@@ -96,6 +95,21 @@ def merge(
     Something descriptive
     """
     merge_files(input_dir=input_dir, output_dir=output_dir)
+
+
+@typer_app.command()
+def closure():
+    apply_closure()
+
+
+@typer_app.command()
+def solr(run: bool = typer.Option(False, help="Load and run solr, no artifact created")):
+    # TODO: node file is in the tar file, maybe we just need to tar-gz after merge..
+    load_solr(node_schema="solr/entity-index.yaml",
+              edge_schema="solr/association-index.yaml",
+              node_file=f"{OUTPUT_DIR}/monarch-kg_nodes.tsv",
+              edge_file=f"{OUTPUT_DIR}/monarch-kg-with-closure_edges.tsv",
+              run=run)
 
 
 @typer_app.command()

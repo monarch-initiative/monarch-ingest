@@ -75,6 +75,16 @@ pipeline {
 //                 '''
 //             }
 //         }
+        stage("generate closure kgx files") {
+            steps {
+                sh 'poetry run ingest closure'
+            }
+        }
+//         stage("load solr") {
+//             steps {
+//                 sh 'poetry run ingest solr'
+//             }
+//         }
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --update-latest'
@@ -84,6 +94,7 @@ pipeline {
     post {
         always {
             sh 'docker rm -f neo || True'
+            sh 'docker rm my_solr || True'
         }
     }
 }
