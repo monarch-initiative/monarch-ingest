@@ -80,11 +80,11 @@ pipeline {
                 sh 'poetry run ingest closure'
             }
         }
-        stage("load solr") {
-            steps {
-                sh 'poetry run ingest solr'
-            }
-        }
+//         stage("load solr") {
+//             steps {
+//                 sh 'poetry run ingest solr'
+//             }
+//         }
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --update-latest'
