@@ -1,16 +1,18 @@
-import logging
+from typing import List
+
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from monarch_ingest.model.biolink import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
+import logging
 LOG = logging.getLogger(__name__)
 
-source_name = "alliance_gene_to_phenotype"
+koza_app = get_koza_app("alliance_gene_to_phenotype")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 gene_ids = koza_app.get_map("alliance-gene")
 
 if len(row["phenotypeTermIdentifiers"]) == 0:
@@ -22,30 +24,33 @@ if len(row["phenotypeTermIdentifiers"]) > 1:
 # limit to only genes
 if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:
 
+    gene_id = row["objectId"]
+
+    phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]
+
+    # Remove the extra WB: prefix if necessary
+    phenotypic_feature_id = phenotypic_feature_id.replace("WB:WBPhenotype:", "WBPhenotype:")
+
     source = source_map[row["objectId"].split(':')[0]]
 
-    pheno_id = row["phenotypeTermIdentifiers"][0]["termId"]
-    # Remove the extra WB: prefix if necessary
-    pheno_id = pheno_id.replace("WB:WBPhenotype:", "WBPhenotype:")
-
-    gene = Gene(id=row["objectId"], source=source)
-    phenotypicFeature = PhenotypicFeature(id=pheno_id, source=source)
-    #relation = koza_app.translation_table.resolve_term("has phenotype"),
     association = GeneToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
+        subject=gene_id,
         predicate="biolink:has_phenotype",
-        object=phenotypicFeature.id,
+        object=phenotypic_feature_id,
         publications=[row["evidence"]["publicationId"]],
-        source=source,
+        aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+        primary_knowledge_source=source
     )
 
     if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
-        qualifiers = []
+        qualifiers: List[str] = []
         for conditionRelation in row["conditionRelations"]:
             for condition in conditionRelation["conditions"]:
                 if condition["conditionClassId"]:
-                    qualifiers.append(condition["conditionClassId"])
+                    qualifier_term = condition["conditionClassId"]
+                    qualifiers.append(qualifier_term)
+
         association.qualifiers = qualifiers
 
     koza_app.write(association)

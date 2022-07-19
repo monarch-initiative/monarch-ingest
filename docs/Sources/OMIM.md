@@ -15,7 +15,7 @@ In these cases we get the OMIM to NCBIGene (Entrez) mapping and use the NCBI ide
 for the nucleic acid entity (phenotypic heritable marker) and the OMIM identifier 
 for the disease
 
-Currently we are only pulling in gene disease associations with evidence of a
+Currently, we are only pulling in gene disease associations with evidence of a
 causal mendelian association between a variation and a disease.  For susceptibility
 and other association types we will aim to curate those associations from the OMIM
 dataset.
@@ -32,17 +32,14 @@ from ClinVar.
 * biolink:Gene
     * id
     
-* biolink:NucleicAcidEntity
-    * id
-
-* biolink:Disease
-    * id
+* "Disorder" (biolink:NucleicAcidEntity or biolink:Disease)
+    * id (OMIM ID)
 
 * biolink:GeneToDiseaseAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
-    * object (disease.id)
-    * relation (RO:0002200)
-    * publication (publication.id)
-    * evidence
+    * object (disorder.id)
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:omim)

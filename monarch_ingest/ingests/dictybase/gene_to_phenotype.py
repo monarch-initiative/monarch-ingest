@@ -1,13 +1,14 @@
 import uuid
 from typing import Optional, Tuple
 
-from monarch_ingest.model.biolink import GeneToPhenotypicFeatureAssociation
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
-source_name = "dictybase_gene_to_phenotype"
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("dictybase_gene_to_phenotype")
+
+row = koza_app.get_row()
 
 gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
 phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")
@@ -27,7 +28,8 @@ if gene_identifier:
             subject=gene_identifier[0],  # gene[0] is the resolved gene ID
             predicate='biolink:has_phenotype',
             object=phenotype_id,
-            source="infores:dictybase"
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:dictybase"
         )
 
         koza_app.write(association)

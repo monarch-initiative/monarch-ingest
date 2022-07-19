@@ -19,9 +19,9 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
-    * publication
-
+    * publications
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:zfin)
 
 ### Gene to Publication
 
@@ -40,4 +40,5 @@ This ingest uses ZFIN's gene to publication download file, which only contains a
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * relation (mentions)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:zfin)

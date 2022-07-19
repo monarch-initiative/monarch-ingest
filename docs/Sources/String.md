@@ -32,8 +32,6 @@ A separate Entrez to String identifier mapping file is not available for _Rattus
 
 * **biolink:Gene**
   * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (entrez)
 
 #### Associations
 
@@ -42,5 +40,5 @@ A separate Entrez to String identifier mapping file is not available for _Rattus
     * subject (gene.id)
     * predicate (interacts_with)
     * object (gene.id)
-    * relation (RO:0002434)
-    * provided_by (infores:string)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:string)

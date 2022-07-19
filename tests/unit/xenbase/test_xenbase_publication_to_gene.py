@@ -1,7 +1,7 @@
 import pytest
 from koza.cli_runner import get_translation_table
 
-from monarch_ingest.model.biolink import (
+from biolink.pydanticmodel import (
     Gene,
     InformationContentEntityToNamedThingAssociation,
     Publication,
@@ -77,12 +77,13 @@ def test_gene_literature_entity_types(gene_literature_entities):
     publications = [
         entity for entity in gene_literature_entities if isinstance(entity, Publication)
     ]
-    [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
-    associations = [
+    genes = [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
+    association = [
         entity
         for entity in gene_literature_entities
         if isinstance(entity, InformationContentEntityToNamedThingAssociation)
-    ]
+    ][0]
 
     # Simple assertion, do any associations exist. Could be more rigorous
-    assert len(associations) != 0
+    assert association.primary_knowledge_source == "infores:xenbase"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

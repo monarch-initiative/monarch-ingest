@@ -8,7 +8,6 @@ This ingest uses RGD's gene file which contains publication assocations that are
 
 Note, there will be a column mismatch warning on this transform because there are two (UNUSED) columns.
 
-
 #### Biolink captured
 
 * biolink:Gene
@@ -21,5 +20,5 @@ Note, there will be a column mismatch warning on this transform because there ar
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)
-    * object (publication.id)
-    * relation (mentions)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:rgd)

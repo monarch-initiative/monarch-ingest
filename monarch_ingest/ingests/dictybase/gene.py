@@ -1,11 +1,13 @@
 from typing import Optional, Tuple
-from monarch_ingest.model.biolink import Gene
-from koza.cli_runner import koza_app
+
+from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id
 
-source_name = "dictybase_gene"
+from biolink.pydanticmodel import Gene
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("dictybase_gene")
+
+row = koza_app.get_row()
 
 gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
 
@@ -17,7 +19,7 @@ if gene_identifier:
         symbol=gene_identifier[1],
         name=gene_identifier[1],
         in_taxon=["NCBITaxon:44689"],
-        source="infores:dictybase"
+        provided_by=["infores:dictybase"]
     )
 
     koza_app.write(gene)

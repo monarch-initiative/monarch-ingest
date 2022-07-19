@@ -1,9 +1,11 @@
 import subprocess
 from pathlib import Path
-from typing import List, Optional
+
+from typing import Optional
 import tarfile
 import pandas
 import csv
+
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat

@@ -28,11 +28,12 @@ columns:
   - 'MIM Number'
   - 'Cyto Location'
 
-# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
   - 'has_evidence'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'

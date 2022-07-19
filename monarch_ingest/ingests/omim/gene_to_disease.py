@@ -5,20 +5,18 @@ Usage:
 poetry run koza transform \
   --source monarch_ingest/omim/gene_to_disease.yaml \
 """
-
-import logging
 import re
 import uuid
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-from monarch_ingest.model.biolink import Disease, Gene, GeneToDiseaseAssociation, NucleicAcidEntity
+from biolink.pydanticmodel import GeneToDiseaseAssociation
 
+import logging
 LOG = logging.getLogger(__name__)
 
-
-source_name = "omim_gene_to_disease"
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("omim_gene_to_disease")
+row = koza_app.get_row()
 omim_to_gene = koza_app.get_map('mim2gene')
 
 disorder = row['Phenotype']
@@ -61,12 +59,10 @@ if disorder_match is not None:
     gene_id = 'OMIM:' + str(gene_num)
     disorder_id = 'OMIM:' + disorder_num
 
-    gene = Gene(id=gene_id, source='infores:omim')
-
 elif no_disease_id_match is not None:
     # this is a case where the disorder
     # a blended gene/phenotype
-    # we lookup the NCBIGene feature and make the association
+    # we look up the NCBIGene feature and make the association
     disorder_label, association_key = no_disease_id_match.groups()
     # make what's in the gene column the disease
     disorder_id = 'OMIM:' + gene_num
@@ -76,12 +72,6 @@ elif no_disease_id_match is not None:
     if ncbi_id == '':
         koza_app.next_row()
     gene_id = 'NCBIGene:' + ncbi_id
-
-    genomic_entity = NucleicAcidEntity(
-        id=gene_id,
-        type=koza_app.translation_table.global_table['heritable_phenotypic_marker'],
-        source='infores:omim',
-    )
 
 else:
     # In dipper we created anonymous nodes for these cases, but for now we will skip these
@@ -115,7 +105,7 @@ else:
 # reference: https://omim.org/help/faq#1_6
 
 predicate = "biolink:gene_associated_with_condition"
-relation = koza_app.translation_table.global_table['causes condition']
+# relation = koza_app.translation_table.global_table['causes condition']
 
 if disorder_label.startswith('['):
     # predicate = "biolink:related_condition"
@@ -123,9 +113,9 @@ if disorder_label.startswith('['):
     koza_app.next_row()
 elif disorder_label.startswith('{'):
     predicate = "biolink:risk_affected_by"
-    relation = koza_app.translation_table.global_table[
-        'confers susceptibility to condition'
-    ]
+    # relation = koza_app.translation_table.global_table[
+    #     'confers susceptibility to condition'
+    # ]
 elif disorder_label.startswith('?'):
     # this is a questionable mapping!  skip?, skipping for now
     # predicate = "biolink:related_condition"
@@ -139,8 +129,6 @@ if association_key is not None:
     if evidence == association_key:
         evidence = None
 
-disease = Disease(id=disorder_id, source='infores:omim')
-
 # Association
 association = GeneToDiseaseAssociation(
     id="uuid:" + str(uuid.uuid1()),
@@ -148,7 +136,8 @@ association = GeneToDiseaseAssociation(
     predicate=predicate,
     object=disorder_id,
     has_evidence=[evidence],
-    source='infores:omim',
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source='infores:omim'
 )
 
 koza_app.write(association)

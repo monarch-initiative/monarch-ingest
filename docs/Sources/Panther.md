@@ -27,13 +27,13 @@ Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther anal
 
 #### Panther Data Model of RefGenomeOrthologs
 
-| Data Field | Content                                     | 
-|------------|---------------------------------------------| 
+| Data Field | Content                                     |
+|------------|---------------------------------------------|
 | Gene       | species1 &#124; DB=id1 &#124; protdb=pdbid1|
-| Ortholog   | species2 &#124; DB=id2 &#124; protdb=pdbid2| 
-| Type of ortholog   | [LDO, O, P, X ,LDX]  see [README](http://data.pantherdb.org/ftp/ortholog/current_release/README). | 
+| Ortholog   | species2 &#124; DB=id2 &#124; protdb=pdbid2|
+| Type of ortholog   | [LDO, O, P, X ,LDX]  see [README](http://data.pantherdb.org/ftp/ortholog/current_release/README). |
 | Common ancestor for the orthologs   | taxon name of common ancestor|
-| Panther Ortholog ID   | Panther (sub)family identifier| 
+| Panther Ortholog ID   | Panther (sub)family identifier|
 
 The `DB=id#` fields - where DB == database namespace and id# is the object identifier - are directly translated, by internal namespace mapping, into gene CURIEs.
 
@@ -43,19 +43,16 @@ The `species#` are abridged labels currently filtered and mapped onto NCBI Taxon
 
 - **biolink:Gene**
   * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (infores:panther) 
 
 Note that the Gene `source` is currently given as Panther, although the real source of a Gene identifier is given by its CURIE namespace.
-
 
 - **biolink:GeneToGeneHomologyAssociation**
   * id (random uuid)
   * subject (gene.id)
   * predicate (orthologous to)
   * object (gene.id)
-  * relation (RO:HOM0000017)
-  * provided_by (infores:panther)
+  * aggregating_knowledge_source (["infores:monarchinitiative"])
+  * primary_knowledge_source (infores:panther)
 
 ### Protein Family and Subfamily Classifications - T.B.D.
 
@@ -86,24 +83,24 @@ Contains the PANTHER 16.0 family/subfamily name, with molecular function, biolog
      * subject (gene_family.id)
      * predicate (enables)
      * object (go_term.id)
-     * relation (RO:0002327)
-     * provided_by (infores:panther)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
 
-     - **biolink:GeneFamilyToBiologicalProcessAssociation**
-       * id (random uuid)
-       * subject (gene_family.id)
-       * predicate (involved_in)
-       * object (go_term.id)
-       * relation (RO:0002331)
-       * provided_by (infores:panther)
+   - **biolink:GeneFamilyToBiologicalProcessAssociation**
+     * id (random uuid)
+     * subject (gene_family.id)
+     * predicate (involved_in)
+     * object (go_term.id)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
 
-     - **biolink:GeneFamilyToPathwayAssociation**
-       * id (random uuid)
-       * subject (gene_family.id)
-       * predicate (involved_in)
-       * object (pathway.id)
-       * relation (RO:0002331)
-       * provided_by (infores:panther)
+   - **biolink:GeneFamilyToPathwayAssociation**
+     * id (random uuid)
+     * subject (gene_family.id)
+     * predicate (involved_in)
+     * object (pathway.id)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
 
 ### Pathways - T.B.D.
 
@@ -132,16 +129,16 @@ Contains regulatory and metabolic pathways, each with subfamilies and protein se
       * subject (gene.id)
       * predicate (involved_in)
       * object (pathway.id)
-      * relation (RO:0002331)
-      * provided_by (infores:panther)
+      * aggregating_knowledge_source (["infores:monarchinitiative"])
+      * primary_knowledge_source (infores:panther)
 
     - **biolink:GeneFamilyToPathwayAssociation**
       * id (random uuid)
       * subject (gene_family.id)
       * predicate (involved_in)
       * object (pathway.id)
-      * relation (RO:0002331)
-      * provided_by (infores:panther)
+      * aggregating_knowledge_source (["infores:monarchinitiative"])
+      * primary_knowledge_source (infores:panther)
 
 ### Sequence Classifications - T.B.D.
 
@@ -178,29 +175,29 @@ Only a subset of the available species will be ingested into Monarch at this tim
      * subject (gene.id)
      * predicate (member_of)
      * object (gene_family.id)
-     * relation (RO:0002350)
-     * provided_by (infores:panther)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
 
    - **biolink:MacromolecularMachineToMolecularActivityAssociation**:
      * id (random uuid)
      * subject (gene.id)
      * predicate (enables)
      * object (go_term.id)
-     * relation (RO:0002327)
-     * provided_by (infores:panther)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
     
    - **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
      * id (random uuid)
      * subject (gene.id)
      * predicate (involved_in)
      * object (go_term.id)
-     * relation (RO:0002331)
-     * provided_by (infores:panther)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)
 
    - **biolink:GeneToPathwayAssociation**
      * id (random uuid)
      * subject (gene.id)
      * predicate (involved_in)
      * object (pathway.id)
-     * relation (RO:0002331)
-     * provided_by (infores:panther)
+     * aggregating_knowledge_source (["infores:monarchinitiative"])
+     * primary_knowledge_source (infores:panther)

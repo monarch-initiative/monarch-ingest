@@ -20,8 +20,9 @@ This ingest is built against a one-off OBAN formatted file, which makes for a tr
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
-    * publication
+    * publications
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:xenbase)
     
 ### Gene Literature
 
@@ -40,5 +41,5 @@ This ingest reads from Xenbase's [Genes Associated with Literature](http://ftp.x
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * relation (mentions)
-    
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:xenbase)

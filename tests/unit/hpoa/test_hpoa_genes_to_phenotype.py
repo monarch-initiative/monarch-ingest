@@ -1,6 +1,6 @@
 import pytest
 
-from monarch_ingest.model.biolink import GeneToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -67,6 +67,13 @@ def test_confirm_one_of_each_classes(cls, basic_hpoa):
 
 
 def test_hpoa_g2p_association(basic_hpoa):
+    assert basic_hpoa
+    assert len(basic_hpoa) == 1
+    association = [
+        entity
+        for entity in basic_hpoa
+        if isinstance(entity, GeneToPhenotypicFeatureAssociation)
+    ][0]
     assert len(basic_hpoa) == 1
     assert basic_hpoa[0]
     assert basic_hpoa[0].subject == "NCBIGene:8192"
@@ -75,4 +82,5 @@ def test_hpoa_g2p_association(basic_hpoa):
     assert "OMIM:614129" in basic_hpoa[0].qualifiers  # Disease term
     assert "HP:0040283" in basic_hpoa[0].qualifiers   # Frequency term
     assert "mim2gene" in basic_hpoa[0].has_evidence
-    assert "infores:hpoa" in basic_hpoa[0].source
+    assert association.primary_knowledge_source == "infores:hpoa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
