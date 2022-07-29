@@ -4,10 +4,12 @@ using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
 
-There are two HPOA ingests: gene-to-disease and gene-to-phenotype.
+There are three HPOA ingests: 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease'.
 
-The gene-to-disease parser currently only processes the "abnormal" annotations.
-Association to "remarkable normality" will be added in the near future.
+The 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease' parsers currently only processe the "abnormal" annotations.
+Association to "remarkable normality" may be added in the near future.
+
+The disease-to-mode-of-inheritance parses 'inheritance' records.
 
 [HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa)
 
@@ -15,17 +17,12 @@ Association to "remarkable normality" will be added in the near future.
 
 phenotype.hpoa: [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format)
 
-
-Note that we're calling this the disease to phenotype file because - using the YAML file configuration for the ingest -
-we are only parsing rows with 'Aspect' types 'I' relating to mode of inheritance, 'C' relating to clinical course and
-'M' relating to clinical modifiers, but ignoring the **Aspect == 'P'** rows of data.
+Note that we're calling this the disease to phenotype file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'P' (phenotypic anomalies)**, but ignoring all other Aspects.
 
 #### Biolink captured
 
 * biolink:Disease
     * id
-    * has_attribute=["HP term"],  # some child term of "HP:0000005" Mode of Inheritance 
-    * provided_by=["infores:hpoa"]
   
 * biolink:PhenotypicFeature
     * id
@@ -55,6 +52,20 @@ Notes:
 1. CURIE of [Evidence and Conclusion Ontology(https://bioportal.bioontology.org/ontologies/ECO)] term
 2. female -> PATO:0000383, male -> PATO:0000384 or None
 3. See 8. Frequency in https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format
+
+### Disease to Modes of Inheritance
+
+Same as above, we input the  file - phenotype.hpoa: [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format).
+
+Note that we're calling this the 'disease to modes of inheritance' file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'I' (inheritance)**, but ignoring all other Aspects.
+
+#### Biolink captured
+
+* biolink:Disease
+    * id
+    * has_attribute=["HP term"],  # some child term of "HP:0000005" term for 'Mode of Inheritance'
+    * provided_by=["infores:hpoa"]
+
 
 ### Gene to Phenotype (with Disease and HPO Frequency Context)
 

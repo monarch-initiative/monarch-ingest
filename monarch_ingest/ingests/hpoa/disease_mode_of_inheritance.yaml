@@ -1,4 +1,4 @@
-name: 'hpoa_disease_phenotype'
+name: 'hpoa_disease_mode_of_inheritance'
 
 metadata:
   ingest_title: 'Human Phenotype Ontology Annotations'
@@ -20,14 +20,14 @@ delimiter: '\t'
 header: 4
 
 global_table: './monarch_ingest/translation_table.yaml'
-local_table: './monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
+local_table: './monarch_ingest/ingests/hpoa/hpoa-modes-of-inheritance.yaml'
 
-# We only concern ourselves with Aspect == 'P' (phenotypic anomalies) records in this ingest.
+# We only concern ourselves with Aspect == 'I' (inheritance) records in this ingest.
 filters:
   - inclusion: 'include'
     column: 'Aspect'
     filter_code: 'eq'
-    value: 'P'
+    value: 'I'
 
 # For a csv/tsv file, list expected columns
 columns:
@@ -44,18 +44,9 @@ columns:
   - 'Aspect'
   - 'Biocuration'
 
-# DiseaseToPhenotypicFeatureAssociation
-edge_properties:
+# Disease nodes with annotated 'Mode of Inheritance'
+node_properties:
   - 'id'
   - 'category'
-  - 'subject'
-  - 'predicate'
-  - 'negated'
-  - 'object'
-  - 'publications'
-  - 'onset_qualifier'
-  - 'frequency_qualifier'
-  - 'sex_qualifier'
-  - 'has_evidence'
-  - 'aggregator_knowledge_source'
-  - 'primary_knowledge_source'
+  - 'has_attribute'
+  - 'provided_by'
