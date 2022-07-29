@@ -13,7 +13,8 @@ filters:
     filter_code: 'eq'
     value: 'P'
 
-We are only excluding P associations from the ingest.
+We are only excludeP associations from the ingest;
+keeping 'I' == 'inheritance' and 'C' == 'clinical'
 
 Usage:
 poetry run koza transform \

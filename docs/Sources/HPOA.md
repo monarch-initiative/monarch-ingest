@@ -17,15 +17,16 @@ phenotype.hpoa: [A description of this file is found here](https://hpo-annotatio
 
 
 Note that we're calling this the disease to phenotype file because - using the YAML file configuration for the ingest -
-we are only including the **Aspect == 'P'** rows of data (ignoring the rows of other association types - namely, 
-'I' relating to mode of inheritance, 'C' relating to clinical course and 'M' relating to clinical modifiers, 
-which will be brought in via the Mondo ingest and published ontology file).
+we are only parsing rows with 'Aspect' types 'I' relating to mode of inheritance, 'C' relating to clinical course and
+'M' relating to clinical modifiers, but ignoring the **Aspect == 'P'** rows of data.
 
 #### Biolink captured
 
 * biolink:Disease
     * id
-
+    * has_attribute=["HP term"],  # some child term of "HP:0000005" Mode of Inheritance 
+    * provided_by=["infores:hpoa"]
+  
 * biolink:PhenotypicFeature
     * id
 
@@ -44,11 +45,11 @@ which will be brought in via the Mondo ingest and published ontology file).
     * object (phenotypicFeature.id)
     * publications (List[publication.id])
     * has_evidence (List[Note [1]]),
-    * sex_qualifier (Note [2])  # 
+    * sex_qualifier (Note [2]) 
     * onset_qualifier (Onset.id)
     * frequency_qualifier (Note [3])
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:hpoa)
+    * primary_knowledge_source ("infores:hpoa")
 
 Notes:
 1. CURIE of [Evidence and Conclusion Ontology(https://bioportal.bioontology.org/ontologies/ECO)] term
