@@ -13,7 +13,7 @@ filters:
     filter_code: 'eq'
     value: 'P'
 
-We are only including P associations, which are disease to phenotype associations
+We are only excluding P associations from the ingest.
 
 Usage:
 poetry run koza transform \
@@ -28,7 +28,10 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import (
+    Disease,
+    DiseaseToPhenotypicFeatureAssociation
+)
 
 import logging
 LOG = logging.getLogger(__name__)
@@ -41,7 +44,8 @@ disease_id = row["DatabaseID"]
 
 predicate = "biolink:has_phenotype"
 
-phenotypic_feature_id = row["HPO_ID"]
+hpo_id = row["HPO_ID"]
+mode_of_inheritance: bool = True if hpo_id and hpo_id in koza_app.translation_table.local_table else False
 
 # Predicate negation
 negated: Optional[bool]
@@ -105,20 +109,29 @@ publications = [p for p in publications if not p.startswith("http")]
 #
 #     koza_app.write(publication)
 
-# Associations/Edges
-association = DiseaseToPhenotypicFeatureAssociation(
-    id="uuid:" + str(uuid.uuid1()),
-    subject=disease_id,
-    predicate=predicate,
-    negated=negated,
-    object=phenotypic_feature_id,
-    publications=publications,
-    has_evidence=[evidence_curie],
-    sex_qualifier=sex_qualifier,
-    onset_qualifier=onset,
-    frequency_qualifier=frequency_qualifier,
-    aggregator_knowledge_source=["infores:monarchinitiative"],
-    primary_knowledge_source="infores:hpoa"
-)
+if mode_of_inheritance:
 
-koza_app.write(association)
+    disease = Disease(
+        id=disease_id,
+        has_attribute=[hpo_id],
+        provided_by=["infores:hpoa"]
+    )
+    koza_app.write(disease)
+
+else:
+    # Association/Edge
+    association = DiseaseToPhenotypicFeatureAssociation(
+        id="uuid:" + str(uuid.uuid1()),
+        subject=disease_id,
+        predicate=predicate,
+        negated=negated,
+        object=hpo_id,
+        publications=publications,
+        has_evidence=[evidence_curie],
+        sex_qualifier=sex_qualifier,
+        onset_qualifier=onset,
+        frequency_qualifier=frequency_qualifier,
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:hpoa"
+    )
+    koza_app.write(association)

@@ -1,10 +1,13 @@
 import pytest
 
-from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import (
+    Disease,
+    DiseaseToPhenotypicFeatureAssociation
+)
 
 
 @pytest.fixture
-def entities(mock_koza, global_table):
+def d2pf_entities(mock_koza, global_table):
     row = iter(
         [
             {
@@ -32,12 +35,12 @@ def entities(mock_koza, global_table):
     )
 
 
-def test_gene_2_phenotype_transform(entities):
-    assert entities
-    assert len(entities) == 1
+def test_disease_to_phenotype_transform(d2pf_entities):
+    assert d2pf_entities
+    assert len(d2pf_entities) == 1
     association = [
         entity
-        for entity in entities
+        for entity in d2pf_entities
         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
     ][0]
     assert association.subject == "OMIM:614856"
@@ -51,6 +54,48 @@ def test_gene_2_phenotype_transform(entities):
     assert association.frequency_qualifier == "1/1"
     assert association.primary_knowledge_source == "infores:hpoa"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
+
+
+@pytest.fixture
+def d2moi_entities(mock_koza, global_table):
+    row = iter(
+        [
+            {
+                "DatabaseID": "OMIM:300425",
+                "DiseaseName": "Autism susceptibility, X-linked 1",
+                "Qualifier": "",
+                "HPO_ID": "HP:0001417",
+                "Reference": "OMIM:300425",
+                "Evidence": "IEA",
+                "Onset": "",
+                "Frequency": "",
+                "Sex": "",
+                "Modifier": "",
+                "Aspect": "I",  # assert 'Inheritance' test record
+                "Biocuration": "HPO:iea[2009-02-17]",
+            }
+        ]
+    )
+    return mock_koza(
+        name="hpoa_disease_phenotype",
+        data=row,
+        transform_code="./monarch_ingest/ingests/hpoa/disease_phenotype.py",
+        global_table=global_table,
+        local_table="./monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
+    )
+
+
+def test_disease_to_mode_of_inheritance_transform(d2moi_entities):
+    assert d2moi_entities
+    assert len(d2moi_entities) == 1
+    disease: Disease = [
+        entity
+        for entity in d2moi_entities
+        if isinstance(entity, Disease)
+    ][0]
+    assert disease.id == "OMIM:300425"
+    assert "HP:0001417" in disease.has_attribute
+    assert "infores:hpoa" in disease.provided_by
 
 
 # Commenting out publication node generation in edge ingests, at least temporarily

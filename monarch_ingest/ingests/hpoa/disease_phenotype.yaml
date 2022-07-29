@@ -44,12 +44,14 @@ columns:
   - 'Aspect'
   - 'Biocuration'
 
-# Avoiding creating publication nodes, at least temporarily
-#node_properties:
-#  - 'id'
-#  - 'category'
-#  - 'type'
+# Disease nodes with annotated 'Mode of Inheritance'
+node_properties:
+  - 'id'
+  - 'category'
+  - 'has_attribute'
+  - 'provided_by'
 
+# DiseaseToPhenotypicFeatureAssociation
 edge_properties:
   - 'id'
   - 'category'
