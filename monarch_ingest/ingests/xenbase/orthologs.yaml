@@ -4,9 +4,14 @@ format: 'csv'
 delimiter: '\t'
 header: none
 
-# https://storage.googleapis.com/monarch-ingest/data/xb_ortho_spo_v_v20210318a.csv
+#    Entrez Gene ID
+#    Xenbase genepage ID
+#    Xenbase gene symbol
+#    Xenbase gene name
 files:
-  - 'data/xenbase/orthologs.csv'
+ - 'data/xenbase/XenbaseGeneHumanOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneMouseOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt'
 
 metadata:
   ingest_title: 'Xenbase'
@@ -16,20 +21,12 @@ metadata:
 
 global_table: './monarch_ingest/translation_table.yaml'
 
+
 columns:
- - "SUBJECT"
- - "SUBJECT_LABEL"
- - "SUBJECT_TAXON"
- - "SUBJECT_TAXON_LABEL"
- - "OBJECT"
- - "OBJECT_LABEL"
- - "RELATION"
- - "RELATION_LABEL"
- - "EVIDENCE"
- - "EVIDENCE_LABEL"
- - "SOURCE"
- - "IS_DEFINED_BY"
- - "QUALIFIER"
+ - 'entrez_id'
+ - 'xb_genepage_id'
+ - 'xb_gene_symbol'
+ - 'xb_gene_name'
 
 edge_properties:
   - 'id'
@@ -37,7 +34,6 @@ edge_properties:
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'has_evidence'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 

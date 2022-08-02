@@ -2,6 +2,7 @@
 Unit tests for Xenbase Gene Orthology relationships ingest
 """
 import pytest
+from biolink.pydanticmodel import GeneToGeneHomologyAssociation
 
 
 @pytest.fixture
@@ -9,7 +10,7 @@ def source_name():
     """
     :return: string source name of Xenbase Gene Orthology relationships ingest
     """
-    return "xenbase_ref_genome_orthologs"
+    return "xenbase_orthologs"
 
 
 @pytest.fixture
@@ -38,21 +39,12 @@ result_expected = {
 
 
 @pytest.fixture
-def well_behaved_record(mock_koza, source_name, script, global_table):
+def orthology_record(mock_koza, source_name, script, global_table):
     row = {
-        #  - "SUBJECT"
-        #  - "SUBJECT_LABEL"
-        #  - "SUBJECT_TAXON"
-        #  - "SUBJECT_TAXON_LABEL"
-        #  - "OBJECT"
-        #  - "OBJECT_LABEL"
-        #  - "RELATION"
-        #  - "RELATION_LABEL"
-        #  - "EVIDENCE"
-        #  - "EVIDENCE_LABEL"
-        #  - "SOURCE"
-        #  - "IS_DEFINED_BY"
-        #  - "QUALIFIER"
+        'entrez_id': "8928",
+        'xb_genepage_id': "XB-GENEPAGE-478063",
+        'xb_gene_symbol': "foxh1.2",
+        'xb_gene_name': "forkhead box H1, gene 2"
     }
     return mock_koza(
         name=source_name,
@@ -62,21 +54,20 @@ def well_behaved_record(mock_koza, source_name, script, global_table):
     )
 
 
-def test_well_behaved_record_1(well_behaved_record):
-
-    association = well_behaved_record[0]
-
-    assert association
-    assert association.object in result_expected.keys()
+def test_well_behaved_record_1(orthology_record):
+    assert orthology_record
+    association = [
+        association
+        for association in orthology_record
+        if isinstance(association, GeneToGeneHomologyAssociation)
+    ][0]
 
     # The test data mostly has the same human 'gene' subject
     # but is distinguished by the 'object' orthology gene id
     # hence the result_expected dictionary is now indexed thus...
-    assert association.subject == result_expected[association.object][0]
-    assert association.predicate == result_expected[association.object][3]
-
-    # Evidence is a list
-    assert result_expected[association.object][5] in association.has_evidence
+    assert association.subject == "Xenbase:XB-GENEPAGE-478063"
+    assert association.predicate == "biolink:orthologous_to"
+    assert association.object == "NCBIGene:8928"
 
     assert association.primary_knowledge_source == "infores:xenbase"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
