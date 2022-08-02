@@ -1,17 +1,18 @@
-name: 'xenbase_orthologs'
+name: 'xenbase_non_entrez_orthologs'
 
 format: 'csv'
 delimiter: '\t'
-header: none
 
-#    Entrez Gene ID
+# Non-Entrez Human, Mouse, and Zebrafish Orthologs
+# File contains a mapping of XB-GENEPAGE IDs to Non-Entrez OMIM gene ID, MGI gene ID, ZFIN gene ID.
+# The file is tab-delimited and has the following format:
+#
 #    Xenbase genepage ID
-#    Xenbase gene symbol
-#    Xenbase gene name
+#    OMIM gene ID
+#    MGI gene ID
+#    ZFIN gene ID
 files:
- - 'data/xenbase/XenbaseGeneHumanOrthologMapping.txt'
- - 'data/xenbase/XenbaseGeneMouseOrthologMapping.txt'
- - 'data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneNonEntrezOrthologMapping.txt'
 
 metadata:
   ingest_title: 'Xenbase'
@@ -20,10 +21,11 @@ metadata:
   rights: 'https://www.xenbase.org/other/static-xenbase/citingMOD.jsp'
 
 columns:
- - 'entrez_id'
- - 'xb_genepage_id'
- - 'xb_gene_symbol'
- - 'xb_gene_name'
+ - 'Xenbase'
+ - 'OMIM'
+ - 'MGI'
+ - 'ZFIN'
+ - 'GEISHA'  # spurious empty column header... ignored?
 
 edge_properties:
   - 'id'
