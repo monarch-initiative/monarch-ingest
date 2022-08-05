@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    environment {
+        HOME = "${env.WORKSPACE}"
+        RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
+        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+    }
+    stages {
+        stage('setup') {
+            steps {
+                sh '''
+                    mkdir /tmp/mnt/ || true
+                    gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
+                    
+                    git clone https://github.com/monarch-initiative/monarch-file-server.git
+                    cd monarch-file-server
+                    
+                    # python3 -m venv venv
+                    # source venv/bin/activate
+                    python3 ./scripts/directory_indexer.py -v --inject ./scripts/directory-index-template.html --directory /tmp/mnt --prefix https://data.monarchinitiative.org -x
+                '''
+            }
+        }
+        stage('upload files') {
+            steps {
+                sh 'poetry run ingest release --update-latest'
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker rm -f neo || true'
+//            sh 'docker rm my_solr || true'
+        }
+    }
+}
