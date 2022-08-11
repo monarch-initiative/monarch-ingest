@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent monarch-agent-small-1660119804
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
@@ -27,10 +27,10 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            sh 'docker rm -f neo || true'
+//    post {
+//        always {
+//           sh 'docker rm -f neo || true'
 //            sh 'docker rm my_solr || true'
-        }
-    }
+//        }
+//    }
 }
