@@ -14,6 +14,7 @@ pipeline {
                     
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
                     cd monarch-file-server
+                    pip install -r requirements.txt
                     
                     # python3 -m venv venv
                     # source venv/bin/activate
