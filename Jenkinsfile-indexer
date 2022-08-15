@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'monarch-agent-medium' }
+    agent { label 'monarch-agent-small' }
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
@@ -10,9 +10,8 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p /tmp/mnt/
-                    groups
-                    
-                    # gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
+
+                    gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
                     
                     # git clone https://github.com/monarch-initiative/monarch-file-server.git
                     # cd monarch-file-server
