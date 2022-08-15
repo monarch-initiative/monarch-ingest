@@ -9,7 +9,7 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    mkdir /tmp/mnt/ || true
+                    mkdir -p /tmp/mnt/
                     gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
                     
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
