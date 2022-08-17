@@ -203,7 +203,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.1.4"
+version = "0.1.6"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 category = "main"
 optional = false
@@ -2108,7 +2108,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cb3bbdd11a56f5f1bec424f3711e31a86280f585d196993800f29b994a52b791"
+content-hash = "73a52299cedca5de7f629f1363d3df66fdc5c8125ceeca19d30244891d08e232"
 
 [metadata.files]
 alabaster = [
