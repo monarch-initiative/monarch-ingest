@@ -14,7 +14,7 @@ pipeline {
                     gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
                     
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
-                    cd monarch-file-server
+                    cd monarch-file-server/scripts
                     pip install -r requirements.txt
                     
                     python3 -m venv venv
