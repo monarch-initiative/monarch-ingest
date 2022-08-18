@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'monarch-agent-medium' }
+    agent any
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
@@ -12,6 +12,7 @@ pipeline {
                     pip --version
                     python3 --version
                     echo $PATH
+                    ls -al /home/ubuntu/.poetry/bin
                     poetry install
                     poetry run which ingest
                 '''
