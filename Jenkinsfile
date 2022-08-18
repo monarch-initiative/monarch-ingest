@@ -9,10 +9,12 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    pip --version
+                    echo "Current directory: $(pwd)"
                     python3 --version
-                    echo $PATH
-                    ls -al /home/ubuntu/.poetry/bin
+                    pip --version
+                    export PATH=$HOME/.local/bin:$PATH
+                    echo "Path: $PATH"
+                    
                     poetry install
                     poetry run which ingest
                 '''
