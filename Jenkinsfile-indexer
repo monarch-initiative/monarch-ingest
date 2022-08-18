@@ -9,26 +9,22 @@ pipeline {
         stage('index') {
             steps {
                 sh '''
-                    mkdir -p /tmp/mnt/
-
-                    gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
-                    
-                    echo "----------------------------------------------"
-                    pwd
-                    echo "----------------------------------------------"
+                    echo "Current directory: $(pwd)"
                     pip --version
                     python3 --version
-                    echo "----------------------------------------------"
-                    echo $HOME/.local/.bin
-                    echo $PATH
+                    export PATH=$HOME/.local/.bin:$PATH
+                    echo "Path: $PATH"
 
-                    #git clone https://github.com/monarch-initiative/monarch-file-server.git
-                    #cd monarch-file-server/scripts
-                    #pip install -r requirements.txt
+                    mkdir -p /tmp/mnt/
+                    gcsfuse --implicit-dirs data-public-monarchinitiative /tmp/mnt
+                  
+                    git clone https://github.com/monarch-initiative/monarch-file-server.git
+                    cd monarch-file-server/scripts
+                    pip install -r requirements.txt
                     
-                    #python3 -m venv venv
-                    #source venv/bin/activate
-                    #python3 ./scripts/directory_indexer.py -v --inject ./scripts/directory-index-template.html --directory /tmp/mnt --prefix https://data.monarchinitiative.org -x
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    python3 ./scripts/directory_indexer.py -v --inject ./scripts/directory-index-template.html --directory /tmp/mnt --prefix https://data.monarchinitiative.org -x
                 '''
             }
         }
