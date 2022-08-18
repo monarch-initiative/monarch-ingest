@@ -16,7 +16,7 @@ pipeline {
                     echo "Path: $PATH"
 
 
-                    mkdir -p data-public
+                    mkdir data-public
                     gcsfuse --implicit-dirs data-public-monarchinitiative data-public
                   
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
