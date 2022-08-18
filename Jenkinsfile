@@ -88,7 +88,7 @@ pipeline {
 //         }
         stage('upload files') {
             steps {
-                sh 'poetry run ingest release --update-latest'
+                sh 'poetry run ingest release --update-buckets'
             }
         }
     }

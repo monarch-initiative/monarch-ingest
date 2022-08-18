@@ -12,7 +12,7 @@ pipeline {
                     echo "Current directory: $(pwd)"
                     pip --version
                     python3 --version
-                    export PATH=$HOME/.local/.bin:$PATH
+                    export PATH=$HOME/.local/bin:$PATH
                     echo "Path: $PATH"
                     ls -al /home/ubuntu/.poetry/bin
 
