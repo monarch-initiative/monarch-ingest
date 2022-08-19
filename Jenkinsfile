@@ -12,9 +12,10 @@ pipeline {
                     echo "Current directory: $(pwd)"
                     python3 --version
                     pip --version
-                    export PATH=$HOME/.local/bin:$PATH
+                    export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
+                    which poetry
                     poetry install
                     poetry run which ingest
                 '''
