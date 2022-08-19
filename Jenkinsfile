@@ -1,6 +1,6 @@
 pipeline {
-    agent any
-    environment {
+    agent { label 'monarch-agent-medium' }
+        environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
         PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
@@ -88,6 +88,29 @@ pipeline {
 //                 sh 'poetry run ingest solr'
 //             }
 //         }
+        stage('index') {
+            steps {
+                sh '''
+                    echo "Current directory: $(pwd)"
+                    python3 --version
+                    pip --version
+                    export PATH=$HOME/.local/bin:$PATH
+                    echo "Path: $PATH"
+
+                    cd $HOME
+                    mkdir data-public
+                    gcsfuse --implicit-dirs data-public-monarchinitiative data-public
+                  
+                    git clone https://github.com/monarch-initiative/monarch-file-server.git
+                    cd monarch-file-server/scripts
+                    pip install -r requirements.txt
+                    
+                    #python3 -m venv venv
+                    #source venv/bin/activate
+                    python3 ./directory_indexer.py -v --inject ./directory-index-template.html --directory ../data-public --prefix https://data.monarchinitiative.org -x
+                '''
+            }
+        }
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --update-buckets'
