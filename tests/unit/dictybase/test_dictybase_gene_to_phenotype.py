@@ -94,7 +94,7 @@ def test_row():
 
 
 @pytest.fixture
-def basic_dictybase(mock_koza, source_name, script, test_row, global_table, map_cache):
+def basic_dictybase(mock_koza, source_name, script, test_row_1, global_table, map_cache):
     """
     Mock Koza run for Dictybase Gene to Phenotype ingest.
 
@@ -109,7 +109,7 @@ def basic_dictybase(mock_koza, source_name, script, test_row, global_table, map_
     """
     return mock_koza(
         name=source_name,
-        data=iter([test_row]),
+        data=iter([test_row_1]),
         transform_code=script,
         global_table=global_table,
         map_cache=map_cache
@@ -126,10 +126,10 @@ def confirm_one_of_each_classes(cls, basic_dictybase):
     assert class_entities[0]
 
 
-def test_dictybase_g2p_association(basic_dictybase):
+def test_dictybase_g2p_association(basic_dictybase_1):
     associations = [
         association
-        for association in basic_dictybase
+        for association in basic_dictybase_1
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 2

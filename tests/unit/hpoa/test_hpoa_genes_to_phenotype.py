@@ -38,7 +38,7 @@ def test_row():
 
 
 @pytest.fixture
-def basic_hpoa(mock_koza, source_name, script, test_row):
+def basic_hpoa(mock_koza, source_name, script, test_row_1):
     """
     Mock Koza run for HPOA Gene to Phenotype ingest.
 
@@ -51,7 +51,7 @@ def basic_hpoa(mock_koza, source_name, script, test_row):
     """
     return mock_koza(
         name=source_name,
-        data=iter([test_row]),
+        data=iter([test_row_1]),
         transform_code=script
     )
 
