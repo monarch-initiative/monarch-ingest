@@ -119,7 +119,7 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, 
 
     :param mock_koza:
     :param source_name:
-    :param test_row:
+    :param test_row_1:
     :param script:
     :param global_table:
     :param map_cache:

@@ -43,7 +43,8 @@ def parse_gene_id(row: Dict, gene_names_to_ids: Dict, dicty_symbols_to_ncbi_gene
         # Try first to map the Gene Name ("Symbol") to an NCBI Gene ID
         gene_id = f"NCBIGene:{dicty_symbols_to_ncbi_genes[gene_name]['NCBI GeneID']}"
     except KeyError:
-        logger.warning(f"{error_prefix} has a Gene Name '{gene_name}' unmapped to an NCBI Genes ID?\n")
+        # logger.info(f"{error_prefix} has a Gene Name '{gene_name}' unmapped to an NCBI Genes ID?\n")
+        pass
 
     if not gene_id:
         try:

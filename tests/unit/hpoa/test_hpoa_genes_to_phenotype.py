@@ -44,7 +44,7 @@ def basic_hpoa(mock_koza, source_name, script, test_row_1):
 
     :param mock_koza:
     :param source_name:
-    :param test_row:
+    :param test_row_1:
     :param script:
 
     :return: mock_koza application

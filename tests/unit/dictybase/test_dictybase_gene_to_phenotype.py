@@ -14,15 +14,24 @@ def map_cache() -> Dict:
         "cbpC": {"GENE ID": "DDB_G0283613"},
         "DDB_G0267364_RTE": {"GENE ID": "DDB_G0267364"},
         "argE": {"GENE ID": "DDB_G0267380"},
-        "DDB_G0269812": {"GENE ID": "DDB_G0269812"}
+        "DDB_G0269812": {"GENE ID": "DDB_G0269812"},
+        "DDB_G0274679": {"GENE ID": "DDB_G0274679"}
     }
     dictybase_phenotype_names_to_ids = {
         "decreased slug migration": {"id": "DDPHENO:0000225"},
-        "aberrant spore morphology": {"id": "DDPHENO:0000163"}
+        "aberrant spore morphology": {"id": "DDPHENO:0000163"},
+        "delayed aggregation": {"id": "DDPHENO:0000156"},
+        "increased cell-substrate adhesion": {"id": "DDPHENO:0000213"},
+        "decreased cell motility": {"id": "DDPHENO:0000148"}
+    }
+    dicty_symbols_to_ncbi_genes = {
+        "cbpC": {"NCBI GeneID": "8624175"},
+        "argE": {"NCBI GeneID": "8615966"},
     }
     return {
         "dictybase_gene_names_to_ids": dictybase_gene_names_to_ids,
-        "dictybase_phenotype_names_to_ids": dictybase_phenotype_names_to_ids
+        "dictybase_phenotype_names_to_ids": dictybase_phenotype_names_to_ids,
+        "dicty_symbols_to_ncbi_genes": dicty_symbols_to_ncbi_genes
     }
 
 
@@ -81,7 +90,7 @@ def script():
 
 
 @pytest.fixture
-def test_row():
+def test_row_1():
     """
     :return: Test Dictybase Gene to Phenotype data row.
     """
@@ -94,13 +103,13 @@ def test_row():
 
 
 @pytest.fixture
-def basic_dictybase(mock_koza, source_name, script, test_row_1, global_table, map_cache):
+def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, map_cache):
     """
     Mock Koza run for Dictybase Gene to Phenotype ingest.
 
     :param mock_koza:
     :param source_name:
-    :param test_row:
+    :param test_row_1:
     :param script:
     :param global_table:
     :param map_cache:
@@ -119,14 +128,14 @@ def basic_dictybase(mock_koza, source_name, script, test_row_1, global_table, ma
 @pytest.mark.parametrize(
     "cls", [GeneToPhenotypicFeatureAssociation]
 )
-def confirm_one_of_each_classes(cls, basic_dictybase):
-    class_entities = [entity for entity in basic_dictybase if isinstance(entity, cls)]
+def test_confirm_one_of_each_classes(cls, basic_dictybase_1):
+    class_entities = [entity for entity in basic_dictybase_1 if isinstance(entity, cls)]
     assert class_entities
-    assert len(class_entities) == 1
+    assert len(class_entities) == 2
     assert class_entities[0]
 
 
-def test_dictybase_g2p_association(basic_dictybase_1):
+def test_dictybase_g2p_association_ncbi_gene(basic_dictybase_1):
     associations = [
         association
         for association in basic_dictybase_1
@@ -136,8 +145,61 @@ def test_dictybase_g2p_association(basic_dictybase_1):
 
     for association in associations:
         assert association
-        assert association.subject == "dictyBase:DDB_G0283613"
+        assert association.subject == "NCBIGene:8624175"
         assert association.object in ["DDPHENO:0000225", "DDPHENO:0000163"]
+        assert association.predicate == "biolink:has_phenotype"
+        assert association.primary_knowledge_source == "infores:dictybase"
+        assert "infores:monarchinitiative" in association.aggregator_knowledge_source
+
+
+@pytest.fixture
+def test_row_2():
+    """
+    :return: another Test Dictybase Gene to Phenotype data row.
+    """
+    return {
+        "Systematic Name": "DBS0351079",
+        "Strain Descriptor": "DDB_G0274679-",
+        "Associated gene(s)": "DDB_G0274679",
+        "Phenotypes": "delayed aggregation | increased cell-substrate adhesion | decreased cell motility"
+    }
+
+
+@pytest.fixture
+def basic_dictybase_2(mock_koza, source_name, script, test_row_2, global_table, map_cache):
+    """
+    Mock Koza run for Dictybase Gene to Phenotype ingest.
+
+    :param mock_koza:
+    :param source_name:
+    :param test_row_2:
+    :param script:
+    :param global_table:
+    :param map_cache:
+
+    :return: mock_koza application
+    """
+    return mock_koza(
+        name=source_name,
+        data=iter([test_row_2]),
+        transform_code=script,
+        global_table=global_table,
+        map_cache=map_cache
+    )
+
+
+def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
+    associations = [
+        association
+        for association in basic_dictybase_2
+        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+    ]
+    assert len(associations) == 3
+
+    for association in associations:
+        assert association
+        assert association.subject == "dictyBase:DDB_G0274679"
+        assert association.object in ["DDPHENO:0000156", "DDPHENO:0000213", "DDPHENO:0000148"]
         assert association.predicate == "biolink:has_phenotype"
         assert association.primary_knowledge_source == "infores:dictybase"
         assert "infores:monarchinitiative" in association.aggregator_knowledge_source
