@@ -1,6 +1,8 @@
+from typing import Dict
+
 import pytest
 
-from biolink.pydanticmodel import Disease
+from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -28,18 +30,27 @@ def d2moi_entities(mock_koza, global_table):
         data=row,
         transform_code="./monarch_ingest/ingests/hpoa/disease_mode_of_inheritance.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/hpoa/hpoa-modes-of-inheritance.yaml",
+        local_table="./monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
     )
 
 
 def test_disease_to_mode_of_inheritance_transform(d2moi_entities):
     assert d2moi_entities
     assert len(d2moi_entities) == 1
-    disease: Disease = [
+    association = [
         entity
         for entity in d2moi_entities
-        if isinstance(entity, Disease)
+        # TODO: DiseaseToPhenotypicFeatureAssociation will later be revised to
+        #       DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation or equivalent
+        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
     ][0]
-    assert disease.id == "OMIM:300425"
-    assert "HP:0001417" in disease.has_attribute
-    assert "infores:hpoa" in disease.provided_by
+    assert association.subject == "OMIM:300425"
+
+    # TODO: later revise "biolink:has_manifestation" to "biolink:has_mode_of_inheritance"
+    assert association.predicate == "biolink:has_manifestation"
+
+    assert association.object == "HP:0001417"
+    assert "OMIM:300425" in association.publications
+    assert "ECO:0000501" in association.has_evidence  # from local HPOA translation table
+    assert association.primary_knowledge_source == "infores:hpoa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

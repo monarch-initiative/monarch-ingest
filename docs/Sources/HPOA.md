@@ -4,25 +4,23 @@ using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
 
-There are three HPOA ingests: 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease'.
+There are four HPOA ingests - 'disease-to-phenotype', 'disease-to-mode-of-inheritance', 'gene-to-disease' and 'disease-to-mode-of-inheritance' - that parse out records from the [HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa).
 
-The 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease' parsers currently only processe the "abnormal" annotations.
+The 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease' parsers currently only process the "abnormal" annotations.
 Association to "remarkable normality" may be added in the near future.
 
-The disease-to-mode-of-inheritance parses 'inheritance' records.
-
-[HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa)
+The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record information out from the annotation file.
 
 ### Disease to Phenotype
 
-phenotype.hpoa: [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format)
+**phenotype.hpoa:** [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format)
 
 Note that we're calling this the disease to phenotype file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'P' (phenotypic anomalies)**, but ignoring all other Aspects.
 
 #### Biolink captured
 
 * biolink:Disease
-    * id
+    * id ((OMIM|DECIPHER|ORPHA) id)
   
 * biolink:PhenotypicFeature
     * id
@@ -55,17 +53,30 @@ Notes:
 
 ### Disease to Modes of Inheritance
 
-Same as above, we input the  file - phenotype.hpoa: [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format).
+Same as above, we again parse the [phenotype.hpoa file](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format).
 
-Note that we're calling this the 'disease to modes of inheritance' file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'I' (inheritance)**, but ignoring all other Aspects.
+However, we're calling this the 'disease to modes of inheritance' file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'I' (inheritance)**, but ignoring all other Aspects.
 
 #### Biolink captured
 
 * biolink:Disease
-    * id
-    * has_attribute=["HP term"],  # some child term of "HP:0000005" term for 'Mode of Inheritance'
-    * provided_by=["infores:hpoa"]
+    * id ((OMIM|DECIPHER|ORPHA) id)
 
+* biolink:GeneticInheritance
+    * id (HP term)
+
+* biolink:Publication
+    * id
+
+* biolink:DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation
+    * id (random uuid)
+    * subject (disease.id)
+    * predicate (has_mode_of_inheritance)
+    * object (geneticInheritance.id)
+    * publications (List[publication.id])
+    * has_evidence (List[Note [1]]),
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source ("infores:hpoa")
 
 ### Gene to Phenotype (with Disease and HPO Frequency Context)
 

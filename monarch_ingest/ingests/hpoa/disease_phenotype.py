@@ -19,8 +19,8 @@ We are only keeping 'P' == 'phenotypic anomaly' records.
 Usage:
 poetry run koza transform \
   --global-table monarch_ingest/translation_table.yaml \
-  --local-table monarch_ingest/hpoa/hpoa-translation.yaml \
-  --source monarch_ingest/hpoa/disease_phenotype.yaml \
+  --local-table monarch_ingest/ingests/hpoa/hpoa-translation.yaml \
+  --source monarch_ingest/ingests/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
 from typing import Optional, List

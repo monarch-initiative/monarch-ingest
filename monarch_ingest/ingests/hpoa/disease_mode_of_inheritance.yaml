@@ -20,7 +20,7 @@ delimiter: '\t'
 header: 4
 
 global_table: './monarch_ingest/translation_table.yaml'
-local_table: './monarch_ingest/ingests/hpoa/hpoa-modes-of-inheritance.yaml'
+local_table: './monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
 
 # We only concern ourselves with Aspect == 'I' (inheritance) records in this ingest.
 filters:
@@ -44,9 +44,15 @@ columns:
   - 'Aspect'
   - 'Biocuration'
 
-# Disease nodes with annotated 'Mode of Inheritance'
-node_properties:
+# Disease subject with annotated 'Mode of Inheritance'
+# DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation
+edge_properties:
   - 'id'
   - 'category'
-  - 'has_attribute'
-  - 'provided_by'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'publications'
+  - 'has_evidence'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
