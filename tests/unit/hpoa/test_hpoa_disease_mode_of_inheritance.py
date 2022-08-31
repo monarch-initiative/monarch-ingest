@@ -1,8 +1,6 @@
-from typing import Dict
-
 import pytest
 
-from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
 
 
 @pytest.fixture
@@ -40,14 +38,11 @@ def test_disease_to_mode_of_inheritance_transform(d2moi_entities):
     association = [
         entity
         for entity in d2moi_entities
-        # TODO: DiseaseToPhenotypicFeatureAssociation will later be revised to
-        #       DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation or equivalent
-        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
+        if isinstance(entity, DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation)
     ][0]
     assert association.subject == "OMIM:300425"
 
-    # TODO: later revise "biolink:has_manifestation" to "biolink:has_mode_of_inheritance"
-    assert association.predicate == "biolink:has_manifestation"
+    assert association.predicate == "biolink:has_mode_of_inheritance"
 
     assert association.object == "HP:0001417"
     assert "OMIM:300425" in association.publications

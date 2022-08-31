@@ -19,13 +19,13 @@ poetry run koza transform \
   --source monarch_ingest/ingests/hpoa/disease_mode_of_inheritance.yaml \
   --output-format tsv
 """
-from typing import Optional, List
+from typing import List
 
 import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
 
 import logging
 LOG = logging.getLogger(__name__)
@@ -35,8 +35,7 @@ koza_app = get_koza_app("hpoa_disease_mode_of_inheritance")
 row = koza_app.get_row()
 
 # Object: Actually a Genetic Inheritance (as should be specified by a suitable HPO term)
-# TODO: once the biolink:Association is updated below, we'll want to load the proper
-#      (Genetic Inheritance) node concepts into the Monarch Graph (perhaps simply as Ontology).
+# TODO: perhaps load the proper (Genetic Inheritance) node concepts into the Monarch Graph (simply as Ontology terms?).
 hpo_id = row["HPO_ID"]
 
 # We ignore records that don't map to a known HPO term for Genetic Inheritance
@@ -49,9 +48,7 @@ if hpo_id and hpo_id in koza_app.translation_table.local_table:
     disease_id = row["DatabaseID"]
 
     # Predicate (canonical direction)
-    # TODO: the desired Biolink Model predicate 'has mode of inheritance' is not yet finalized and released
-    # predicate = "biolink:has_mode_of_inheritance"
-    predicate = "biolink:has_manifestation"
+    predicate = "biolink:has_mode_of_inheritance"
 
     # Annotations
 
@@ -65,20 +62,8 @@ if hpo_id and hpo_id in koza_app.translation_table.local_table:
     # Filter out some weird NCBI web endpoints
     publications = [p for p in publications if not p.startswith("http")]
 
-    #
-    # Deprecated model of specifying the Mode of Inheritance directly on a Disease, as a node attribute
-    #
-    # disease = Disease(
-    #     id=disease_id,
-    #     has_attribute=[hpo_id],
-    #     provided_by=["infores:hpoa"]
-    # )
-    # koza_app.write(disease)
-
     # Association/Edge
-    # TODO: we temporarily use DiseaseToPhenotypicFeatureAssociation as a proxy for our (as yet unreleased)
-    #       biolink:Association child class DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation
-    association = DiseaseToPhenotypicFeatureAssociation(
+    association = DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=disease_id,
         predicate=predicate,

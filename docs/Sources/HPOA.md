@@ -68,7 +68,7 @@ However, we're calling this the 'disease to modes of inheritance' file because -
 * biolink:Publication
     * id
 
-* biolink:DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation
+* biolink:DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
     * id (random uuid)
     * subject (disease.id)
     * predicate (has_mode_of_inheritance)
