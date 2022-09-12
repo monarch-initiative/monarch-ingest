@@ -49,7 +49,7 @@ pipeline {
                     poetry run which kgx
                     ls -la
                     ls -la output/
-                    poetry run kgx transform --stream --transform-config neo4j-v3-transform.yaml
+                    poetry run kgx transform --stream --transform-config neo4j-v4-transform.yaml > /dev/null
                     sleep 30s
                     mkdir neo4j-v3 || true
                     docker cp neo:/data ./neo4j-v3/data
