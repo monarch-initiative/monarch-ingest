@@ -14,7 +14,7 @@ pipeline {
                     pip --version
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
-                    
+
                     which poetry
                     poetry install
                     poetry run which ingest
@@ -49,9 +49,7 @@ pipeline {
                     poetry run which kgx
                     ls -la
                     ls -la output/
-                    python3 -mvenv venv
-                    ./venv/bin/pip install kgx==1.5.2
-                    ./venv/bin/kgx transform --stream --transform-config neo4j-v3-transform.yaml
+                    poetry run kgx transform --stream --transform-config neo4j-v3-transform.yaml
                     sleep 30s
                     mkdir neo4j-v3 || true
                     docker cp neo:/data ./neo4j-v3/data
@@ -101,11 +99,11 @@ pipeline {
                     cd $HOME
                     mkdir data-public
                     gcsfuse --implicit-dirs data-public-monarchinitiative data-public
-                  
+
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
                     cd monarch-file-server/scripts
                     pip install -r requirements.txt
-                    
+
                     #python3 -m venv venv
                     #source venv/bin/activate
                     python3 ./directory_indexer.py -v --inject ./directory-index-template.html --directory ../data-public --prefix https://data.monarchinitiative.org -x

@@ -758,7 +758,7 @@ typer = "0.4"
 
 [[package]]
 name = "kgx"
-version = "1.5.8"
+version = "1.7.2"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 category = "main"
 optional = false
@@ -787,14 +787,14 @@ prefixcommons = ">=0.1.4"
 prologterms = ">=0.0.5"
 pytest = ">=0.0"
 python-dateutil = ">=2.8.1"
-pyyaml = ">=5.1.0,<6.0.0"
+pyyaml = "*"
 rdflib = ">=6.0.0"
-recommonmark = ">=0.7.1"
+recommonmark = "*"
 shexjsg = ">=0.6.5"
 SPARQLWrapper = ">=1.8.2"
-sphinx = ">=3.1,<5"
+sphinx = "*"
 sphinx-click = "*"
-sphinx-rtd-theme = ">=0.4.3,<0.5.0"
+sphinx-rtd-theme = "*"
 stringcase = ">=1.2.0"
 terminaltables = ">=3.1.0"
 tox = "*"
@@ -2108,7 +2108,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cb3bbdd11a56f5f1bec424f3711e31a86280f585d196993800f29b994a52b791"
+content-hash = "01be71f188a2a83920519005f3452a2fb3029c480fab810108e903ad86e168d3"
 
 [metadata.files]
 alabaster = [
@@ -2480,11 +2480,7 @@ kghub-downloader = [
     {file = "kghub-downloader-0.1.14.tar.gz", hash = "sha256:4b6bc7179bac40e574d4b4d4479bf46a8375a68ee7781d773fdc4dc51375251a"},
     {file = "kghub_downloader-0.1.14-py3-none-any.whl", hash = "sha256:108306a3adfe5ea375c647af6f86b5f9f97b1cc507afdb41555829bd7dac81d9"},
 ]
-kgx = [
-    {file = "kgx-1.5.8-py3-none-any.whl", hash = "sha256:4351c633616346ccdc95e6caa33d93ef3721717b8ebc18744ff3896e78642c21"},
-    {file = "kgx-1.5.8-py3.8.egg", hash = "sha256:c6bdcc38de1e18a45b35b4975984edb5c818545c995cf5ec63b1d1045c1f9ce4"},
-    {file = "kgx-1.5.8.tar.gz", hash = "sha256:c4e2825a828d1c80571f32c233387340606eab0a9c00383b3b40335939902415"},
-]
+kgx = []
 koza = []
 linkml = []
 linkml-dataops = [
