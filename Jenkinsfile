@@ -41,7 +41,7 @@ pipeline {
                 sh 'poetry run ingest merge'
             }
         }
-        // stage('neo-3.4-transform'){
+        // stage('neo4j-v3-transform'){
         //     steps {
         //         sh '''
         //             docker rm -f neo || True
@@ -59,7 +59,7 @@ pipeline {
         //         '''
         //     }
         // }
-        stage('neo-4.3-transform'){
+        stage('neo4j-v4-transform'){
             steps {
                 sh '''
                     docker rm -f neo || True
