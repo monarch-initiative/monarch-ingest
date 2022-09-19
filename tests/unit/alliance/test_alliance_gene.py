@@ -204,7 +204,7 @@ def test_gene_information_type(pax2a):
 
 def test_gene_information_no_synonyms(no_synonym_gene):
     gene = no_synonym_gene[0]
-    assert len(gene.synonym) == 0
+    assert gene.synonym is None or len(gene.synonym) == 0
 
 
 def test_gene_information_no_name_gene_uses_symbol(no_name_gene):

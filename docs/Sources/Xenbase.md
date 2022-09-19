@@ -3,21 +3,6 @@ Xenbase is a web-accessible resource that integrates all the diverse biological,
 [Xenbase Bulk Data](http://www.xenbase.org/other/static-xenbase/ftpDatafiles.jsp)
 [Xenbase FTP](http://ftp.xenbase.org/pub/)
 
-### Gene Information
-
-Xenbase genes are ingested using Koza's built in support for the GPI format rather than using the gene information file available from the bulk download. The GPI file is downloaded from [http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz](http://ftp.xenbase.org/pub/GenePageReports/xenbase.gpi.gz)
-
-#### Biolink captured
-
-* Gene
-  * id
-  * symbol
-  * name
-  * synonym
-  * in_taxon
-  * xref
-  * source
-
 ### Gene to Phenotype
 
 This ingest is built against a one-off OBAN formatted file, which makes for a transformation which only requries adding a curie prefix and connecting column names to biolink attributes. Evidence codes are provided as ECO terms but not yet captured in the output. 
@@ -35,8 +20,9 @@ This ingest is built against a one-off OBAN formatted file, which makes for a tr
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
-    * publication
+    * publications
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:xenbase)
     
 ### Gene Literature
 
@@ -55,5 +41,5 @@ This ingest reads from Xenbase's [Genes Associated with Literature](http://ftp.x
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * relation (mentions)
-    
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:xenbase)

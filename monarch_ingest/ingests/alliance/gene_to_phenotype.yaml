@@ -18,8 +18,7 @@ required_properties:
   - 'objectId'
   - 'phenotypeTermIdentifiers'
   - 'evidence'
-  # Nested properties that are also required, but can't be specified yet
-  # - 'phenotypeTermIdentifiers[0]['termId']
+  # - 'phenotypeTermIdentifiers[0]["termId"]'
   # - 'evidence.publicationId'
 
 
@@ -28,13 +27,13 @@ depends_on:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
   - 'qualifiers'
   - 'publications'
-  - 'provided_by'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

@@ -11,8 +11,8 @@ This ingest uses Reactome's pathway download file.
 * biolink:Pathway
     * id
     * name
-    * type
-    * source
+    * in_taxon
+    * provided_by (["infores:reactome"])
 
 ### Gene to Pathway
 
@@ -31,7 +31,8 @@ This ingest uses Reactome's gene to pathway download file, which contains all en
     * subject (gene.id)
     * predicate (mentions)
     * object (pathway.id)
-    * relation (participates_in)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:reactome)
 
 ### Chemical to Pathway
 
@@ -50,4 +51,5 @@ This ingest uses Reactome's chemical to pathway download file, which contains al
     * subject (chemical.id)
     * predicate (mentions)
     * object (pathway.id)
-    * relation (participates_in)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:reactome)

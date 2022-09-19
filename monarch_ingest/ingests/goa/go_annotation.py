@@ -4,17 +4,17 @@ Gene Ontology Annotations Ingest module.
 Gene to GO term Associations
 (to MolecularActivity, BiologicalProcess and CellularComponent)
 """
-import logging
-import re
 import uuid
-from typing import List
 
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
 from monarch_ingest.ingests.goa.goa_utils import get_biolink_classes, lookup_predicate
 
+import logging
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
+koza_app = get_koza_app("goa_go_annotation")
 
 row = koza_app.get_row()
 
@@ -23,25 +23,22 @@ db_object_id = row['DB_Object_ID']
 
 # This check is to avoid MGI:MGI:123
 if ":" in db_object_id:
-    object_id = db_object_id
+    gene_id = db_object_id
 else:
-    object_id = f"{db}:{db_object_id}"
+    gene_id = f"{db}:{db_object_id}"
 
-# The Biolink Model might be wrong here about all caps, but we're matching it for now
-object_id = object_id.replace('PomBase', 'POMBASE')
-
-# TODO: the NCBI Taxon ID is not really propagated to the output?
+# TODO: the NCBI Taxon ID is not currently propagated to the output?
 #       Hence, the following parsing operation is useless?
-ncbitaxon = row['Taxon']
-if ncbitaxon:
-    # in rare circumstances, multiple taxa may be given as a piped list...
-    taxa = ncbitaxon.split("|")
-    ncbitaxon: List[str] = list()
-    for taxon in taxa:
-        ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
-else:
-    # Unlikely to happen, but...
-    logger.warning(f"Missing taxon for '{object_id}'?")
+# ncbitaxon: str = row['Taxon']
+# if ncbitaxon:
+#     # in rare circumstances, multiple taxa may be given as a piped list...
+#     taxa = ncbitaxon.split("|")
+#     ncbitaxon: List[str] = list()
+#     for taxon in taxa:
+#         ncbitaxon.append(re.sub(r"^taxon", "NCBITaxon", taxon, flags=re.IGNORECASE))
+# else:
+#     # Unlikely to happen, but...
+#     logger.warning(f"Missing taxon for '{gene_id}'?")
 
 
 # Grab the Gene Ontology ID
@@ -130,19 +127,16 @@ else:
             go_aspect
         )
 
-        # Instantiate the GO term instance
-        go_term = go_concept_node_class(id=go_id, source="infores:go")
-
         # Instantiate the appropriate Gene-to-GO Term instance
         association = gene_go_term_association_class(
             id="uuid:" + str(uuid.uuid1()),
-            subject=object_id,
+            subject=gene_id,
             object=go_id,
             predicate=predicate,
             negated=negated,
-            relation=relation,
-            has_evidence=eco_term,
-            source="infores:goa",
+            has_evidence=[eco_term],
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:goa",
         )
 
         # Write the captured Association out

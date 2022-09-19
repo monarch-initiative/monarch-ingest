@@ -1,33 +1,36 @@
 import uuid
+from koza.cli_runner import get_koza_app
 
-from biolink_model_pydantic.model import (
-    ChemicalToPathwayAssociation,
-    Gene,
-    Pathway,
-    Predicate,
-)
-from koza.cli_runner import koza_app
+from biolink.pydanticmodel import GeneToPathwayAssociation
 
-source_name = "reactome_gene_to_pathway"
+koza_app = get_koza_app("reactome_gene_to_pathway")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
+species = row["species_nam"]
+try:
+    taxon_id = koza_app.translation_table.local_table[species]
+except KeyError:
+    # Move on if the taxon name isn't in the translation table
+    koza_app.next_row()
 
-gene = Gene(id='ENSEMBL:' + row["component"], source="infores:reactome")
+# We only continue of the species is in our local taxon_name_to_id_mapping table
+if taxon_id:
 
-pathway = Pathway(
-    id="REACT:" + row["pathway_id"],
-    type=koza_app.translation_table.resolve_term("pathway"),
-    source="infores:reactome",
-)
+    gene_id = 'NCBIGene:' + row["component"]
+    pathway_id = "REACT:" + row["pathway_id"]  # pathways themselves are an independent ingest now...
 
-association = ChemicalToPathwayAssociation(
-    id="uuid:" + str(uuid.uuid1()),
-    subject=gene.id,
-    predicate=Predicate.participates_in,
-    object=pathway.id,
-    relation=koza_app.translation_table.resolve_term("participates_in"),
-    source="infores:reactome",
-)
+    go_evidence_code = row["go_ecode"]
+    evidence_code_term = koza_app.translation_table.resolve_term(go_evidence_code)
+
+    association = GeneToPathwayAssociation(
+        id="uuid:" + str(uuid.uuid1()),
+        subject=gene_id,
+        predicate="biolink:participates_in",
+        object=pathway_id,
+        has_evidence=[evidence_code_term],
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:reactome",
+    )
 
 koza_app.write(association)

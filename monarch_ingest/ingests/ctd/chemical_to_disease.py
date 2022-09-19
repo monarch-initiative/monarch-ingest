@@ -1,37 +1,31 @@
 import uuid
 
-from biolink_model_pydantic.model import (
-    ChemicalEntity,
-    ChemicalToDiseaseOrPhenotypicFeatureAssociation,
-    Disease,
-    Predicate,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-source_name = "ctd_chemical_to_disease"
+from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("ctd_chemical_to_disease")
+
+row = koza_app.get_row()
 
 if row['DirectEvidence'] in ['therapeutic']:
 
-    chemical = ChemicalEntity(
-        id='MESH:' + row['ChemicalID'], name=row['ChemicalName'], source='infores:ctd'
-    )
+    chemical_id = 'MESH:' + row['ChemicalID']
 
-    disease = Disease(id=row['DiseaseID'], source="infores:ctd")
+    disease_id = row['DiseaseID']
 
     # Update this if we start bringing in marker/mechanism records
-    predicate = Predicate.treats
+    predicate = "biolink:treats"
     relation = koza_app.translation_table.resolve_term("is substance that treats")
 
     association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=chemical.id,
+        subject=chemical_id,
         predicate=predicate,
-        object=disease.id,
-        relation=relation,
+        object=disease_id,
         publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
-        source="infores:ctd",
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:ctd"
     )
 
     koza_app.write(association)

@@ -22,31 +22,35 @@ poetry run koza transform \
   --source monarch_ingest/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
+from typing import Optional, List
 
-import logging
 import uuid
 
-from biolink_model_pydantic.model import (
-    Disease,
-    DiseaseToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Predicate,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
+from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+
+import logging
 LOG = logging.getLogger(__name__)
 
-source_name = "hpoa_disease_phenotype"
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("hpoa_disease_phenotype")
+row = koza_app.get_row()
 
-# Filters
+# Nodes
+disease_id = row["DatabaseID"]
 
-# Skipping NOTs for now but we'll want to come back and add them
-# Could also add this to the yaml filters but leaving here as the
-# intention is to bring these in
+predicate = "biolink:has_phenotype"
+
+phenotypic_feature_id = row["HPO_ID"]
+
+# Predicate negation
+negated: Optional[bool]
 if row["Qualifier"] == "NOT":
-    koza_app.next_row()
+    negated = True
+else:
+    negated = None
 
+# Annotations
 
 # Translations to curies
 # Three letter ECO code to ECO class based on hpo documentation
@@ -54,23 +58,23 @@ evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
 
 # female -> PATO:0000383
 # male -> PATO:0000384
+sex: Optional[str] = row["Sex"]  # may be translated by local table
 sex_qualifier = (
-    koza_app.translation_table.resolve_term(row["Sex"]) if row["Sex"] else None
+    koza_app.translation_table.resolve_term(sex) if sex else None
 )
 
-# Nodes
-disease = Disease(
-    id=row["DatabaseID"],
-)
+onset = row["Onset"]
 
-phenotypic_feature = PhenotypicFeature(
-    id=row["HPO_ID"],
-)
-
-#    Avoiding creating publication nodes within ingests, at least temporarily
+frequency_qualifier = row["Frequency"]
 
 # Publications
-# publications: List[str] = row["Reference"].split(";")
+publications_field: str = row["Reference"]
+publications: List[str] = publications_field.split(";")
+
+# Filter out some weird NCBI web endpoints
+publications = [p for p in publications if not p.startswith("http")]
+
+# Avoiding creating publication nodes within ingests, at least temporarily
 # for pub in publications:
 #
 #     publication = Publication(
@@ -104,15 +108,17 @@ phenotypic_feature = PhenotypicFeature(
 # Associations/Edges
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=disease.id,
-    predicate=Predicate.has_phenotype,
-    object=phenotypic_feature.id,
-    relation=koza_app.translation_table.resolve_term("has phenotype"),
-    publications=row["Reference"].split(";"),
-    has_evidence=evidence_curie,
+    subject=disease_id,
+    predicate=predicate,
+    negated=negated,
+    object=phenotypic_feature_id,
+    publications=publications,
+    has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
-    onset_qualifier=row["Onset"],
-    frequency_qualifier=row["Frequency"],
+    onset_qualifier=onset,
+    frequency_qualifier=frequency_qualifier,
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:hpoa"
 )
 
 koza_app.write(association)

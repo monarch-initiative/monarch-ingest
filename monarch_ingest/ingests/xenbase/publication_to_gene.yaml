@@ -20,11 +20,11 @@ depends_on:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
-  - 'provided_by'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

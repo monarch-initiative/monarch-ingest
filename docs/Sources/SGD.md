@@ -19,4 +19,5 @@ This ingest uses RGD's gene to publication download file, which only contains as
     * subject (gene.id)
     * predicate (mentions)
     * object (publication.id)
-    * relation (mentions)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:sgd)

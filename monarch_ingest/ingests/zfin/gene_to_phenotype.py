@@ -1,19 +1,15 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Predicate,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
+
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 LOG = logging.getLogger(__name__)
 
-source_name = "zfin_gene_to_phenotype"
+koza_app = get_koza_app("zfin_gene_to_phenotype")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 eqe2zp = koza_app.get_map("eqe2zp")
 
 if row["Phenotype Tag"] == "abnormal":
@@ -32,18 +28,19 @@ if row["Phenotype Tag"] == "abnormal":
     zp_term = eqe2zp[zp_key]["iri"]
 
     if not zp_term:
-        LOG.warning("ZP concatenation " + zp_key + " did not match a ZP term")
+        LOG.debug("ZP concatenation " + zp_key + " did not match a ZP term")
+    else:
 
-    gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
-    phenotypicFeature = PhenotypicFeature(id=zp_term, source="infores:zfin")  # ...or?
-    association = GeneToPhenotypicFeatureAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene.id,
-        predicate=Predicate.has_phenotype,
-        object=phenotypicFeature.id,
-        relation=koza_app.translation_table.resolve_term("has phenotype"),
-        publications="ZFIN:" + row["Publication ID"],
-        source="infores:zfin",
-    )
+        gene_id = "ZFIN:" + row["Gene ID"]
 
-    koza_app.write(association)
+        association = GeneToPhenotypicFeatureAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gene_id,
+            predicate="biolink:has_phenotype",
+            object=zp_term,
+            publications=["ZFIN:" + row["Publication ID"]],
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:zfin"
+        )
+
+        koza_app.write(association)

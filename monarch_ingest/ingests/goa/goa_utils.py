@@ -4,14 +4,13 @@ Some Gene Ontology Annotation ingest utility functions.
 import logging
 from typing import Any, Optional, Tuple
 
-from biolink_model_pydantic.model import (
+from biolink.pydanticmodel import (
     BiologicalProcess,
     CellularComponent,
     MacromolecularMachineToBiologicalProcessAssociation,
     MacromolecularMachineToCellularComponentAssociation,
     MacromolecularMachineToMolecularActivityAssociation,
     MolecularActivity,
-    Predicate,
 )
 
 logger = logging.getLogger(__name__)
@@ -22,38 +21,38 @@ logger.setLevel("DEBUG")
 #       Pydantic Predicate functionality and the translator_table.yaml
 #       Or an external local table file?
 _predicate_by_name = {
-    "enables": {"predicate": Predicate.enables, "mapping": "RO:0002327"},
-    "involved_in": {"predicate": Predicate.actively_involved_in, "mapping": "RO:0002331"},
-    "located_in": {"predicate": Predicate.located_in, "mapping": "RO:0001025"},
-    "contributes_to": {"predicate": Predicate.contributes_to, "mapping": "RO:0002326"},
+    "enables": {"predicate": "biolink:enables", "mapping": "RO:0002327"},
+    "involved_in": {"predicate": "biolink:actively_involved_in", "mapping": "RO:0002331"},
+    "located_in": {"predicate": "biolink:located_in", "mapping": "RO:0001025"},
+    "contributes_to": {"predicate": "biolink:contributes_to", "mapping": "RO:0002326"},
     "acts_upstream_of": {
-        "predicate": Predicate.acts_upstream_of,
+        "predicate": "biolink:acts_upstream_of",
         "mapping": "RO:0002263",
     },
-    "part_of": {"predicate": Predicate.part_of, "mapping": "BFO:0000050"},
+    "part_of": {"predicate": "biolink:part_of", "mapping": "BFO:0000050"},
     "acts_upstream_of_positive_effect": {
-        "predicate": Predicate.acts_upstream_of_positive_effect,
+        "predicate": "biolink:acts_upstream_of_positive_effect",
         "mapping": "RO:0004034",
     },
-    "is_active_in": {"predicate": Predicate.active_in, "mapping": "RO:0002432"},
+    "is_active_in": {"predicate": "biolink:active_in", "mapping": "RO:0002432"},
     "acts_upstream_of_negative_effect": {
-        "predicate": Predicate.acts_upstream_of_negative_effect,
+        "predicate": "biolink:acts_upstream_of_negative_effect",
         "mapping": "RO:0004035",
     },
     "colocalizes_with": {
-        "predicate": Predicate.colocalizes_with,
+        "predicate": "biolink:colocalizes_with",
         "mapping": "RO:0002325",
     },
     "acts_upstream_of_or_within": {
-        "predicate": Predicate.acts_upstream_of_or_within,
+        "predicate": "biolink:acts_upstream_of_or_within",
         "mapping": "RO:0002264",
     },
     "acts_upstream_of_or_within_positive_effect": {
-        "predicate": Predicate.acts_upstream_of_or_within_positive_effect,
+        "predicate": "biolink:acts_upstream_of_or_within_positive_effect",
         "mapping": "RO:0004032",
     },
     "acts_upstream_of_or_within_negative_effect": {
-        "predicate": Predicate.acts_upstream_of_or_within_negative_effect,
+        "predicate": "biolink:acts_upstream_of_or_within_negative_effect",
         "mapping": "RO:0004033",
     },
 }
@@ -62,7 +61,7 @@ _predicate_by_name = {
 def lookup_predicate(name: str = None) -> Optional[Tuple[str, Any]]:
     """
     :param name: string name of predicate to be looked up
-    :return: tuple(Predicate.name, mapping to relation) if available; None otherwise
+    :return: tuple(biolink:predicate, mapping to relation) if available; None otherwise
     """
     if name and name in _predicate_by_name:
         entry = _predicate_by_name[name]

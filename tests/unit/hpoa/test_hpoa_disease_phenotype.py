@@ -1,5 +1,6 @@
 import pytest
-from biolink_model_pydantic.model import DiseaseToPhenotypicFeatureAssociation
+
+from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -9,15 +10,15 @@ def entities(mock_koza, global_table):
             {
                 "DatabaseID": "OMIM:614856",
                 "DiseaseName": "Osteogenesis imperfecta, type XIII",
-                "Qualifier": "",
+                "Qualifier": "NOT",
                 "HPO_ID": "HP:0000343",
                 "Reference": "OMIM:614856",
                 "Evidence": "TAS",
-                "Onset": "",
-                "Frequency": "HP:0040283",
-                "Sex": "",
+                "Onset": "HP:0003593",
+                "Frequency": "1/1",
+                "Sex": "FEMALE",
                 "Modifier": "",
-                "Aspect": "P",
+                "Aspect": "C",  # assert 'Clinical' test record
                 "Biocuration": "HPO:skoehler[2012-11-16]",
             }
         ]
@@ -31,15 +32,25 @@ def entities(mock_koza, global_table):
     )
 
 
-def test_gene2_phenotype_transform(entities):
+def test_gene_2_phenotype_transform(entities):
     assert entities
     assert len(entities) == 1
-    associations = [
+    association = [
         entity
         for entity in entities
         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-    ]
-    assert len(associations) == 1
+    ][0]
+    assert association.subject == "OMIM:614856"
+    assert association.predicate == "biolink:has_phenotype"
+    assert association.negated is True
+    assert association.object == "HP:0000343"
+    assert "OMIM:614856" in association.publications
+    assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
+    assert association.sex_qualifier == "PATO:0000383"
+    assert association.onset_qualifier == "HP:0003593"
+    assert association.frequency_qualifier == "1/1"
+    assert association.primary_knowledge_source == "infores:hpoa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 # Commenting out publication node generation in edge ingests, at least temporarily
@@ -49,4 +60,4 @@ def test_gene2_phenotype_transform(entities):
 #         for entity in entities
 #         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
 #     ]
-#     assert associations[0].publications[0] == "OMIM:614856"
+#     assert association.publications[0] == "OMIM:614856"

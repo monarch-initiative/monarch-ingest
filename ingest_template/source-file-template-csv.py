@@ -1,4 +1,6 @@
-from biolink_model_pydantic.model import Gene
+from typing import List
+
+from biolink.pydanticmodel import Gene
 from koza.cli_runner import koza_app
 
 # You've got 'NCBI_Gene:' and you want 'NCBIGene:'? clean it up.
@@ -9,15 +11,19 @@ source_name = "gene-information"
 
 # inject a single row from the source
 row = koza_app.get_row(source_name)
+
 # create your entities
 gene = Gene(
     id='somethingbase:'+row['ID'],
-    name=row['Name']
+    name=row['Name'],
+    symbol="SOME_GENE",
+    in_taxon=["NCBITaxon:9606"],
+    source=["infores:monarchinitiative"]
 )
 
 # populate any additional optional properties
-if row['xrefs']:
-    gene.xrefs = [curie_cleaner.clean(xref) for xref in row['xrefs']]
+if row['xrefS']:
+    gene.xref = [curie_cleaner.clean(xref) for xref in row['xrefs']]
 
 # remember to supply the source name as the first argument, followed by entities
 koza_app.write(gene)

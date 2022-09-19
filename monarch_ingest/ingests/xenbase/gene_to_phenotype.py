@@ -1,16 +1,16 @@
 import uuid
 
-from biolink_model_pydantic.model import (
+from koza.cli_runner import get_koza_app
+
+from biolink.pydanticmodel import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Predicate,
+    PhenotypicFeature
 )
-from koza.cli_runner import koza_app
 
-source_name = "xenbase_gene_to_phenotype"
+koza_app = get_koza_app("xenbase_gene_to_phenotype")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
 # Not including qualifiers, as none are present in the input file. If they show up,
 # we'll want to examine the values before including them in the output of this transform
@@ -21,14 +21,15 @@ gene = Gene(id=row["SUBJECT"], source="Xenbase")
 
 phenotype = PhenotypicFeature(id=row["OBJECT"], source="Xenbase")
 
+# relation = row["RELATION"].replace("_", ":"),
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=gene.id,
-    predicate=Predicate.has_phenotype,
+    predicate="biolink:has_phenotype",
     object=phenotype.id,
-    publications=row["SOURCE"],
-    relation=row["RELATION"].replace("_", ":"),
-    source="infores:xenbase",
+    publications=[row["SOURCE"]],
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:xenbase"
 )
 
 if row["SOURCE"]:

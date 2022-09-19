@@ -26,12 +26,12 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
-  - 'source'
   - 'has_evidence'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

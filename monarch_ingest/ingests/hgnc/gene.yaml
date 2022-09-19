@@ -69,13 +69,12 @@ columns:
 node_properties:
   - 'id'
   - 'category'
-  - 'provided_by'
   - 'name'
   - 'symbol'
   - 'in_taxon'
   - 'xref'
   - 'synonym'
-  - 'source'
+  - 'provided_by'
 
 # Commented out while we're not bringing in publication associations
 #edge_properties:
@@ -84,7 +83,6 @@ node_properties:
 #  - 'predicate'
 #  - 'object'
 #  - 'category'
-#  - 'relation'
 #  - 'provided_by'
 
 transform_mode: 'flat'

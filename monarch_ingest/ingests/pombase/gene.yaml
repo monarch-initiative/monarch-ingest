@@ -26,12 +26,11 @@ columns:
 node_properties:
   - 'id'
   - 'category'
-  - 'provided_by'
-  - 'name'
   - 'symbol'
+  - 'type'
   - 'in_taxon'
   - 'xref'
-  - 'synonyms'
-  - 'source'
+  - 'synonym'
+  - 'provided_by'
 
 transform_mode: 'flat'

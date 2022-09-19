@@ -28,9 +28,10 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
   - 'publications'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'

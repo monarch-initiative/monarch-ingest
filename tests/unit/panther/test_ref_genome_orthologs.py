@@ -104,12 +104,12 @@ def assert_association(data):
     # hence the result_expected dictionary is now indexed thus...
     assert association.subject == result_expected[association.object][0]
     assert association.predicate == result_expected[association.object][3]
-    assert association.relation == result_expected[association.object][4]
 
     # Evidence is a list
     assert result_expected[association.object][5] in association.has_evidence
 
-    assert "infores:panther" in association.source
+    assert association.primary_knowledge_source == "infores:panther"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture

@@ -1,12 +1,10 @@
-from biolink_model_pydantic.model import Gene
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-source_name = "hgnc_gene"
+from biolink.pydanticmodel import Gene
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("hgnc_gene")
 
-if not row["pubmed_id"]:
-    koza_app.next_row()
+row = koza_app.get_row()
 
 xref_list = []
 if row['ensembl_gene_id']:
@@ -32,7 +30,8 @@ gene = Gene(
     name=row["name"],
     xref=xref_list,
     synonym=synonyms_list,
-    in_taxon="NCBITaxon:9606"
+    in_taxon=["NCBITaxon:9606"],
+    provided_by=["infores:hgnc"]
 )
 
 # Excluding pub to gene associations for now
@@ -43,12 +42,12 @@ gene = Gene(
 #         id=publication_id,
 #         type=koza_app.translation_table.resolve_term("publication"),
 #     )
+#     relation = koza_app.translation_table.resolve_term("mentions"),
 #     association = InformationContentEntityToNamedThingAssociation(
 #         id="uuid:" + str(uuid.uuid1()),
 #         subject=gene.id,
 #         predicate=Predicate.mentions,
 #         object=publication.id,
-#         relation=koza_app.translation_table.resolve_term("mentions"),
 #     )
 
 koza_app.write(gene)

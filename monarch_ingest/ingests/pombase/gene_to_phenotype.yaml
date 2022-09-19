@@ -36,13 +36,13 @@ columns:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
   - 'qualifiers'
   - 'publications'
-  - 'provided_by'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

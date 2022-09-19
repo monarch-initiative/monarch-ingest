@@ -45,10 +45,11 @@ filters:
 
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'
-  - 'category'
-  - 'relation'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
 
 transform_mode: 'flat'

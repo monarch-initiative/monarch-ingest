@@ -1,15 +1,33 @@
-from biolink_model_pydantic.model import Publication
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
+from dateutil.parser import parse, ParserError
 
-source_name = "alliance_publication"
+from biolink.pydanticmodel import Publication
+from source_translation import source_map
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("alliance_publication")
 
+row = koza_app.get_row()
 
 # TODO: remove DOI exclusion once curie regex can handle them
 xrefs = [
     xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")
 ]
+
+# Parse creation date for different time formats
+creation_date = row["datePublished"]
+try:
+    creation_date = parse(creation_date)
+except (ParserError, OverflowError):
+    creation_date = None
+
+source: str
+if 'MODReferenceTypes' in row and \
+        len(row['MODReferenceTypes']) > 0 and \
+        'source' in row['MODReferenceTypes'][0] and \
+        row['MODReferenceTypes'][0]['source'] in source_map:
+    source = source_map[row['MODReferenceTypes'][0]['source']]
+else:  # default source
+    source = "infores:alliancegenome"
 
 pub = Publication(
     id=row["primaryId"],
@@ -17,8 +35,8 @@ pub = Publication(
     summary=row["abstract"] if "abstract" in row.keys() else None,
     xref=xrefs,
     type=koza_app.translation_table.resolve_term("publication"),
-    creation_date=row["datePublished"],
-    source="infores:alliance-of-genome-resources",
+    creation_date=creation_date,
+    provided_by=[source]
 )
 
 if "authors" in row.keys():

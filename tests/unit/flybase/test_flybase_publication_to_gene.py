@@ -40,6 +40,8 @@ def test_association(basic_g2p):
     assert association
     assert association.subject == "FB:FBgn0001098"
     assert association.object == "PMID:10199954"
+    assert association.primary_knowledge_source == "infores:flybase"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture

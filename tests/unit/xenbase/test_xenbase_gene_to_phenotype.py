@@ -1,8 +1,9 @@
 import pytest
-from biolink_model_pydantic.model import (
+
+from biolink.pydanticmodel import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
+    PhenotypicFeature
 )
 
 
@@ -37,12 +38,13 @@ def entities(
 def test_gene2_phenotype_transform(entities):
     assert entities
     assert len(entities) == 1
-    associations = [
+    association = [
         entity
         for entity in entities
         if isinstance(entity, GeneToPhenotypicFeatureAssociation)
-    ]
-    assert len(associations) == 1
+    ][0]
+    assert association.primary_knowledge_source == "infores:xenbase"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 # TODO: can this test be shared across all g2p loads?
@@ -57,9 +59,11 @@ def confirm_one_of_each_classes(cls, entities):
 
 
 def test_gene2_phenotype_transform_publications(entities):
-    associations = [
+    association = [
         entity
         for entity in entities
         if isinstance(entity, GeneToPhenotypicFeatureAssociation)
-    ]
-    assert associations[0].publications[0] == "PMID:17112317"
+    ][0]
+    assert association.publications[0] == "PMID:17112317"
+    assert association.primary_knowledge_source == "infores:xenbase"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

@@ -14,32 +14,25 @@ There is a ReadMe.txt file that explains the different annotation files availabl
 
 * **biolink:Gene**
   * id (NCBIGene Entrez ID)
-  * in taxon (NCBITaxon ID)
-  * source (entrez)
 
 ##### Object Concept Node (Gene Ontology Terms)
 
 * **biolink:MolecularActivity**
   * id (GO ID)
-  * source (go)
 
 * **biolink:BiologicalProcess**
   * id (GO ID)
-  * source (go)
 
 * **biolink:CellularComponent**
   * id (GO ID)
-  * source (go)
 
 ##### Additional Gene Ontology Term Concept Nodes for possible use?
 
 * **biolink:Pathway**
   * id (GO ID)
-  * source (go)
 
 * **biolink:PhysiologicalProcess**
   * id (GO ID)
-  * source (go)
 
 #### Associations
 
@@ -48,8 +41,10 @@ There is a ReadMe.txt file that explains the different annotation files availabl
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * negated
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 OR
 
@@ -58,24 +53,30 @@ OR
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * negated
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
     
 * **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
     * id (random uuid)
     * subject (gene.id)
     * predicate (participates_in)
     * object (go_term.id)
-    * relation (RO:0000056)
-    * provided_by (infores:goa)
+    * negated
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 * **biolink:MacromolecularMachineToCellularComponentAssociation**:
     * id (random uuid)
     * subject (gene.id)
     * predicate (located_in)
     * object (go_term.id)
-    * relation (RO:0001025)
-    * provided_by (infores:goa)
+    * negated
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)
 
 ##### Possible Additional Gene to Gene Ontology Term Association?
 
@@ -84,5 +85,7 @@ OR
     * subject (gene.id)
     * predicate (related_to)
     * object (go_term.id)
-    * relation (RO:0002434)
-    * provided_by (infores:goa)
+    * negated
+    * has_evidence
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:goa)

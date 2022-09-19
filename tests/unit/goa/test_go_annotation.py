@@ -4,7 +4,8 @@ Unit tests for GO Annotations ingest
 import logging
 
 import pytest
-from biolink_model_pydantic.model import Association
+
+from biolink.pydanticmodel import Association
 
 logger = logging.getLogger(__name__)
 
@@ -425,11 +426,11 @@ def test_association(basic_goa):
 
     assert association.object == result_expected[association.subject][2]
     assert association.predicate == result_expected[association.subject][5]
-    assert association.relation == result_expected[association.subject][6]
     assert association.negated == result_expected[association.subject][7]
     assert result_expected[association.subject][8] in association.has_evidence
 
-    assert "infores:goa" in association.source
+    assert association.primary_knowledge_source == "infores:goa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture
@@ -472,3 +473,5 @@ def test_mgi_curie(mgi_entities):
     ][0]
     assert association
     assert association.subject == "MGI:1918911"
+    assert association.primary_knowledge_source == "infores:goa"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

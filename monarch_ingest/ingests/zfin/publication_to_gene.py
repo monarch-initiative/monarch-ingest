@@ -1,33 +1,27 @@
 import logging
 import uuid
 
-from biolink_model_pydantic.model import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Predicate,
-    Publication,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
+
+from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
 LOG = logging.getLogger(__name__)
 
-source_name = "zfin_publication_to_gene"
+koza_app = get_koza_app("zfin_publication_to_gene")
 
-row = koza_app.get_row(source_name)
+row = koza_app.get_row()
 
-gene = Gene(id="ZFIN:" + row["Gene ID"], source="infores:zfin")
-publication = Publication(
-    id="ZFIN:" + row["Publication ID"],
-    type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:zfin",
-)
+gene_id = "ZFIN:" + row["Gene ID"]
+
+publication_id = "ZFIN:" + row["Publication ID"]
+
 association = InformationContentEntityToNamedThingAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=publication.id,
-    predicate=Predicate.mentions,
-    object=gene.id,
-    relation=koza_app.translation_table.resolve_term("mentions"),
-    source="infores:zfin",
+    subject=publication_id,
+    predicate="biolink:mentions",
+    object=gene_id,
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:zfin"
 )
 
 koza_app.write(association)

@@ -1,27 +1,25 @@
 import uuid
 
-from biolink_model_pydantic.model import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature,
-    Predicate,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-source_name = "pombase_gene_to_phenotype"
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("pombase_gene_to_phenotype")
 
-gene = Gene(id="PomBase:" + row["Gene systematic ID"], source="infores:pombase")
-phenotype = PhenotypicFeature(id=row["FYPO ID"], source="infores:pombase")
+row = koza_app.get_row()
+
+gene_id = "PomBase:" + row["Gene systematic ID"]
+
+phenotype_id = row["FYPO ID"]
+
 association = GeneToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=gene.id,
-    predicate=Predicate.has_phenotype,
-    object=phenotype.id,
-    relation=koza_app.translation_table.resolve_term("has phenotype"),
+    subject=gene_id,
+    predicate="biolink:has_phenotype",
+    object=phenotype_id,
     publications=[row["Reference"]],
-    source="infores:pombase",
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:pombase"
 )
 
 if row["Condition"]:

@@ -1,5 +1,6 @@
 import pytest
-from biolink_model_pydantic.model import InformationContentEntityToNamedThingAssociation
+
+from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
 
 @pytest.fixture
@@ -39,5 +40,8 @@ def test_association(basic_entities):
         for entity in basic_entities
         if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ][0]
+    print(association)
     assert association.subject == "ZFIN:ZDB-PUB-140801-12"
     assert association.object == "ZFIN:ZDB-GENE-060526-342"
+    assert association.primary_knowledge_source == "infores:zfin"
+    assert "infores:monarchinitiative" in association.aggregator_knowledge_source

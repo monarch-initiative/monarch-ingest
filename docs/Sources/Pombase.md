@@ -4,6 +4,19 @@ PomBase is a comprehensive database for the fission yeast Schizosaccharomyces po
 * [Phaf Format Description](https://www.pombase.org/downloads/phenotype-annotations)
 * [Phaf Format LinkML](https://biodatamodels.github.io/ontology-associations/PombasePhafAssociation/)
 
+### Gene Information
+
+PomBase genes are captured directly from the PomBase (names and identifiers)[https://www.pombase.org/downloads/names-and-identifiers] set, with synonyms being populated as available and UniProtKB accessions captured as xrefs if available.   
+
+#### Biolink Captured
+
+* biolink:Gene
+  * id
+  * symbol
+  * type (SO term ids mapped through the global translation table)
+  * xref (UniProfKB curie if provided)
+  * synonym
+  * provided_by(["infores:pombase"])
 
 ### Gene to Phenotype
 
@@ -24,20 +37,7 @@ Penetrance and Severity columns are available, but not captured as a part of thi
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * relation (has phenotype)
     * publications
-    * qualifers (optionally included from condition row)
-
-### Gene Information
-
-PomBase genes are captured directly from the PomBase (names and identifiers)[https://www.pombase.org/downloads/names-and-identifiers] set, with synonyms being populated as available and UniProtKB accessions captured as xrefs if available.   
-
-#### Biolink Captured
-
-* biolink:Gene
-  * id
-  * symbol
-  * type (SO term ids mapped through the global translation table)
-  * xref (UniProfKB curie if provided)
-  * synonyms
-  * source 
+    * qualifiers (optionally included from condition row)
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source (infores:pombase)

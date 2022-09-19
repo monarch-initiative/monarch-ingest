@@ -1,32 +1,24 @@
 import uuid
 
-from biolink_model_pydantic.model import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Predicate,
-    Publication,
-)
-from koza.cli_runner import koza_app
+from koza.cli_runner import get_koza_app
 
-source_name = "sgd_publication_to_gene"
+from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
-row = koza_app.get_row(source_name)
+koza_app = get_koza_app("sgd_publication_to_gene")
 
-gene = Gene(id='SGD:' + row["gene name"], source="infores:sgd")
+row = koza_app.get_row()
 
-publication = Publication(
-    id="PMID:" + row["PubMed ID"],
-    type=koza_app.translation_table.resolve_term("publication"),
-    source="infores:sgd",
-)
+gene_id = "SGD:" + row["gene name"]
+
+publication_id = "PMID:" + row["PubMed ID"]
 
 association = InformationContentEntityToNamedThingAssociation(
     id="uuid:" + str(uuid.uuid1()),
-    subject=gene.id,
-    predicate=Predicate.mentions,
-    object=publication.id,
-    relation=koza_app.translation_table.resolve_term("mentions"),
-    source="infores:sgd",
+    subject=gene_id,
+    predicate="biolink:mentions",
+    object=publication_id,
+    aggregator_knowledge_source=["infores:monarchinitiative"],
+    primary_knowledge_source="infores:sgd"
 )
 
 koza_app.write(association)
