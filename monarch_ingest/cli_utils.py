@@ -117,11 +117,16 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
+    # Hopefully this won't be necessary long term, but these IDs are coming
+    # in with odd OBO prefixes from Phenio currently.
+    nodes_df["id"] = nodes_df["id"].str.replace("OBO:FBbt_", "FBbt:")
+    nodes_df["id"] = nodes_df["id"].str.replace("OBO:WBbt_", "WBbt:")
+
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
     prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
                 "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
-                "ZFA", "UBERON", "WBbt", "ORPHA"]
+                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA"]
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
@@ -138,6 +143,12 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     edges_df = edges_df[edges_df["predicate"].str.contains(":")]
 
+    # Hopefully this won't be necessary long term, but these IDs are coming
+    # in with odd OBO prefixes from Phenio currently.
+    edges_df["subject"] = edges_df["subject"].str.replace("OBO:FBbt_", "FBbt:")
+    edges_df["object"] = edges_df["object"].str.replace("OBO:FBbt_", "FBbt:")
+    edges_df["subject"] = edges_df["subject"].str.replace("OBO:WBbt_", "WBbt:")
+    edges_df["object"] = edges_df["object"].str.replace("OBO:WBbt_", "WBbt:")
 
     edges_df.to_csv(edges, sep='\t', index=False)
     os.remove(f"data/phenio/{nodefile}")
