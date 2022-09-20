@@ -428,6 +428,31 @@
   local_name: data/xenbase/xb_xpo_spo_v_v1.tab
   tag: xenbase_gene_to_phenotype
 
+#### Xenopus orthologs
+
+- # Homo sapiens (human)
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneHumanOrthologMapping.txt
+  local_name: data/xenbase/XenbaseGeneHumanOrthologMapping.txt
+  tag: xenbase_orthologs
+
+- # Mus musculus (house mouse)
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneMouseOrthologMapping.txt
+  local_name: data/xenbase/XenbaseGeneMouseOrthologMapping.txt
+  tag: xenbase_orthologs
+
+- # Danio rerio (Zebrafish)
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneZebrafishOrthologMapping.txt
+  local_name: data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt
+  tag: xenbase_orthologs
+
+#
+# TODO: parse this oddball non-Entrez ortholog file separately?
+#
+#- # Non-Entrez OMIM, MGI, and ZFIN genes
+#  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
+#  local_name: data/xenbase/XenbaseGeneZebrafishOXenbaseGeneNonEntrezOrthologMappingrthologMapping.txt
+#  tag: xenbase_orthologs
+
 ### Zfin
 -
   url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt

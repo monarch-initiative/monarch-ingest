@@ -46,6 +46,10 @@ string_protein_links:
   config: 'ingests/string/protein_links.yaml'
 xenbase_gene_to_phenotype:
   config: 'ingests/xenbase/gene_to_phenotype.yaml'
+xenbase_orthologs:
+  config: 'ingests/xenbase/orthologs.yaml'
+xenbase_non_entrez_orthologs:
+  config: 'ingests/xenbase/non_entrez_orthologs.yaml'
 # xenbase_publication_to_gene:
 #   config: 'ingests/xenbase/publication_to_gene.yaml'
 zfin_gene_to_phenotype:
