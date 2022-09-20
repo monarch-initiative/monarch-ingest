@@ -40,7 +40,7 @@ pipeline {
         stage('neo-3-4-transform'){
             steps {
                 sh '''
-                    docker rm -f neo || True
+                    docker rm -f neo || true
                     docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:3.4.15
                     poetry run which kgx
                     ls -la
@@ -60,7 +60,7 @@ pipeline {
 //         stage('neo-4-3-transform'){
 //             steps {
 //                 sh '''
-//                     docker rm -f neo || True
+//                     docker rm -f neo || true
 //                     docker run --name neo -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/admin neo4j:4.3
 //                     poetry run which kgx
 //                     ls -la
