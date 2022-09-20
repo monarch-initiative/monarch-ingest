@@ -10,6 +10,10 @@ ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
 # flybase_publication_to_gene::
 #   config: 'ingests/flybase/publication_to_gene.yaml'
+dictybase_gene:
+  config: 'ingests/dictybase/gene.yaml'
+dictybase_gene_to_phenotype:
+  config: 'ingests/dictybase/gene_to_phenotype.yaml'
 goa_go_annotation:
   config: 'ingests/goa/go_annotation.yaml'
 hgnc_gene:
@@ -42,6 +46,10 @@ string_protein_links:
   config: 'ingests/string/protein_links.yaml'
 xenbase_gene_to_phenotype:
   config: 'ingests/xenbase/gene_to_phenotype.yaml'
+xenbase_orthologs:
+  config: 'ingests/xenbase/orthologs.yaml'
+xenbase_non_entrez_orthologs:
+  config: 'ingests/xenbase/non_entrez_orthologs.yaml'
 # xenbase_publication_to_gene:
 #   config: 'ingests/xenbase/publication_to_gene.yaml'
 zfin_gene_to_phenotype:

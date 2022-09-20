@@ -10,8 +10,9 @@ koza_app = get_koza_app("dictybase_gene")
 row = koza_app.get_row()
 
 gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
+dicty_symbols_to_ncbi_genes = koza_app.get_map("dicty_symbols_to_ncbi_genes")
 
-gene_identifier: Optional[Tuple[str, str]] = parse_gene_id(row, gene_names_to_ids)
+gene_identifier: Optional[Tuple[str, str]] = parse_gene_id(row, gene_names_to_ids, dicty_symbols_to_ncbi_genes)
 if gene_identifier:
 
     gene = Gene(

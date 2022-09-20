@@ -1,0 +1,37 @@
+name: 'xenbase_orthologs'
+
+format: 'csv'
+delimiter: '\t'
+header: none
+
+#    Entrez Gene ID
+#    Xenbase genepage ID
+#    Xenbase gene symbol
+#    Xenbase gene name
+files:
+ - 'data/xenbase/XenbaseGeneHumanOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneMouseOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt'
+
+metadata:
+  ingest_title: 'Xenbase'
+  ingest_url: 'https://xenbase.org'
+  description: 'Xenbase: The Xenopus Model Organism Knowledgebase'
+  rights: 'https://www.xenbase.org/other/static-xenbase/citingMOD.jsp'
+
+columns:
+ - 'entrez_id'
+ - 'xb_genepage_id'
+ - 'xb_gene_symbol'
+ - 'xb_gene_name'
+
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+
+transform_mode: 'flat'
