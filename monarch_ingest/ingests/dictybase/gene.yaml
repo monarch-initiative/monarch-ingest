@@ -21,7 +21,7 @@ columns:
 
 depends_on:
   - './monarch_ingest/maps/dictybase_gene_names_to_ids.yaml'
-  - './monarch_ingest/maps/dictybase_phenotype_names_to_ids.yaml'
+  - './monarch_ingest/maps/dicty_symbols_to_ncbi_genes.yaml'
 
 node_properties:
   - 'id'

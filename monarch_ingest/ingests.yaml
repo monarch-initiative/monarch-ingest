@@ -10,6 +10,10 @@ ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
 # flybase_publication_to_gene::
 #   config: 'ingests/flybase/publication_to_gene.yaml'
+dictybase_gene:
+  config: 'ingests/dictybase/gene.yaml'
+dictybase_gene_to_phenotype:
+  config: 'ingests/dictybase/gene_to_phenotype.yaml'
 goa_go_annotation:
   config: 'ingests/goa/go_annotation.yaml'
 hgnc_gene:

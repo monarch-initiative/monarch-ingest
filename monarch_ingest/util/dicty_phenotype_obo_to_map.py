@@ -5,7 +5,7 @@
 #
 # then running the robot conversion (http://robot.obolibrary.org/convert.html) to OBO JSON, namely:
 #
-#    robot convert --input ./data/dictybase/dicty_phenotypes.obo --output ./data/dictybase/dicty_phenotypes.obo
+#    robot convert --input ./data/dictybase/dicty_phenotypes.obo --output ./data/dictybase/dicty_phenotypes.json
 #
 # this script can be run to extract a mapping file for the dictybase gene-to-phenotype ingest.
 #
