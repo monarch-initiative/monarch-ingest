@@ -119,8 +119,10 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     # Hopefully this won't be necessary long term, but these IDs are coming
     # in with odd OBO prefixes from Phenio currently.
-    nodes_df["id"] = nodes_df["id"].str.replace("OBO:FBbt_", "FBbt:")
-    nodes_df["id"] = nodes_df["id"].str.replace("OBO:WBbt_", "WBbt:")
+    obo_prefixes_to_repair = ['FBbt', 'WBbt', 'ZFA', 'XAO']
+    for prefix in obo_prefixes_to_repair:
+        nodes_df["id"] = nodes_df["id"].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
@@ -145,10 +147,13 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     # Hopefully this won't be necessary long term, but these IDs are coming
     # in with odd OBO prefixes from Phenio currently.
-    edges_df["subject"] = edges_df["subject"].str.replace("OBO:FBbt_", "FBbt:")
-    edges_df["object"] = edges_df["object"].str.replace("OBO:FBbt_", "FBbt:")
-    edges_df["subject"] = edges_df["subject"].str.replace("OBO:WBbt_", "WBbt:")
-    edges_df["object"] = edges_df["object"].str.replace("OBO:WBbt_", "WBbt:")
+    for prefix in obo_prefixes_to_repair:
+        for field in ["subject", "object"]:
+            edges_df[field] = edges_df[field].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+
+    # Only keep edges where the subject and object both are within our allowable prefix list
+    edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
+                        and edges_df["object"].str.startswith(tuple(prefixes))]
 
     edges_df.to_csv(edges, sep='\t', index=False)
     os.remove(f"data/phenio/{nodefile}")
