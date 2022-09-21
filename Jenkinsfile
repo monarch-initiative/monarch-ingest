@@ -71,6 +71,11 @@ pipeline {
                 '''
             }
         }
+        stage('upload files') {
+            steps {
+                sh 'poetry run ingest release --update-buckets'
+            }
+        }
         stage('index') {
             steps {
                 sh '''
@@ -92,11 +97,6 @@ pipeline {
                     #source venv/bin/activate
                     python3 ./directory_indexer.py -v --inject ./directory-index-template.html --directory ../data-public --prefix https://data.monarchinitiative.org -x
                 '''
-            }
-        }
-        stage('upload files') {
-            steps {
-                sh 'poetry run ingest release --update-buckets'
             }
         }
     }
