@@ -153,7 +153,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     # Only keep edges where the subject and object both are within our allowable prefix list
     edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
-                        and edges_df["object"].str.startswith(tuple(prefixes))]
+                        & edges_df["object"].str.startswith(tuple(prefixes))]
 
     edges_df.to_csv(edges, sep='\t', index=False)
     os.remove(f"data/phenio/{nodefile}")

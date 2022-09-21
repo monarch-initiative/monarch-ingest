@@ -69,7 +69,8 @@
   local_name: data/alliance/BGI_WB.json.gz
   tag: alliance_gene
 -
-  url: https://fms.alliancegenome.org/download/BGI_XB.json.gz
+  # url: https://fms.alliancegenome.org/download/BGI_XB.json.gz
+  url: https://download.alliancegenome.org/5.1.1/BGI/XB/1.0.1.4_BGI_XB_1.json.gz
   local_name: data/alliance/BGI_XB.json.gz
   tag: alliance_gene
 -
