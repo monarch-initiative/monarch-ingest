@@ -40,6 +40,27 @@ filters:
       - '9913'
       - '9823'
       - '9031'
+      # multiple Aspergillus genus taxon:5052
+      - '227321'  # Aspergillus nidulans FGSC A4 - primary Aspergillus nidulans genomic reference
+      - '330879'  # Aspergillus fumigatus Af293
+      - '425011'  # Aspergillus niger CBS 513.88
+      - '510516'  # Aspergillus oryzae RIB40
+      - '341663'  # Aspergillus terreus NIH2624
+      # - '767769'  # Aspergillus brasiliensis - not in GOA
+      # - '41063'   # Aspergillus zonatus - not in GOA
+      # - '1137211' # Aspergillus acidus CBS 106.47  - not in GOA
+      - '1073089'  # Aspergillus wentii DTO 134E9
+      # - '46472'  # Aspergillus versicolor
+      # - '602072' # Aspergillus carbonarius ITEM 5010
+      - '690307'  # Aspergillus aculeatus ATCC16872
+      - '1160497'  # Aspergillus glaucus CBS 516.65
+      - '331117'  # Neosartorya fischeri NRRL 181
+      - '344612'  # Aspergillus clavatus NRRL 1
+      - '332952'  # Aspergillus flavus NRRL 3357
+      # - '767770'  # Aspergillus tubingensis CBS 134.48 - not in GOA
+      # - '75750'  # Aspergillus sydowii - not in GOA
+      # - '451804'  # Aspergillus fumigatus A1163 - not in GOA
+      # - '1033177'  # Aspergillus kawachii - not in GOA
 
 node_properties:
   - 'id'

@@ -17,10 +17,42 @@ files:
   - './data/goa/7227.go_annotations.gaf.gz'
   - './data/goa/6239.go_annotations.gaf.gz'
   - './data/goa/44689.go_annotations.gaf.gz'
-  - './data/goa/162425.go_annotations.gaf.gz'
   - './data/goa/4932.go_annotations.gaf.gz'
   - './data/goa/4896.go_annotations.gaf.gz'
+  # Contains data from multiple species of genus Aspergillus, taxon:5052
+  - './data/goa/5052.go_annotations.gaf.gz'
 
+filters:
+  - inclusion: 'include'
+    column: 'Taxon'
+    filter_code: 'in'
+    value:
+      - '9606'
+      - '10090'
+      - '10116'
+      - '10116'
+      - '9615'
+      - '9913'
+      - '9823'
+      - '9031'
+      - '7955'
+      - '7227'
+      - '6239'
+      - '44689'
+      - '4932'
+      - '4896'
+      # multiple Aspergillus genus taxon:5052
+      - '227321'  # Aspergillus nidulans FGSC A4 - primary Aspergillus nidulans genomic reference
+      - '330879'  # Aspergillus fumigatus Af293
+      - '425011'  # Aspergillus niger CBS 513.88
+      - '510516'  # Aspergillus oryzae RIB40
+      - '341663'  # Aspergillus terreus NIH2624
+      - '1073089'  # Aspergillus wentii DTO 134E9
+      - '690307'  # Aspergillus aculeatus ATCC16872
+      - '1160497'  # Aspergillus glaucus CBS 516.65
+      - '331117'  # Neosartorya fischeri NRRL 181
+      - '344612'  # Aspergillus clavatus NRRL 1
+      - '332952'  # Aspergillus flavus NRRL 3357
 
 metadata:
   ingest_title: 'GOA DB'
