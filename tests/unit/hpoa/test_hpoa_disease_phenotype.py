@@ -4,7 +4,7 @@ from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
-def entities(mock_koza, global_table):
+def d2pf_entities(mock_koza, global_table):
     row = iter(
         [
             {
@@ -32,12 +32,12 @@ def entities(mock_koza, global_table):
     )
 
 
-def test_gene_2_phenotype_transform(entities):
-    assert entities
-    assert len(entities) == 1
+def test_disease_to_phenotype_transform(d2pf_entities):
+    assert d2pf_entities
+    assert len(d2pf_entities) == 1
     association = [
         entity
-        for entity in entities
+        for entity in d2pf_entities
         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
     ][0]
     assert association.subject == "OMIM:614856"
@@ -51,13 +51,3 @@ def test_gene_2_phenotype_transform(entities):
     assert association.frequency_qualifier == "1/1"
     assert association.primary_knowledge_source == "infores:hpoa"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
-
-
-# Commenting out publication node generation in edge ingests, at least temporarily
-# def test_disease_phenotype_transform_publications(entities):
-#     associations = [
-#         entity
-#         for entity in entities
-#         if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-#     ]
-#     assert association.publications[0] == "OMIM:614856"

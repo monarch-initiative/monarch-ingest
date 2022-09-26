@@ -4,6 +4,7 @@ curates and assembles over 115,000 annotations to hereditary diseases
 using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
+
 The parser currently only processes the "abnormal" annotations.
 Association to "remarkable normality" will be added in the near future.
 
@@ -13,13 +14,13 @@ filters:
     filter_code: 'eq'
     value: 'P'
 
-We are only including P associations, which are disease to phenotype associations
+We are only keeping 'P' == 'phenotypic anomaly' records.
 
 Usage:
 poetry run koza transform \
   --global-table monarch_ingest/translation_table.yaml \
-  --local-table monarch_ingest/hpoa/hpoa-translation.yaml \
-  --source monarch_ingest/hpoa/disease_phenotype.yaml \
+  --local-table monarch_ingest/ingests/hpoa/hpoa-translation.yaml \
+  --source monarch_ingest/ingests/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
 from typing import Optional, List
@@ -41,7 +42,8 @@ disease_id = row["DatabaseID"]
 
 predicate = "biolink:has_phenotype"
 
-phenotypic_feature_id = row["HPO_ID"]
+hpo_id = row["HPO_ID"]
+assert hpo_id, "HPOA Disease to Phenotype has missing HP ontology ('HPO_ID') field identifier?"
 
 # Predicate negation
 negated: Optional[bool]
@@ -74,44 +76,13 @@ publications: List[str] = publications_field.split(";")
 # Filter out some weird NCBI web endpoints
 publications = [p for p in publications if not p.startswith("http")]
 
-# Avoiding creating publication nodes within ingests, at least temporarily
-# for pub in publications:
-#
-#     publication = Publication(
-#         id=pub,
-#         type=koza_app.translation_table.global_table["publication"],
-#     )
-#
-#     if pub.startswith("PMID:"):
-#         # journal article -> IAO:0000013
-#         publication.type = koza_app.translation_table.global_table["journal article"]
-#
-#     elif pub.startswith("ISBN"):
-#         # publication -> IAO:0000311
-#         publication.type = koza_app.translation_table.global_table["publication"]
-#
-#     elif pub.startswith("OMIM:"):
-#         # web page -> SIO:000302
-#         publication.type = koza_app.translation_table.global_table["web page"]
-#
-#     elif pub.startswith("DECIPHER:"):
-#         publication.type = koza_app.translation_table.global_table["web page"]
-#
-#     elif pub.startswith("ORPHA:"):
-#         publication.type = koza_app.translation_table.global_table["web page"]
-#
-#     elif pub.startswith("http"):
-#         publication.type = koza_app.translation_table.global_table["web page"]
-#
-#     koza_app.write(publication)
-
-# Associations/Edges
+# Association/Edge
 association = DiseaseToPhenotypicFeatureAssociation(
     id="uuid:" + str(uuid.uuid1()),
     subject=disease_id,
     predicate=predicate,
     negated=negated,
-    object=phenotypic_feature_id,
+    object=hpo_id,
     publications=publications,
     has_evidence=[evidence_curie],
     sex_qualifier=sex_qualifier,
@@ -120,5 +91,4 @@ association = DiseaseToPhenotypicFeatureAssociation(
     aggregator_knowledge_source=["infores:monarchinitiative"],
     primary_knowledge_source="infores:hpoa"
 )
-
 koza_app.write(association)

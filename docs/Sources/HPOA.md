@@ -4,28 +4,24 @@ using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
 
-There are two HPOA ingests: gene-to-disease and gene-to-phenotype.
+There are four HPOA ingests - 'disease-to-phenotype', 'disease-to-mode-of-inheritance', 'gene-to-disease' and 'disease-to-mode-of-inheritance' - that parse out records from the [HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa).
 
-The gene-to-disease parser currently only processes the "abnormal" annotations.
-Association to "remarkable normality" will be added in the near future.
+The 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease' parsers currently only process the "abnormal" annotations.
+Association to "remarkable normality" may be added in the near future.
 
-[HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa)
+The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record information out from the annotation file.
 
 ### Disease to Phenotype
 
-phenotype.hpoa: [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format)
+**phenotype.hpoa:** [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format)
 
-
-Note that we're calling this the disease to phenotype file because - using the YAML file configuration for the ingest -
-we are only including the **Aspect == 'P'** rows of data (ignoring the rows of other association types - namely, 
-'I' relating to mode of inheritance, 'C' relating to clinical course and 'M' relating to clinical modifiers, 
-which will be brought in via the Mondo ingest and published ontology file).
+Note that we're calling this the disease to phenotype file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'P' (phenotypic anomalies)**, but ignoring all other Aspects.
 
 #### Biolink captured
 
 * biolink:Disease
-    * id
-
+    * id ((OMIM|DECIPHER|ORPHA) id)
+  
 * biolink:PhenotypicFeature
     * id
 
@@ -44,16 +40,43 @@ which will be brought in via the Mondo ingest and published ontology file).
     * object (phenotypicFeature.id)
     * publications (List[publication.id])
     * has_evidence (List[Note [1]]),
-    * sex_qualifier (Note [2])  # 
+    * sex_qualifier (Note [2]) 
     * onset_qualifier (Onset.id)
     * frequency_qualifier (Note [3])
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:hpoa)
+    * primary_knowledge_source ("infores:hpoa")
 
 Notes:
 1. CURIE of [Evidence and Conclusion Ontology(https://bioportal.bioontology.org/ontologies/ECO)] term
 2. female -> PATO:0000383, male -> PATO:0000384 or None
 3. See 8. Frequency in https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format
+
+### Disease to Modes of Inheritance
+
+Same as above, we again parse the [phenotype.hpoa file](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format).
+
+However, we're calling this the 'disease to modes of inheritance' file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'I' (inheritance)**, but ignoring all other Aspects.
+
+#### Biolink captured
+
+* biolink:Disease
+    * id ((OMIM|DECIPHER|ORPHA) id)
+
+* biolink:GeneticInheritance
+    * id (HP term)
+
+* biolink:Publication
+    * id
+
+* biolink:DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
+    * id (random uuid)
+    * subject (disease.id)
+    * predicate (has_mode_of_inheritance)
+    * object (geneticInheritance.id)
+    * publications (List[publication.id])
+    * has_evidence (List[Note [1]]),
+    * aggregating_knowledge_source (["infores:monarchinitiative"])
+    * primary_knowledge_source ("infores:hpoa")
 
 ### Gene to Phenotype (with Disease and HPO Frequency Context)
 
