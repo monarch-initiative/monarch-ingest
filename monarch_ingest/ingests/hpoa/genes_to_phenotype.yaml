@@ -10,15 +10,15 @@ format: 'csv'
 delimiter: '\t'
 
 columns:
-  - entrez-gene-id
-  - entrez-gene-symbol
-  - HPO-Term-ID
-  - HPO-Term-Name
-  - Frequency-Raw
-  - Frequency-HPO
-  - Additional Info from G-D source
-  - G-D source
-  - disease-ID for link
+  - 'entrez-gene-id'
+  - 'entrez-gene-symbol'
+  - 'HPO-Term-ID'
+  - 'HPO-Term-Name'
+  - 'Frequency-Raw'
+  - 'Frequency-HPO'
+  - 'Additional Info from G-D source'
+  - 'G-D source'
+  - 'disease-ID for link'
 
 edge_properties:
   - 'id'

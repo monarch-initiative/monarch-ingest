@@ -99,7 +99,7 @@ python-versions = "*"
 
 [[package]]
 name = "biolink-model"
-version = "2.4.8"
+version = "3.0.3"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
@@ -2895,7 +2895,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "0a3d643b344c4eaf13702df72b46f6c2c241031ec74e0c7921023512f3fb5e52"
+content-hash = "8f6d081a6a6a4313b1650d85407ddfdebf6c06bef2ca3c787683ea387d1b9b1c"
 
 [metadata.files]
 alabaster = [

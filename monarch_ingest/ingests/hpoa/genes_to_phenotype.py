@@ -1,3 +1,9 @@
+"""
+Usage:
+poetry run koza transform \
+  --source monarch_ingest/ingests/hpoa/genes_to_phenotype.yaml \
+  --output-format tsv
+"""
 import uuid
 
 from koza.cli_runner import get_koza_app
