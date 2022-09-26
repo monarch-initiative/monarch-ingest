@@ -10,7 +10,7 @@ from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
-from monarch_gene_mapping.gene_mapping import main as generate_gene_mapping
+from monarch_gene_mapping.main import generate as generate_gene_mapping
 from closurizer.closurizer import add_closure
 from linkml_solr.cli import start_server, add_cores, create_schema, bulkload
 
@@ -208,7 +208,7 @@ def merge_files(
     mappings.append("data/monarch/mondo.sssom.tsv")
 
     mapping_output_dir = f"{OUTPUT_DIR}/mappings"
-    generate_gene_mapping(output_dir=mapping_output_dir)
+    generate_gene_mapping(output_dir=mapping_output_dir, download=False)
     mappings.append(f"{mapping_output_dir}/gene_mappings.tsv")
 
 
@@ -216,7 +216,7 @@ def merge_files(
 
     merge(
         name=name,
-        input_dir=input_dir,
+        source=input_dir,
         output_dir=output_dir,
         mappings=mappings
     )
