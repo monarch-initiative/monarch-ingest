@@ -10,7 +10,7 @@ from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
-from monarch_gene_mapping.gene_mapping import main as generate_gene_mapping
+from monarch_gene_mapping.main import generate as generate_gene_mapping
 from closurizer.closurizer import add_closure
 from linkml_solr.cli import start_server, add_cores, create_schema, bulkload
 
@@ -117,11 +117,18 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
+    # Hopefully this won't be necessary long term, but these IDs are coming
+    # in with odd OBO prefixes from Phenio currently.
+    obo_prefixes_to_repair = ['FBbt', 'WBbt', 'ZFA', 'XAO']
+    for prefix in obo_prefixes_to_repair:
+        nodes_df["id"] = nodes_df["id"].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+
+
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
     prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
                 "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
-                "ZFA", "UBERON", "WBbt", "ORPHA"]
+                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA"]
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
@@ -138,6 +145,15 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     edges_df = edges_df[edges_df["predicate"].str.contains(":")]
 
+    # Hopefully this won't be necessary long term, but these IDs are coming
+    # in with odd OBO prefixes from Phenio currently.
+    for prefix in obo_prefixes_to_repair:
+        for field in ["subject", "object"]:
+            edges_df[field] = edges_df[field].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+
+    # Only keep edges where the subject and object both are within our allowable prefix list
+    edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
+                        & edges_df["object"].str.startswith(tuple(prefixes))]
 
     edges_df.to_csv(edges, sep='\t', index=False)
     os.remove(f"data/phenio/{nodefile}")
@@ -192,7 +208,7 @@ def merge_files(
     mappings.append("data/monarch/mondo.sssom.tsv")
 
     mapping_output_dir = f"{OUTPUT_DIR}/mappings"
-    generate_gene_mapping(output_dir=mapping_output_dir)
+    generate_gene_mapping(output_dir=mapping_output_dir, download=False)
     mappings.append(f"{mapping_output_dir}/gene_mappings.tsv")
 
 
@@ -200,7 +216,7 @@ def merge_files(
 
     merge(
         name=name,
-        input_dir=input_dir,
+        source=input_dir,
         output_dir=output_dir,
         mappings=mappings
     )

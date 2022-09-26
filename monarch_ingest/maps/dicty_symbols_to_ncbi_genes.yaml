@@ -1,0 +1,34 @@
+#
+# After manually downloading the Dictyostelium discoideum 'gene' TSV table file from:
+#
+# https://www.ncbi.nlm.nih.gov/data-hub/gene/table/taxon/352472/
+#
+# (for convenience, we name the resulting file
+#  something like 'dicty_symbols_to_ncbi_genes.tsv')
+#
+# This file specifies the resulting map of
+# Dictyostelium discoideum gene symbols ('names')
+# to NCBI gene identifier numbers.
+
+name: 'dicty_symbols_to_ncbi_genes'
+
+metadata:
+  description:  'Dictyostelium discoideum gene symbols to NCBI gene identifiers'
+
+files:
+  - './data/dictybase/dicty_symbols_to_ncbi_genes.tsv'
+
+header: 0
+
+delimiter: '\t'
+
+columns:
+  - 'NCBI GeneID'
+  - 'Symbol'
+  - 'Description'
+  - 'Gene Type'
+
+key: 'Symbol'
+
+values:
+  - 'NCBI GeneID'
