@@ -113,37 +113,33 @@ def solr(run: bool = typer.Option(False, help="Load and run solr, no artifact cr
 
 
 @typer_app.command()
-def release(
-    update_buckets: bool = typer.Option(False, help="Pass to update Google Buckets with this release")
-):
+def release():
 
     release_name = datetime.datetime.now()
     release_name = release_name.strftime("%Y-%m-%d")
 
-    LOG.info(
-        f"Creating release...\nToday's date: {release_name}"
-    )
+    LOG.info(f"Creating dated release: {release_name}...")
 
     try:
         LOG.debug(f"Uploading release to Google bucket...")
         subprocess.run(['touch', f"output/{release_name}"])
-        subprocess.run(['gsutil', '-m', 'cp', '-r', 'output/*', f"gs://monarch-ingest/{release_name}"])
+
+        # copy to monarch-archive bucket
+        subprocess.run(['gsutil', '-m', 'cp', '-r', 'output/*', f"gs://monarch-archive/monarch-kg-dev/{release_name}"])
+        subprocess.run(['gsutil', '-q', '-m', 'rm', '-rf', 'gs://monarch-archive/monarch-kg-dev/latest'])
+        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-archive/monarch-kg-dev/{release_name}","gs://monarch-archive/monarch-kg-dev/latest",])
+
+        # copy to data-public bucket
+        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-archive/monarch-kg-dev/{release_name}","gs://data-public-monarchinitiative/monarch-kg-dev/latest",])
+        subprocess.run(['gsutil', '-q', '-m', 'rm', '-rf', 'gs://data-public-monarchinitiative/monarch-kg-dev/latest'])
+        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}","gs://data-public-monarchinitiative/monarch-kg-dev/latest",])
 
         LOG.debug("Cleaning up files...")
         subprocess.run(['rm', f"output/{release_name}"])
-        
-        LOG.info(f"Successfuly uploaded release: see gs://monarch-ingest/{release_name}")
+
+        LOG.info(f"Successfuly uploaded release!")
     except BaseException as e:
         LOG.error(f"Oh no! Something went wrong:\n{e}")
-
-    if update_buckets:
-        LOG.debug(f"Replacing latest with this release..")
-        subprocess.run(['gsutil', '-q', '-m', 'rm', '-rf', 'gs://monarch-ingest/latest'])
-        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-ingest/{release_name}","gs://monarch-ingest/latest",])
-        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-ingest/{release_name}", f'gs://monarch-archive/monarch-kg-dev/{release_name}'])
-        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-ingest/{release_name}", 'gs://data-public-monarchinitiative/monarch-kg-dev/latest'])
-        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-ingest/{release_name}", f'gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}'])
-        LOG.info(f"Updated 'latest' to current release.")
 
 if __name__ == "__main__":
     typer_app()
