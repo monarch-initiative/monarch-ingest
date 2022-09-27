@@ -24,7 +24,7 @@ click = "8.0.4"
 # force specific version of click for now, because typer 0.4.1 is busted
 cat-merge = "^0.1.16"
 linkml = "^1.2.11"
-monarch-gene-mapping = "^0.1.3"
+monarch-gene-mapping = "^0.1.4"
 closurizer = "0.1.6"
 linkml-solr = "0.1.3"
 biolink-model = ">=3.0.1"
