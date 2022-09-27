@@ -100,10 +100,6 @@
   url: https://fms.alliancegenome.org/download/EXPRESSION_SGD.json.gz
   local_name: data/alliance/EXPRESSION_SGD.json.gz
   tag: alliance_gene_to_expression
--
-  url: https://fms.alliancegenome.org/download/EXPRESSION_XB.json.gz
-  local_name: data/alliance/EXPRESSION_XB.json.gz
-  tag: alliance_gene_to_expression
 
 ### CTD
 -
