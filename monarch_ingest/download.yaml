@@ -201,13 +201,13 @@
   local_name: data/goa/4896.go_annotations.gaf.gz
   tag: goa_go_annotation
 
-# hgnc
+# HGNC
 -
   url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
   local_name: data/hgnc/hgnc_complete_set.txt
   tag: hgnc_gene
 
-# hpoa
+# HPOA
 -
   url: http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
   local_name: data/hpoa/phenotype.hpoa
@@ -224,20 +224,37 @@
   local_name: data/mgi/MRK_Reference.rpt
   tag: mgi_publication_to_gene
 
+### Monarch
+-
+  # url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.tsv'
+  url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
+  local_name: data/monarch/gene_mappings.tsv
+  # tag: ???
+  -
+  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
+  local_name: data/phenio/kg-phenio.tar.gz
+  tag: phenio
+-
+  # TODO: eventually, this should come from kg-phenio itself
+  url: https://storage.googleapis.com/monarch-ingest/phenio-relations-non-redundant.tsv
+  local_name: data/phenio/phenio-relations-non-redundant.tsv
+  tag: phenio
+-
+  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
+  local_name: data/monarch/mondo.sssom.tsv
+  tag: mapping
+# -
+#   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
+#   local_name: data/monarch/monarch.json
+#   tag: monarch_ontology
+
 ### NCBI
 -
   url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
   local_name: data/ncbi/gene_info.gz
   tag: ncbi_gene
 
-### monarch
-# -
-#   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
-#   local_name: data/monarch/monarch.json
-#   tag: monarch_ontology
-# -
-
-# omim
+### OMIM
 #  This should eventually pull from the source using the API key
 -
   url: gs://koza-cache/data/omim/morbidmap.txt
@@ -254,30 +271,24 @@
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
   local_name: data/panther/RefGenomeOrthologs.tar.gz
 
-##
-## This orthology data ingest is not yet implemented
+
+## The following Panther orthology data ingest is not yet implemented
 ##
 ## Contains the PANTHER 16.0 family/subfamily name, and the molecular function, biological process, and
 ## pathway classifications for every PANTHER protein family and subfamily in the current PANTHER HMM library
 #- url: http://data.pantherdb.org/ftp/hmm_classifications/current_release/PANTHER16.0_HMM_classifications
 #  local_name: data/panther/classifications.tsv
 
-##
-## This orthology data ingest is not yet implemented
-##
 ## Contains regulatory and metabolic pathways, each with subfamilies and
 ## protein sequences mapped to individual pathway components.
 #- url: http://data.pantherdb.org/ftp/pathway/current_release/SequenceAssociationPathway3.6.5.txt
 #  local_name: data/panther/pathways.tsv
 
-##
-## This orthology data ingest is not yet implemented
-##
 ## Sequence Classifications files contain the PANTHER family, subfamily, molecular function, biological process,
 ## and pathway classifications for the complete proteomes derived from the various genomes, indexed by species.
 ## Refer to http://data.pantherdb.org/ftp/sequence_classifications/current_release/README for details.
 ## Only a subset (as noted below) of the available species is ingested into Monarch at this time.
-##
+
 ## Homo sapiens (human)
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_human
 #  local_name: data/panther/9606.sequence_classifications.tsv
@@ -310,20 +321,6 @@
 #- url: http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR16.0_budding_yeast
 #  local_name: data/panther/4932.sequence_classifications.tsv
 
-### Monarch
--
-  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
-  local_name: data/phenio/kg-phenio.tar.gz
-  tag: phenio
--
-  # TODO: eventually, this should come from kg-phenio itself
-  url: https://storage.googleapis.com/monarch-ingest/phenio-relations-non-redundant.tsv
-  local_name: data/phenio/phenio-relations-non-redundant.tsv
-  tag: phenio
--
-  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
-  local_name: data/monarch/mondo.sssom.tsv
-  tag: mapping
 
 ### Pombase
 -
@@ -445,7 +442,7 @@
   local_name: data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt
   tag: xenbase_orthologs
 
-#
+
 # TODO: parse this oddball non-Entrez ortholog file separately?
 #
 #- # Non-Entrez OMIM, MGI, and ZFIN genes
