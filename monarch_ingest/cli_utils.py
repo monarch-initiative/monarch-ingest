@@ -210,7 +210,7 @@ def merge_files(
     LOG.info("Merging knowledge graph...")
 
     merge(
-        name=name.,
+        name=name,
         source=input_dir,
         output_dir=output_dir,
         mappings=mappings
