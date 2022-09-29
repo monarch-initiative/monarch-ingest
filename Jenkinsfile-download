@@ -39,7 +39,7 @@ pipeline {
         stage('upload') {
             steps {
                 sh '''
-                    gsutil -m cp -r data/* gs://monarch-ingest/data-cache
+                    gsutil -m cp -r data/* gs://monarch-ingest-data-cache/data-cache
                 '''
             }
         }
