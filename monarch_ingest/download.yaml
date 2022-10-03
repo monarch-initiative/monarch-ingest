@@ -235,7 +235,7 @@
   local_name: data/monarch/mondo.sssom.tsv
   tag: mapping
   -
-  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
+  url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
   local_name: data/monarch/kg-phenio.tar.gz
   tag: phenio
 -
