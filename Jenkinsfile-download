@@ -11,21 +11,14 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    echo "Current directory: $(pwd)"
-                    python3 --version
-                    pip --version
-                    echo "Path: $PATH"
-                    
-                    which poetry
-                    poetry install
-                    poetry run which ingest
+                pip install kghub-downloader
                 '''
             }
         }
         stage('download') {
             steps {
                 sh '''
-                    poetry run ingest download --all
+                downloader monarch_ingest/download.yaml
                 '''
             }
         }
@@ -40,6 +33,7 @@ pipeline {
             steps {
                 sh '''
                     gsutil -m cp -r data/* gs://monarch-ingest-data-cache
+                    gsutil -m mv gs://monarch-ingest-data-cache/omim gs://
                 '''
             }
         }

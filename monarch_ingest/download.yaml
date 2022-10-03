@@ -234,13 +234,13 @@
   url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
   local_name: data/monarch/mondo.sssom.tsv
   tag: mapping
-  -
+-
   url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
   local_name: data/monarch/kg-phenio.tar.gz
   tag: phenio
 -
   # TODO: eventually, this should come from kg-phenio itself
-  url: https://storage.googleapis.com/monarch-ingest-data-cache/phenio-relations-non-redundant.tsv
+  url: https://storage.googleapis.com/monarch-ingest-data-cache/monarch/phenio-relations-non-redundant.tsv
   local_name: data/monarch/phenio-relations-non-redundant.tsv
   tag: phenio
 # -
@@ -257,11 +257,13 @@
 ### OMIM
 #  This should eventually pull from the source using the API key
 -
-  url: gs://koza-cache/data/omim/morbidmap.txt
+  # url: gs://koza-cache/data/omim/morbidmap.txt
+  url: gs://monarch-ingest-data-cache/omim/morbidmap.txt
   local_name: data/omim/morbidmap.txt
   tag: omim_gene_to_disease
 -
-  url: gs://koza-cache/data/omim/mim2gene.txt
+  # url: gs://koza-cache/data/omim/mim2gene.txt
+  url: gs://monarch-ingest-data-cache/omim/mim2gene.txt
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
 
