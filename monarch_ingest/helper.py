@@ -16,7 +16,7 @@ def get_ingest(source: str):
 
 
 def file_exists(file):
-    return (Path(file).is_file() and os.stat(file).st_size > 64)
+    return (Path(file).is_file() and os.stat(file).st_size > 1000)
 
 
 def ingest_output_exists(source, output_dir):
