@@ -1,6 +1,7 @@
 import os, sys, pkgutil
-import logging
+from pathlib import Path
 import yaml
+import logging
 
 
 def get_ingests():
@@ -15,7 +16,7 @@ def get_ingest(source: str):
 
 
 def file_exists(file):
-    return os.path.exists(file) and os.path.getsize(file) > 0
+    return (Path(file).is_file() and os.stat(file).st_size > 64)
 
 
 def ingest_output_exists(source, output_dir):
@@ -51,3 +52,4 @@ def get_logger(name: str) -> logging.Logger:
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
     return logger
+

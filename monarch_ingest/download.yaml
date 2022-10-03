@@ -226,10 +226,10 @@
 
 ### Monarch
 -
-  # url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.tsv'
-  url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
+  url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.tsv'
+  # url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
   local_name: data/monarch/gene_mappings.tsv
-  # tag: ???
+  tag: mapping
   -
   url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
   local_name: data/phenio/kg-phenio.tar.gz

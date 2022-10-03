@@ -1,4 +1,4 @@
-import subprocess
+import os, subprocess
 from pathlib import Path
 
 from typing import Optional
@@ -87,7 +87,7 @@ def transform_one(
         )
 
     if not ingest_output_exists(tag, f"{output_dir}/transform_output"):
-        raise ValueError(f"{tag} did not produce the the expected output")
+        raise FileNotFoundError(f"Ingest {tag} did not produce the the expected output")
 
 
 def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
@@ -106,6 +106,10 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
+
+    if not force and file_exists(nodes) and file_exists(edges):
+        LOG.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
+        return
 
     nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
@@ -159,6 +163,9 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
     os.remove(f"data/phenio/{nodefile}")
     os.remove(f"data/phenio/{edgefile}")
 
+    if (not file_exists(nodes) or not file_exists(edges)):
+        raise FileNotFoundError("Phenio transform did not produce the expected output")
+
 
 def transform_all(
     output_dir: str = OUTPUT_DIR,
@@ -168,9 +175,11 @@ def transform_all(
     quiet: bool = False,
     debug: bool = False,
     log: bool = False,
-):
+    ):
 
-    # TODO: check for data - download if missing (maybe y/n prompt?)
+    # TODO:
+    # - check for data - download if missing (maybe y/n prompt?)
+    # - check for difference in data? maybe implement in kghub downloder instead? 
 
     try:
         transform_phenio(output_dir=output_dir, force=force)
@@ -200,7 +209,7 @@ def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
-):
+    ):
     LOG.info("Generate mappings...")
 
     mappings = []
