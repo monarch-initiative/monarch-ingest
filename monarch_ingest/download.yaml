@@ -45,6 +45,10 @@
   local_name: data/alliance/REFERENCE_SGD.json.gz
   tag: alliance_publication
 -
+  url: https://fms.alliancegenome.org/download/GENECROSSREFERENCE_COMBINED.tsv.gz
+  local_name: data/alliance/GENECROSSREFERENCE_COMBINED.tsv.gz
+  tag: alliance_gene
+-
   url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
   local_name: data/alliance/BGI_MGI.json.gz
   tag: alliance_gene
@@ -186,9 +190,9 @@
   local_name: data/goa/44689.go_annotations.gaf.gz
   tag: goa_go_annotation
 
-# Aspergillus nidulans
+# Various species in the Aspergillus genus
 - url: http://current.geneontology.org/annotations/aspgd.gaf.gz
-  local_name: data/goa/162425.go_annotations.gaf.gz
+  local_name: data/goa/5052.go_annotations.gaf.gz
   tag: goa_go_annotation
 
 # Saccharomyces cerevisiae (baker's yeast)

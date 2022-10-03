@@ -2,7 +2,8 @@
 Some Gene Ontology Annotation ingest utility functions.
 """
 import logging
-from typing import Any, Optional, Tuple
+from re import sub, IGNORECASE, compile, Pattern
+from typing import Any, Optional, Tuple, List, Dict
 
 from biolink.pydanticmodel import (
     BiologicalProcess,
@@ -15,6 +16,58 @@ from biolink.pydanticmodel import (
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
+
+def parse_ncbi_taxa(taxon: str) -> List[str]:
+    ncbi_taxa: List[str] = list()
+    if taxon:
+        # in rare circumstances, multiple taxa may be given as a piped list...
+        taxa = taxon.split("|")
+        for taxon in taxa:
+            ncbi_taxa.append(sub(r"^taxon", "NCBITaxon", taxon, flags=IGNORECASE))
+        return ncbi_taxa
+    else:
+        return []
+
+
+_gene_identifier_map: Dict[str, Tuple[str, Pattern]] = {
+    # Genome sequenced model for
+    # Aspergillus nidulans FGSC A4  a.k.a. Emericella nidulans
+    # The proper CURIE prefix for this is not certain
+    "NCBITaxon:227321": ('AspGD', compile(r"(?P<identifier>AN\d+)\|"))
+}
+
+
+def parse_identifiers(row: Dict):
+    """
+    This method uses specific fields of the GOA data entry
+    to resolve both the gene identifier and the NCBI Taxon
+    """
+    db: str = row['DB']
+    db_object_id: str = row['DB_Object_ID']
+
+    # This check is to clean up id's like MGI:MGI:123
+    if ":" in db_object_id:
+        db_object_id = db_object_id.split(':')[-1]
+
+    ncbitaxa: List[str] = parse_ncbi_taxa(row['Taxon'])
+    if not ncbitaxa:
+        # Unlikely to happen, but...
+        logger.warning(f"Missing taxa for '{db}:{db_object_id}'?")
+
+    # Hacky remapping of some gene identifiers
+    if ncbitaxa[0] in _gene_identifier_map.keys():
+        id_regex: Pattern = _gene_identifier_map[ncbitaxa[0]][1]
+        aliases: str = row['DB_Object_Synonym']
+        match = id_regex.match(aliases)
+        if match is not None:
+            # Overwrite the 'db' and 'db_object_id' accordingly
+            db = _gene_identifier_map[ncbitaxa[0]][0]
+            db_object_id = match.group('identifier')
+
+    gene_id: str = f"{db}:{db_object_id}"
+
+    return gene_id, ncbitaxa
 
 
 # TODO: replace this workaround dictionary with direct usage of the

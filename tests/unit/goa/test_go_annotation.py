@@ -2,12 +2,49 @@
 Unit tests for GO Annotations ingest
 """
 import logging
+from typing import Tuple
 
 import pytest
 
 from biolink.pydanticmodel import Association
 
+from monarch_ingest.ingests.goa.goa_utils import parse_identifiers
+
 logger = logging.getLogger(__name__)
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        (
+            {
+                "DB": "AspGD",
+                "DB_Object_ID": "ASPL0000057967",
+                "DB_Object_Symbol": "catB",
+                "Qualifier": "acts_upstream_of_or_within",
+                "GO_ID": "GO:0019521",  # D-gluconate metabolic process
+                "DB_Reference": "AspGD_REF:ASPL0000080002|PMID:18405346",
+                "Evidence_Code": "RCA",
+                "With_or_From": "",
+                "Aspect": "P",
+                "DB_Object_Name": "",
+                "DB_Object_Synonym": "AN9339|ANID_09339|ANIA_09339",
+                "DB_Object_Type": "gene_product",
+                "Taxon": "taxon:227321",
+                "Date": "20090403",
+                "Assigned_By": "AspGD",
+                "Annotation_Extension": "",
+                "Gene_Product_Form_ID": "",
+            },
+            "AspGD:AN9339",
+            "NCBITaxon:227321"
+        )
+    ]
+)
+def test_parse_identifiers(query: Tuple):
+    gene_id, ncbitaxa = parse_identifiers(query[0])
+    assert gene_id == query[1]
+    assert query[2] in ncbitaxa
 
 
 @pytest.fixture
