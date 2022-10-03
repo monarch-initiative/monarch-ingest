@@ -92,15 +92,15 @@ def transform_one(
 
 def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
-    phenio_tar = 'data/phenio/kg-phenio.tar.gz'
+    phenio_tar = 'data/monarch/kg-phenio.tar.gz'
     assert os.path.exists(phenio_tar)
 
     nodefile = 'merged-kg_nodes.tsv'
     edgefile = 'merged-kg_edges.tsv'
 
     tar = tarfile.open(phenio_tar)
-    tar.extract(nodefile, 'data/phenio')
-    tar.extract(edgefile, 'data/phenio')
+    tar.extract(nodefile, 'data/monarch')
+    tar.extract(edgefile, 'data/monarch')
 
     os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
 
@@ -111,7 +111,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
         LOG.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
         return
 
-    nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', dtype="string",
+    nodes_df = pandas.read_csv(f"data/monarch/{nodefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     nodes_df.drop(
         nodes_df.columns.difference(['id', 'category', 'name', 'description', 'xref', 'provided_by', 'synonym']),
@@ -138,7 +138,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
-    edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', dtype="string",
+    edges_df = pandas.read_csv(f"data/monarch/{edgefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     edges_df.drop(
         edges_df.columns.difference(['id', 'subject', 'predicate', 'object',
@@ -160,8 +160,8 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
                         & edges_df["object"].str.startswith(tuple(prefixes))]
 
     edges_df.to_csv(edges, sep='\t', index=False)
-    os.remove(f"data/phenio/{nodefile}")
-    os.remove(f"data/phenio/{edgefile}")
+    os.remove(f"data/monarch/{nodefile}")
+    os.remove(f"data/monarch/{edgefile}")
 
     if (not file_exists(nodes) or not file_exists(edges)):
         raise FileNotFoundError("Phenio transform did not produce the expected output")
@@ -228,7 +228,7 @@ def merge_files(
 
 def apply_closure(
         name: str = "monarch-kg",
-        closure_file: str = f"data/phenio/phenio-relations-non-redundant.tsv",
+        closure_file: str = f"data/monarch/phenio-relations-non-redundant.tsv",
         output_dir: str = OUTPUT_DIR
 ):
     add_closure(node_file=f"{name}_nodes.tsv",

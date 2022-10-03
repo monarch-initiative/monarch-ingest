@@ -230,19 +230,19 @@
   # url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
   local_name: data/monarch/gene_mappings.tsv
   tag: mapping
-  -
-  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
-  local_name: data/phenio/kg-phenio.tar.gz
-  tag: phenio
--
-  # TODO: eventually, this should come from kg-phenio itself
-  url: https://storage.googleapis.com/monarch-ingest/phenio-relations-non-redundant.tsv
-  local_name: data/phenio/phenio-relations-non-redundant.tsv
-  tag: phenio
 -
   url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
   local_name: data/monarch/mondo.sssom.tsv
   tag: mapping
+  -
+  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
+  local_name: data/monarch/kg-phenio.tar.gz
+  tag: phenio
+-
+  # TODO: eventually, this should come from kg-phenio itself
+  url: https://storage.googleapis.com/monarch-ingest/phenio-relations-non-redundant.tsv
+  local_name: data/monarch/phenio-relations-non-redundant.tsv
+  tag: phenio
 # -
 #   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
 #   local_name: data/monarch/monarch.json
