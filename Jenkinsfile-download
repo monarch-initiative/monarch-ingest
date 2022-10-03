@@ -20,6 +20,7 @@ pipeline {
         stage('download') {
             steps {
                 sh '''
+                . venv/bin/activate
                 downloader monarch_ingest/download.yaml
                 '''
             }
