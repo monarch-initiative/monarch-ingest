@@ -312,7 +312,7 @@
 
 ### Monarch
 -
-  url: https://kg-hub.berkeleybop.io/kg-phenio/20220607/kg-phenio.tar.gz
+  url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
   local_name: data/phenio/kg-phenio.tar.gz
   tag: phenio
 -
