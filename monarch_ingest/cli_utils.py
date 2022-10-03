@@ -1,4 +1,4 @@
-import subprocess
+import os, subprocess
 from pathlib import Path
 
 from typing import Optional
@@ -87,27 +87,31 @@ def transform_one(
         )
 
     if not ingest_output_exists(tag, f"{output_dir}/transform_output"):
-        raise ValueError(f"{tag} did not produce the the expected output")
+        raise FileNotFoundError(f"Ingest {tag} did not produce the the expected output")
 
 
 def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
-    phenio_tar = 'data/phenio/kg-phenio.tar.gz'
+    phenio_tar = 'data/monarch/kg-phenio.tar.gz'
     assert os.path.exists(phenio_tar)
 
     nodefile = 'merged-kg_nodes.tsv'
     edgefile = 'merged-kg_edges.tsv'
 
     tar = tarfile.open(phenio_tar)
-    tar.extract(nodefile, 'data/phenio')
-    tar.extract(edgefile, 'data/phenio')
+    tar.extract(nodefile, 'data/monarch')
+    tar.extract(edgefile, 'data/monarch')
 
     os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
 
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    nodes_df = pandas.read_csv(f"data/phenio/{nodefile}", sep='\t', dtype="string",
+    if not force and file_exists(nodes) and file_exists(edges):
+        LOG.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
+        return
+
+    nodes_df = pandas.read_csv(f"data/monarch/{nodefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     nodes_df.drop(
         nodes_df.columns.difference(['id', 'category', 'name', 'description', 'xref', 'provided_by', 'synonym']),
@@ -134,7 +138,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
 
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
-    edges_df = pandas.read_csv(f"data/phenio/{edgefile}", sep='\t', dtype="string",
+    edges_df = pandas.read_csv(f"data/monarch/{edgefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     edges_df.drop(
         edges_df.columns.difference(['id', 'subject', 'predicate', 'object',
@@ -156,8 +160,11 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
                         & edges_df["object"].str.startswith(tuple(prefixes))]
 
     edges_df.to_csv(edges, sep='\t', index=False)
-    os.remove(f"data/phenio/{nodefile}")
-    os.remove(f"data/phenio/{edgefile}")
+    os.remove(f"data/monarch/{nodefile}")
+    os.remove(f"data/monarch/{edgefile}")
+
+    if (not file_exists(nodes) or not file_exists(edges)):
+        raise FileNotFoundError("Phenio transform did not produce the expected output")
 
 
 def transform_all(
@@ -168,9 +175,11 @@ def transform_all(
     quiet: bool = False,
     debug: bool = False,
     log: bool = False,
-):
+    ):
 
-    # TODO: check for data - download if missing (maybe y/n prompt?)
+    # TODO:
+    # - check for data - download if missing (maybe y/n prompt?)
+    # - check for difference in data? maybe implement in kghub downloder instead? 
 
     try:
         transform_phenio(output_dir=output_dir, force=force)
@@ -200,17 +209,12 @@ def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
-):
+    ):
     LOG.info("Generate mappings...")
 
     mappings = []
-
     mappings.append("data/monarch/mondo.sssom.tsv")
-
-    mapping_output_dir = f"{OUTPUT_DIR}/mappings"
-    generate_gene_mapping(output_dir=mapping_output_dir, download=False)
-    mappings.append(f"{mapping_output_dir}/gene_mappings.tsv")
-
+    mappings.append("data/monarch/gene_mappings.tsv")
 
     LOG.info("Merging knowledge graph...")
 
@@ -224,7 +228,7 @@ def merge_files(
 
 def apply_closure(
         name: str = "monarch-kg",
-        closure_file: str = f"data/phenio/phenio-relations-non-redundant.tsv",
+        closure_file: str = f"data/monarch/phenio-relations-non-redundant.tsv",
         output_dir: str = OUTPUT_DIR
 ):
     add_closure(node_file=f"{name}_nodes.tsv",

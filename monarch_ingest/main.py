@@ -141,5 +141,6 @@ def release():
     except BaseException as e:
         LOG.error(f"Oh no! Something went wrong:\n{e}")
 
+
 if __name__ == "__main__":
     typer_app()
