@@ -11,6 +11,8 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
+                python -m venv venv
+                . venv/bin/activate
                 pip install kghub-downloader
                 '''
             }
