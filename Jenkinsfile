@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir data || true
-                    gsutil -q -m cp -r gs://monarch-ingest/data-cache/* data/
+                    gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
                     ls -la
                     ls -la data
                 '''
