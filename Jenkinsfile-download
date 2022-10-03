@@ -6,6 +6,7 @@ pipeline {
     environment {
         HOME = "${env.WORKSPACE}"
         PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+        OMIM_API_KEY = credentials('OMIM_API_KEY')
     }
     stages {
         stage('setup') {
@@ -14,6 +15,10 @@ pipeline {
                 python3 -m venv venv
                 . venv/bin/activate
                 pip install kghub-downloader
+
+                ls -al
+                which downloader
+                echo $OMIM_API_KEY
                 '''
             }
         }
