@@ -251,8 +251,12 @@
 ### Panther Gene Orthology (from www.pantherdb.org)
 
 # Contains the Reference Genome Gene-to-Gene Ortholog mappings from Panther analyses
-- url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
-  local_name: data/panther/RefGenomeOrthologs.tar.gz
+# TODO: we now substitute the larger Panther orthologs file for the limited RefGenome set
+#- url: http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
+#  local_name: data/panther/RefGenomeOrthologs.tar.gz
+
+- url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
+  local_name: data/panther/AllOrthologs.tar.gz
 
 ##
 ## This orthology data ingest is not yet implemented

@@ -1,13 +1,16 @@
-name: 'panther_ref_genome_orthologs'
+name: 'panther_genome_orthologs'
 
 format: 'csv'
 delimiter: '\t'
 header: none
 
-file_archive: 'data/panther/RefGenomeOrthologs.tar.gz' # http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
+# We expand the ingest to extract orthology data from species out of "All Orthologs"
+#file_archive: 'data/panther/RefGenomeOrthologs.tar.gz' # http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz
+file_archive: 'data/panther/AllOrthologs.tar.gz' # http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
 
 files:
-  - 'RefGenomeOrthologs'
+  #- 'RefGenomeOrthologs'
+  - 'AllOrthologs'
 
 metadata:
   ingest_title: 'Orthology Ingest'

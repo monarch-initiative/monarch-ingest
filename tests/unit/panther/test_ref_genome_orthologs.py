@@ -88,11 +88,29 @@ result_expected = {
         "biolink:orthologous_to",
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR45616",
+    ],
+    "ENSEMBL:ENSSSCG00000002799": [  # PIG 'GeneID'
+        "MGI:2442402",
+        "NCBITaxon:10090",
+        "NCBITaxon:9823",   # Sus scrofa
+        "biolink:orthologous_to",
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR13162",
+    ],
+    "ENSEMBL:AN4965.2": [  # Aspergillus
+        "MGI:2442402",
+        "NCBITaxon:10090",
+        "NCBITaxon:227321",   # Emericella nidulans (strain FGSC A4 etc.)
+        "biolink:orthologous_to",
+        "RO:HOM0000017",
+        "PANTHER.FAMILY:PTHR13162",
     ]
 }
 
 
 def assert_association(data):
+
+    assert data
 
     association = data[0]
 
@@ -266,6 +284,50 @@ def odd_mgi_gene_id_record(mock_koza, source_name, script, global_table):
 
 def test_odd_mgi_gene_id_record(odd_mgi_gene_id_record):
     data = odd_mgi_gene_id_record
+    assert_association(data)
+
+
+@pytest.fixture
+def pig_gene_id_record(mock_koza, source_name, script, global_table):
+    row = {
+        "Gene": "MOUSE|MGI=MGI=2442402|UniProtKB=Q6ZQ08",
+        "Ortholog": "PIG|Ensembl=ENSSSCG00000002799|UniProtKB=I3LIC6",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Eutheria",
+        "Panther Ortholog ID": "PTHR13162",
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_pig_gene_id_record(pig_gene_id_record):
+    data = pig_gene_id_record
+    assert_association(data)
+
+
+@pytest.fixture
+def aspergillus_gene_id_record(mock_koza, source_name, script, global_table):
+    row = {
+        "Gene": "MOUSE|MGI=MGI=2442402|UniProtKB=Q6ZQ08",
+        "Ortholog": "EMENI|EnsemblGenome=AN4965.2|UniProtKB=Q5B3B5",
+        "Type of ortholog": "LDO",
+        "Common ancestor for the orthologs": "Opisthokonts",
+        "Panther Ortholog ID": "PTHR13162",
+    }
+    return mock_koza(
+        name=source_name,
+        data=iter([row]),
+        transform_code=script,
+        global_table=global_table,
+    )
+
+
+def test_aspergillus_gene_id_record(aspergillus_gene_id_record):
+    data = aspergillus_gene_id_record
     assert_association(data)
 
 
