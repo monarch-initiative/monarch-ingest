@@ -261,13 +261,13 @@
 ### OMIM
 #  This should eventually pull from the source using the API key
 -
-  # url: gs://koza-cache/data/omim/morbidmap.txt
-  url: gs://monarch-ingest-data-cache/omim/morbidmap.txt
+  # url: gs://monarch-ingest-data-cache/omim/morbidmap.txt
+  url: https://data.omim.org/downloads/{OMIM_API_KEY}/morbidmap.txt
   local_name: data/omim/morbidmap.txt
   tag: omim_gene_to_disease
 -
-  # url: gs://koza-cache/data/omim/mim2gene.txt
-  url: gs://monarch-ingest-data-cache/omim/mim2gene.txt
+  # url: gs://monarch-ingest-data-cache/omim/mim2gene.txt
+  url: https://omim.org/static/omim/data/mim2gene.txt
   local_name: data/omim/mim2gene.txt
   tag: omim_gene_to_disease
 
