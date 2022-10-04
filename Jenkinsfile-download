@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'monarch-agent-small' }
+    agent { label 'monarch-agent-micro' }
     triggers {
         cron('H H * * 7')  //sometime on Sundays
     }
