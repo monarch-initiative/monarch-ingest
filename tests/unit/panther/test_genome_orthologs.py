@@ -9,7 +9,7 @@ def source_name():
     """
     :return: string source name of Panther Gene Orthology relationships ingest
     """
-    return "panther_ref_genome_orthologs"
+    return "panther_genome_orthologs"
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def script():
     """
     :return: string path to Panther Gene Orthology relationships ingest script
     """
-    return "./monarch_ingest/ingests/panther/ref_genome_orthologs.py"
+    return "./monarch_ingest/ingests/panther/genome_orthologs.py"
 
 
 # The results expected is only distinguished by the above
@@ -513,4 +513,5 @@ def ensemblgenome_prefix_gene_spec_string(mock_koza, source_name, script, global
 
 
 def test_ensemblgenome_prefix_gene_spec_string(ensemblgenome_prefix_gene_spec_string):
+    print(ensemblgenome_prefix_gene_spec_string)
     assert len(ensemblgenome_prefix_gene_spec_string) == 0
