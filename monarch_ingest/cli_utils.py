@@ -107,7 +107,7 @@ def transform_phenio(output_dir: str = OUTPUT_DIR, force=False):
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    if not force and file_exists(nodes) and file_exists(edges):
+    if (force == False) and file_exists(nodes) and file_exists(edges):
         LOG.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
         return
 
@@ -184,8 +184,7 @@ def transform_all(
     try:
         transform_phenio(output_dir=output_dir, force=force)
     except Exception as e:
-        LOG.error(f"Error running ontology ingest:\n{e}")
-        pass
+        LOG.error(f"Error running Phenio ingest:\n{e}")
 
     ingests = get_ingests()
     for ingest in ingests:
