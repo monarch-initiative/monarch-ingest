@@ -130,7 +130,7 @@ def release():
         subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-archive/monarch-kg-dev/{release_name}","gs://monarch-archive/monarch-kg-dev/latest",])
 
         # copy to data-public bucket
-        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-archive/monarch-kg-dev/{release_name}","gs://data-public-monarchinitiative/monarch-kg-dev/latest",])
+        subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://monarch-archive/monarch-kg-dev/{release_name}",f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",])
         subprocess.run(['gsutil', '-q', '-m', 'rm', '-rf', 'gs://data-public-monarchinitiative/monarch-kg-dev/latest'])
         subprocess.run(['gsutil', '-q', '-m', 'cp', '-r', f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}","gs://data-public-monarchinitiative/monarch-kg-dev/latest",])
 

@@ -73,7 +73,7 @@ pipeline {
         }
         stage('upload files') {
             steps {
-                sh 'poetry run ingest release --update-buckets'
+                sh 'poetry run ingest release'
             }
         }
         stage('index') {
