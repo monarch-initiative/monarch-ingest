@@ -65,7 +65,7 @@ pipeline {
                     docker rm -f neo || True
                     mkdir neo4j-v4-data
                     docker run -d --name neo -p7474:7474 -p7687:7687 -v neo4j-v4-data:/data --env NEO4J_AUTH=neo4j/admin neo4j:4.4
-                    poetry run kgx transform --stream --transform-config neo4j-transform.yaml
+                    poetry run kgx transform --stream --transform-config neo4j-transform.yaml > kgx-transform.log
                     docker stop neo
                     docker run -v output:/backup -v neo4j-v4-data:/data --entrypoint neo4j-admin neo4j:4.4 dump --to /backup/monarch-kg.neo4j.dump
                 '''
