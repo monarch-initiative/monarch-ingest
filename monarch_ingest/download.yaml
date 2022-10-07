@@ -427,7 +427,7 @@
   local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
   tag: xenbase_publication_to_gene
 -
-  url: https://storage.googleapis.com/monarch-ingest-data-cache/manually-uploaded-data/xb_xpo_spo_v_v1.tab
+  url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
   local_name: data/xenbase/xb_xpo_spo_v_v1.tab
   tag: xenbase_gene_to_phenotype
 
