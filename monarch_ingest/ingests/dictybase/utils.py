@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger()
 
 
-def parse_gene_id(row: Dict, gene_names_to_ids: Dict, dicty_symbols_to_ncbi_genes: Dict) -> Optional[Tuple[str, str]]:
+def parse_gene_id(row: Dict, gene_names_to_ids: Dict) -> Optional[Tuple[str, str]]:
     """
     Parses the 'Associated gene(s)' field of the data row
     to extract a dictybase gene ID associated with the row.
@@ -37,22 +37,12 @@ def parse_gene_id(row: Dict, gene_names_to_ids: Dict, dicty_symbols_to_ncbi_gene
     # map gene symbols to proper ids
     gene_name = genes.pop().strip()
 
-    # Otherwise, attempt to map the gene symbol given into a gene identifier
-    gene_id: Optional[str] = None
     try:
-        # Try first to map the Gene Name ("Symbol") to an NCBI Gene ID
-        gene_id = f"NCBIGene:{dicty_symbols_to_ncbi_genes[gene_name]['NCBI GeneID']}"
+        # If an NCBI Gene Id is not available, attempt a more local Dictybase gene identifier
+        gene_id = f"dictyBase:{gene_names_to_ids[gene_name]['GENE ID']}"
     except KeyError:
-        # logger.info(f"{error_prefix} has a Gene Name '{gene_name}' unmapped to an NCBI Genes ID?\n")
-        pass
-
-    if not gene_id:
-        try:
-            # If an NCBI Gene Id is not available, attempt a more local Dictybase gene identifier
-            gene_id = f"dictyBase:{gene_names_to_ids[gene_name]['GENE ID']}"
-        except KeyError:
-            logger.warning(f"{error_prefix} has a Gene Name '{gene_name}' with an unknown identifier mapping?\n")
-            return None
+        logger.warning(f"{error_prefix} has a Gene Name '{gene_name}' with an unknown identifier mapping?\n")
+        return None
 
     return gene_id, gene_name
 

@@ -10,12 +10,11 @@ koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
 row = koza_app.get_row()
 
-gene_names_to_ids = koza_app.get_map("dictybase_gene_names_to_ids")
 phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")
-dicty_symbols_to_ncbi_genes = koza_app.get_map("dicty_symbols_to_ncbi_genes")
 
-gene_identifier: Optional[Tuple[str, str]] = parse_gene_id(row, gene_names_to_ids, dicty_symbols_to_ncbi_genes)
-if gene_identifier:
+gene_identifier = ['dictyBase:' + gene_id for gene_id in row['DDB_G_ID'].split("|")]
+
+if len(gene_identifier) == 1:
 
     # Parse out list of phenotypes...
     phenotypes = parse_phenotypes(row, phenotype_names_to_ids)

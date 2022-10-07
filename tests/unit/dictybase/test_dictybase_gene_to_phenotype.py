@@ -10,13 +10,7 @@ def map_cache() -> Dict:
     """
     :return: Multi-level mock map_cache of test Dictybase Gene & Phenotype, Names to Identifiers.
     """
-    dictybase_gene_names_to_ids = {
-        "cbpC": {"GENE ID": "DDB_G0283613"},
-        "DDB_G0267364_RTE": {"GENE ID": "DDB_G0267364"},
-        "argE": {"GENE ID": "DDB_G0267380"},
-        "DDB_G0269812": {"GENE ID": "DDB_G0269812"},
-        "DDB_G0274679": {"GENE ID": "DDB_G0274679"}
-    }
+
     dictybase_phenotype_names_to_ids = {
         "decreased slug migration": {"id": "DDPHENO:0000225"},
         "aberrant spore morphology": {"id": "DDPHENO:0000163"},
@@ -24,14 +18,9 @@ def map_cache() -> Dict:
         "increased cell-substrate adhesion": {"id": "DDPHENO:0000213"},
         "decreased cell motility": {"id": "DDPHENO:0000148"}
     }
-    dicty_symbols_to_ncbi_genes = {
-        "cbpC": {"NCBI GeneID": "8624175"},
-        "argE": {"NCBI GeneID": "8615966"},
-    }
+
     return {
-        "dictybase_gene_names_to_ids": dictybase_gene_names_to_ids,
         "dictybase_phenotype_names_to_ids": dictybase_phenotype_names_to_ids,
-        "dicty_symbols_to_ncbi_genes": dicty_symbols_to_ncbi_genes
     }
 
 
@@ -95,9 +84,10 @@ def test_row_1():
     :return: Test Dictybase Gene to Phenotype data row.
     """
     return {
-        "Systematic Name": "DBS0235594",
-        "Strain Descriptor": "CHE10",
+        "Systematic_Name": "DBS0235594",
+        "Strain_Descriptor": "CHE10",
         "Associated gene(s)": "cbpC",
+        "DDB_G_ID": "DDB_G0283613",
         "Phenotypes": " decreased slug migration | aberrant spore morphology "
     }
 
@@ -145,7 +135,7 @@ def test_dictybase_g2p_association_ncbi_gene(basic_dictybase_1):
 
     for association in associations:
         assert association
-        assert association.subject == "NCBIGene:8624175"
+        assert association.subject == "dictyBase:DDB_G0283613"
         assert association.object in ["DDPHENO:0000225", "DDPHENO:0000163"]
         assert association.predicate == "biolink:has_phenotype"
         assert association.primary_knowledge_source == "infores:dictybase"
@@ -161,6 +151,7 @@ def test_row_2():
         "Systematic Name": "DBS0351079",
         "Strain Descriptor": "DDB_G0274679-",
         "Associated gene(s)": "DDB_G0274679",
+        "DDB_G_ID": "DDB_G0283613",
         "Phenotypes": "delayed aggregation | increased cell-substrate adhesion | decreased cell motility"
     }
 
@@ -198,7 +189,7 @@ def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
 
     for association in associations:
         assert association
-        assert association.subject == "dictyBase:DDB_G0274679"
+        assert association.subject == "dictyBase:DDB_G0283613"
         assert association.object in ["DDPHENO:0000156", "DDPHENO:0000213", "DDPHENO:0000148"]
         assert association.predicate == "biolink:has_phenotype"
         assert association.primary_knowledge_source == "infores:dictybase"

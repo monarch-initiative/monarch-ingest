@@ -1,7 +1,7 @@
 name: 'dictybase_gene_to_phenotype'
 
 files:
-  - './data/dictybase/all-mutants.txt'
+  - './data/dictybase/all-mutants-ddb_g.txt'
 
 metadata: './monarch_ingest/dictybase/metadata.yaml'
 
@@ -14,15 +14,14 @@ format: 'csv'
 delimiter: '\t'
 
 columns:
-  - 'Systematic Name'
-  - 'Strain Descriptor'
+  - 'Systematic_Name'
+  - 'Strain_Descriptor'
   - 'Associated gene(s)'
+  - 'DDB_G_ID'
   - 'Phenotypes'
 
 depends_on:
-  - './monarch_ingest/maps/dictybase_gene_names_to_ids.yaml'
   - './monarch_ingest/maps/dictybase_phenotype_names_to_ids.yaml'
-  - './monarch_ingest/maps/dicty_symbols_to_ncbi_genes.yaml'
 
 edge_properties:
   - 'id'
