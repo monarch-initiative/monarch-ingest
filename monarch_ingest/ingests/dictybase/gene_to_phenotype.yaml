@@ -14,9 +14,10 @@ format: 'csv'
 delimiter: '\t'
 
 columns:
-  - 'Systematic Name'
-  - 'Strain Descriptor'
+  - 'Systematic_Name'
+  - 'Strain_Descriptor'
   - 'Associated gene(s)'
+  - 'DDB_G_ID'
   - 'Phenotypes'
 
 depends_on:

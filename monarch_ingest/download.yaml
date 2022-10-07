@@ -117,9 +117,9 @@
   local_name: data/dictybase/gene_information.txt
   tag: dictybase_gene
 
--  # Mapping file of phenotype ontology (in OBO format... can't be directly used...)
-  url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=pheno_ontology&ID=dicty_phenotypes.obo
-  local_name: data/dictybase/dicty_phenotypes.obo
+-  # dictybase phenotype ontology, to build mapping from term names to term ids
+  url: https://s3.amazonaws.com/bbop-sqlite/ddpheno.db
+  local_name: data/dictybase/ddpheno.db
   tag: dictybase_gene_to_phenotype
 
 - # Gene<-Strain->Phenotype mappings
