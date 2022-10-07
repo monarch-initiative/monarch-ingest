@@ -34,7 +34,6 @@ pipeline {
             steps {
                 sh '''
                     gsutil -m cp -r data/* gs://monarch-ingest-data-cache
-                    gsutil -m mv gs://monarch-ingest-data-cache/omim gs://
                 '''
             }
         }
