@@ -10,7 +10,6 @@ from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
-from monarch_gene_mapping.main import generate as generate_gene_mapping
 from closurizer.closurizer import add_closure
 from linkml_solr.cli import start_server, add_cores, create_schema, bulkload
 
@@ -179,7 +178,7 @@ def transform_all(
 
     # TODO:
     # - check for data - download if missing (maybe y/n prompt?)
-    # - check for difference in data? maybe implement in kghub downloder instead? 
+    # - check for difference in data? maybe implement in kghub downloder instead?
 
     try:
         transform_phenio(output_dir=output_dir, force=force)
