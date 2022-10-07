@@ -1,7 +1,7 @@
 name: 'dictybase_gene'
 
 files:
-  - './data/dictybase/all-mutants.txt'
+  - './data/dictybase/gene_information.txt'
 
 metadata: './monarch_ingest/dictybase/metadata.yaml'
 
@@ -14,14 +14,10 @@ format: 'csv'
 delimiter: '\t'
 
 columns:
-  - 'Systematic Name'
-  - 'Strain Descriptor'
-  - 'Associated gene(s)'
-  - 'Phenotypes'
-
-depends_on:
-  - './monarch_ingest/maps/dictybase_gene_names_to_ids.yaml'
-  - './monarch_ingest/maps/dicty_symbols_to_ncbi_genes.yaml'
+  - 'GENE ID'
+  - 'Gene Name'
+  - 'Synonyms'
+  - 'Gene products'
 
 node_properties:
   - 'id'

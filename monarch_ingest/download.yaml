@@ -112,10 +112,10 @@
   tag: ctd_chemical_to_disease
 
 ### Dictybase
--  # Mapping file of gene locus identifiers onto symbols
+-  # Gene identifiers
   url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=general&ID=gene_information.txt
   local_name: data/dictybase/gene_information.txt
-  tag: dictybase_gene_to_phenotype
+  tag: dictybase_gene
 
 -  # Mapping file of phenotype ontology (in OBO format... can't be directly used...)
   url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=pheno_ontology&ID=dicty_phenotypes.obo
@@ -123,8 +123,8 @@
   tag: dictybase_gene_to_phenotype
 
 - # Gene<-Strain->Phenotype mappings
-  url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=mutant_phenotypes&ID=all-mutants.txt
-  local_name: data/dictybase/all-mutants.txt
+  url: http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=mutant_phenotypes&ID=all-mutants-ddb_g.txt
+  local_name: data/dictybase/all-mutants-ddb_g.txt
   tag: dictybase_gene_to_phenotype
 
 ### Flybase
