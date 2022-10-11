@@ -1,5 +1,5 @@
-import os, subprocess
-from pathlib import Path
+import subprocess
+
 
 from typing import Optional
 import tarfile
@@ -11,7 +11,6 @@ from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
 from cat_merge.merge import merge
 from closurizer.closurizer import add_closure
-from linkml_solr.cli import start_server, add_cores, create_schema, bulkload
 
 from monarch_ingest.helper import *
 
@@ -236,6 +235,10 @@ def apply_closure(
                 path=output_dir,
                 output_file=f"{name}-with-closure_edges.tsv",
                 fields=["subject", "object"])
+
+
+def load_sqlite():
+    subprocess.call("scripts/load_sqlite.sh")
 
 
 def load_solr(node_schema,

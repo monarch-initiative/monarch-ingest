@@ -101,6 +101,10 @@ def merge(
 def closure():
     apply_closure()
 
+@typer_app.command()
+def sqlite():
+    load_sqlite()
+
 
 @typer_app.command()
 def solr(run: bool = typer.Option(False, help="Load and run solr, no artifact created")):
