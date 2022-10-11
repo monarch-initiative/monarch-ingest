@@ -105,6 +105,7 @@ def closure():
 def sqlite():
     load_sqlite()
 
+
 @typer_app.command()
 def solr(run: bool = typer.Option(False, help="Load and run solr, no artifact created")):
     # TODO: node file is in the tar file, maybe we just need to tar-gz after merge..
