@@ -28,8 +28,8 @@ ncbi_gene:
   config: 'ingests/ncbi/gene.yaml'
 omim_gene_to_disease:
   config: 'ingests/omim/gene_to_disease.yaml'
-panther_ref_genome_orthologs:
-  config: 'ingests/panther/ref_genome_orthologs.yaml'
+panther_genome_orthologs:
+  config: 'ingests/panther/genome_orthologs.yaml'
 pombase_gene:
   config: 'ingests/pombase/gene.yaml'
 pombase_gene_to_phenotype:

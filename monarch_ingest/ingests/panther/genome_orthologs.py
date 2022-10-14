@@ -12,7 +12,7 @@ from monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 logger = logging.getLogger(__name__)
 
-koza_app = get_koza_app("panther_ref_genome_orthologs")
+koza_app = get_koza_app("panther_genome_orthologs")
 
 row = koza_app.get_row()
 
@@ -51,4 +51,6 @@ try:
     koza_app.write(association)
 
 except RuntimeError as rte:
-    logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
+    # Skip the row - not of interest or error
+    # logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
+    pass

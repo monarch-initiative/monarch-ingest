@@ -8,35 +8,41 @@ _ncbitaxon_catalog = {
     #       of species - just starting with the STRING DB list + Dictyostelium
     "HUMAN": "9606",
     "MOUSE": "10090",
+    "CANLF": "9615",    # Canis lupus familiaris - domestic dog
+    # "FELCA": "9685",  # Felis catus - domestic cat
+    "BOVIN": "9913",    # Bos taurus - cow
+    "PIG": "9823",     # Sus scrofa - pig
     "RAT": "10116",
     "CHICK": "9031",
+    "XENTR": "8364",   # Xenopus tropicalis - tropical clawed frog
     "DANRE": "7955",
     "DROME": "7227",
     "CAEEL": "6239",
     "DICDI": "44689",
+    "EMENI": "227321",  # Emericella nidulans (strain FGSC A4 etc.) (Aspergillus nidulans)
     "SCHPO": "4896",
     "YEAST": "4932",
 }
 
 
-def ncbitaxon_by_name(species_name: str) -> Optional[str]:
+def ncbitaxon_by_name(species_tag: str) -> Optional[str]:
     """
     Retrieves the NCBI Taxon ID of a given species, only if we are interested in it...
-    :param species_name:
+    :param species_tag:
     """
-    if species_name in _ncbitaxon_catalog:
-        return f"NCBITaxon:{_ncbitaxon_catalog[species_name]}"
+    if species_tag in _ncbitaxon_catalog:
+        return f"NCBITaxon:{_ncbitaxon_catalog[species_tag]}"
     else:
-        raise RuntimeError(
-            f"ncbitaxon_by_name(): '{species_name}' is not a taxon of interest to Monarch? Ignoring..."
-        )
+        # ncbitaxon_by_name(): taxon with this species_tag is not of interest to Monarch? Ignoring...
+        return None
+
 
 # Entries with Gene/Orthology identifier namespaces
 # with 'None' values below, are filtered out during ingest
 _db_to_curie = {
     "FlyBase": "FB",
     "Ensembl": "ENSEMBL",
-    "EnsemblGenome": None,  # predicated but uncharacterized proteins... TODO: review and fix this later?
+    "EnsemblGenome": "ENSEMBL",  # TODO: review and fix this later?
     "PomBase": "POMBASE",
     "WormBase": "WB",  # Wormbase supports 'WormBase:' but alliancegenome.org and identifiers.org supports 'WB:'
     "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
