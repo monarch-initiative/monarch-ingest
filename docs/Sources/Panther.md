@@ -23,9 +23,41 @@ The first iteration of this dataset (committed March 2022) focuses on [Reference
 Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther analyses.
 
 
-- _Source File:_ [RefGenomeOrthologs.tar.gz](http://data.pantherdb.org/ftp/ortholog/current_release/RefGenomeOrthologs.tar.gz)
+- _Source File:_ [AllOrthologs.tar.gz](http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz). 
 
-#### Panther Data Model of RefGenomeOrthologs
+The source file is huge, containing data from all species, many of which are not currently of direct interest to Monarch. For this reason, a Python function `filter_panther_orthologs_file` was coded within [orthology_utils](https://github.com/monarch-initiative/monarch-ingest/blob/main/monarch_ingest/ingests/panther/orthology_utils.py).
+
+```python
+ALL_ORTHOLOGS_FILE = "AllOrthologs"
+TARGET_SPECIES_ORTHOLOGS = "TargetOrthologs"
+
+def filter_panther_orthologs_file(
+        directory: str = '.',
+        source_filename: str = ALL_ORTHOLOGS_FILE,
+        target_filename: str = TARGET_SPECIES_ORTHOLOGS,
+        number_of_lines: int = 0
+) -> bool:
+    """
+    Filters a tar.gz Panther input file against the target list of species.
+    :param directory: str, location of source data file
+    :param source_filename: str, source data file name
+    :param target_filename: str, target data file name
+    :param number_of_lines: int, number of lines parsed; 'all' lines parsed if omitted or set to zero
+    :return: bool, True if filtering was successful; False if unsuccessful
+    """
+    ...
+```
+
+which could be called with default parameter values in the 
+following manner (if invoked from within the Panther data directory):
+
+```python
+filter_file()
+```
+
+to generate a pruned down `TargetOrthologs.tar.gz` file with target species (as hardcoded in the catalog of species in the **ortholog_utils** module).
+
+#### Panther Data Model of Panther Orthologs
 
 | Data Field | Content                                     |
 |------------|---------------------------------------------|
