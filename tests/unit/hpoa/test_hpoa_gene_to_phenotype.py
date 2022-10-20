@@ -8,7 +8,7 @@ def source_name():
     """
     :return: string source name of HPOA Gene to Phenotype ingest
     """
-    return "hpoa_genes_to_phenotype"
+    return "hpoa_gene_to_phenotype"
 
 
 @pytest.fixture
