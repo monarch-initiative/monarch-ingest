@@ -1,7 +1,7 @@
 """
 Usage:
 poetry run koza transform \
-  --source monarch_ingest/ingests/hpoa/genes_to_phenotype.yaml \
+  --source monarch_ingest/ingests/hpoa/gene_to_phenotype.yaml \
   --output-format tsv
 """
 import uuid
@@ -10,7 +10,7 @@ from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
-koza_app = get_koza_app("hpoa_genes_to_phenotype")
+koza_app = get_koza_app("hpoa_gene_to_phenotype")
 row = koza_app.get_row()
 
 gene_id = "NCBIGene:" + row["entrez-gene-id"]
