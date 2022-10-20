@@ -22,6 +22,8 @@ hpoa_disease_phenotype:
   config: 'ingests/hpoa/disease_phenotype.yaml'
 hpoa_disease_mode_of_inheritance:
   config: 'ingests/hpoa/disease_mode_of_inheritance.yaml'
+hpoa_gene_to_phenotype:
+  config: 'ingests/hpoa/gene_to_phenotype.yaml'
 # mgi_publication_to_gene:
 #   config: 'ingests/mgi/publication_to_gene.yaml'
 ncbi_gene:
