@@ -5,6 +5,7 @@ from typing import Optional
 import tarfile
 import pandas
 import csv
+from sh import gzip
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -228,9 +229,11 @@ def apply_closure(
         closure_file: str = f"data/monarch/phenio-relations-non-redundant.tsv",
         output_dir: str = OUTPUT_DIR
 ):
+    output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
                 closure_file=closure_file,
-                output_file=f"{output_dir}/{name}-denormalized-edges.tsv")
+                output_file=output_file)
+    gzip(output_file)
 
 
 def load_sqlite():
