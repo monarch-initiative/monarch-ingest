@@ -53,19 +53,14 @@ pipeline {
                 '''
             }
         }
+        stage('denormalize') {
+            steps {
+                sh 'poetry run ingest closure'
+            }
+        }
         stage('sqlite') {
             steps {
-                sh '''
-                    tar zxf output/monarch-kg.tar.gz -C output
-                    gunzip output/qc/monarch-kg-dangling-edges.tsv.gz
-
-                    sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/monarch-kg_nodes.tsv nodes"
-                    sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/monarch-kg_edges.tsv edges"
-                    sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/qc/monarch-kg-dangling-edges.tsv dangling_edges"
-
-                    rm output/monarch-kg_*.tsv
-                    gzip output/qc/monarch-kg-dangling-edges.tsv
-                '''
+                sh 'poetry run ingest sqlite'
             }
         }
         stage('upload files') {

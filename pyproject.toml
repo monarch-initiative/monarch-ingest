@@ -24,9 +24,10 @@ click = "8.0.4"
 # force specific version of click for now, because typer 0.4.1 is busted
 cat-merge = "^0.1.17"
 linkml = "^1.2.11"
-closurizer = "0.1.6"
+closurizer = "^0.1.7"
 linkml-solr = "0.1.3"
 biolink-model = ">=3.0.1"
+sh = "^1.14.3"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
