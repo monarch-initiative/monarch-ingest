@@ -47,8 +47,11 @@ TARGET_SPECIES_ORTHOLOGS = "TargetOrthologs"
 def target_taxon(line: Optional[str]) -> bool:
     if not line:
         return False
-    part: List[str] = line.split("|")
-    if part[0] in _ncbitaxon_catalog.keys():
+    line_parts = line.split("\t")
+    gene_parts = line_parts[0].split("|")
+    ortholog_parts = line_parts[1].split("|")
+
+    if gene_parts[0] in _ncbitaxon_catalog.keys() and ortholog_parts[0] in _ncbitaxon_catalog.keys():
         return True
     else:
         return False
