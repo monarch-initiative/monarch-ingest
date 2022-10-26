@@ -83,7 +83,7 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
     :param gene_id_spec: is assumed to be of form 'UniProtKB=<object_id>'
     """
     if not gene_id_spec:
-        return None
+        raise RuntimeError(f"parse_gene_id(): Empty 'gene_id_spec'? Ignoring...")
 
     spec_part = gene_id_spec.split("=")
 
@@ -92,7 +92,9 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
         prefix = get_biolink_curie_prefix(spec_part[0])
 
         if not prefix:
-            return None
+            raise RuntimeError(
+                f"parse_gene_id(): Namespace '{spec_part[0]}' is not mappable to a canonical namespace? Ignoring..."
+            )
         return f"{prefix}:{spec_part[1]}"
 
     elif len(spec_part) == 3 and spec_part[1] == "MGI":
@@ -101,7 +103,9 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
         #  trapped by the RuntimeError below should answer this...)
         return f"{spec_part[1]}:{spec_part[2]}"
     else:
-        return None
+        raise RuntimeError(
+            f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring..."
+        )
 
 
 def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
@@ -112,26 +116,33 @@ def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
     """
 
     if not gene_entry:
-        return None
+        raise RuntimeError("parse_gene(): Empty 'gene_entry' argument?. Ignoring...")
 
-    species, gene_spec, _ = gene_entry.split("|")
-
-    if not species or not gene_spec:
-        return None
+    try:
+        species, gene_spec, _ = gene_entry.split("|")
+    except ValueError:
+        raise RuntimeError(
+            f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring..."
+        )
 
     # get the NCBI Taxonomic identifier
     ncbitaxon_id = ncbitaxon_by_name(species)
 
     # Quietly ignore a species we don't know about? Only complain in debug mode though (otherwise...)
     if not ncbitaxon_id:
-        return None
+        raise RuntimeError(
+            f"parse_gene(): Taxon '{str(species)}' in gene entry "
+            f"'{str(gene_entry)}' is not in target list. Ignoring..."
+        )
 
     # get the gene identifier
     gene_id = parse_gene_id(gene_spec)
 
     # Quietly ignore a gene identifier we can't parse out? Only complain in debug mode though (otherwise...)
     if not gene_id:
-        return None
+        raise RuntimeError(
+            f"parse_gene(): Gene identifier in gene entry '{str(gene_entry)}' cannot be parsed. Ignoring..."
+        )
 
     return ncbitaxon_id, gene_id
 
