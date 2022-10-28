@@ -20,7 +20,6 @@ logger = get_logger(__name__)
 
 koza_app = get_koza_app("goa_go_annotation")
 
-row = koza_app.get_row()
 while (row := koza_app.get_row()) is not None:
 
     gene_id, ncbitaxa = parse_identifiers(row)
