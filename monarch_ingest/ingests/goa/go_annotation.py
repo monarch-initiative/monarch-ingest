@@ -14,10 +14,9 @@ from monarch_ingest.ingests.goa.goa_utils import (
     get_biolink_classes,
     lookup_predicate
 )
+from monarch_ingest.helper import get_logger
+logger = get_logger(__name__)
 
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
 
 koza_app = get_koza_app("goa_go_annotation")
 

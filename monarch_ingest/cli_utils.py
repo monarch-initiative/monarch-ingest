@@ -1,10 +1,9 @@
 import subprocess
-
-
 from typing import Optional
-import tarfile
+import csv, tarfile
 import pandas
-import csv
+import datetime
+import shlex
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -74,7 +73,7 @@ def transform_one(
         if os.path.exists(src_edges):
             src_files.append(src_edges)
 
-        print(src_files)
+        # LOG.info(src_files)
         kgx_transform(
             inputs=src_files,
             input_format="tsv",
@@ -273,6 +272,35 @@ def load_solr(node_schema,
 
         # remove the solr docker container
         subprocess.call(['docker', 'rm', '-f', 'my_solr'])
+
+
+def do_release():
+    release_name = datetime.datetime.now()
+    release_name = release_name.strftime("%Y-%m-%d")
+
+    LOG.info(f"Creating dated release: {release_name}...")
+
+    try:
+        LOG.debug(f"Uploading release to Google bucket...")
+
+        subprocess.run(shlex.split(f"touch output/{release_name}"))
+        
+        # copy to monarch-archive bucket
+        subprocess.run(shlex.split(f"gsutil -m cp -r output/* gs://monarch-archive/monarch-kg-dev/{release_name}"))
+        subprocess.run(shlex.split(f"gsutil -q -m rm -rf gs://monarch-archive/monarch-kg-dev/latest"))
+        subprocess.run(shlex.split(f"gsutil -q -m cp -r gs://monarch-archive/monarch-kg-dev/{release_name} gs://monarch-archive/monarch-kg-dev/latest"))
+        
+        # copy to data-public bucket
+        subprocess.run(shlex.split(f"gsutil -q -m cp -r gs://monarch-archive/monarch-kg-dev/{release_name} gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}"))
+        subprocess.run(shlex.split(f"gsutil -q -m rm -rf gs://data-public-monarchinitiative/monarch-kg-dev/latest"))
+        subprocess.run(shlex.split(f"gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/{release_name} gs://data-public-monarchinitiative/monarch-kg-dev/latest"))
+        
+        LOG.debug("Cleaning up files...")
+        subprocess.run(shlex.split(f"rm output/{release_name}"))
+
+        LOG.info(f"Successfuly uploaded release!")
+    except BaseException as e:
+        LOG.error(f"Oh no! Something went wrong:\n{e}")
 
 
 def _set_log_level(
