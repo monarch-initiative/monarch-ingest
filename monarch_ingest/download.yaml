@@ -370,9 +370,34 @@
   local_name: data/string/9606.protein_links.txt.gz
   tag: string_protein_links
 
+# Rattus norvegicus (Norway rat)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/10116.protein_links.txt.gz
+  tag: string_protein_links
+
 # Mus musculus (house mouse)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10090.protein.links.detailed.v11.5.txt.gz
   local_name: data/string/10090.protein_links.txt.gz
+  tag: string_protein_links
+
+# Canis lupus familiaris - domestic dog
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9615.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/9615.protein_links.txt.gz
+  tag: string_protein_links
+
+# Bos taurus - cow
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9913.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/9913.protein_links.txt.gz
+  tag: string_protein_links
+
+# Gallus gallus - chicken
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/9031.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/9031.protein_links.txt.gz
+  tag: string_protein_links
+
+# Xenopus tropicalis - tropical clawed frog
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/8364.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/8364.protein_links.txt.gz
   tag: string_protein_links
 
 # Danio rerio (Zebrafish)
@@ -390,14 +415,24 @@
   local_name: data/string/6239.protein_links.txt.gz
   tag: string_protein_links
 
+# Dictyostelium discoideum (slime mold)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/44689.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/44689.protein_links.txt.gz
+  tag: string_protein_links
+
+# Aspergillus nidulans
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/162425.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/162425.protein_links.txt.gz
+  tag: string_protein_links
+
+# Schizosaccharomyces pombe ("fission" yeast)
+- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4896.protein.links.detailed.v11.5.txt.gz
+  local_name: data/string/4896.protein_links.txt.gz
+  tag: string_protein_links
+
 # Saccharomyces cerevisiae (baker's yeast)
 - url: https://stringdb-static.org/download/protein.links.detailed.v11.5/4932.protein.links.detailed.v11.5.txt.gz
   local_name: data/string/4932.protein_links.txt.gz
-  tag: string_protein_links
-
-# Rattus norvegicus (Norway rat)
-- url: https://stringdb-static.org/download/protein.links.detailed.v11.5/10116.protein.links.detailed.v11.5.txt.gz
-  local_name: data/string/10116.protein_links.txt.gz
   tag: string_protein_links
 
 # All species mapping file (Since the rat mapping file isn't available, use the cross species set)

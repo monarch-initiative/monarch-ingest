@@ -1,4 +1,4 @@
-name: 'hpoa_genes_to_phenotype'
+name: 'hpoa_gene_to_phenotype'
 
 files:
   - './data/hpoa/genes_to_phenotype.txt'
