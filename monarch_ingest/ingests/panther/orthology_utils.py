@@ -1,9 +1,24 @@
 """
 Utility functions for Panther Orthology data processing
 """
-from typing import Optional, Tuple
+from sys import stderr
+from os import sep, remove
+from tarfile import (
+    open as tar_open,
+    ReadError,
+    CompressionError,
+    TarInfo
 
-_ncbitaxon_catalog = {
+)
+from datetime import datetime
+
+from typing import Optional, Tuple, List
+from io import TextIOWrapper
+import logging
+
+logger = logging.getLogger()
+
+ncbitaxon_catalog = {
     # TODO: may need to further build up this catalog
     #       of species - just starting with the STRING DB list + Dictyostelium
     "HUMAN": "9606",
@@ -11,7 +26,7 @@ _ncbitaxon_catalog = {
     "CANLF": "9615",    # Canis lupus familiaris - domestic dog
     # "FELCA": "9685",  # Felis catus - domestic cat
     "BOVIN": "9913",    # Bos taurus - cow
-    "PIG": "9823",     # Sus scrofa - pig
+    "PIG": "9823",      # Sus scrofa - pig
     "RAT": "10116",
     "CHICK": "9031",
     "XENTR": "8364",   # Xenopus tropicalis - tropical clawed frog
@@ -24,14 +39,13 @@ _ncbitaxon_catalog = {
     "YEAST": "4932",
 }
 
-
 def ncbitaxon_by_name(species_tag: str) -> Optional[str]:
     """
     Retrieves the NCBI Taxon ID of a given species, only if we are interested in it...
     :param species_tag:
     """
-    if species_tag in _ncbitaxon_catalog:
-        return f"NCBITaxon:{_ncbitaxon_catalog[species_tag]}"
+    if species_tag in ncbitaxon_catalog:
+        return f"NCBITaxon:{ncbitaxon_catalog[species_tag]}"
     else:
         # ncbitaxon_by_name(): taxon with this species_tag is not of interest to Monarch? Ignoring...
         return None
@@ -88,7 +102,6 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
         # (is this the only one like this? Logger errors
         #  trapped by the RuntimeError below should answer this...)
         return f"{spec_part[1]}:{spec_part[2]}"
-
     else:
         raise RuntimeError(
             f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring..."
@@ -160,7 +173,6 @@ def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
 #     #     "mapping": "RO:0002263"
 #     # }
 # }
-
 
 # def lookup_predicate(orthology_type: str = None) -> Optional[Tuple[str, Any]]:
 #     """
