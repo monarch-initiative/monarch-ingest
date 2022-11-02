@@ -105,6 +105,22 @@
   local_name: data/alliance/EXPRESSION_SGD.json.gz
   tag: alliance_gene_to_expression
 
+### BGee
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Homo_sapiens_expr_simple.tsv.gz
+  local_name: data/bgee/Homo_sapiens_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Rattus_norvegicus_expr_simple.tsv.gz
+  local_name: data/bgee/Rattus_norvegicus_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Rattus_norvegicus_expr_simple.tsv.gz
+  local_name: data/bgee/Rattus_norvegicus_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
 ### CTD
 -
   url: http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz

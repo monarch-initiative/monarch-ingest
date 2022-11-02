@@ -1,0 +1,52 @@
+name: 'bgee_gene_to_expression'
+
+# List of files to be ingested
+files:
+  - './data/bgee/Homo_sapiens_expr_simple.tsv.gz'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+# Presence of a header defaults to true
+# if no header is present in the file, use
+# header = false
+
+# If the source_file has metadata lines to skip, use
+# skip_lines: 10
+
+# Optionally, if a source file depends on any map files, specify their configuration file here
+# depends_on:
+#   - './path/to/map.yaml'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - 'Gene ID'
+  - 'Gene name'
+  - 'Anatomical entity ID'
+  - 'Anatomical entity name'
+  - 'Expression'
+  - 'Call quality'
+  - 'FDR'
+  - 'Expression score' : 'float'
+  - 'Expression rank' : 'float'
+
+filters:
+  - inclusion: 'include'
+    column: 'Expression rank'
+    filter_code: 'lt'
+    value: 25
+
+# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+
+# For node-only ingests
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'aggregator_knowledge_source'
+
+transform_mode: 'loop'
