@@ -117,8 +117,48 @@
   tag: bgee_gene_to_expression
 
 -
-  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Rattus_norvegicus_expr_simple.tsv.gz
-  local_name: data/bgee/Rattus_norvegicus_expr_simple.tsv.gz
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Mus_musculus_expr_simple.tsv.gz
+  local_name: data/bgee/Mus_musculus_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Danio_rerio_expr_simple.tsv.gz
+  local_name: data/bgee/Danio_rerio_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Xenopus_laevis_expr_simple.tsv.gz
+  local_name: data/bgee/Xenopus_laevis_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Drosophila_melanogaster_expr_simple.tsv.gz
+  local_name: data/bgee/Drosophila_melanogaster_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Caenorhabditis_elegans_expr_simple.tsv.gz
+  local_name: data/bgee/Caenorhabditis_elegans_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Canis_lupus_familiaris_expr_simple.tsv.gz
+  local_name: data/bgee/Canis_lupus_familiaris_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Bos_taurus_expr_simple.tsv.gz
+  local_name: data/bgee/Bos_taurus_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Sus_scrofa_expr_simple.tsv.gz
+  local_name: data/bgee/Sus_scrofa_expr_simple.tsv.gz
+  tag: bgee_gene_to_expression
+
+-
+  url: https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/Gallus_gallus_expr_simple.tsv.gz
+  local_name: data/bgee/Gallus_gallus_expr_simple.tsv.gz
   tag: bgee_gene_to_expression
 
 ### CTD
