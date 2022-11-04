@@ -89,4 +89,4 @@ edge_properties:
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 
-transform_mode: 'flat'
+transform_mode: 'loop'
