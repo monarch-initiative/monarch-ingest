@@ -1,5 +1,5 @@
 # Builds and runs pytest on ubuntu-latest
-# Tests python versions >=3.6
+# Tests python versions >=3.10
 name: CI
 
 on:
@@ -11,7 +11,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # https://github.com/actions/setup-python
   test-python3-ubuntu-latest:
     name: test py${{ matrix.python-version }} on linux
     runs-on: ubuntu-latest
