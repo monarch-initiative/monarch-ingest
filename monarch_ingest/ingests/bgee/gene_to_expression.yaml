@@ -2,7 +2,17 @@ name: 'bgee_gene_to_expression'
 
 # List of files to be ingested
 files:
+  - './data/bgee/Bos_taurus_expr_simple.tsv.gz'
+  - './data/bgee/Caenorhabditis_elegans_expr_simple.tsv.gz'
+  - './data/bgee/Canis_lupus_familiaris_expr_simple.tsv.gz'
+  - './data/bgee/Danio_rerio_expr_simple.tsv.gz'
+  - './data/bgee/Drosophila_melanogaster_expr_simple.tsv.gz'
+  - './data/bgee/Gallus_gallus_expr_simple.tsv.gz'
   - './data/bgee/Homo_sapiens_expr_simple.tsv.gz'
+  - './data/bgee/Mus_musculus_expr_simple.tsv.gz'
+  - './data/bgee/Rattus_norvegicus_expr_simple.tsv.gz'
+  - './data/bgee/Sus_scrofa_expr_simple.tsv.gz'
+  - './data/bgee/Xenopus_laevis_expr_simple.tsv.gz'
 
 # Format options csv, json
 format: 'csv'
@@ -37,7 +47,11 @@ filters:
   - inclusion: 'include'
     column: 'Expression rank'
     filter_code: 'lt'
-    value: 25
+    value: 200
+  - inclusion: 'include'
+    column: 'Expression score'
+    filter_code: 'gt'
+    value: 99
 
 # Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
 
