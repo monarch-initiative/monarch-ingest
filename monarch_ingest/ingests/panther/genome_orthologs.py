@@ -61,4 +61,6 @@ while (row := koza_app.get_row()) is not None:
             # Skip the row - not of interest or error
             # logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
             pass
+        except StopIteration as si:
+            pass
 

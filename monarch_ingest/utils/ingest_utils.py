@@ -1,17 +1,16 @@
-import os, sys, pkgutil
+import os, pkgutil
 from pathlib import Path
 import yaml
-import logging
 
 
 def get_ingests():
-    return yaml.safe_load(pkgutil.get_data(__name__, 'ingests.yaml'))
+    return yaml.safe_load(pkgutil.get_data("monarch_ingest", 'ingests.yaml'))
 
 
 def get_ingest(source: str):
     ingests = get_ingests
     return yaml.load(
-        pkgutil.get_data(__name__, ingests[source]['config']), yaml.FullLoader
+        pkgutil.get_data("monarch_ingest", ingests[source]['config']), yaml.FullLoader
     )
 
 
@@ -23,7 +22,7 @@ def ingest_output_exists(source, output_dir):
     ingests = get_ingests()
 
     ingest_config = yaml.load(
-        pkgutil.get_data(__name__, ingests[source]['config']), yaml.FullLoader
+        pkgutil.get_data("monarch_ingest", ingests[source]['config']), yaml.FullLoader
     )
 
     has_node_properties = "node_properties" in ingest_config
@@ -38,16 +37,4 @@ def ingest_output_exists(source, output_dir):
         return False
 
     return True
-
-
-def get_logger(name: str) -> logging.Logger:
-    """Get an instance of logger."""
-    logger = logging.getLogger(name)
-    handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter("[%(asctime)s][%(levelname)-s][%(name)-20s] %(message)s", "%Y-%m-%d %H:%M:%S")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
-    logger.propagate = False
-    return logger
 

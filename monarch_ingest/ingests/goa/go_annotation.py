@@ -14,7 +14,7 @@ from monarch_ingest.ingests.goa.goa_utils import (
     get_biolink_classes,
     lookup_predicate
 )
-from monarch_ingest.helper import get_logger
+from monarch_ingest.utils.log_utils import get_logger
 logger = get_logger(__name__)
 
 
@@ -33,9 +33,7 @@ go_id = row['GO_ID']
 #      'C' == cellular_component - child of GO:0005575
 go_aspect: str = row['Aspect']
 if not (go_aspect and go_aspect.upper() in ["F", "P", "C"]):
-    logger.warning(
-        f"GAF Aspect '{str(go_aspect)}' is empty or unrecognized? Skipping record"
-    )
+    logger.debug(f"GAF Aspect '{str(go_aspect)}' is empty or unrecognized? Skipping record")
 
 else:
     # Decipher the GO Evidence Code
@@ -46,9 +44,7 @@ else:
         eco_term = koza_app.translation_table.local_table[evidence_code]
 
     if not eco_term:
-        logger.warning(
-            f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'"
-        )
+        logger.debug(f"GAF Evidence Code '{str(evidence_code)}' is empty or unrecognized? Tagging as 'ND'")
         eco_term = "ECO:0000307"
 
     # Association predicate is normally NOT negated
@@ -76,7 +72,7 @@ else:
 
     if not qualifier:
         # If missing, assign a default qualifier a.k.a. predicate based on specified GO Aspect type
-        logger.error(
+        logger.warning(
             "GAF record is missing its qualifier...assigning default qualifier as per GO term Aspect"
         )
         if go_aspect == "F":
@@ -96,9 +92,7 @@ else:
             predicate_mapping = lookup_predicate(qualifier_parts[0])
 
     if not predicate_mapping:
-        logger.error(
-            f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record..."
-        )
+        logger.debug(f"GAF Qualifier '{qualifier}' is unrecognized? Skipping the record...")
 
     else:
         # extract the predicate Pydantic class and RO'relation' mapping
