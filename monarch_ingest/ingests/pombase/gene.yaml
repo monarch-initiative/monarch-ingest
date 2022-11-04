@@ -12,6 +12,12 @@ global_table: './monarch_ingest/translation_table.yaml'
 
 header: none
 
+filters:
+  - inclusion: 'include'
+    column: "product type"
+    filter_code: 'eq'
+    value: 'protein coding gene'
+
 columns:
   - "systematic ID"
   - "curie"
