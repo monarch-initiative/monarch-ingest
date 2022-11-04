@@ -20,7 +20,7 @@ install:
 	poetry install
 	
 .PHONY: test
-test:
+test: install
 	poetry run python -m pytest --ignore=ingest_template
 
 .PHONY: clean
