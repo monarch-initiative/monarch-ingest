@@ -2,8 +2,8 @@ import subprocess
 from typing import Optional
 import csv, tarfile
 import pandas
-import datetime
-import shlex
+import shlex, datetime
+from sh import gzip, gunzip, tar, mv, lsolr, docker
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
@@ -248,29 +248,40 @@ def load_solr(node_schema,
     node_core = "entity"
     edge_core = "association"
 
+    if edge_file.endswith(".gz"):
+        gunzip(edge_file)
+        edge_file = edge_file[:-len(".gz")]
+
     # awkwardly handle there not being a closurized/solrized version of the nodes file yet
-    subprocess.call(['tar', 'zxf', f"{output_dir}/monarch-kg.tar.gz", 'monarch-kg_nodes.tsv'])
-    subprocess.call(['mv', 'monarch-kg_nodes.tsv', output_dir])
+
+    tar("zxf", f"{output_dir}/monarch-kg.tar.gz", 'monarch-kg_nodes.tsv')
+    mv('monarch-kg_nodes.tsv', output_dir)
 
     # Start the server without specifying a schema
-    subprocess.call(['lsolr', 'start-server'])
-    subprocess.call(['lsolr', 'add-cores', node_core, edge_core])
-    subprocess.call(['lsolr', 'create-schema', '--core', node_core, '--schema', node_schema])
-    subprocess.call(['lsolr', 'create-schema', '--core', edge_core, '--schema', edge_schema])
-    subprocess.call(['lsolr', 'bulkload', node_file, '--core', 'entity', '--schema', node_schema])
-    subprocess.call(['lsolr', 'bulkload', edge_file, '--core', 'association', '--schema', edge_schema])
+    print("Starting server...")
+    lsolr('start-server')
+
+    print("Adding cores and schema...")
+    lsolr('add-cores', node_core, edge_core)
+    lsolr('create-schema', core=node_core, schema=node_schema)
+    lsolr('create-schema', core=edge_core, schema=edge_schema)
+    print("Loading nodes...")
+    lsolr('bulkload', node_file, core='entity', schema=node_schema)
+    print("Loading edges...")
+    lsolr('bulkload', edge_file, core='association', schema=edge_schema)
 
     # Run mode just loads into the docker container, doesn't export and shut down
     if not run:
-        subprocess.call(['docker', 'cp', 'my_solr:/var/solr/', 'output/'])
+        print("Copying data and removing container...")
+        logging.info(docker('cp', 'my_solr:/var/solr/', 'output/'))
         subprocess.call(['tar', 'czf', 'solr.tar.gz', 'solr'], cwd='output')
 
-        # clean up the nodes file that was pulled out of the tar
-        os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
-
         # remove the solr docker container
-        subprocess.call(['docker', 'rm', '-f', 'my_solr'])
+        docker('rm', '-f', 'my_solr')
 
+    # cleanup
+    gzip(edge_file)
+    os.remove(f"{output_dir}/monarch-kg_nodes.tsv")
 
 def do_release():
     release_name = datetime.datetime.now()
