@@ -33,5 +33,5 @@ jobs:
 
       - name: make test
         run: |
-        pip install poetry
-        make test
+          pip install poetry
+          make test
