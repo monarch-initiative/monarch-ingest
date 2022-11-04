@@ -2,13 +2,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 import pandas
-<<<<<<< HEAD
 import csv, tarfile
 import sh
-=======
-import shlex, datetime
-from sh import gzip, gunzip, tar, mv, lsolr, docker
->>>>>>> main
 
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
