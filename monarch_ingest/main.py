@@ -41,9 +41,8 @@ def transform(
     verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
     log: bool = typer.Option(False, help="Write DEBUG level logs to ./logs/ for each ingest"),
 ):
-    """
-    Run Koza transformation on specified Monarch ingests
-    """
+    """Run Koza transformation on specified Monarch ingests"""
+    
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
 
     if phenio:
