@@ -26,8 +26,6 @@ def ingest_output_exists(source, output_dir):
         pkgutil.get_data(__name__, ingests[source]['config']), yaml.FullLoader
     )
 
-    #print(f"Ingest config: {ingest_config}\n{type(ingest_config)}")
-
     has_node_properties = "node_properties" in ingest_config
     has_edge_properties = "edge_properties" in ingest_config
 
@@ -46,7 +44,7 @@ def get_logger(name: str) -> logging.Logger:
     """Get an instance of logger."""
     logger = logging.getLogger(name)
     handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter(":%(name)-12s: %(levelname)-6s: %(message)s")
+    formatter = logging.Formatter("[%(asctime)s][%(levelname)-s][%(name)-20s] %(message)s", "%Y-%m-%d %H:%M:%S")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)

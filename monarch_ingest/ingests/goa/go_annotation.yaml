@@ -6,22 +6,23 @@ header: none
 comment_char: '!'
 
 files:
-  - './data/goa/9606.go_annotations.gaf.gz'
-  - './data/goa/10090.go_annotations.gaf.gz'
-  - './data/goa/10116.go_annotations.gaf.gz'
-  - './data/goa/9615.go_annotations.gaf.gz'
-  - './data/goa/9913.go_annotations.gaf.gz'
-  - './data/goa/9823.go_annotations.gaf.gz'
-  - './data/goa/9031.go_annotations.gaf.gz'
-  - './data/goa/7955.go_annotations.gaf.gz'
-  - './data/goa/7227.go_annotations.gaf.gz'
-  - './data/goa/6239.go_annotations.gaf.gz'
-  - './data/goa/44689.go_annotations.gaf.gz'
+  # Need to filter out 5052 - Contains data from multiple species of the
+  # genus Aspergillus, taxon:5052, not just Aspergillus nidulans
   - './data/goa/4932.go_annotations.gaf.gz'
   - './data/goa/4896.go_annotations.gaf.gz'
-  # Need to filter out: Contains data from multiple species of the
-  # genus Aspergillus, taxon:5052, not just Aspergillus nidulans
-  - './data/goa/5052.go_annotations.gaf.gz'
+  - './data/goa/5052.go_annotations.gaf.gz' 
+  - './data/goa/6239.go_annotations.gaf.gz'
+  - './data/goa/7227.go_annotations.gaf.gz'
+  - './data/goa/7955.go_annotations.gaf.gz'
+  - './data/goa/9031.go_annotations.gaf.gz'
+  - './data/goa/9606.go_annotations.gaf.gz'
+  - './data/goa/9615.go_annotations.gaf.gz'
+  - './data/goa/9823.go_annotations.gaf.gz'
+  - './data/goa/9913.go_annotations.gaf.gz'
+  - './data/goa/44689.go_annotations.gaf.gz'
+  - './data/goa/10090.go_annotations.gaf.gz'
+  - './data/goa/10116.go_annotations.gaf.gz'
+  # - './data/goa/162425.go_annotations.gaf.gz'
 
 filters:
   - inclusion: 'include'
@@ -88,4 +89,4 @@ edge_properties:
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 
-transform_mode: 'flat'
+transform_mode: 'loop'
