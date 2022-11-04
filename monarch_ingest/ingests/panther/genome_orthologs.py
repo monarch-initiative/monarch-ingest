@@ -13,9 +13,15 @@ from monarch_ingest.ingests.panther.orthology_utils import parse_gene, ncbitaxon
 logger = logging.getLogger(__name__)
 
 koza_app = get_koza_app("panther_genome_orthologs")
-# The more reasonable `for row in koza_app.source:` doesn't successfully iterate with
-# the mock_koza test harness
-while (row := koza_app.get_row()) is not None:
+
+# for row in koza_app.source: # doesn't successfully iterate with the mock_koza test harness
+# while (row := koza_app.get_row()) is not None:
+while True:
+    try:
+        row = koza_app.get_row()
+    except StopIteration:
+        break
+
     if row['Gene'].split("|")[0] in ncbitaxon_catalog \
             and row['Ortholog'].split("|")[0] in ncbitaxon_catalog:
         try:
@@ -61,6 +67,3 @@ while (row := koza_app.get_row()) is not None:
             # Skip the row - not of interest or error
             # logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
             pass
-        except StopIteration as si:
-            pass
-
