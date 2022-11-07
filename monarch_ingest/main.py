@@ -79,9 +79,8 @@ def merge(
     input_dir: str = typer.Option(f"{OUTPUT_DIR}/transform_output", help="Directory with nodes and edges to be merged",),
     output_dir: str = typer.Option(f"{OUTPUT_DIR}", help="Directory to output data"),
     ):
-    """
-    Merge nodes and edges into kg
-    """
+    """Merge nodes and edges into kg"""
+    
     merge_files(input_dir=input_dir, output_dir=output_dir)
 
 
