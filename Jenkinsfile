@@ -10,12 +10,15 @@ pipeline {
             steps {
                 sh '''
                     echo "Current directory: $(pwd)"
-                    python3 --version
-                    pip --version
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
+                    
+                    python3 --version
+                    pip --version
+
 
                     which poetry
+                    poetry config experimental.new-installer false
                     poetry install
                     poetry run which ingest
                 '''
