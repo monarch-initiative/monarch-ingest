@@ -15,9 +15,8 @@ pipeline {
                     
                     python3 --version
                     pip --version
+                    poetry --version
 
-
-                    which poetry
                     poetry config experimental.new-installer false
                     poetry install
                     poetry run which ingest
