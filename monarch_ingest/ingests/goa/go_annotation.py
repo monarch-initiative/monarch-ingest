@@ -20,11 +20,8 @@ logger = get_logger(__name__)
 
 koza_app = get_koza_app("goa_go_annotation")
 
-while True:
-    try:
-        row = koza_app.get_row()
-    except StopIteration:
-        break
+# for row in koza_app.source: # doesn't play nice with tests
+while (row := koza_app.get_row()) is not None:
 
     gene_id, ncbitaxa = parse_identifiers(row)
 
