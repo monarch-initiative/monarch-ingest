@@ -1,33 +1,33 @@
 [tool.poetry]
 name = "monarch-ingest"
-version = "0.3.4"
+version = "0.3.5"
 description = ""
 authors = [
+    "The Monarch Initiative <info@monarchinitiative.org>",
     "Kevin Schaper <kevinschaper@gmail.com>",
     "Victoria Soesanto <victoria.soesanto@cuanschutz.edu>",
     "Glass Elsarboukh <g.elsarboukh@gmail.com>",
     "Kent Shefchek <kent@tislab.org>",
-    "Glass Elsarboukh <g.elsarboukh@gmail.com>",
     "Richard Bruskiewich <richard.bruskiewich@delphinai.com>",
-    "The Monarch Initiative <info@monarchinitiative.org>"
 ]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-importlib-metadata = "^4.6.1"
-koza = "^0.2.1"
+koza = "^0.2.2"
 kghub-downloader = "^0.3.1"
 kgx = "^1.7.2"
+cat-merge = "^0.1.18"
+closurizer = "^0.1.7"
+biolink-model = ">=3.0.1"
+linkml = "^1.2.11"
+linkml-solr = "0.1.3"
 greenlet = "^1.1.2"
+importlib-metadata = "^4.6.1"
+sh = "^1.14.3"
+# force specific version of click for now, because typer 0.4.1 is busted
+# THIS IS FIXED IN TYPER 0.6 !!! WE CAN UPDATE ACROSS MONARCH PACKAGES
 typer = "^0.4"
 click = "8.0.4"
-# force specific version of click for now, because typer 0.4.1 is busted
-cat-merge = "^0.1.18"
-linkml = "^1.2.11"
-closurizer = "^0.1.7"
-linkml-solr = "0.1.3"
-biolink-model = ">=3.0.1"
-sh = "^1.14.3"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
@@ -45,11 +45,11 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line_length = 90
+line_length = 120
 skip-string-normalization = true
 
 [tool.isort]
 profile = "black"
-line_length = 90
+line_length = 120
 multi_line_output = 3
 include_trailing_comma = true

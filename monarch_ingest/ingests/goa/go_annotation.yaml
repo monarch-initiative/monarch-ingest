@@ -19,9 +19,9 @@ files:
   - './data/goa/9615.go_annotations.gaf.gz'
   - './data/goa/9823.go_annotations.gaf.gz'
   - './data/goa/9913.go_annotations.gaf.gz'
-  - './data/goa/44689.go_annotations.gaf.gz'
   - './data/goa/10090.go_annotations.gaf.gz'
   - './data/goa/10116.go_annotations.gaf.gz'
+  - './data/goa/44689.go_annotations.gaf.gz'
   # - './data/goa/162425.go_annotations.gaf.gz'
 
 filters:
@@ -43,9 +43,9 @@ filters:
       - 'taxon:44689'
       - 'taxon:4932'
       - 'taxon:4896'
-      # Aspergillus nidulans FGSC A4 - primary genomic reference for
-      # Aspergillus nidulanse, data inside 5052.go_annotations.gaf.gz
+      # Aspergillus nidulans FGSC A4 - primary genomic reference for Aspergillus nidulanse, data inside 5052.go_annotations.gaf.gz
       - 'taxon:227321'
+      - 'taxon:559292'
 
 metadata:
   ingest_title: 'GOA DB'

@@ -62,6 +62,9 @@ For a detailed tutorial on ingests and how to make one, see the [Create an Inges
 | Command | Arguments/Options | Usage |
 | :--- | :--- | :--- |
 | `ingest download` | `--tags <tags>`: Which ingest to download dataset for<br>`--all`: Download all datasets | Downloads source data to be transformed |
-| `ingest transform` | `--tag`: Specify an ingest to run<br>`--ontology`: Runs the Monarch ontology ingest<br>`--all`: Runs all ingests `--output_dir`: Directory to output data<br>`--merge`: Merge output directory after transform<br>`--row-limit`: Number of rows to process<br>`--force`: Run ingest, even if output exists<br>`--quiet`: Suppress LOG output<br>`--log`: Write logs to ./logs/ for each ingest run | Perform a transform on source data |
+| `ingest transform` | `--tag`: Specify an ingest to run<br>`--ontology`: Runs the Monarch ontology ingest<br>`--all`: Runs all ingests `--output_dir`: Directory to output data<br>`--merge`: Merge output directory after transform<br>`--row-limit`: Number of rows to process<br>`--force`: Run ingest, even if output exists<br>`--quiet`: Suppress LOG output<br>`--log`: Write logs to ./logs/ for each ingest | Perform a transform on source data |
 | `ingest merge` | | Merge output/ into a tar.gz containg a single node and edge file |
 | `ingest release` | `--update-latest`: Also replaces latest/ | Upload results to Monarch Google bucket as dated release |
+| `ingest closure` | | Apply closures |
+| `ingest sqlite` | | Load sqlite |
+| `ingest solr` | | Load and run solr, no artifact created |

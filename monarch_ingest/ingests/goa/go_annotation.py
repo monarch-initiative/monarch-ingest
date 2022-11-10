@@ -14,12 +14,13 @@ from monarch_ingest.ingests.goa.goa_utils import (
     get_biolink_classes,
     lookup_predicate
 )
-from monarch_ingest.helper import get_logger
+from monarch_ingest.utils.log_utils import get_logger
 logger = get_logger(__name__)
 
 
 koza_app = get_koza_app("goa_go_annotation")
 
+# for row in koza_app.source: # doesn't play nice with tests
 while (row := koza_app.get_row()) is not None:
 
     gene_id, ncbitaxa = parse_identifiers(row)

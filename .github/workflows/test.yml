@@ -1,5 +1,5 @@
 # Builds and runs pytest on ubuntu-latest
-# Tests python versions >=3.6
+# Tests python versions >=3.10
 name: CI
 
 on:
@@ -11,7 +11,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # https://github.com/actions/setup-python
   test-python3-ubuntu-latest:
     name: test py${{ matrix.python-version }} on linux
     runs-on: ubuntu-latest
@@ -24,12 +23,14 @@ jobs:
       OS: ubuntu
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: set up python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: make test
-        run: make install-poetry test
+        run: |
+          pip install poetry
+          make test
