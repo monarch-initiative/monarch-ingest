@@ -9,6 +9,7 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
+                    source $HOME/.poetry/env
                     echo "Current directory: $(pwd)"
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
