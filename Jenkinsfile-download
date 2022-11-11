@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         HOME = "${env.WORKSPACE}"
-        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+        PATH = "/opt/poetry/bin:${env.PATH}"
         OMIM_API_KEY = credentials('OMIM_API_KEY')
     }
     stages {
