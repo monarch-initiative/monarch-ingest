@@ -9,16 +9,17 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    source $HOME/.poetry/env
                     echo "Current directory: $(pwd)"
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
                     python3 --version
                     pip --version
+                    
+                    # source $HOME/.poetry/env
                     poetry --version
 
-                    poetry config experimental.new-installer false
+                    # poetry config experimental.new-installer false
                     poetry install
                     poetry run which ingest
                 '''
@@ -29,7 +30,7 @@ pipeline {
                 sh '''
                     mkdir data || true
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    ls -la
+                    ls -lasdf
                     ls -la data
                 '''
             }
