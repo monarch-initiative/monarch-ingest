@@ -13,8 +13,8 @@ authors = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-koza = "^0.2.2"
-kghub-downloader = "^0.3.1"
+koza = "^0.2.3"
+kghub-downloader = "^0.3.2"
 kgx = "^1.7.2"
 cat-merge = "^0.1.18"
 closurizer = "^0.1.7"
