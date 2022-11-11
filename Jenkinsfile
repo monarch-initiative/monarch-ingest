@@ -16,9 +16,8 @@ pipeline {
                     # echo $SHELL
                     python3 --version
                     pip --version
-
-                    # alias poetry="/opt/poetry/bin/poetry"                    
                     poetry --version
+                  
 
                     # poetry config experimental.new-installer false
                     poetry install
