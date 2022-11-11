@@ -485,10 +485,10 @@
 
 # TODO: parse this oddball non-Entrez ortholog file separately?
 #
-#- # Non-Entrez OMIM, MGI, and ZFIN genes
-#  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
-#  local_name: data/xenbase/XenbaseGeneZebrafishOXenbaseGeneNonEntrezOrthologMappingrthologMapping.txt
-#  tag: xenbase_orthologs
+- # Non-Entrez OMIM, MGI, and ZFIN genes
+  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
+  local_name: data/xenbase/XenbaseGeneNonEntrezOrthologMapping.txt
+  tag: xenbase_non_entrez_orthologs
 
 ### Zfin
 -
