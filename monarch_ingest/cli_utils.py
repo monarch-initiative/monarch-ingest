@@ -113,7 +113,7 @@ def transform_phenio(
     tar.extract(nodefile, 'data/monarch')
     tar.extract(edgefile, 'data/monarch')
 
-    Path(f"{output_dir}/transform_output").mkdir(exist_ok=True)
+    Path(f"{output_dir}/transform_output").mkdir(parents=True, exist_ok=True)
 
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
@@ -197,7 +197,7 @@ def transform_all(
     # TODO:
     # - check for data - download if missing (maybe y/n prompt?)
     # - check for difference in data? maybe implement in kghub downloder instead?
-
+    
     try:
         transform_phenio(output_dir=output_dir, force=force)
     except Exception as e:
