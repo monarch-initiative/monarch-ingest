@@ -9,15 +9,15 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    which bash
                     echo "Current directory: $(pwd)"
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
+                    echo $SHELL
                     python3 --version
                     pip --version
                     
-                    # source $HOME/.poetry/env
+                    source $HOME/.poetry/env
                     poetry --version
 
                     # poetry config experimental.new-installer false
