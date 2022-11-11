@@ -795,7 +795,7 @@ validators = ">=0.13.0"
 
 [[package]]
 name = "koza"
-version = "0.2.2"
+version = "0.2.3"
 description = "Data transformation framework for LinkML data models"
 category = "main"
 optional = false
@@ -2118,7 +2118,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "0efadee9728765d432c1110d999a5630bdfe0db1e959b1461109b4a0ce1327e5"
+content-hash = "2bf12dd7ec416fc9e89bb0a554529c2558faa5ca332db4e43fff5105b7e56997"
 
 [metadata.files]
 alabaster = [
@@ -2562,8 +2562,8 @@ kgx = [
     {file = "kgx-1.7.2.tar.gz", hash = "sha256:7e7c712a16265aa2a92fa5cd70690998d7c219c21ca816ec696184babe714cc7"},
 ]
 koza = [
-    {file = "koza-0.2.2-py3-none-any.whl", hash = "sha256:1fe0c50bf4d3fa94615303905a2245cc69b6440fb140d563ed8ee2ada46d63fb"},
-    {file = "koza-0.2.2.tar.gz", hash = "sha256:a9e0c031a6a3308dc2f99f3fc5a48fa4ab4e473a81cb00a0b446b7c9f5711efe"},
+    {file = "koza-0.2.3-py3-none-any.whl", hash = "sha256:c0e343cbd95845a544dcb610332325a9d050e01b2721799c1359ead85c795320"},
+    {file = "koza-0.2.3.tar.gz", hash = "sha256:4a6f1a5bf4e0a832504ef682e86484c27eb21187673197bbcd34fc83f9c5a66f"},
 ]
 linkml = [
     {file = "linkml-1.3.2-py3-none-any.whl", hash = "sha256:2fd6bc0ba9f40ec528185dbd3bfd1433659ae3feb4e82b4782371684c8a54f2b"},
