@@ -3,21 +3,21 @@ pipeline {
         environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
-        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+        PATH = "/opt/poetry/bin:${env.PATH}"
     }
     stages {
         stage('setup') {
             steps {
                 sh '''
                     echo "Current directory: $(pwd)"
-                    export PATH=$PATH:$HOME/.local/bin
+                    # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
-                    echo $SHELL
+                    # echo $SHELL
                     python3 --version
                     pip --version
 
-                    alias poetry="/opt/poetry/bin/poetry"                    
+                    # alias poetry="/opt/poetry/bin/poetry"                    
                     poetry --version
 
                     # poetry config experimental.new-installer false
