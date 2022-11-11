@@ -12,7 +12,7 @@ delimiter: '\t'
 #    MGI gene ID
 #    ZFIN gene ID
 files:
- - 'data/xenbase/XenbaseGeneNonEntrezOrthologMapping.txt'
+ - 'data/xenbase/XenbaseGeneZebrafishOXenbaseGeneNonEntrezOrthologMappingrthologMapping.txt'
 
 metadata:
   ingest_title: 'Xenbase'
