@@ -9,6 +9,7 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
+                    which bash
                     echo "Current directory: $(pwd)"
                     export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
