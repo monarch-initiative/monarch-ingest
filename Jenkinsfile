@@ -3,19 +3,23 @@ pipeline {
         environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
-        PATH = "/home/ubuntu/.poetry/bin:${env.PATH}"
+        PATH = "/opt/poetry/bin:${env.PATH}"
     }
     stages {
         stage('setup') {
             steps {
                 sh '''
                     echo "Current directory: $(pwd)"
+                    # export PATH=$PATH:$HOME/.local/bin
+                    echo "Path: $PATH"
+                    
+                    # echo $SHELL
                     python3 --version
                     pip --version
-                    export PATH=$PATH:$HOME/.local/bin
-                    echo "Path: $PATH"
+                    poetry --version
+                  
 
-                    which poetry
+                    # poetry config experimental.new-installer false
                     poetry install
                     poetry run which ingest
                 '''
@@ -26,7 +30,7 @@ pipeline {
                 sh '''
                     mkdir data || true
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    ls -la
+                    ls -lasdf
                     ls -la data
                 '''
             }
