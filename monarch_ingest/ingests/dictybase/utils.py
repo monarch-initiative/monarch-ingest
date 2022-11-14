@@ -23,7 +23,7 @@ def parse_gene_id(row: Dict, gene_names_to_ids: Dict) -> Optional[Tuple[str, str
 
     # sanity check: probably won't happen but empty gene field?
     if not gene_field:
-        logger.warning(f"{error_prefix} has an empty 'Associated gene(s)' field?\n")
+        logger.debug(f"{error_prefix} has an empty 'Associated gene(s)' field?\n")
         return None
 
     # Split out multiple genes
@@ -41,7 +41,7 @@ def parse_gene_id(row: Dict, gene_names_to_ids: Dict) -> Optional[Tuple[str, str
         # If an NCBI Gene Id is not available, attempt a more local Dictybase gene identifier
         gene_id = f"dictyBase:{gene_names_to_ids[gene_name]['GENE ID']}"
     except KeyError:
-        logger.warning(f"{error_prefix} has a Gene Name '{gene_name}' with an unknown identifier mapping?\n")
+        logger.debug(f"{error_prefix} has a Gene Name '{gene_name}' with an unknown identifier mapping?\n")
         return None
 
     return gene_id, gene_name
@@ -62,7 +62,7 @@ def parse_phenotypes(row: Dict, phenotype_names_to_ids: Dict) -> List[str]:
 
     # sanity check: probably won't happen but empty gene field?
     if not phenotypes_field:
-        logger.warning(f"{error_prefix} has an empty 'Phenotypes' field?\n")
+        logger.debug(f"{error_prefix} has an empty 'Phenotypes' field?\n")
         return []
 
     # Split out multiple genes
@@ -76,7 +76,7 @@ def parse_phenotypes(row: Dict, phenotype_names_to_ids: Dict) -> List[str]:
         try:
             phenotype_ids.append(phenotype_names_to_ids[phenotype_name]['id'])
         except KeyError:
-            logger.warning(f"{error_prefix} Phenotype Name '{phenotype_name}' has unknown identifier mapping?\n")
+            logger.debug(f"{error_prefix} Phenotype Name '{phenotype_name}' has unknown identifier mapping?\n")
             return []
 
     return phenotype_ids
