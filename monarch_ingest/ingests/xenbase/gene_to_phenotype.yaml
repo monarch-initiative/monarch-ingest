@@ -24,6 +24,7 @@ columns:
   - 'RELATION_LABEL'
   - 'EVIDENCE'
   - 'EVIDENCE_LABEL'
+  - 'SOURCE'
   - 'IS_DEFINED_BY'
   - 'QUALIFIER'
 

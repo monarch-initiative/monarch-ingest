@@ -207,6 +207,14 @@ petl = ">=1.7.10,<2.0.0"
 SQLAlchemy = ">=1.4.37,<2.0.0"
 
 [[package]]
+name = "cloudpickle"
+version = "2.2.0"
+description = "Extended pickling support for Python objects"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -238,6 +246,31 @@ support_developer = "*"
 
 [package.extras]
 test = ["codacy-coverage", "coveralls", "dict_hash", "pytest", "pytest-cov", "random_dict", "validate_version_code"]
+
+[[package]]
+name = "dask"
+version = "2022.10.2"
+description = "Parallel PyData with Task Scheduling"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+click = ">=7.0"
+cloudpickle = ">=1.1.1"
+fsspec = ">=0.6.0"
+packaging = ">=20.0"
+partd = ">=0.3.10"
+pyyaml = ">=5.3.1"
+toolz = ">=0.8.2"
+
+[package.extras]
+array = ["numpy (>=1.18)"]
+complete = ["bokeh (>=2.4.2,<3)", "distributed (==2022.10.2)", "jinja2", "numpy (>=1.18)", "pandas (>=1.0)"]
+dataframe = ["numpy (>=1.18)", "pandas (>=1.0)"]
+diagnostics = ["bokeh (>=2.4.2,<3)", "jinja2"]
+distributed = ["distributed (==2022.10.2)"]
+test = ["pandas[test]", "pre-commit", "pytest", "pytest-rerunfailures", "pytest-xdist"]
 
 [[package]]
 name = "decorator"
@@ -378,6 +411,37 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 mccabe = ">=0.6.0,<0.7.0"
 pycodestyle = ">=2.7.0,<2.8.0"
 pyflakes = ">=2.3.0,<2.4.0"
+
+[[package]]
+name = "fsspec"
+version = "2022.11.0"
+description = "File-system specification"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+abfs = ["adlfs"]
+adl = ["adlfs"]
+arrow = ["pyarrow (>=1)"]
+dask = ["dask", "distributed"]
+dropbox = ["dropbox", "dropboxdrivefs", "requests"]
+entrypoints = ["importlib-metadata"]
+fuse = ["fusepy"]
+gcs = ["gcsfs"]
+git = ["pygit2"]
+github = ["requests"]
+gs = ["gcsfs"]
+gui = ["panel"]
+hdfs = ["pyarrow (>=1)"]
+http = ["aiohttp (!=4.0.0a0,!=4.0.0a1)", "requests"]
+libarchive = ["libarchive-c"]
+oci = ["ocifs"]
+s3 = ["s3fs"]
+sftp = ["paramiko"]
+smb = ["smbprotocol"]
+ssh = ["paramiko"]
+tqdm = ["tqdm"]
 
 [[package]]
 name = "ghp-import"
@@ -918,6 +982,14 @@ stringcase = ">=1.2.0"
 dev = ["mkdocs", "mkdocs-material", "mkdocstrings", "mkdocstrings-python-legacy", "pytest", "pytest-cov"]
 
 [[package]]
+name = "locket"
+version = "1.0.0"
+description = "File-based locks for Python on Linux and Windows"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "markdown"
 version = "3.3.7"
 description = "Python implementation of Markdown."
@@ -1186,6 +1258,21 @@ description = "parse() is the opposite of format()"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "partd"
+version = "1.3.0"
+description = "Appendable key-value storage"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+locket = "*"
+toolz = "*"
+
+[package.extras]
+complete = ["blosc", "numpy (>=1.9.0)", "pandas (>=0.19.0)", "pyzmq"]
 
 [[package]]
 name = "pathspec"
@@ -1952,6 +2039,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "toolz"
+version = "0.12.0"
+description = "List processing tools and functional utilities"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "tox"
 version = "3.27.1"
 description = "tox is a generic virtualenv management and test command line tool"
@@ -2118,7 +2213,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2bf12dd7ec416fc9e89bb0a554529c2558faa5ca332db4e43fff5105b7e56997"
+content-hash = "4ca083268cf730c579c7ef5ae4defb05ca17f9f0779218c9cb7c29b0f05873b8"
 
 [metadata.files]
 alabaster = [
@@ -2191,6 +2286,10 @@ closurizer = [
     {file = "closurizer-0.1.7-py3-none-any.whl", hash = "sha256:31beb73914cabf6f55e08f3a22697761d110b033d62c31e967f8dc87dcaf8688"},
     {file = "closurizer-0.1.7.tar.gz", hash = "sha256:a4d4aca3dd007d8e35ef03dc951cea4bf38ceb2b083982188ee721f832acff7d"},
 ]
+cloudpickle = [
+    {file = "cloudpickle-2.2.0-py3-none-any.whl", hash = "sha256:7428798d5926d8fcbfd092d18d01a2a03daf8237d8fcdc8095d256b8490796f0"},
+    {file = "cloudpickle-2.2.0.tar.gz", hash = "sha256:3f4219469c55453cfe4737e564b67c2a149109dabf7f242478948b895f61106f"},
+]
 colorama = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -2201,6 +2300,10 @@ commonmark = [
 ]
 compress-json = [
     {file = "compress_json-1.0.8.tar.gz", hash = "sha256:463e55fb8bb154f605130c7f6c2411fcb20f9ef4cb16020fd9880ba143002814"},
+]
+dask = [
+    {file = "dask-2022.10.2-py3-none-any.whl", hash = "sha256:928003a97b890a14c8a09a01f15320d261053bda530a8bf191d84f33db4a63b8"},
+    {file = "dask-2022.10.2.tar.gz", hash = "sha256:42cb43f601709575fa46ce09e74bea83fdd464187024f56954e09d9b428ceaab"},
 ]
 decorator = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
@@ -2249,6 +2352,10 @@ filelock = [
 flake8 = [
     {file = "flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907"},
     {file = "flake8-3.9.2.tar.gz", hash = "sha256:07528381786f2a6237b061f6e96610a4167b226cb926e2aa2b6b1d78057c576b"},
+]
+fsspec = [
+    {file = "fsspec-2022.11.0-py3-none-any.whl", hash = "sha256:d6e462003e3dcdcb8c7aa84c73a228f8227e72453cd22570e2363e8844edfe7b"},
+    {file = "fsspec-2022.11.0.tar.gz", hash = "sha256:259d5fd5c8e756ff2ea72f42e7613c32667dc2049a4ac3d84364a7ca034acb8b"},
 ]
 ghp-import = [
     {file = "ghp-import-2.1.0.tar.gz", hash = "sha256:9c535c4c61193c2df8871222567d7fd7e5014d835f97dc7b7439069e2413d343"},
@@ -2585,6 +2692,10 @@ linkml-validator = [
     {file = "linkml_validator-0.4.3-py3-none-any.whl", hash = "sha256:8d32157e8981174cdcd6350d60df680cdcde9158b840f6b812638e353baf879d"},
     {file = "linkml_validator-0.4.3.tar.gz", hash = "sha256:73a3c0d06a133d271c64426f2950a708042313f341e3fdce8c4913e6d6bf022a"},
 ]
+locket = [
+    {file = "locket-1.0.0-py2.py3-none-any.whl", hash = "sha256:b6c819a722f7b6bd955b80781788e4a66a55628b858d347536b7e81325a3a5e3"},
+    {file = "locket-1.0.0.tar.gz", hash = "sha256:5c0d4c052a8bbbf750e056a8e65ccd309086f4f0f18a2eac306a8dfa4112a632"},
+]
 markdown = [
     {file = "Markdown-3.3.7-py3-none-any.whl", hash = "sha256:f5da449a6e1c989a4cea2631aa8ee67caa5a2ef855d551c88f9e309f4634c621"},
     {file = "Markdown-3.3.7.tar.gz", hash = "sha256:cbb516f16218e643d8e0a95b309f77eb118cb138d39a4f27851e6a63581db874"},
@@ -2783,6 +2894,10 @@ pandas = [
 ]
 parse = [
     {file = "parse-1.19.0.tar.gz", hash = "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"},
+]
+partd = [
+    {file = "partd-1.3.0-py3-none-any.whl", hash = "sha256:6393a0c898a0ad945728e34e52de0df3ae295c5aff2e2926ba7cc3c60a734a15"},
+    {file = "partd-1.3.0.tar.gz", hash = "sha256:ce91abcdc6178d668bcaa431791a5a917d902341cb193f543fe445d494660485"},
 ]
 pathspec = [
     {file = "pathspec-0.10.2-py3-none-any.whl", hash = "sha256:88c2606f2c1e818b978540f73ecc908e13999c6c3a383daf3705652ae79807a5"},
@@ -3308,6 +3423,10 @@ toml = [
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
+]
+toolz = [
+    {file = "toolz-0.12.0-py3-none-any.whl", hash = "sha256:2059bd4148deb1884bb0eb770a3cde70e7f954cfbbdc2285f1f2de01fd21eb6f"},
+    {file = "toolz-0.12.0.tar.gz", hash = "sha256:88c570861c440ee3f2f6037c4654613228ff40c93a6c25e0eba70d17282c6194"},
 ]
 tox = [
     {file = "tox-3.27.1-py2.py3-none-any.whl", hash = "sha256:f52ca66eae115fcfef0e77ef81fd107133d295c97c52df337adedb8dfac6ab84"},

@@ -20,7 +20,7 @@ while (row := koza_app.get_row()) is not None:
     frequency_hpo = row["Frequency-HPO"]
     qualifiers = [disease_id]
     if frequency_hpo:
-          # Not all entries have HPO frequency info
+        # Not all entries have HPO frequency info
         qualifiers.append(frequency_hpo)
     evidence = [row["G-D source"]]
 

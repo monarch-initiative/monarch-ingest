@@ -181,6 +181,51 @@ def transform_phenio(
 
     if log: logger.removeHandler(fh)
 
+def parallel_all(
+    output_dir: str = OUTPUT_DIR,
+    row_limit: Optional[int] = None,
+    rdf: bool = False,
+    force: bool = False,
+    verbose: bool = None,
+    log: bool = False,
+    ):
+
+    set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
+        
+    import dask
+        
+    @dask.delayed
+    def delayed_transform(ingest, output_dir, row_limit, rdf, force, verbose, log):
+        try:
+            return transform_one(
+                    tag=ingest,
+                    output_dir=output_dir,
+                    row_limit=row_limit,
+                    rdf=rdf,
+                    force=force,
+                    verbose=verbose,
+                    log=log
+                    )
+        except FileNotFoundError:
+            logger.error(f"Ingest {ingest} did not produce any output.")
+            pass
+
+    @dask.delayed
+    def delayed_phenio(output_dir, force):
+        try:
+            return transform_phenio(output_dir=output_dir, force=force)
+        except FileNotFoundError:
+            logger.error("Phenio transform produced no output.") 
+            pass
+
+
+    tasks = [delayed_phenio(output_dir=output_dir, force=force)]
+    tasks.append(delayed_transform(i, output_dir, row_limit, rdf, force, verbose, log) for i in get_ingests())
+
+    results = dask.compute(tasks, traverse=True)
+
+    return results
+
 
 def transform_all(
     output_dir: str = OUTPUT_DIR,
