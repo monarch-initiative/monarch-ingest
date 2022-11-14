@@ -6,19 +6,19 @@ from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociatio
 
 koza_app = get_koza_app("sgd_publication_to_gene")
 
-row = koza_app.get_row()
+while (row := koza_app.get_row()) is not None:
 
-gene_id = "SGD:" + row["gene name"]
+    gene_id = "SGD:" + row["gene name"]
 
-publication_id = "PMID:" + row["PubMed ID"]
+    publication_id = "PMID:" + row["PubMed ID"]
 
-association = InformationContentEntityToNamedThingAssociation(
-    id="uuid:" + str(uuid.uuid1()),
-    subject=gene_id,
-    predicate="biolink:mentions",
-    object=publication_id,
-    aggregator_knowledge_source=["infores:monarchinitiative"],
-    primary_knowledge_source="infores:sgd"
-)
+    association = InformationContentEntityToNamedThingAssociation(
+        id="uuid:" + str(uuid.uuid1()),
+        subject=gene_id,
+        predicate="biolink:mentions",
+        object=publication_id,
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:sgd"
+    )
 
-koza_app.write(association)
+    koza_app.write(association)

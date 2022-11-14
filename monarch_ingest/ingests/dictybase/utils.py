@@ -4,7 +4,7 @@ A few Dictybase parse utility functions
 from typing import Optional, Tuple, Dict, List
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def parse_gene_id(row: Dict, gene_names_to_ids: Dict) -> Optional[Tuple[str, str]]:
