@@ -18,7 +18,102 @@ logger = logging.getLogger(__name__)
 
 OUTPUT_DIR = "output"
 
+###### Testing parallel ##########################################
 
+import prefect
+
+@prefect.flow
+def prefect_all(
+    output_dir: str = OUTPUT_DIR,
+    row_limit: Optional[int] = None,
+    rdf: bool = False,
+    force: bool = False,
+    verbose: bool = None,
+    log: bool = False,
+    # parallel: int = 4
+):
+    prefect.settings.PREFECT_LOGGING_LEVEL.value("WARNING")
+
+    if log: fh = add_log_fh(logger, Path(f"logs/all_ingests.log"))
+
+    # TODO:
+    # - check for data - download if missing (maybe y/n prompt?)
+    # - check for difference in data? maybe implement in kghub downloder instead?
+    
+    try:
+        transform_phenio(output_dir=output_dir, force=force)
+    except Exception as e:
+        logger.error(f"Error running Phenio ingest: {e}")
+
+    ingests = get_ingests()
+    for ingest in ingests:
+        try:
+            transform_one(
+                ingest=ingest,
+                output_dir=output_dir,
+                row_limit=row_limit,
+                rdf=rdf,
+                force=force,
+                verbose=verbose,
+                log=log,
+            )
+        except Exception as e:
+            logger.error(f"Error running ingest {ingest}: {e}")
+            pass
+        
+    if log: logger.removeHandler(fh)
+    
+
+# def parallel_all(
+#     output_dir: str = OUTPUT_DIR,
+#     row_limit: Optional[int] = None,
+#     rdf: bool = False,
+#     force: bool = False,
+#     verbose: bool = None,
+#     log: bool = False,
+#     parallel: int = 4
+#     ):
+
+#     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
+        
+#     import dask
+#     from concurrent.futures import ThreadPoolExecutor
+        
+#     @dask.delayed
+#     def delayed_transform(ingest, output_dir, row_limit, rdf, force, verbose, log):
+#         try:
+#             return transform_one(
+#                     ingest=ingest,
+#                     output_dir=output_dir,
+#                     row_limit=row_limit,
+#                     rdf=rdf,
+#                     force=force,
+#                     verbose=verbose,
+#                     log=log
+#                     )
+#         except FileNotFoundError:
+#             logger.error(f"Ingest {ingest} did not produce any output.")
+#             pass
+
+#     @dask.delayed
+#     def delayed_phenio(output_dir, force):
+#         try:
+#             return transform_phenio(output_dir=output_dir, force=force)
+#         except FileNotFoundError:
+#             logger.error("Phenio transform produced no output.") 
+#             pass
+
+#     tasks = [delayed_phenio(output_dir=output_dir, force=force)]
+#     tasks.append(delayed_transform(i, output_dir, row_limit, rdf, force, verbose, log) for i in get_ingests())
+
+#     with dask.config.set(pool=ThreadPoolExecutor(parallel)):
+#         results = dask.compute(tasks, traverse=True, rerun_exceptions_locally=True)
+
+#     return results
+    
+#########################################################################################################################################
+
+# @prefect.task
 def transform_one(
     ingest: str = None,
     output_dir: str = OUTPUT_DIR,
@@ -90,7 +185,7 @@ def transform_one(
 
     if log: logger.removeHandler(fh)
 
-
+# @prefect.task
 def transform_phenio(
     output_dir: str = OUTPUT_DIR,
     force: bool = False,
@@ -180,54 +275,6 @@ def transform_phenio(
         raise FileNotFoundError("Phenio transform did not produce the expected output")
 
     if log: logger.removeHandler(fh)
-
-def parallel_all(
-    output_dir: str = OUTPUT_DIR,
-    row_limit: Optional[int] = None,
-    rdf: bool = False,
-    force: bool = False,
-    verbose: bool = None,
-    log: bool = False,
-    parallel: int = 4
-    ):
-
-    set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
-        
-    import dask
-    from concurrent.futures import ThreadPoolExecutor
-        
-    @dask.delayed
-    def delayed_transform(ingest, output_dir, row_limit, rdf, force, verbose, log):
-        try:
-            return transform_one(
-                    ingest=ingest,
-                    output_dir=output_dir,
-                    row_limit=row_limit,
-                    rdf=rdf,
-                    force=force,
-                    verbose=verbose,
-                    log=log
-                    )
-        except FileNotFoundError:
-            logger.error(f"Ingest {ingest} did not produce any output.")
-            pass
-
-    @dask.delayed
-    def delayed_phenio(output_dir, force):
-        try:
-            return transform_phenio(output_dir=output_dir, force=force)
-        except FileNotFoundError:
-            logger.error("Phenio transform produced no output.") 
-            pass
-
-
-    tasks = [delayed_phenio(output_dir=output_dir, force=force)]
-    tasks.append(delayed_transform(i, output_dir, row_limit, rdf, force, verbose, log) for i in get_ingests())
-
-    with dask.config.set(pool=ThreadPoolExecutor(parallel)):
-        results = dask.compute(tasks, traverse=True, rerun_exceptions_locally=True)
-
-    return results
 
 
 def transform_all(

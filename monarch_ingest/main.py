@@ -34,8 +34,8 @@ def transform(
     ingest: str = typer.Option(None, "--ingest", "-i", help="Which ingest to run (see ingests.yaml for a list)"),
     phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
     all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
-    force: bool = typer.Option(None, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
-    rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
+    rdf: bool = typer.Option(False, help="Output rdf files along with tsv"),
     verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
     log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
     parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
@@ -46,14 +46,15 @@ def transform(
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
 
     if parallel:
-        parallel_all(
+        # parallel_all(
+        prefect_all(
             output_dir = output_dir,
             row_limit = row_limit,
             rdf = rdf,
             force = force,
             verbose=verbose,
             log = log,
-            parallel = parallel
+            # parallel = parallel
         )
     elif phenio:
         transform_phenio(
