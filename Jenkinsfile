@@ -37,7 +37,7 @@ pipeline {
         }
         stage('transform') {
             steps {
-                sh 'poetry run ingest transform --all --rdf --log'
+                sh 'poetry run ingest transform -p -a -l --rdf'
             }
         }
         stage('merge') {
