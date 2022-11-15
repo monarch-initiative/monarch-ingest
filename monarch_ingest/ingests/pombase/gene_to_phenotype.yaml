@@ -33,6 +33,7 @@ columns:
     - 'Reference'
     - 'Taxon'
     - 'Date'
+    - 'Ploidy'
 
 edge_properties:
   - 'id'
