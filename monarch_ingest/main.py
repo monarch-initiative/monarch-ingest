@@ -30,20 +30,20 @@ def download(
 @typer_app.command()
 def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
-    output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to output data"),
-    tag: str = typer.Option(None, help="Which ingest to run (see ingests.yaml for a list)"),
+    output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
+    ingest: str = typer.Option(None, "--ingest", "-i", help="Which ingest to run (see ingests.yaml for a list)"),
     phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
-    all: bool = typer.Option(False, help="Ingest all sources"),
-    row_limit: int = typer.Option(None, help="Number of rows to process"),
-    do_merge: bool = typer.Option(False, "--merge", help="Merge output dir after ingest"),
-    force: bool = typer.Option(None,help="Force ingest, even if output exists (on by default for single ingests)"),
+    all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
+    do_merge: bool = typer.Option(False, "--merge", "-m", help="Merge output dir after ingest"),
+    force: bool = typer.Option(None, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
     rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
-    verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
-    log: bool = typer.Option(False, help="Write DEBUG level logs to ./logs/ for each ingest"),
-    parallel: bool = typer.Option(False, help="Utilize Dask to perform multiple ingests in parallel")
+    verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
+    log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
+    parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
+    row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
-    
+
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
 
     if parallel:
@@ -54,6 +54,7 @@ def transform(
             force = force,
             verbose=verbose,
             log = log,
+            parallel = parallel
         )
         return
 
@@ -63,9 +64,9 @@ def transform(
             force=force,
             verbose=verbose
         )
-    elif tag:
+    elif ingest:
         transform_one(
-            tag = tag,
+            ingest = ingest,
             output_dir = output_dir,
             row_limit = row_limit,
             rdf = rdf,

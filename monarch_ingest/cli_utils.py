@@ -20,7 +20,7 @@ OUTPUT_DIR = "output"
 
 
 def transform_one(
-    tag: str = None,
+    ingest: str = None,
     output_dir: str = OUTPUT_DIR,
     row_limit: int = None,
     rdf: bool = False,
@@ -29,26 +29,26 @@ def transform_one(
     log: bool = False
 ):
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
-    if log: fh = add_log_fh(logger, Path(f"logs/{tag}.log"))
+    if log: fh = add_log_fh(logger, Path(f"logs/{ingest}.log"))
 
     ingests = get_ingests()
 
-    if tag not in ingests:
+    if ingest not in ingests:
         if log: logger.removeHandler(fh)
-        raise ValueError(f"{tag} is not a valid ingest - see ingests.yaml for a list of options")
+        raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
 
-    source_file = Path(Path(__file__).parent, ingests[tag]['config'])
+    source_file = Path(Path(__file__).parent, ingests[ingest]['config'])
 
     if not Path(source_file).is_file():
         if log: logger.removeHandler(fh)
         raise ValueError(f"Source file {source_file} does not exist")
 
-    if ingest_output_exists(tag, output_dir) and not force:
-        logger.info(f"Transformed output exists - skipping ingest: {tag} - To run this ingest anyway, use --force")
+    if ingest_output_exists(ingest, output_dir) and not force:
+        logger.info(f"Transformed output exists - skipping ingest: {ingest} - To run this ingest anyway, use --force")
         if log: logger.removeHandler(fh)
         return
 
-    logger.info(f"Running ingest: {tag}...")
+    logger.info(f"Running ingest: {ingest}...")
     try:
         transform_source(
             source=source_file,
@@ -62,13 +62,13 @@ def transform_one(
         raise ValueError(f"Missing data - {e}")
 
     if rdf is not None:
-        logger.info(f"Creating rdf output {output_dir}/rdf/{tag}.nt.gz ...")
+        logger.info(f"Creating rdf output {output_dir}/rdf/{ingest}.nt.gz ...")
 
         Path(f"{output_dir}/rdf").mkdir(parents=True, exist_ok=True)
 
         src_files = []
-        src_nodes = f"{output_dir}/transform_output/{tag}_nodes.tsv"
-        src_edges = f"{output_dir}/transform_output/{tag}_edges.tsv"
+        src_nodes = f"{output_dir}/transform_output/{ingest}_nodes.tsv"
+        src_edges = f"{output_dir}/transform_output/{ingest}_edges.tsv"
         if Path(src_nodes).is_file():
             src_files.append(src_nodes)
         if Path(src_edges).is_file():
@@ -79,14 +79,14 @@ def transform_one(
             inputs=src_files,
             input_format="tsv",
             stream=True,
-            output=f"{output_dir}/rdf/{tag}.nt.gz",
+            output=f"{output_dir}/rdf/{ingest}.nt.gz",
             output_format="nt",
             output_compression="gz",
         )
 
-    if not ingest_output_exists(tag, f"{output_dir}/transform_output"):
+    if not ingest_output_exists(ingest, f"{output_dir}/transform_output"):
         if log: logger.removeHandler(fh) 
-        raise FileNotFoundError(f"Ingest {tag} did not produce the the expected output")
+        raise FileNotFoundError(f"Ingest {ingest} did not produce the the expected output")
 
     if log: logger.removeHandler(fh)
 
@@ -188,17 +188,19 @@ def parallel_all(
     force: bool = False,
     verbose: bool = None,
     log: bool = False,
+    parallel: int = 4
     ):
 
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
         
     import dask
+    from concurrent.futures import ThreadPoolExecutor
         
     @dask.delayed
     def delayed_transform(ingest, output_dir, row_limit, rdf, force, verbose, log):
         try:
             return transform_one(
-                    tag=ingest,
+                    ingest=ingest,
                     output_dir=output_dir,
                     row_limit=row_limit,
                     rdf=rdf,
@@ -222,7 +224,8 @@ def parallel_all(
     tasks = [delayed_phenio(output_dir=output_dir, force=force)]
     tasks.append(delayed_transform(i, output_dir, row_limit, rdf, force, verbose, log) for i in get_ingests())
 
-    results = dask.compute(tasks, traverse=True)
+    with dask.config.set(pool=ThreadPoolExecutor(parallel)):
+        results = dask.compute(tasks, traverse=True, rerun_exceptions_locally=True)
 
     return results
 
@@ -252,7 +255,7 @@ def transform_all(
     for ingest in ingests:
         try:
             transform_one(
-                tag=ingest,
+                ingest=ingest,
                 output_dir=output_dir,
                 row_limit=row_limit,
                 rdf=rdf,
