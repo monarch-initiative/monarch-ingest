@@ -34,7 +34,6 @@ def transform(
     ingest: str = typer.Option(None, "--ingest", "-i", help="Which ingest to run (see ingests.yaml for a list)"),
     phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
     all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
-    do_merge: bool = typer.Option(False, "--merge", "-m", help="Merge output dir after ingest"),
     force: bool = typer.Option(None, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
     rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
     verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
@@ -56,9 +55,7 @@ def transform(
             log = log,
             parallel = parallel
         )
-        return
-
-    if phenio:
+    elif phenio:
         transform_phenio(
             output_dir=output_dir,
             force=force,
@@ -83,8 +80,7 @@ def transform(
             verbose=verbose,
             log = log,
         )
-    if do_merge:
-        merge(f"{output_dir}/transform_output", output_dir)
+
 
 
 @typer_app.command()
