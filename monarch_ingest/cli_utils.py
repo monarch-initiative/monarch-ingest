@@ -366,7 +366,7 @@ def do_release():
         sh.touch(f"output/{release_name}")
         
         # copy to monarch-archive bucket
-        sh.gsutil('gsutil', '-m', 'cp', '-r', 'output/*', f'gs://monarch-archive/monarch-kg-dev/{release_name}')
+        sh.gsutil('-q', '-m', 'cp', '-r', 'output/*', f'gs://monarch-archive/monarch-kg-dev/{release_name}')
 
         sh.gsutil("-q", "-m", "cp", "-r", "output/*", f"gs://monarch-archive/monarch-kg-dev/{release_name}")
 
