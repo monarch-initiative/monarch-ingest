@@ -38,25 +38,14 @@ def transform(
     rdf: bool = typer.Option(False, help="Output rdf files along with tsv"),
     verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
     log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
-    parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
     row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
+    # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
 
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
 
-    if parallel:
-        # parallel_all(
-        prefect_all(
-            output_dir = output_dir,
-            row_limit = row_limit,
-            rdf = rdf,
-            force = force,
-            verbose=verbose,
-            log = log,
-            # parallel = parallel
-        )
-    elif phenio:
+    if phenio:
         transform_phenio(
             output_dir=output_dir,
             force=force,
