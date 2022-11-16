@@ -6,25 +6,25 @@ from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociatio
 
 koza_app = get_koza_app("rgd_publication_to_gene")
 
-row = koza_app.get_row()
+while (row := koza_app.get_row()) is not None:
 
-if not row["CURATED_REF_PUBMED_ID"]:
-    koza_app.next_row()
+    if not row["CURATED_REF_PUBMED_ID"]:
+        koza_app.next_row()
 
-gene_id='RGD:' + row["GENE_RGD_ID"]
+    gene_id='RGD:' + row["GENE_RGD_ID"]
 
-id_list = row["CURATED_REF_PUBMED_ID"].split(';')
-for each_id in id_list:
+    id_list = row["CURATED_REF_PUBMED_ID"].split(';')
+    for each_id in id_list:
 
-    publication_id = "PMID:" + each_id
+        publication_id = "PMID:" + each_id
 
-    association = InformationContentEntityToNamedThingAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene_id,
-        predicate="biolink:mentions",
-        object=publication_id,
-        aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:rgd"
-    )
+        association = InformationContentEntityToNamedThingAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gene_id,
+            predicate="biolink:mentions",
+            object=publication_id,
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:rgd"
+        )
 
-    koza_app.write(association)
+        koza_app.write(association)

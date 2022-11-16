@@ -5,32 +5,34 @@ from biolink.pydanticmodel import Gene
 
 koza_app = get_koza_app("alliance_gene")
 
-row = koza_app.get_row()
-# curie prefix as source?
-gene_id = row["basicGeneticEntity"]["primaryId"]
-# Not sure if Alliance will stick with this prefix for Xenbase, but for now...
-gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
+while (row := koza_app.get_row()) is not None:
 
-source = source_map[gene_id.split(":")[0]]
+    # curie prefix as source?
+    gene_id = row["basicGeneticEntity"]["primaryId"]
 
-if "name" not in row.keys():
-    row["name"] = row["symbol"]
+    # Not sure if Alliance will stick with this prefix for Xenbase, but for now...
+    gene_id = gene_id.replace("DRSC:XB:", "Xenbase:")
 
-gene = Gene(
-    id=gene_id,
-    symbol=row["symbol"],
-    name=row["name"],
-    type=row["soTermId"],
-    in_taxon=[row["basicGeneticEntity"]["taxonId"]],
-    source=source,
-)
+    source = source_map[gene_id.split(":")[0]]
 
-if row["basicGeneticEntity"]["crossReferences"]:
-    gene.xref = [
-        koza_app.curie_cleaner.clean(xref["id"])
-        for xref in row["basicGeneticEntity"]["crossReferences"]
-    ]
-if "synonyms" in row["basicGeneticEntity"].keys():
-    gene.synonym = row["basicGeneticEntity"]["synonyms"]
+    if "name" not in row.keys():
+        row["name"] = row["symbol"]
 
-koza_app.write(gene)
+    gene = Gene(
+        id=gene_id,
+        symbol=row["symbol"],
+        name=row["name"],
+        type=row["soTermId"],
+        in_taxon=[row["basicGeneticEntity"]["taxonId"]],
+        source=source,
+    )
+
+    if row["basicGeneticEntity"]["crossReferences"]:
+        gene.xref = [
+            koza_app.curie_cleaner.clean(xref["id"])
+            for xref in row["basicGeneticEntity"]["crossReferences"]
+        ]
+    if "synonyms" in row["basicGeneticEntity"].keys():
+        gene.synonym = row["basicGeneticEntity"]["synonyms"]
+
+    koza_app.write(gene)
