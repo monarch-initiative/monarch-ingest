@@ -30,6 +30,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm
 
 import logging
 LOG = logging.getLogger(__name__)
@@ -68,7 +69,9 @@ while (row := koza_app.get_row()) is not None:
 
     onset = row["Onset"]
 
-    frequency_qualifier = row["Frequency"]
+    # Raw frequencies - HPO term curies, ratios, percentages - normalized to HPO terms
+    frequency_hpo: Optional[FrequencyHpoTerm] = \
+        phenotype_frequency_to_hpo_term(frequency_field=row["Frequency"])
 
     # Publications
     publications_field: str = row["Reference"]
@@ -88,7 +91,7 @@ while (row := koza_app.get_row()) is not None:
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
         onset_qualifier=onset,
-        frequency_qualifier=frequency_qualifier,
+        frequency_qualifier=frequency_hpo.curie,
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpoa"
     )
