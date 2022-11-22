@@ -10,16 +10,16 @@ OUTPUT_DIR = "output"
 
 @typer_app.command()
 def download(
-    tags: Optional[List[str]] = typer.Option(None,  help="Which tags to download data for"),
+    ingests: Optional[List[str]] = typer.Option(None,  help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets")
     ):
     """Downloads data defined in download.yaml"""
 
-    if tags:
+    if ingests:
         download_from_yaml(
             yaml_file='monarch_ingest/download.yaml',
             output_dir='.',
-            tags=tags,
+            tags=ingests,
         )
     elif all:
         download_from_yaml(
@@ -31,8 +31,8 @@ def download(
 def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
     output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
-    ingest: str = typer.Option(None, "--ingest", "-i", help="Which ingest to run (see ingests.yaml for a list)"),
-    phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
+    ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see ingests.yaml for a list)"),
+    phenio: bool = typer.Option(False, help="Run the phenio transform"),
     all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
     force: bool = typer.Option(False, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
     rdf: bool = typer.Option(False, help="Output rdf files along with tsv"),
