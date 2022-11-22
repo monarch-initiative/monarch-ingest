@@ -18,7 +18,6 @@ The Monarch Ingest is built using [Poetry](https://python-poetry.org), which wil
 ```bash
 curl -sSL https://install.python-poetry.org | python3 -
 
-
 # Optionally, have poetry create its venvs in your project directories
 poetry config virtualenvs.in-project true
 ```
