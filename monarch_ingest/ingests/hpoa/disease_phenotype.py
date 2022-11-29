@@ -23,7 +23,7 @@ poetry run koza transform \
   --source monarch_ingest/ingests/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 import uuid
 
@@ -70,8 +70,14 @@ while (row := koza_app.get_row()) is not None:
     onset = row["Onset"]
 
     # Raw frequencies - HPO term curies, ratios, percentages - normalized to HPO terms
-    frequency_hpo: Optional[FrequencyHpoTerm] = \
-        phenotype_frequency_to_hpo_term(frequency_field=row["Frequency"])
+    frequency_field = row["Frequency"]
+    frequency_hpo: Optional[FrequencyHpoTerm] = None
+    frequency_percentage: Optional[float] = None
+    frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float]] = \
+        phenotype_frequency_to_hpo_term(frequency_field=frequency_field)
+
+    if frequency_parsed:
+        frequency_hpo, frequency_percentage = frequency_parsed
 
     # Publications
     publications_field: str = row["Reference"]
@@ -91,7 +97,8 @@ while (row := koza_app.get_row()) is not None:
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
         onset_qualifier=onset,
-        frequency_qualifier=frequency_hpo.curie,
+        # frequency_quantifier=frequency_percentage if frequency_percentage else None,
+        frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpoa"
     )
