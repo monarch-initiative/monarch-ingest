@@ -73,11 +73,11 @@ while (row := koza_app.get_row()) is not None:
     frequency_field = row["Frequency"]
     frequency_hpo: Optional[FrequencyHpoTerm] = None
     frequency_percentage: Optional[float] = None
-    frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float]] = \
+    frequency_quotient: Optional[float] = None
+    frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float, float]] = \
         phenotype_frequency_to_hpo_term(frequency_field=frequency_field)
-
     if frequency_parsed:
-        frequency_hpo, frequency_percentage = frequency_parsed
+        frequency_hpo, frequency_percentage, frequency_quotient = frequency_parsed
 
     # Publications
     publications_field: str = row["Reference"]
@@ -97,8 +97,13 @@ while (row := koza_app.get_row()) is not None:
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
         onset_qualifier=onset,
-        # frequency_quantifier=frequency_percentage if frequency_percentage else None,
+
+        # TODO: not totally sure if HPO term now ought to be assigned to
+        #       percentage and quotient frequency values anymore?
+        has_percentage=frequency_percentage if frequency_percentage else None,
+        has_quotient=frequency_quotient if frequency_quotient else None,
         frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
+
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpoa"
     )

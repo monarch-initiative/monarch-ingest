@@ -32,15 +32,15 @@ def get_hpo_term(hpo_id: str) -> Optional[FrequencyHpoTerm]:
         return None
 
 
-def map_percentage_frequency_to_hpo_term(percentage: float) -> Optional[FrequencyHpoTerm]:
+def map_percentage_frequency_to_hpo_term(percentage_or_quotient: float) -> Optional[FrequencyHpoTerm]:
     """
     Map phenotypic percentage frequency to a corresponding HPO term corresponding to (HP:0040280 to HP:0040285).
 
-    :param percentage: int, should be in range 0 to 100
+    :param percentage_or_quotient: int, should be in range 0.0 to 100.0
     :return: str, HPO term mapping onto percentage range of term definition; None if outside range
     """
     for hpo_id, details in hpo_term_to_frequency.items():
-        if details.lower <= percentage <= details.upper:
+        if details.lower <= percentage_or_quotient <= details.upper:
             return details
 
     return None
@@ -48,20 +48,21 @@ def map_percentage_frequency_to_hpo_term(percentage: float) -> Optional[Frequenc
 
 def phenotype_frequency_to_hpo_term(
         frequency_field: Optional[str]
-) -> Optional[Tuple[FrequencyHpoTerm, Optional[float]]]:
+) -> Optional[Tuple[FrequencyHpoTerm, Optional[float], Optional[float]]]:
     """
 Maps a raw frequency field onto HPO, for consistency. This is needed since the **phenotypes.hpoa**
 file field #8 which tracks phenotypic frequency, has a variable values. There are three allowed options for this field:
 
 1. A term-id from the HPO-sub-ontology below the term “Frequency” (HP:0040279). (since December 2016 ; before was a mixture of values). The terms for frequency are in alignment with Orphanet;
-2. A count of patients affected within a cohort. For instance, 7/13 would indicate that 7 of the 13 patients with the specified disease were found to have the phenotypic abnormality referred to by the HPO term in question in the study referred to by the DB_Reference;
-3. A percentage value such as 17%.
+2. A percentage value such as 17%.
+3. A count of patients affected within a cohort. For instance, 7/13 would indicate that 7 of the 13 patients with the specified disease were found to have the phenotypic abnormality referred to by the HPO term in question in the study referred to by the DB_Reference;
 
     :param frequency_field: str, raw frequency value in one of the three above forms
-    :return: Optional[FrequencyHpoTerm, float], raw frequency mapped to its HPO term and percentage (if available);
-             None if unmappable; percentage may also be None if only an HP term is parsed in.
+    :return: Optional[FrequencyHpoTerm, float, float], raw frequency mapped to its HPO term, quotient or percentage
+             (as applicable); return None if unmappable; percentage and/or quotient will also be None if not applicable
     """
     hpo_term: Optional[FrequencyHpoTerm] = None
+    quotient: Optional[float] = None
     percentage: Optional[float] = None
     if frequency_field:
         try:
@@ -76,8 +77,8 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
             else:
                 # assume a ratio
                 ratio_parts = frequency_field.split("/")
-                percentage = round((int(ratio_parts[0]) / int(ratio_parts[1]))*100.0)
-                hpo_term = map_percentage_frequency_to_hpo_term(percentage)
+                quotient = float(int(ratio_parts[0]) / int(ratio_parts[1]))
+                hpo_term = map_percentage_frequency_to_hpo_term(quotient*100.0)
 
         except Exception:
             # expected ratio not recognized
@@ -87,4 +88,4 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
         # may be None, if original field was empty or has an invalid value
         return None
 
-    return hpo_term, percentage   # percentage may also be None if only an HP term is parsed in.
+    return hpo_term, percentage, quotient   # percentage and/or quotient will also be None if not applicable
