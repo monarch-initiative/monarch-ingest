@@ -260,50 +260,8 @@ def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
 
 
-def load_solr(node_schema,
-              edge_schema,
-              node_file,
-              edge_file,
-              output_dir: str = OUTPUT_DIR,
-              run: bool = False):
-
-    node_core = "entity"
-    edge_core = "association"
-
-    if edge_file.endswith(".gz"):
-        sh.gunzip(edge_file)
-        edge_file = edge_file[:-len(".gz")]
-
-    # awkwardly handle there not being a closurized/solrized version of the nodes file yet
-
-    sh.tar("zxf", f"{output_dir}/monarch-kg.tar.gz", 'monarch-kg_nodes.tsv')
-    sh.mv('monarch-kg_nodes.tsv', output_dir)
-
-    # Start the server without specifying a schema
-    print("Starting server...")
-    sh.lsolr('start-server')
-
-    print("Adding cores and schema...")
-    sh.lsolr('add-cores', node_core, edge_core)
-    sh.lsolr('create-schema', core=node_core, schema=node_schema)
-    sh.lsolr('create-schema', core=edge_core, schema=edge_schema)
-    print("Loading nodes...")
-    sh.lsolr('bulkload', node_file, core='entity', schema=node_schema)
-    print("Loading edges...")
-    sh.lsolr('bulkload', edge_file, core='association', schema=edge_schema)
-
-    # Run mode just loads into the docker container, doesn't export and shut down
-    if not run:
-        print("Copying data and removing container...")
-        logging.info(sh.docker('cp', 'my_solr:/var/solr/', 'output/'))
-        sh.tar('czf', 'output/solr.tar.gz', "-C", '/solr', '.')
-
-        # remove the solr docker container
-        sh.docker('rm', '-f', 'my_solr')
-
-    # cleanup
-    sh.gzip(edge_file)
-    Path(f"{output_dir}/monarch-kg_nodes.tsv").unlink()
+def load_solr():
+    sh.bash("scripts/load_solr.sh")
 
 
 def do_release():
