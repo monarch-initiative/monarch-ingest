@@ -13,21 +13,19 @@ authors = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-koza = "^0.2.3"
+koza = "^0.2.5"
 kghub-downloader = "^0.3.2"
 kgx = "^1.7.2"
 cat-merge = "^0.1.18"
 closurizer = "^0.1.7"
-biolink-model = ">=3.0.1"
+biolink-model = "3.1.0"
 linkml = "^1.2.11"
 linkml-solr = "^0.1.3"
 greenlet = "^1.1.2"
 importlib-metadata = "^4.6.1"
 sh = "^1.14.3"
-# force specific version of click for now, because typer 0.4.1 is busted
-# THIS IS FIXED IN TYPER 0.6 !!! WE CAN UPDATE ACROSS MONARCH PACKAGES
-typer = "^0.4"
-click = "8.0.4"
+typer = "^0.7"
+monarch-py = "^0.2.3"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"

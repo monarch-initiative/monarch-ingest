@@ -93,12 +93,8 @@ def sqlite():
 
 
 @typer_app.command()
-def solr(run: bool = typer.Option(False, help="Load and run solr, no artifact created")):
-    load_solr(node_schema="solr/entity-index.yaml",
-              edge_schema="solr/association-index.yaml",
-              node_file=f"{OUTPUT_DIR}/monarch-kg_nodes.tsv",
-              edge_file=f"{OUTPUT_DIR}/monarch-kg-denormalized-edges.tsv.gz",
-              run=run)
+def solr():
+    load_solr()
 
 
 @typer_app.command()

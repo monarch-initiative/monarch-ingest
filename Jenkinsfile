@@ -62,6 +62,11 @@ pipeline {
                 sh 'poetry run ingest closure'
             }
         }
+        stage('solr') {
+            steps {
+                sh 'poetry run ingest solr'
+            }
+        }
         stage('sqlite') {
             steps {
                 sh 'poetry run ingest sqlite'
