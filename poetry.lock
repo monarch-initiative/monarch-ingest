@@ -72,16 +72,14 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "biolink-model"
-version = "3.1.1"
+version = "3.1.0"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-curies = "*"
 linkml = "*"
-prefixmaps = "*"
 
 [[package]]
 name = "black"
@@ -243,24 +241,6 @@ support_developer = "*"
 
 [package.extras]
 test = ["codacy-coverage", "coveralls", "dict_hash", "pytest", "pytest-cov", "random_dict", "validate_version_code"]
-
-[[package]]
-name = "curies"
-version = "0.4.0"
-description = "Idiomatic conversion between URIs and compact URIs (CURIEs)."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-pytrie = "*"
-requests = "*"
-
-[package.extras]
-bioregistry = ["bioregistry (>=0.5.136)"]
-docs = ["sphinx", "sphinx-autodoc-typehints", "sphinx-automodapi", "sphinx-rtd-theme"]
-pandas = ["pandas"]
-tests = ["coverage", "pytest"]
 
 [[package]]
 name = "decorator"
@@ -1569,17 +1549,6 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 six = ">=1.5"
 
 [[package]]
-name = "pytrie"
-version = "0.4.0"
-description = "A pure Python implementation of the trie data structure."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-sortedcontainers = "*"
-
-[[package]]
 name = "pytz"
 version = "2022.6"
 description = "World timezone definitions, modern and historical"
@@ -1810,14 +1779,6 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 name = "snowballstemmer"
 version = "2.2.0"
 description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
-name = "sortedcontainers"
-version = "2.4.0"
-description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
 category = "main"
 optional = false
 python-versions = "*"
@@ -2255,7 +2216,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "f4e06e500219141e8c80a9019da02b095ba0a90598a3b604f637bb0f27fcb2a1"
+content-hash = "176ee8dce7d450c6aa1eb3a5b9f5b668bf612f08795b1ce36db35558838f0d1d"
 
 [metadata.files]
 alabaster = [
@@ -2286,8 +2247,8 @@ babel = [
     {file = "Babel-2.11.0.tar.gz", hash = "sha256:5ef4b3226b0180dedded4229651c8b0e1a3a6a2837d45a073272f313e4cf97f6"},
 ]
 biolink-model = [
-    {file = "biolink-model-3.1.1.tar.gz", hash = "sha256:5d865537423d3ce39a1b409e2720c50e3edbf11412674efb842b4ff8da88885e"},
-    {file = "biolink_model-3.1.1-py3-none-any.whl", hash = "sha256:ac2b245e70af5fc7d5c61eb3ee7db4735eebd795cd34dbfb206a8d195ff7e173"},
+    {file = "biolink-model-3.1.0.tar.gz", hash = "sha256:e6ba93ba0a61148e148f55aa2eccfa3154bcf676d7caa13a20505202041e9aac"},
+    {file = "biolink_model-3.1.0-py3-none-any.whl", hash = "sha256:ec765b64d4ab83bd8541bb81005f867f11b5ca29535fb4c6ac5fd8b5b408e5f7"},
 ]
 black = [
     {file = "black-21.6b0-py3-none-any.whl", hash = "sha256:dfb8c5a069012b2ab1e972e7b908f5fb42b6bbabcba0a788b86dc05067c7d9c7"},
@@ -2338,10 +2299,6 @@ commonmark = [
 ]
 compress-json = [
     {file = "compress_json-1.0.8.tar.gz", hash = "sha256:463e55fb8bb154f605130c7f6c2411fcb20f9ef4cb16020fd9880ba143002814"},
-]
-curies = [
-    {file = "curies-0.4.0-py3-none-any.whl", hash = "sha256:e3042027344ab70b7b90307aa9160351645152c34d1ada4b0fbd121dd537bd87"},
-    {file = "curies-0.4.0.tar.gz", hash = "sha256:fc235a75ff53b9f4478bb0fc1df8e2facf1c17d913895876815b14eba7f25b41"},
 ]
 decorator = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
@@ -3109,9 +3066,6 @@ python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
-pytrie = [
-    {file = "PyTrie-0.4.0.tar.gz", hash = "sha256:8f4488f402d3465993fb6b6efa09866849ed8cda7903b50647b7d0342b805379"},
-]
 pytz = [
     {file = "pytz-2022.6-py2.py3-none-any.whl", hash = "sha256:222439474e9c98fced559f1709d89e6c9cbf8d79c794ff3eb9f8800064291427"},
     {file = "pytz-2022.6.tar.gz", hash = "sha256:e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"},
@@ -3367,10 +3321,6 @@ six = [
 snowballstemmer = [
     {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
     {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
-]
-sortedcontainers = [
-    {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
-    {file = "sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88"},
 ]
 sparqlslurper = [
     {file = "sparqlslurper-0.5.1-py3-none-any.whl", hash = "sha256:ae49b2d8ce3dd38df7a40465b228ad5d33fb7e11b3f248d195f9cadfc9cfff87"},
