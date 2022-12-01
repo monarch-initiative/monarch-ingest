@@ -10,16 +10,16 @@ OUTPUT_DIR = "output"
 
 @typer_app.command()
 def download(
-    tags: Optional[List[str]] = typer.Option(None,  help="Which tags to download data for"),
+    ingests: Optional[List[str]] = typer.Option(None,  help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets")
     ):
     """Downloads data defined in download.yaml"""
 
-    if tags:
+    if ingests:
         download_from_yaml(
             yaml_file='monarch_ingest/download.yaml',
             output_dir='.',
-            tags=tags,
+            tags=ingests,
         )
     elif all:
         download_from_yaml(
@@ -30,19 +30,19 @@ def download(
 @typer_app.command()
 def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
-    output_dir: str = typer.Option(OUTPUT_DIR, help="Directory to output data"),
-    tag: str = typer.Option(None, help="Which ingest to run (see ingests.yaml for a list)"),
-    phenio: bool = typer.Option(False, help="Option: pass to run the phenio transform"),
-    all: bool = typer.Option(False, help="Ingest all sources"),
-    row_limit: int = typer.Option(None, help="Number of rows to process"),
-    do_merge: bool = typer.Option(False, "--merge", help="Merge output dir after ingest"),
-    force: bool = typer.Option(None,help="Force ingest, even if output exists (on by default for single ingests)"),
-    rdf: bool = typer.Option(None, help="Output rdf files along with tsv"),
-    verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
-    log: bool = typer.Option(False, help="Write DEBUG level logs to ./logs/ for each ingest"),
+    output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
+    ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see ingests.yaml for a list)"),
+    phenio: bool = typer.Option(False, help="Run the phenio transform"),
+    all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"),
+    rdf: bool = typer.Option(False, help="Output rdf files along with tsv"),
+    verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose, including Koza logs"),
+    log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
+    row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
+    # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
-    
+
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
 
     if phenio:
@@ -51,9 +51,9 @@ def transform(
             force=force,
             verbose=verbose
         )
-    elif tag:
+    elif ingest:
         transform_one(
-            tag = tag,
+            ingest = ingest,
             output_dir = output_dir,
             row_limit = row_limit,
             rdf = rdf,
@@ -70,8 +70,7 @@ def transform(
             verbose=verbose,
             log = log,
         )
-    if do_merge:
-        merge(f"{output_dir}/transform_output", output_dir)
+
 
 
 @typer_app.command()

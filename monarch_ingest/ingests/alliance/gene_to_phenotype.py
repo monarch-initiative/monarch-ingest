@@ -12,45 +12,46 @@ LOG = logging.getLogger(__name__)
 
 koza_app = get_koza_app("alliance_gene_to_phenotype")
 
-row = koza_app.get_row()
-gene_ids = koza_app.get_map("alliance-gene")
+while (row := koza_app.get_row()) is not None:
 
-if len(row["phenotypeTermIdentifiers"]) == 0:
-    LOG.debug("Phenotype ingest record has 0 phenotype terms: " + str(row))
+    gene_ids = koza_app.get_map("alliance-gene")
 
-if len(row["phenotypeTermIdentifiers"]) > 1:
-    LOG.debug("Phenotype ingest record has >1 phenotype terms: " + str(row))
+    if len(row["phenotypeTermIdentifiers"]) == 0:
+        LOG.debug("Phenotype ingest record has 0 phenotype terms: " + str(row))
 
-# limit to only genes
-if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:
+    if len(row["phenotypeTermIdentifiers"]) > 1:
+        LOG.debug("Phenotype ingest record has >1 phenotype terms: " + str(row))
 
-    gene_id = row["objectId"]
+    # limit to only genes
+    if row["objectId"] in gene_ids.keys() and len(row["phenotypeTermIdentifiers"]) == 1:
 
-    phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]
+        gene_id = row["objectId"]
 
-    # Remove the extra WB: prefix if necessary
-    phenotypic_feature_id = phenotypic_feature_id.replace("WB:WBPhenotype:", "WBPhenotype:")
+        phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]
 
-    source = source_map[row["objectId"].split(':')[0]]
+        # Remove the extra WB: prefix if necessary
+        phenotypic_feature_id = phenotypic_feature_id.replace("WB:WBPhenotype:", "WBPhenotype:")
 
-    association = GeneToPhenotypicFeatureAssociation(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gene_id,
-        predicate="biolink:has_phenotype",
-        object=phenotypic_feature_id,
-        publications=[row["evidence"]["publicationId"]],
-        aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
-        primary_knowledge_source=source
-    )
+        source = source_map[row["objectId"].split(':')[0]]
 
-    if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
-        qualifiers: List[str] = []
-        for conditionRelation in row["conditionRelations"]:
-            for condition in conditionRelation["conditions"]:
-                if condition["conditionClassId"]:
-                    qualifier_term = condition["conditionClassId"]
-                    qualifiers.append(qualifier_term)
+        association = GeneToPhenotypicFeatureAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gene_id,
+            predicate="biolink:has_phenotype",
+            object=phenotypic_feature_id,
+            publications=[row["evidence"]["publicationId"]],
+            aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
+            primary_knowledge_source=source
+        )
 
-        association.qualifiers = qualifiers
+        if "conditionRelations" in row.keys() and row["conditionRelations"] is not None:
+            qualifiers: List[str] = []
+            for conditionRelation in row["conditionRelations"]:
+                for condition in conditionRelation["conditions"]:
+                    if condition["conditionClassId"]:
+                        qualifier_term = condition["conditionClassId"]
+                        qualifiers.append(qualifier_term)
 
-    koza_app.write(association)
+            association.qualifiers = qualifiers
+
+        koza_app.write(association)

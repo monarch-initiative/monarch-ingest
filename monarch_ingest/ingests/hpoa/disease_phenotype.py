@@ -35,60 +35,61 @@ import logging
 LOG = logging.getLogger(__name__)
 
 koza_app = get_koza_app("hpoa_disease_phenotype")
-row = koza_app.get_row()
 
-# Nodes
-disease_id = row["DatabaseID"]
+while (row := koza_app.get_row()) is not None:
 
-predicate = "biolink:has_phenotype"
+    # Nodes
+    disease_id = row["DatabaseID"]
 
-hpo_id = row["HPO_ID"]
-assert hpo_id, "HPOA Disease to Phenotype has missing HP ontology ('HPO_ID') field identifier?"
+    predicate = "biolink:has_phenotype"
 
-# Predicate negation
-negated: Optional[bool]
-if row["Qualifier"] == "NOT":
-    negated = True
-else:
-    negated = None
+    hpo_id = row["HPO_ID"]
+    assert hpo_id, "HPOA Disease to Phenotype has missing HP ontology ('HPO_ID') field identifier?"
 
-# Annotations
+    # Predicate negation
+    negated: Optional[bool]
+    if row["Qualifier"] == "NOT":
+        negated = True
+    else:
+        negated = None
 
-# Translations to curies
-# Three letter ECO code to ECO class based on hpo documentation
-evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
+    # Annotations
 
-# female -> PATO:0000383
-# male -> PATO:0000384
-sex: Optional[str] = row["Sex"]  # may be translated by local table
-sex_qualifier = (
-    koza_app.translation_table.resolve_term(sex) if sex else None
-)
+    # Translations to curies
+    # Three letter ECO code to ECO class based on hpo documentation
+    evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
 
-onset = row["Onset"]
+    # female -> PATO:0000383
+    # male -> PATO:0000384
+    sex: Optional[str] = row["Sex"]  # may be translated by local table
+    sex_qualifier = (
+        koza_app.translation_table.resolve_term(sex) if sex else None
+    )
 
-frequency_qualifier = row["Frequency"]
+    onset = row["Onset"]
 
-# Publications
-publications_field: str = row["Reference"]
-publications: List[str] = publications_field.split(";")
+    frequency_qualifier = row["Frequency"]
 
-# Filter out some weird NCBI web endpoints
-publications = [p for p in publications if not p.startswith("http")]
+    # Publications
+    publications_field: str = row["Reference"]
+    publications: List[str] = publications_field.split(";")
 
-# Association/Edge
-association = DiseaseToPhenotypicFeatureAssociation(
-    id="uuid:" + str(uuid.uuid1()),
-    subject=disease_id,
-    predicate=predicate,
-    negated=negated,
-    object=hpo_id,
-    publications=publications,
-    has_evidence=[evidence_curie],
-    sex_qualifier=sex_qualifier,
-    onset_qualifier=onset,
-    frequency_qualifier=frequency_qualifier,
-    aggregator_knowledge_source=["infores:monarchinitiative"],
-    primary_knowledge_source="infores:hpoa"
-)
-koza_app.write(association)
+    # Filter out some weird NCBI web endpoints
+    publications = [p for p in publications if not p.startswith("http")]
+
+    # Association/Edge
+    association = DiseaseToPhenotypicFeatureAssociation(
+        id="uuid:" + str(uuid.uuid1()),
+        subject=disease_id,
+        predicate=predicate,
+        negated=negated,
+        object=hpo_id,
+        publications=publications,
+        has_evidence=[evidence_curie],
+        sex_qualifier=sex_qualifier,
+        onset_qualifier=onset,
+        frequency_qualifier=frequency_qualifier,
+        aggregator_knowledge_source=["infores:monarchinitiative"],
+        primary_knowledge_source="infores:hpoa"
+    )
+    koza_app.write(association)

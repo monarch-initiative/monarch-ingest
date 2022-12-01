@@ -14,13 +14,6 @@ logger = logging.getLogger(__name__)
 
 koza_app = get_koza_app("panther_genome_orthologs")
 
-# for row in koza_app.source: # doesn't successfully iterate with the mock_koza test harness
-# same with this i believe: 
-# while True:
-#     try:
-#         row = koza_app.get_row()
-#     except StopIteration:
-#         break
 while (row := koza_app.get_row()) is not None:
 
     if row['Gene'].split("|")[0] in ncbitaxon_catalog \
@@ -64,6 +57,7 @@ while (row := koza_app.get_row()) is not None:
 
             # Write the captured Association out
             koza_app.write(association)
+            
         except RuntimeError as rte:
             # Skip the row - not of interest or error
             # logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")

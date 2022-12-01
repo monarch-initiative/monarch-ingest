@@ -37,7 +37,7 @@ pipeline {
         }
         stage('transform') {
             steps {
-                sh 'poetry run ingest transform --all --rdf --log'
+                sh 'poetry run ingest transform --all --log --rdf'
             }
         }
         stage('merge') {
@@ -92,7 +92,7 @@ pipeline {
 
                     git clone https://github.com/monarch-initiative/monarch-file-server.git
                     pip install -r monarch-file-server/scripts/requirements.txt
-                    python3 monarch-file-server/scripts/directory_indexer.py -v --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x > directory-indexer.log
+                    python3 monarch-file-server/scripts/directory_indexer.py --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x
                 '''
             }
         }
