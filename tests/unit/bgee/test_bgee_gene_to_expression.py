@@ -1,4 +1,5 @@
 import types
+import copy
 from typing import List, Dict
 
 import pytest
@@ -45,7 +46,7 @@ from biolink.pydanticmodel import GeneToExpressionSiteAssociation
 
 
 @pytest.fixture
-def bgee_mock_koza(koza_row_1, mock_koza, global_table, source_name, script):
+def bgee_mock_koza(global_table, source_name, script):
     yaml_file = "monarch_ingest/ingests/bgee/gene_to_expression.yaml"
     with open(yaml_file, 'r') as source_fh:
         source_config = PrimaryFileConfig(**yaml.load(source_fh, Loader=UniqueIncludeLoader))
@@ -89,18 +90,19 @@ def get_bgee_rows(mock_koza, n_rows) -> List[Dict]:
 
 
 @pytest.fixture
-def filter_group_1(bgee_mock_koza) -> List[Dict]:
-    return get_bgee_rows(bgee_mock_koza, 5)
+def row_group_1(bgee_mock_koza) -> List[Dict]:
+    copy_bgee_mock_koza = copy.copy(bgee_mock_koza)
+    return get_bgee_rows(copy_bgee_mock_koza, 5)
 
 
 @pytest.fixture
-def filter_group_2(bgee_mock_koza) -> List[Dict]:
+def row_group_2(bgee_mock_koza) -> List[Dict]:
     _ = get_bgee_rows(bgee_mock_koza, 5)
     return get_bgee_rows(bgee_mock_koza, 22)
 
 
-def test_filter_group_by_rank_short(filter_group_1, filter_col, smallest_n):
-    filtered_group = filter_group_by_rank(filter_group_1, filter_col, smallest_n=smallest_n)
+def test_filter_group_by_rank_short(row_group_1, filter_col, smallest_n):
+    filtered_group = filter_group_by_rank(row_group_1, filter_col, smallest_n=smallest_n)
 
     assert type(filtered_group) is list
     assert len(filtered_group) == 5
@@ -109,12 +111,12 @@ def test_filter_group_by_rank_short(filter_group_1, filter_col, smallest_n):
         assert i['Gene ID'] == 'ENSSSCG00000000002'
 
     filtered_group_df = pd.DataFrame(filtered_group)
-    expected_filtered_col = sorted(pd.DataFrame(filter_group_1)[filter_col].to_list())[0:10]
+    expected_filtered_col = sorted(pd.DataFrame(row_group_1)[filter_col].to_list())[0:10]
     assert filtered_group_df[filter_col].to_list() == expected_filtered_col
 
 
-def test_filter_group_by_rank_long(filter_group_2, filter_col, smallest_n):
-    filtered_group = filter_group_by_rank(filter_group_2, filter_col, smallest_n=smallest_n)
+def test_filter_group_by_rank_long(row_group_2, filter_col, smallest_n):
+    filtered_group = filter_group_by_rank(row_group_2, filter_col, smallest_n=smallest_n)
 
     assert type(filtered_group) is list
     assert len(filtered_group) == 10
@@ -123,12 +125,12 @@ def test_filter_group_by_rank_long(filter_group_2, filter_col, smallest_n):
         assert i['Gene ID'] == 'ENSSSCG00000000003'
 
     filtered_group_df = pd.DataFrame(filtered_group)
-    expected_filtered_col = sorted(pd.DataFrame(filter_group_2)[filter_col].to_list())[0:10]
+    expected_filtered_col = sorted(pd.DataFrame(row_group_2)[filter_col].to_list())[0:10]
     assert filtered_group_df[filter_col].to_list() == expected_filtered_col
 
 
-def test_write_group(bgee_mock_koza, filter_group_1):
-    write_group(filter_group_1, bgee_mock_koza)
+def test_write_group(row_group_1, bgee_mock_koza):
+    write_group(row_group_1, bgee_mock_koza)
     write_result: list[GeneToExpressionSiteAssociation] = bgee_mock_koza._entities
     assert len(write_result) == 5
     prev_uuid = 0
@@ -141,6 +143,17 @@ def test_write_group(bgee_mock_koza, filter_group_1):
         assert item.predicate == 'biolink:expressed_in'
         assert item.subject == 'ENSEMBL:ENSSSCG00000000002'
         assert item.object == object_list[index]
+
+
+def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
+    row_group = get_row_group(bgee_mock_koza)
+
+    assert type(row_group) is list
+    # assert len(row_group) == 5
+    # for i in row_group:
+    #     assert type(i) is dict
+    #
+    # assert row_group == row_group_1
 
 
 @pytest.fixture
