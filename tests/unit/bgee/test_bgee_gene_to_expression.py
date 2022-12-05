@@ -1,65 +1,62 @@
-import types
-import copy
-from typing import List, Dict
-
 import pytest
+import types
 import yaml
 import pandas as pd
-from koza.app import KozaApp
-from koza.io.yaml_loader import UniqueIncludeLoader
-# from koza.cli_runner import *
-# from koza.io.writer.jsonl_writer import JSONLWriter
-# from koza.io.writer.tsv_writer import TSVWriter
-from koza.model.source import Source
-from koza.model.config.source_config import PrimaryFileConfig, OutputFormat
-from monarch_ingest.ingests.bgee.gene_to_expression_utils import get_row_group, filter_group_by_rank, write_group
 from pathlib import PosixPath
+from typing import List, Dict
+
+from koza.app import KozaApp
+from koza.model.source import Source
+from koza.io.yaml_loader import UniqueIncludeLoader
+from koza.model.config.source_config import PrimaryFileConfig, OutputFormat
+
 from biolink.pydanticmodel import GeneToExpressionSiteAssociation
+from monarch_ingest.ingests.bgee.gene_to_expression_utils import get_row_group, filter_group_by_rank, write_group
 
 
-#
-# test of utility function - proven to work, unless modified in the future?
-#
-# def test_get_data():
-#     entry = {
-#         "testing": {
-#             "one": {
-#                 "two": {
-#                     "three": "Success!"
-#                 }
-#             }
-#         }
-#     }
-#     assert get_data(entry, "testing.one.two.three") == "Success!"
+def get_koza(yaml_file: str, translation_table: str, output_dir: str, output_format: str = 'tsv') -> KozaApp:
+    """Function to get a KozaApp for testing
 
-# transform_source(source="monarch_ingest/ingests/bgee/gene_to_expression.yaml", output_dir="tests/unit/bgee/output")
-# source_name = "bgee_gene_to_expression"
-# koza_app = get_koza_app(source_name)
+        Creates a KozaApp from inputs identical to the KozaApp produced from Koza
+        for the input yaml file but with the supplied translation table and using
+        the given output dir and format:
 
+        Args:
+            yaml_file (str): The yaml file used for the Koza ingest of interest.
+            translation_table (str): The translation table for the Koza ingest.
+            output_dir (str): The directory for KozaApp output.
+            output_format (str): The format for output from the KozaApp.
 
-# class MockKozaApp(KozaApp):
-#     def write(self, *entities):
-#         if hasattr(self, '_entities'):
-#             self._entities.extend(list(entities))
-#         else:
-#             self._entities = list(entities)
-
-
-@pytest.fixture
-def bgee_mock_koza(global_table, source_name, script):
-    yaml_file = "monarch_ingest/ingests/bgee/gene_to_expression.yaml"
+        Returns:
+            KozaApp: Returns a KozaApp for the indicated ingest with modified output.
+        """
     with open(yaml_file, 'r') as source_fh:
         source_config = PrimaryFileConfig(**yaml.load(source_fh, Loader=UniqueIncludeLoader))
 
     koza_app = KozaApp(
         source=Source(source_config),
-        translation_table=global_table,
-        output_dir="tests/unit/bgee/output",
-        output_format=OutputFormat('tsv'),
-        schema=None)
+        translation_table=translation_table,
+        output_dir=output_dir,
+        output_format=OutputFormat(output_format))
+    return koza_app
 
-    koza_app.source.config.files = [PosixPath("tests/unit/bgee/test_bgee.tsv.gz")]
-    # koza_app.source.config.transform_code = str(Path(yaml_file).parent / Path(yaml_file).stem) + '.py'
+
+def make_mock_koza(koza_app: KozaApp, files: List[str]) -> KozaApp:
+    """Function to mock a KozaApp:
+
+        Creates a mock KozaApp from KozaApp by changing input files and write function:
+
+        Args:
+            koza_app (str): The KozaApp to mock.
+            files (List[PosixPath]): The files to use for the mock KozaApp.
+
+        Returns:
+            KozaApp: Returns a KozaApp for the indicated ingest with modified output.
+        """
+    posix_files = []
+    for file in files:
+        posix_files.append(PosixPath(file))
+    koza_app.source.config.files = posix_files
 
     def _mock_write(self, *entities):
         if hasattr(self, '_entities'):
@@ -68,8 +65,46 @@ def bgee_mock_koza(global_table, source_name, script):
             self._entities = list(entities)
 
     koza_app.write = types.MethodType(_mock_write, koza_app)
-
     return koza_app
+
+
+def get_koza_rows(mock_koza, n_rows) -> List[Dict]:
+    rows = []
+    for i in range(0, n_rows):
+        rows.append(mock_koza.get_row())
+    return rows
+
+
+@pytest.fixture
+def bgee_yaml():
+    return "monarch_ingest/ingests/bgee/gene_to_expression.yaml"
+
+
+@pytest.fixture
+def bgee_test_output() -> str:
+    return "tests/unit/bgee/output"
+
+
+@pytest.fixture
+def bgee_test_files() -> List[str]:
+    return ["tests/unit/bgee/test_bgee.tsv.gz"]
+
+
+@pytest.fixture
+def bgee_mock_koza_rows(bgee_yaml, global_table, bgee_test_output, bgee_test_files) -> KozaApp:
+    bgee_koza = get_koza(bgee_yaml, global_table, bgee_test_output)
+    return make_mock_koza(bgee_koza, bgee_test_files)
+
+
+@pytest.fixture
+def row_group_1(bgee_mock_koza_rows) -> List[Dict]:
+    return get_koza_rows(bgee_mock_koza_rows, 5)
+
+
+@pytest.fixture
+def row_group_2(bgee_mock_koza_rows) -> List[Dict]:
+    _ = get_koza_rows(bgee_mock_koza_rows, 5)
+    return get_koza_rows(bgee_mock_koza_rows, 22)
 
 
 @pytest.fixture
@@ -80,25 +115,6 @@ def filter_col() -> str:
 @pytest.fixture
 def smallest_n() -> int:
     return 10
-
-
-def get_bgee_rows(mock_koza, n_rows) -> List[Dict]:
-    rows = []
-    for i in range(0, n_rows):
-        rows.append(mock_koza.get_row())
-    return rows
-
-
-@pytest.fixture
-def row_group_1(bgee_mock_koza) -> List[Dict]:
-    copy_bgee_mock_koza = copy.copy(bgee_mock_koza)
-    return get_bgee_rows(copy_bgee_mock_koza, 5)
-
-
-@pytest.fixture
-def row_group_2(bgee_mock_koza) -> List[Dict]:
-    _ = get_bgee_rows(bgee_mock_koza, 5)
-    return get_bgee_rows(bgee_mock_koza, 22)
 
 
 def test_filter_group_by_rank_short(row_group_1, filter_col, smallest_n):
@@ -129,6 +145,12 @@ def test_filter_group_by_rank_long(row_group_2, filter_col, smallest_n):
     assert filtered_group_df[filter_col].to_list() == expected_filtered_col
 
 
+@pytest.fixture
+def bgee_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_files) -> KozaApp:
+    bgee_koza = get_koza(bgee_yaml, global_table, bgee_test_output)
+    return make_mock_koza(bgee_koza, bgee_test_files)
+
+
 def test_write_group(row_group_1, bgee_mock_koza):
     write_group(row_group_1, bgee_mock_koza)
     write_result: list[GeneToExpressionSiteAssociation] = bgee_mock_koza._entities
@@ -149,87 +171,12 @@ def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
     row_group = get_row_group(bgee_mock_koza)
 
     assert type(row_group) is list
-    # assert len(row_group) == 5
-    # for i in row_group:
-    #     assert type(i) is dict
-    #
-    # assert row_group == row_group_1
+    assert len(row_group) == 5
+    for i in row_group:
+        assert type(i) is dict
 
+    assert row_group == row_group_1
 
-@pytest.fixture
-def source_name():
-    return "bgee_gene_to_expression"
-
-
-@pytest.fixture
-def script():
-    return "./monarch_ingest/ingests/bgee/gene_to_expression.py"
-
-
-@pytest.fixture
-def test_file_1():
-    pass
-
-
-def aggregator_knowledge_sources(association) -> bool:
-    return all(
-        [
-            ks in ["infores:monarchinitiative", "infores:bgee"]
-            for ks in association.aggregator_knowledge_source
-        ]
-    )
-
-
-@pytest.fixture
-def koza_row_1():
-    return {'Gene ID': 'ENSG00000000003',
-            'Gene name': 'TSPAN6',
-            'Anatomical entity ID': 'CL:0000019',
-            'Anatomical entity name': 'sperm',
-            'Expression': 'present',
-            'Call quality': 'gold quality',
-            'FDR': 0.00167287722066534,
-            'Expression score': 99.96,
-            'Expression rank': 18.5}
-
-
-@pytest.fixture
-def bgee_koza_1(koza_row_1, mock_koza, source_name, script, global_table):
-    rows = iter([koza_row_1])
-
-    # source = getattr(koza_app, 'source')
-    # config = getattr(source, 'config')
-    # setattr(config, 'files', [PosixPath("tests")])
-
-    test_mock_koza = mock_koza(
-        source_name,
-        rows,
-        script,
-        global_table=global_table,
-    )
-    return test_mock_koza
-
-
-@pytest.fixture
-def koza_skip_row_1(mock_koza, source_name, script, global_table):
-    rows = iter([{'Gene ID': 'ENSG00000008988', 'Gene name': 'RPS20', 'Anatomical entity ID': 'UBERON:0007023',
-                  'Anatomical entity name': 'adult organism', 'Expression': 'present', 'Call quality': 'gold quality',
-                  'FDR': '0.00167287722066534', 'Expression score': 99.95, 'Expression rank': 24.0}])
-    return mock_koza(
-        source_name,
-        rows,
-        script,
-        global_table=global_table,
-    )
-
-
-# def test_association(bgee_koza_1, bgee_mock_koza, global_table):
-#     bgee_mock_koza.process_sources()
-#
-#
-#     assert len(bgee_koza_1) == 1
-#     association = bgee_koza_1[0]
-#     assert association.subject == "ENSEMBL:ENSG00000000003"
-#     assert association.predicate == "biolink:expressed_in"
-#     assert association.object == "CL:0000019"
-#     assert aggregator_knowledge_sources(association)
+# Ignoring process_koza_sources for now as it depends completely on above tested functions but goes deeper into Koza.
+# def test_process_koza_source(bgee_mock_koza):
+#     pass
