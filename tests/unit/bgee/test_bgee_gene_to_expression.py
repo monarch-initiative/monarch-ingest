@@ -56,7 +56,18 @@ def get_mock_koza(
     return koza_app
 
 
-def get_koza_rows(mock_koza, n_rows) -> List[Dict]:
+def get_koza_rows(mock_koza: KozaApp, n_rows: int) -> List[Dict]:
+    """Function to get specified number of rows from mock Koza:
+
+        Read n rows from mock Koza:
+
+        Args:
+            mock_koza (KozaApp): The mock koza object to read rows from.
+            n_rows (int): The number of rows to return.
+
+        Returns:
+            List[Dict]: Returns a list of ros in Koza dict format.
+        """
     rows = []
     for i in range(0, n_rows):
         rows.append(mock_koza.get_row())
