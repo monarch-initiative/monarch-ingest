@@ -14,49 +14,37 @@ from biolink.pydanticmodel import GeneToExpressionSiteAssociation
 from monarch_ingest.ingests.bgee.gene_to_expression_utils import get_row_group, filter_group_by_rank, write_group
 
 
-def get_koza(yaml_file: str, translation_table: str, output_dir: str, output_format: str = 'tsv') -> KozaApp:
-    """Function to get a KozaApp for testing
+def get_mock_koza(
+        yaml_file: str,
+        translation_table: str,
+        output_dir: str,
+        output_format: str,
+        files: List[str]) -> KozaApp:
+    """Function to mock a KozaApp:
 
-        Creates a KozaApp from inputs identical to the KozaApp produced from Koza
-        for the input yaml file but with the supplied translation table and using
-        the given output dir and format:
+        Creates a mock KozaApp from KozaApp by changing input files and write function:
 
         Args:
             yaml_file (str): The yaml file used for the Koza ingest of interest.
             translation_table (str): The translation table for the Koza ingest.
             output_dir (str): The directory for KozaApp output.
             output_format (str): The format for output from the KozaApp.
+            files (List[PosixPath]): The files to use for the mock KozaApp.
 
         Returns:
-            KozaApp: Returns a KozaApp for the indicated ingest with modified output.
+            KozaApp: Returns a mock KozaApp for the indicated ingest modifying files, output, and write function.
         """
     with open(yaml_file, 'r') as source_fh:
-        source_config = PrimaryFileConfig(**yaml.load(source_fh, Loader=UniqueIncludeLoader))
+        yaml_data = yaml.load(source_fh, Loader=UniqueIncludeLoader)
+
+    yaml_data['files'] = files
+    source_config = PrimaryFileConfig(**yaml_data)
 
     koza_app = KozaApp(
         source=Source(source_config),
         translation_table=translation_table,
         output_dir=output_dir,
         output_format=OutputFormat(output_format))
-    return koza_app
-
-
-def make_mock_koza(koza_app: KozaApp, files: List[str]) -> KozaApp:
-    """Function to mock a KozaApp:
-
-        Creates a mock KozaApp from KozaApp by changing input files and write function:
-
-        Args:
-            koza_app (str): The KozaApp to mock.
-            files (List[PosixPath]): The files to use for the mock KozaApp.
-
-        Returns:
-            KozaApp: Returns a KozaApp for the indicated ingest with modified output.
-        """
-    posix_files = []
-    for file in files:
-        posix_files.append(PosixPath(file))
-    koza_app.source.config.files = posix_files
 
     def _mock_write(self, *entities):
         if hasattr(self, '_entities'):
@@ -86,14 +74,18 @@ def bgee_test_output() -> str:
 
 
 @pytest.fixture
+def bgee_test_output_format() -> str:
+    return 'tsv'
+
+
+@pytest.fixture
 def bgee_test_files() -> List[str]:
     return ["tests/unit/bgee/test_bgee.tsv.gz"]
 
 
 @pytest.fixture
-def bgee_mock_koza_rows(bgee_yaml, global_table, bgee_test_output, bgee_test_files) -> KozaApp:
-    bgee_koza = get_koza(bgee_yaml, global_table, bgee_test_output)
-    return make_mock_koza(bgee_koza, bgee_test_files)
+def bgee_mock_koza_rows(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files)
 
 
 @pytest.fixture
@@ -146,9 +138,8 @@ def test_filter_group_by_rank_long(row_group_2, filter_col, smallest_n):
 
 
 @pytest.fixture
-def bgee_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_files) -> KozaApp:
-    bgee_koza = get_koza(bgee_yaml, global_table, bgee_test_output)
-    return make_mock_koza(bgee_koza, bgee_test_files)
+def bgee_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files)
 
 
 def test_write_group(row_group_1, bgee_mock_koza):
