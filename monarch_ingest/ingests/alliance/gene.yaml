@@ -35,7 +35,7 @@ node_properties:
   - 'type' # soTermId
   - 'in_taxon'
   - 'xref'
-  - 'synonyms'
+  - 'synonym'
   - 'source'
 
 transform_mode: 'flat'
