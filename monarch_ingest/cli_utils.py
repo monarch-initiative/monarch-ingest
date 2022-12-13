@@ -286,7 +286,7 @@ def do_release():
         # copy to data-public bucket
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}")
         sh.gsutil("-q", "-m", "rm", "-rf", f"gs://data-public-monarchinitiative/monarch-kg-dev/latest")
-        sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "fallgs://data-public-monarchinitiative/monarch-kg-dev/latest")
+        sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_name}")
