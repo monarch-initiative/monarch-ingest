@@ -19,4 +19,4 @@ services:
       - neo4j-data:/data
       - ./dumps:/dumps
       - ./scripts:/scripts
-    entrypoint: /scripts/load_and_boot.sh
+    entrypoint: /scripts/load_and_boot_neo4j.sh

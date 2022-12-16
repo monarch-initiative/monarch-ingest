@@ -146,3 +146,4 @@ logs/
 
 # Neo4j database
 neo4j-data/
+*.tgz
