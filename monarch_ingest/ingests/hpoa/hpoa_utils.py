@@ -59,7 +59,8 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
 
     :param frequency_field: str, raw frequency value in one of the three above forms
     :return: Optional[FrequencyHpoTerm, float, float], raw frequency mapped to its HPO term, quotient or percentage
-             (as applicable); return None if unmappable; percentage and/or quotient will also be None if not applicable
+             respectively (as applicable); return None if unmappable;
+             percentage and/or quotient returned are also None, if not applicable
     """
     hpo_term: Optional[FrequencyHpoTerm] = None
     quotient: Optional[float] = None
@@ -86,6 +87,10 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
             frequency_field = None
     else:
         # may be None, if original field was empty or has an invalid value
+        return None
+
+    if not hpo_term:
+        # Input value could not be classified
         return None
 
     return hpo_term, percentage, quotient   # percentage and/or quotient will also be None if not applicable
