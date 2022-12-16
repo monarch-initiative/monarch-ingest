@@ -24,7 +24,7 @@ while (row := koza_app.get_row()) is not None:
         name=row["name"],
         type=row["soTermId"],
         in_taxon=[row["basicGeneticEntity"]["taxonId"]],
-        source=source,
+        provided_by=[source]
     )
 
     if row["basicGeneticEntity"]["crossReferences"]:
