@@ -1,0 +1,22 @@
+version: '3.8'
+
+volumes:
+  neo4j-data:
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - neo4j
+  neo4j:
+    image: neo4j:4.4
+    environment:
+      - DO_LOAD=1
+    volumes:
+      - neo4j-data:/data
+      - ./dumps:/dumps
+      - ./scripts:/scripts
+    entrypoint: /scripts/load_and_boot.sh

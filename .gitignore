@@ -143,3 +143,6 @@ test-output/
 
 # Transform logs
 logs/
+
+# Neo4j database
+neo4j-data/
