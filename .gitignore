@@ -144,6 +144,8 @@ test-output/
 # Transform logs
 logs/
 
-# Neo4j database
+# Neo4j database data, dumps and the local
+# config file are ignored by the repository
 neo4j-data/
-*.tgz
+*.dump
+neo4j/neo4j.conf
