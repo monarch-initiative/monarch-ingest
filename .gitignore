@@ -148,4 +148,8 @@ logs/
 # config file are ignored by the repository
 neo4j-data/
 *.dump
-neo4j/neo4j.conf
+neo4j/conf/neo4j.conf
+neo4j/certificates/bolt/private.key
+neo4j/certificates/bolt/public.crt
+neo4j/certificates/https/private.key
+neo4j/certificates/https/public.crt

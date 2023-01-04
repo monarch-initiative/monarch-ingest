@@ -29,6 +29,7 @@ services:
       - neo4j-data:/data
       - ./dumps:/dumps
       - ./scripts:/scripts
-      - ./neo4j:/var/lib/neo4j/conf
+      - ./neo4j/conf:/var/lib/neo4j/conf
+      - ./neo4j/certificates:/var/lib/neo4j/ssl
     # NEO4J_DUMP_FILENAME can be defined within the .env file
     entrypoint: /scripts/load_and_boot_neo4j.sh $NEO4J_DUMP_FILENAME
