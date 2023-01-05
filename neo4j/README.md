@@ -59,13 +59,13 @@ The Neo4j instances with Monarch data loaded should now be visible at **http://l
 
 ## HTTPS/SSL Wrapping of the Neo4j Server Instance
 
-See the [online Neo4j SSL encryption docs](https://neo4j.com/docs/operations-manual/current/docker/security/) for full details.
+See the [online Neo4j SSL encryption docs](https://neo4j.com/docs/operations-manual/current/docker/security/) and [knowledge base article](https://neo4j.com/developer/kb/setting-up-ssl-with-docker) for clarification.
 
 The steps are essentially as follows:
 
 1. Obtain SSL public certificates and private keys from a trusted certificate authority such as [https://www.openssl.org/](https://www.openssl.org/) or [https://letsencrypt.org/](https://letsencrypt.org/). Distinct certificates for the different communication channels (**`bolt`** and **`https`**) are recommended.
 
-2. Place these distinct (**`bolt`** and **`https`**) certificates and keys into the corresponding subdirectory of the communication scope (**`bolt`** or **`https`**) under the [neo4j/certificates](neo4j/certificates) directory of the project. For example, place the **`bolt`** certificates and keys under [neo4j/certificates/bolt](neo4j/certificates/bolt).
+2. Place these distinct (**`bolt`** and **`https`**) certificates and keys into the corresponding subdirectory of the communication scope (**`bolt`** or **`https`**) under the [neo4j/certificates](neo4j/certificates) directory of the project. For example, place the **`bolt`** certificate and private key under [neo4j/certificates/bolt](neo4j/certificates/bolt).
 
 3. Ensure that the following settings are uncommented in the **neo4j.conf** file, to configure the following settings for the policies to be used:
 
