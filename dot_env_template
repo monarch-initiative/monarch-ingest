@@ -1,8 +1,0 @@
-# This Environment Variable file is referenced by the docker-compose.yaml build
-
-# Set this variable to '1' to trigger an initial loading of a Neo4j dump
-# DO_LOAD=1
-
-# Name of Neo4j dump file to load, assumed to be accessed from within
-# the 'dumps' internal Volume path within the Docker container
-# NEO4J_DUMP_FILENAME=monarch-kg.neo4j.dump
