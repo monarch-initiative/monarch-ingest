@@ -35,15 +35,9 @@ See [neo4j configuration settings page](https://neo4j.com/docs/operations-manual
 
 ## Running the System
 
-First, make sure that Docker (or the Docker Desktop) is running then Docker Compose is used to build the local Monarch Neo4j system. From the monarch-ingest project root directory, type commands as follows:
+First, make sure that Docker (or the Docker Desktop) is running then Docker Compose is used to build the local Monarch Neo4j system. Note that since we are simply directly using a standard Neo4j Docker image from DockerHub, there is no 'build' step needed.
 
-```bash
-# May not normally be necessary since the Docker Compose system
-# currently uses 'canned' Docker images for its containers.
-docker-compose build
-```
-
-Then start up the system (as a background daemon):
+Initially, we may be running the Neo4j instance off regular HTTP. The necessary Compose configuration is in the default **docker-compose.yaml** file, thus, to start up the system (as a background daemon), we simply type:
 
 ```bash
 docker-compose up -d
@@ -65,7 +59,7 @@ The Neo4j instances with Monarch data loaded should now be visible at **http://l
 
 ## HTTPS/SSL Wrapping of the Neo4j Server Instance
 
-See the [online Neo4j SSL encryption docs](https://neo4j.com/docs/operations-manual/current/docker/security/) for details.
+See the [online Neo4j SSL encryption docs](https://neo4j.com/docs/operations-manual/current/docker/security/) for full details.
 
 The steps are essentially as follows:
 
@@ -91,4 +85,10 @@ dbms.ssl.policy.bolt.private_key=private.key
 dbms.ssl.policy.bolt.public_certificate=public.crt
 ```
 
-4. (Re-)start the Docker container (i.e. using Compose). Note that since the above SSL configuration changes are external to the image itself, there is generally no need to (re-)build the system before (re-)running it for SSL secured access (once the certificates and private keys are in place)
+4. (Re-)start the Docker container (i.e. using Compose). Note that since the above SSL configuration changes are external to the image itself, there is generally no need to (re-)build the system before (re-)running it for SSL secured access (once the certificates and private keys are in place). However, we need to substitute a Docker Compose YAML file configured for SSL/HTTPS encryption of Neo4j (**docker-compose-ssl.yaml**) is slightly different from its (default) HTTP counterpart. Thus, to run the SSL secured system (after the above configuration steps), we type:
+
+```bash
+docker-compose -f docker-compose-ssl.yaml up -d
+```
+
+Of course, substitute in the same **docker-compose-ssl.yaml** file for the corresponding **Compose** `logs` and `down` commands.
