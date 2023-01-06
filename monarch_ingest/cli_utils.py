@@ -278,13 +278,10 @@ def do_release():
         # copy to monarch-archive bucket
         sh.gsutil('-q', '-m', 'cp', '-r', 'output/*', f'gs://monarch-archive/monarch-kg-dev/{release_name}')
 
-        sh.gsutil("-q", "-m", "cp", "-r", "output/*", f"gs://monarch-archive/monarch-kg-dev/{release_name}")
-
-        sh.gsutil("-q", "-m", "rm", "-rf", f"gs://monarch-archive/monarch-kg-dev/latest")
-        sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", "gs://monarch-archive/monarch-kg-dev/latest")
-
         # copy to data-public bucket
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}")
+
+        # update "latest" 
         sh.gsutil("-q", "-m", "rm", "-rf", f"gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         
