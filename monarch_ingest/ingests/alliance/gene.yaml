@@ -36,6 +36,6 @@ node_properties:
   - 'in_taxon'
   - 'xref'
   - 'synonym'
-  - 'source'
+  - 'provided_by'
 
 transform_mode: 'flat'

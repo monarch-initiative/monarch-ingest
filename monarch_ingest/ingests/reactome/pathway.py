@@ -11,7 +11,7 @@ while (row := koza_app.get_row()) is not None:
         taxon_id = koza_app.translation_table.local_table[species]
     except KeyError:
         # Move on if the taxon name isn't in the translation table
-        koza_app.next_row()
+        continue
 
     # We only continue of the species is in our local reactome_id_mapping table
     if taxon_id:
@@ -19,7 +19,6 @@ while (row := koza_app.get_row()) is not None:
             id="REACT:" + row["ID"],
             name=row["Name"],
             type=koza_app.translation_table.resolve_term("pathway"),
-            source="infores:reactome",
             in_taxon=[taxon_id],
             provided_by=["infores:reactome"]
         )

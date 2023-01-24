@@ -17,11 +17,10 @@ while (row := koza_app.get_row()) is not None:
     gene_id = "NCBIGene:" + row["entrez-gene-id"]
     phenotype_id = row["HPO-Term-ID"]
     disease_id = row["disease-ID for link"]
+
     frequency_hpo = row["Frequency-HPO"]
+
     qualifiers = [disease_id]
-    if frequency_hpo:
-        # Not all entries have HPO frequency info
-        qualifiers.append(frequency_hpo)
     evidence = [row["G-D source"]]
 
     association = GeneToPhenotypicFeatureAssociation(
@@ -30,6 +29,7 @@ while (row := koza_app.get_row()) is not None:
         predicate="biolink:has_phenotype",
         object=phenotype_id,
         qualifiers=qualifiers,
+        frequency_qualifier=frequency_hpo,
         has_evidence=evidence,
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpoa"
