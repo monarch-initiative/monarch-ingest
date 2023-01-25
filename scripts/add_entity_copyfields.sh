@@ -16,7 +16,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
         "name": "*_t",
         "type": "text",
         "indexed": true,
-        "stored": true,
+        "stored": false,
         "multiValued": true
     }
 }' http://localhost:8983/solr/entity/schema
@@ -28,7 +28,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
         "name": "*_ac",
         "type": "autocomplete",
         "indexed": true,
-        "stored": true,
+        "stored": false,
         "multiValued": true
     }
 }' http://localhost:8983/solr/entity/schema
