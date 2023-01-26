@@ -45,6 +45,11 @@ pipeline {
                 sh 'poetry run ingest merge'
             }
         }
+        stage('kgx-graph-summary') {
+            steps {
+                sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
+            }
+        }
         stage('neo4j-v4-transform'){
             steps {
                 sh '''
