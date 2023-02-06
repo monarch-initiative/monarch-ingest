@@ -126,7 +126,7 @@ def transform_phenio(
     nodes_df = pandas.read_csv(f"data/monarch/{nodefile}", sep='\t', dtype="string",
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     nodes_df.drop(
-        nodes_df.columns.difference(['id', 'category', 'name', 'description', 'xref', 'provided_by', 'synonym']),
+        nodes_df.columns.difference(['id', 'category', 'name', 'description', 'xref', 'synonym']),
         axis=1,
         inplace=True
     )

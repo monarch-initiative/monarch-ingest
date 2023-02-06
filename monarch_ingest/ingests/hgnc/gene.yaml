@@ -74,7 +74,6 @@ node_properties:
   - 'in_taxon'
   - 'xref'
   - 'synonym'
-  - 'provided_by'
 
 # Commented out while we're not bringing in publication associations
 #edge_properties:
@@ -83,6 +82,5 @@ node_properties:
 #  - 'predicate'
 #  - 'object'
 #  - 'category'
-#  - 'provided_by'
 
 transform_mode: 'flat'

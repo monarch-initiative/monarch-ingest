@@ -15,8 +15,7 @@ while (row := koza_app.get_row()) is not None:
         symbol=row['Gene Name'],
         name=row['Gene Name'],
         synonym=synonyms,
-        in_taxon=["NCBITaxon:44689"],
-        provided_by=["infores:dictybase"]
+        in_taxon=["NCBITaxon:44689"]
     )
 
     koza_app.write(gene)

@@ -31,6 +31,5 @@ node_properties:
   - 'type'
   - 'creation_date'
   - 'keywords'
-  - 'provided_by'
 
 transform_mode: 'flat'

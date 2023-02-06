@@ -17,9 +17,9 @@ while (row := koza_app.get_row()) is not None:
     if row["QUALIFIER"]:
         raise ValueError("Didn't expect a qualifier value, found: " + row["QUALIFIER"])
 
-    gene = Gene(id=row["SUBJECT"], provided_by=["infores:xenbase"])
+    gene = Gene(id=row["SUBJECT"])
 
-    phenotype = PhenotypicFeature(id=row["OBJECT"], provided_by=["infores:xenbase"])
+    phenotype = PhenotypicFeature(id=row["OBJECT"])
 
     # relation = row["RELATION"].replace("_", ":"),
     association = GeneToPhenotypicFeatureAssociation(

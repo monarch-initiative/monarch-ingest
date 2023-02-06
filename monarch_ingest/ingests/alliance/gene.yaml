@@ -28,14 +28,11 @@ required_properties:
 node_properties:
   - 'id'
   - 'category'
-  - 'provided_by'
   - 'name'
   - 'symbol'
   - 'description'
   - 'type' # soTermId
   - 'in_taxon'
   - 'xref'
-  - 'synonym'
-  - 'provided_by'
 
 transform_mode: 'flat'

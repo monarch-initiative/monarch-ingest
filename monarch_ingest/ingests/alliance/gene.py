@@ -23,8 +23,7 @@ while (row := koza_app.get_row()) is not None:
         symbol=row["symbol"],
         name=row["name"],
         type=row["soTermId"],
-        in_taxon=[row["basicGeneticEntity"]["taxonId"]],
-        provided_by=[source]
+        in_taxon=[row["basicGeneticEntity"]["taxonId"]]
     )
 
     if row["basicGeneticEntity"]["crossReferences"]:

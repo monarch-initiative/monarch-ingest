@@ -35,8 +35,7 @@ while (row := koza_app.get_row()) is not None:
         summary=row["abstract"] if "abstract" in row.keys() else None,
         xref=xrefs,
         type=koza_app.translation_table.resolve_term("publication"),
-        creation_date=creation_date,
-        provided_by=[source]
+        creation_date=creation_date
     )
 
     if "authors" in row.keys():

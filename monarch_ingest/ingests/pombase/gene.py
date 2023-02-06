@@ -14,8 +14,7 @@ while (row := koza_app.get_row()) is not None:
         id=row["curie"],
         symbol=row["primary gene name"],
         type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
-        in_taxon=["NCBITaxon:4896"],
-        provided_by=["infores:pombase"]
+        in_taxon=["NCBITaxon:4896"]
     )
 
     if row["UniProtKB accession"]:

@@ -10,8 +10,7 @@ while (row := koza_app.get_row()) is not None:
         id='NCBIGene:' + row["GeneID"],
         symbol=row["Symbol"],
         description=row["description"],
-        in_taxon=['NCBITaxon:' + row["tax_id"]],
-        provided_by=["infores:ncbi-gene"]
+        in_taxon=['NCBITaxon:' + row["tax_id"]]
     )
 
     koza_app.write(gene)

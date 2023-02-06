@@ -24,6 +24,5 @@ node_properties:
   - 'category'
   - 'name'
   - 'in_taxon'
-  - 'provided_by'
 
 transform_mode: 'flat'

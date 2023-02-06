@@ -73,8 +73,5 @@ node_properties:
   - 'symbol'
   - 'description'
   - 'in_taxon'
-  - 'provided_by'
-
 
 transform_mode: 'flat'
-

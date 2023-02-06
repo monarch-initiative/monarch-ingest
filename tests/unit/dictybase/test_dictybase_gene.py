@@ -72,5 +72,3 @@ def test_dictybase_ncbi_mapped_gene_ingest(basic_dictybase_1):
     assert 'RasGEFB' in entity[0].synonym
     assert 'RasGEF' in entity[0].synonym
     assert "NCBITaxon:44689" in entity[0].in_taxon
-    assert "infores:dictybase" in entity[0].provided_by
-

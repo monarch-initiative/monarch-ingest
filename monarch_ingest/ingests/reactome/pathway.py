@@ -19,8 +19,7 @@ while (row := koza_app.get_row()) is not None:
             id="REACT:" + row["ID"],
             name=row["Name"],
             type=koza_app.translation_table.resolve_term("pathway"),
-            in_taxon=[taxon_id],
-            provided_by=["infores:reactome"]
+            in_taxon=[taxon_id]
         )
 
         koza_app.write(pathway)
