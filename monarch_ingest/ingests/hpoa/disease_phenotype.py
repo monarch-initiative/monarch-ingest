@@ -23,13 +23,14 @@ poetry run koza transform \
   --source monarch_ingest/ingests/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 import uuid
 
 from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm
 
 import logging
 LOG = logging.getLogger(__name__)
@@ -68,7 +69,15 @@ while (row := koza_app.get_row()) is not None:
 
     onset = row["Onset"]
 
-    frequency_qualifier = row["Frequency"]
+    # Raw frequencies - HPO term curies, ratios, percentages - normalized to HPO terms
+    frequency_field = row["Frequency"]
+    frequency_hpo: Optional[FrequencyHpoTerm] = None
+    frequency_percentage: Optional[float] = None
+    frequency_quotient: Optional[float] = None
+    frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float, float]] = \
+        phenotype_frequency_to_hpo_term(frequency_field=frequency_field)
+    if frequency_parsed:
+        frequency_hpo, frequency_percentage, frequency_quotient = frequency_parsed
 
     # Publications
     publications_field: str = row["Reference"]
@@ -88,7 +97,13 @@ while (row := koza_app.get_row()) is not None:
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
         onset_qualifier=onset,
-        frequency_qualifier=frequency_qualifier,
+
+        # TODO: not totally sure if HPO term now ought to be assigned to
+        #       percentage and quotient frequency values anymore?
+        has_percentage=frequency_percentage if frequency_percentage else None,
+        has_quotient=frequency_quotient if frequency_quotient else None,
+        frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
+
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpoa"
     )

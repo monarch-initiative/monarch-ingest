@@ -69,6 +69,7 @@ filters:
 # For node-only ingests
 edge_properties:
   - 'id'
+  - 'category'
   - 'subject'
   - 'predicate'
   - 'object'

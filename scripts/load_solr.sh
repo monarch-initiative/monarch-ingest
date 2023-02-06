@@ -21,12 +21,23 @@ sleep 30
 echo "Adding cores"
 poetry run lsolr add-cores entity association
 sleep 10
+
+# todo: ideally, this will live in linkml-solr
+echo "Adding additional fieldtypes"
+scripts/add_entity_fieldtypes.sh
+sleep 5
+
 echo "Adding entity schema"
 poetry run lsolr create-schema -C entity -s model.yaml
 sleep 5
 
 echo "Adding association schema"
 poetry run lsolr create-schema -C association -s model.yaml
+sleep 5
+
+# todo: this also should live in linkml-solr, and copy-fields should be based on the schema
+echo "Add dynamic fields and copy fields declarations"
+scripts/add_entity_copyfields.sh
 sleep 5
 
 echo "Loading entities"
@@ -39,6 +50,9 @@ curl "http://localhost:8983/solr/association/select?q=*:*"
 mkdir solr-data || true
 
 docker cp my_solr:/var/solr/data solr-data/
+
+# make sure it's readable by all in the tar file
+chmod -R a+rX solr-data
 
 # For now, just leaving solr running. It will go away on it's own in the jenkins builder
 # and otherwise that makes this script a nice way to just run solr locally
