@@ -246,7 +246,7 @@ def merge_files(
 
 def apply_closure(
         name: str = "monarch-kg",
-        closure_file: str = f"data/monarch/phenio-relation-graph.tsv",
+        closure_file: str = f"data/monarch/phenio-relation-filtered.tsv",
         output_dir: str = OUTPUT_DIR
 ):
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
