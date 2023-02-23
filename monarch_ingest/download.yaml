@@ -299,10 +299,10 @@
   local_name: data/monarch/kg-phenio.tar.gz
   tag: phenio
 -
-  # TODO: eventually, this should come from kg-phenio itself
-  url: https://storage.googleapis.com/monarch-ingest-data-cache/monarch/phenio-relations-non-redundant.tsv
-  local_name: data/monarch/phenio-relations-non-redundant.tsv
+  url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.tar.gz
+  local_name: data/monarch/phenio-relation-graph.tar.gz
   tag: phenio
+
 # -
 #   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
 #   local_name: data/monarch/monarch.json
