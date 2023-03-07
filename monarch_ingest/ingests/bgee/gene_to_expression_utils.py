@@ -41,7 +41,8 @@ def write_group(rows: List, koza_app: KozaApp):
             subject="ENSEMBL:" + row['Gene ID'],
             predicate='biolink:expressed_in',
             object=row['Anatomical entity ID'],
-            aggregator_knowledge_source=["infores:monarchinitiative", "infores:bgee"])
+            primary_knowledge_source="infores:bgee",
+            aggregator_knowledge_source=["infores:monarchinitiative"])
 
         koza_app.write(association)
 

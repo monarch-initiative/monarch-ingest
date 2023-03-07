@@ -154,7 +154,8 @@ def transform_phenio(
                                quoting=csv.QUOTE_NONE, lineterminator="\n")
     edges_df.drop(
         edges_df.columns.difference(['id', 'subject', 'predicate', 'object',
-                                      'category', 'relation', 'knowledge_source']),
+                                     'category', 'relation', 'primary_knowledge_source',
+                                     'aggregator_knowledge_source']),
         axis=1,
         inplace=True
     )
