@@ -73,6 +73,7 @@ edge_properties:
   - 'subject'
   - 'predicate'
   - 'object'
+  - 'primary_knowledge_source'
   - 'aggregator_knowledge_source'
 
 transform_mode: 'flat'
