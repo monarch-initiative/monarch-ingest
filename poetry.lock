@@ -99,14 +99,14 @@ files = [
 
 [[package]]
 name = "biolink-model"
-version = "3.2.1"
+version = "3.1.1"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "biolink-model-3.2.1.tar.gz", hash = "sha256:d6fc77919a768ee3f25194e18c63380fa7b7999e3bf1d966892483a10dc86ff5"},
-    {file = "biolink_model-3.2.1-py3-none-any.whl", hash = "sha256:72aa83df97965444d6ba6362cd9241787310603e9108105b86f02eadf5cbbf7b"},
+    {file = "biolink-model-3.1.1.tar.gz", hash = "sha256:5d865537423d3ce39a1b409e2720c50e3edbf11412674efb842b4ff8da88885e"},
+    {file = "biolink_model-3.1.1-py3-none-any.whl", hash = "sha256:ac2b245e70af5fc7d5c61eb3ee7db4735eebd795cd34dbfb206a8d195ff7e173"},
 ]
 
 [package.dependencies]
@@ -3849,4 +3849,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ad0564e4089d3562b3e17d2f0b23e2dff95589d25969204bd82e29ce856a1e33"
+content-hash = "0bffd1793d685cf9107d2d57e965eb12caaba41650614047e746ac2c30c2572c"
