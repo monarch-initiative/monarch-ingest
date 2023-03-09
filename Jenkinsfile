@@ -15,6 +15,8 @@ pipeline {
                     # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
+                    echo ${AWS_ACCESS_KEY_ID}
+
                     # echo $SHELL
                     python3 --version
                     pip --version
@@ -25,7 +27,6 @@ pipeline {
                     poetry install
                     poetry run which ingest
 
-                    echo $AWS_ACCESS_KEY_ID
                 '''
             }
         }
