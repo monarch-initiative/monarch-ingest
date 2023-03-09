@@ -1,9 +1,11 @@
 pipeline {
     agent { label 'monarch-agent-large' }
-        environment {
+    environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
         PATH = "/opt/poetry/bin:${env.PATH}"
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
     stages {
         stage('setup') {
@@ -22,6 +24,8 @@ pipeline {
                     # poetry config experimental.new-installer false
                     poetry install
                     poetry run which ingest
+
+                    aws configure
                 '''
             }
         }
@@ -79,7 +83,7 @@ pipeline {
         }
         stage('upload files') {
             steps {
-                sh 'poetry run ingest release'
+                sh 'poetry run ingest release --kghub'
             }
         }
         stage('index') {

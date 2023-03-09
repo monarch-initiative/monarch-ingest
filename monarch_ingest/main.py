@@ -1,4 +1,5 @@
 from typing import List, Optional
+
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import *
 from monarch_ingest.utils.log_utils import set_log_config, get_logger
@@ -7,6 +8,7 @@ import typer
 typer_app = typer.Typer()
 
 OUTPUT_DIR = "output"
+
 
 @typer_app.command()
 def download(
@@ -26,6 +28,7 @@ def download(
             yaml_file='monarch_ingest/download.yaml',
             output_dir='.'
         )
+
 
 @typer_app.command()
 def transform(
@@ -72,7 +75,6 @@ def transform(
         )
 
 
-
 @typer_app.command()
 def merge(
     input_dir: str = typer.Option(f"{OUTPUT_DIR}/transform_output", help="Directory with nodes and edges to be merged",),
@@ -87,6 +89,7 @@ def merge(
 def closure():
     apply_closure()
 
+
 @typer_app.command()
 def sqlite():
     load_sqlite()
@@ -98,9 +101,9 @@ def solr():
 
 
 @typer_app.command()
-def release():
+def release(kghub: bool = typer.Option(False, help="Also release to kghub S3 bucket")):
     """Copy data to Monarch GCP data buckets"""
-    do_release()
+    do_release(kghub)
 
 
 if __name__ == "__main__":

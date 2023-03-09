@@ -27,7 +27,8 @@ def transform_one(
     force: bool = False,
     verbose: bool = None,
     log: bool = False
-):
+    ):
+
     set_log_config(logging.INFO if (verbose is None) else logging.DEBUG if (verbose == True) else logging.WARNING)
     if log: fh = add_log_fh(logger, Path(f"logs/{ingest}.log"))
 
@@ -249,7 +250,8 @@ def apply_closure(
         name: str = "monarch-kg",
         closure_file: str = f"data/monarch/phenio-relation-filtered.tsv",
         output_dir: str = OUTPUT_DIR
-):
+    ):
+    
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
                 closure_file=closure_file,
@@ -265,7 +267,7 @@ def load_solr():
     sh.bash("scripts/load_solr.sh")
 
 
-def do_release():
+def do_release(kghub: bool = False):
     import datetime
     release_name = datetime.datetime.now().strftime("%Y-%m-%d")
     
@@ -286,6 +288,11 @@ def do_release():
         sh.gsutil("-q", "-m", "rm", "-rf", f"gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         
+        # copy to kghub S3 bucket
+        if kghub:
+            sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"s3://kg-hub-public-data/kg-monarch/{release_name}")
+            sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"s3://kg-hub-public-data/kg-monarch/current")
+
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_name}")
 
