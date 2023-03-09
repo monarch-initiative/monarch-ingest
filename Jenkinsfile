@@ -4,8 +4,8 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
         PATH = "/opt/poetry/bin:${env.PATH}"
-        // AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
-        // AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
     stages {
         stage('setup') {
