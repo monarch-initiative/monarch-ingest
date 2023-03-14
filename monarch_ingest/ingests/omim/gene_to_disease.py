@@ -114,7 +114,7 @@ while (row := koza_app.get_row()) is not None:
         # relation = koza_app.translation_table.global_table['is marker for']
         koza_app.next_row()
     elif disorder_label.startswith('{'):
-        predicate = "biolink:risk_affected_by"
+        predicate = "biolink:affects_risk_for"
         # relation = koza_app.translation_table.global_table[
         #     'confers susceptibility to condition'
         # ]
