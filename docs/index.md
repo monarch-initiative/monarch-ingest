@@ -1,6 +1,6 @@
 # Monarch Ingest
 
-## Overview
+## Introduction
 
 The Monarch Ingest generates [KGX](https://github.com/biolink/kgx/blob/master/specification/kgx-format.md) formatted files conforming to the [BioLink Model](https://biolink.github.io/biolink-model/) from a wide variety of biomedical data sources.
 
@@ -10,11 +10,11 @@ The eventual output of the Monarch Ingest process is the **Monarck KG**. The lat
 
 The Monarch Ingest is built using [Poetry](https://python-poetry.org), which will create its own virtual environment. 
 
-## Getting Started
+## Installation
 
-### Set up the environment
+monarch-ingest is a Python 3.8+ package, installable via [Poetry](https://python-poetry.org).  
 
-1. <a href="https://python-poetry.org/docs/" target="_blank">Install Poetry</a>, if you don't already have it:
+1. <a href="https://python-poetry.org/docs/" target="_blank">Install Poetry</a>, if you don't already have it:  
 ```bash
 curl -sSL https://install.python-poetry.org | python3 -
 
@@ -35,8 +35,8 @@ For a detailed tutorial on ingests and how to make one, see the [Create an Inges
 
 ### Quickstart
 
-For full usage details, see [Usage](Usage.md)  
-run `ingest --help` or `ingest <command> --help`.
+For usage details, see [CLI](CLI.md),  
+or run `ingest --help` or `ingest <command> --help`.
 
 ??? tip "Run the whole pipeline!"
     - Download the source data:

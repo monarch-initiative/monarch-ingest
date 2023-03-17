@@ -1,8 +1,43 @@
 site_name: 'Monarch Ingest Documentation'
 site_url: 'https://monarch-initiative.github.io/monarch-ingest/'
-
 repo_name: 'monarch-initiative/monarch-ingest'
 repo_url: 'https://github.com/monarch-initiative/monarch-ingest'
+
+
+nav:
+  - Welcome: 'index.md'
+  - CLI: 'CLI.md'
+  - Creating an Ingest: 
+    - What is an Ingest?: 'Create-an-Ingest/index.md'
+    - Propose: 'Create-an-Ingest/1. Propose.md'
+    - Configure: 'Create-an-Ingest/2. Configure.md'
+    - Document: 'Create-an-Ingest/3. Document.md'
+    - Implement: 'Create-an-Ingest/4. Implement.md'
+    - Testing: 'Create-an-Ingest/5. Test.md'
+  - KG Build Process: 'KG-Build-Process/kg-build-process.md'
+  - Principles: 'Principles/modeling-principles.md'
+  - Sources:
+    - Alliance: 'Sources/Alliance.md'
+    - BGee: 'Sources/BGee.md'
+    - CTD: 'Sources/CTD.md'
+    - Dictybase: 'Sources/Dictybase.md'
+    - Flybase: 'Sources/Flybase.md'
+    - GOA: 'Sources/GOA.md'
+    - HGNC: 'Sources/HGNC.md'
+    - HPOA: 'Sources/HPOA.md'
+    - MGI: 'Sources/MGI.md'
+    - NCBI: 'Sources/NCBI.md'
+    - OMIM: 'Sources/OMIM.md'
+    - Panther: 'Sources/Panther.md'
+    - Pombase: 'Sources/Pombase.md'
+    - Reactome: 'Sources/Reactome.md'
+    - RGD: 'Sources/RGD.md'
+    - SGD: 'Sources/SGD.md'
+    - String: 'Sources/String.md'
+    - Xenbase: 'Sources/Xenbase.md'
+    - ZFIN: 'Sources/ZFIN.md'
+
+
 
 theme:
     name: 'material'
@@ -24,12 +59,14 @@ theme:
         text: 'Roboto'
         #code: 'Fira Mono'
 
+
 extra:
   social:
     - icon: 'fontawesome/solid/house'
       link: 'https://monarchinitiative.org'
     - icon: 'fontawesome/brands/github-alt'
       link: 'https://github.com/monarch-initiative'
+
 
 markdown_extensions:
   - def_list # list support
@@ -42,4 +79,3 @@ markdown_extensions:
   - pymdownx.betterem:
       smart_enable: all
       
-#copyright: 'Copyright &copy; 2020 - 2022 Glass (contact@glass-ships.com)'
