@@ -12,16 +12,25 @@ WGET = /usr/bin/env wget --timestamping --no-verbose
 .DEFAULT_GOAL := all
 SHELL := bash
 
+
 .PHONY: all
 all: install format test clean
+
 
 .PHONY: install
 install:
 	poetry install
 	
+
 .PHONY: test
 test: install
 	poetry run python -m pytest --ignore=ingest_template
+
+
+.PHONY: docs
+docs: install
+	poetry run typer monarch_ingest/main.py utils docs --name ingest --output docs/Usage.md
+	
 
 .PHONY: clean
 clean:
@@ -30,11 +39,13 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf dist
 
+
 .PHONY: lint
 lint:
 	poetry run flake8 --exit-zero --max-line-length 120 monarch_ingest/ tests/
 	poetry run black --check --diff monarch_ingest tests
 	poetry run isort --check-only --diff monarch_ingest tests
+
 
 .PHONY: format
 format:

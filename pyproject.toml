@@ -26,6 +26,7 @@ importlib-metadata = "^4.6.1"
 sh = "^1.14.3"
 typer = "^0.7"
 monarch-py = "^0.2.3"
+typer-cli = "^0.0.13"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
