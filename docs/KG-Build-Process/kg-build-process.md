@@ -15,7 +15,7 @@ Ingests are documented individually in the Sources section of this documentation
 
 ### Phenio-KG
 
-Ontologies in Monarch are build first as [Phenio](https://github.com/monarch-initiative/phenio), then converted into the biolink model and represented as KGX in [kg-phenio](https://github.com/Knowledge-Graph-Hub/kg-phenio). 
+Ontologies in Monarch are built first as [Phenio](https://github.com/monarch-initiative/phenio), then converted into the biolink model and represented as KGX in [kg-phenio](https://github.com/Knowledge-Graph-Hub/kg-phenio). 
 
 The `ingest` CLI has transform_phenio method then performs some further filtering on the kg-phenio node and edge files. Limiting to nodes and edges that match a subset of curie namespaces, and limiting node property columns to a relevant subset.
 
