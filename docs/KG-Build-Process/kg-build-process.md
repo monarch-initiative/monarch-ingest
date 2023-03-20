@@ -46,9 +46,9 @@ This step is requires that the subject of the SSSOM file be our canonical ID, an
 After edges have been mapped, it's important to cull the graph that point to nodes that don't exist in the graph. The QC filtering step performs joins against the node table/dataframe to split out these edges into their own kgx file ([monarch-kg-dangling-edges.tsv](https://data.monarchinitiative.org/monarch-kg-dev/latest/monarch-kg-denormalized-edges.tsv.gz) that can be used for QC purposes.
 
 A group of edges that wind up in this file could be due to a number of reasons:
-    * We're missing an ontology or other node source that is required for an ingest/source: this is something we want to fix 👎
-    * We're missing mapping necessary to translate between an edge ingest and our canonical node sources: this is something we want to fix 👎
-    * The edge ingest includes edges which can't be mapped to our canonical node sources: this is a feature! 👍
+* We're missing an ontology or other node source that is required for an ingest/source: this is something we want to fix 👎
+* We're missing mapping necessary to translate between an edge ingest and our canonical node sources: this is something we want to fix 👎
+* The edge ingest includes edges which can't be mapped to our canonical node sources: this is a feature! 👍
 
 We have a visualization of this split between connected and dangling edges for each ingest on our [QC Dashboard](https://monarch-initiative.github.io/monarch-qc/) that we can use to problem-solve our mappings and node sources.
 
