@@ -86,10 +86,13 @@ while (row := koza_app.get_row()) is not None:
     # Filter out some weird NCBI web endpoints
     publications = [p for p in publications if not p.startswith("http")]
 
+    # Replace ORPHA prefix with orphanet to match preferred biolink prefix
+    publications = [p.replace("ORPHA:", "orphanet:") for p in publications]
+
     # Association/Edge
     association = DiseaseToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=disease_id,
+        subject=disease_id.replace("ORPHA:", "Orphanet:"), # match `Orphanet` as used in Mondo SSSOM
         predicate=predicate,
         negated=negated,
         object=hpo_id,
