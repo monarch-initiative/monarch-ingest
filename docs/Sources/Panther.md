@@ -25,7 +25,7 @@ Contains the Reference Genomes' Gene-to-Gene Ortholog mappings from Panther anal
 
 - _Source File:_ [AllOrthologs.tar.gz](http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz). 
 
-The source file is huge, containing data from all species, many of which are not currently of direct interest to Monarch. For this reason, a Python function `filter_panther_orthologs_file` was coded within [orthology_utils](https://github.com/monarch-initiative/monarch-ingest/blob/main/monarch_ingest/ingests/panther/orthology_utils.py).
+The source file is huge, containing data from all species, many of which are not currently of direct interest to Monarch. For this reason, a Python function `filter_panther_orthologs_file` was coded within [orthology_utils](https://github.com/monarch-initiative/monarch-ingest/blob/main/src/monarch_ingest/ingests/panther/orthology_utils.py).
 
 ```python
 ALL_ORTHOLOGS_FILE = "AllOrthologs"

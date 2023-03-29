@@ -1,0 +1,61 @@
+name: 'hpoa_disease_phenotype'
+
+metadata:
+  ingest_title: 'Human Phenotype Ontology Annotations'
+  ingest_url: 'https://hpo.jax.org/app/'
+  description: 'Ingest of HPO disease to phenotype associations'
+  rights: 'https://hpo.jax.org/app/license'
+
+# List of files to be ingested
+files:
+  - './data/hpoa/phenotype.hpoa'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+# If the source_file has metadata lines to skip, use
+header: 4
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+local_table: './src/monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
+
+# We only concern ourselves with Aspect == 'P' (phenotypic anomalies) records in this ingest.
+filters:
+  - inclusion: 'include'
+    column: 'Aspect'
+    filter_code: 'eq'
+    value: 'P'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - 'DatabaseID'
+  - 'DiseaseName'
+  - 'Qualifier'
+  - 'HPO_ID'
+  - 'Reference'
+  - 'Evidence'
+  - 'Onset'
+  - 'Frequency'
+  - 'Sex'
+  - 'Modifier'
+  - 'Aspect'
+  - 'Biocuration'
+
+# DiseaseToPhenotypicFeatureAssociation
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'negated'
+  - 'object'
+  - 'publications'
+  - 'onset_qualifier'
+  - 'frequency_qualifier'
+  - 'sex_qualifier'
+  - 'has_evidence'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'

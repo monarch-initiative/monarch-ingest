@@ -1,0 +1,35 @@
+name: 'dictybase_gene_to_phenotype'
+
+files:
+  - './data/dictybase/all-mutants-ddb_g.txt'
+
+metadata: './src/monarch_ingest/ingests/dictybase/metadata.yaml'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+header: 0
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - 'Systematic_Name'
+  - 'Strain_Descriptor'
+  - 'Associated gene(s)'
+  - 'DDB_G_ID'
+  - 'Phenotypes'
+
+depends_on:
+  - './src/monarch_ingest/maps/dictybase_phenotype_names_to_ids.yaml'
+
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+
+transform_mode: 'flat'

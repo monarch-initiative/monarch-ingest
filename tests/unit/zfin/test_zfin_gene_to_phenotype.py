@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/ingests/zfin/gene_to_phenotype.py"
+    return "./src/monarch_ingest/ingests/zfin/gene_to_phenotype.py"
 
 
 @pytest.fixture

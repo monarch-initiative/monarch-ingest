@@ -29,7 +29,7 @@ test: install
 
 .PHONY: docs
 docs: install
-	poetry run typer monarch_ingest/main.py utils docs --name ingest --output docs/Usage.md
+	poetry run typer src/monarch_ingest/main.py utils docs --name ingest --output docs/Usage.md
 	
 
 .PHONY: clean
@@ -42,7 +42,7 @@ clean:
 
 .PHONY: lint
 lint:
-	poetry run flake8 --exit-zero --max-line-length 120 monarch_ingest/ tests/
+	poetry run flake8 --exit-zero --max-line-length 120 src/monarch_ingest/ tests/
 	poetry run black --check --diff monarch_ingest tests
 	poetry run isort --check-only --diff monarch_ingest tests
 

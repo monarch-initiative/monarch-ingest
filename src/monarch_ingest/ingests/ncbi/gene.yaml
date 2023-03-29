@@ -1,0 +1,80 @@
+name: 'ncbi_gene'
+
+files:
+  - './data/ncbi/gene_info.gz'
+
+metadata: './src/monarch_ingest/ingests/ncbi/metadata.yaml'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: 0
+
+columns:
+  - 'tax_id'
+  - 'GeneID'
+  - 'Symbol'
+  - 'LocusTag'
+  - 'Synonyms'
+  - 'dbXrefs'
+  - 'chromosome'
+  - 'map_location'
+  - 'description'
+  - 'type_of_gene'
+  - 'Symbol_from_nomenclature_authority'
+  - 'Full_name_from_nomenclature_authority'
+  - 'Nomenclature_status'
+  - 'Other_designations'
+  - 'Modification_date'
+  - 'Feature_type'
+
+filters:
+  - inclusion: 'include'
+    column: 'tax_id'
+    filter_code: 'in'
+    value:
+      - '9615'
+      - '9913'
+      - '9823'
+      - '9031'
+      # multiple Aspergillus genus taxon:5052
+      # Aspergillus nidulans FGSC A4 - primary Aspergillus nidulans genomic reference
+      - '227321'
+      #
+      # Monarch Technical, 26 Sept 2022: decision taken to *exclude*
+      # non-nidulans Aspergillus (sub-)species from the ingest for now
+      #
+      # - '330879'  # Aspergillus fumigatus Af293
+      # - '425011'  # Aspergillus niger CBS 513.88
+      # - '510516'  # Aspergillus oryzae RIB40
+      # - '341663'  # Aspergillus terreus NIH2624
+      # - '767769'  # Aspergillus brasiliensis - not in GOA
+      # - '41063'   # Aspergillus zonatus - not in GOA
+      # - '1137211' # Aspergillus acidus CBS 106.47  - not in GOA
+      # - '1073089'  # Aspergillus wentii DTO 134E9
+      # - '46472'  # Aspergillus versicolor
+      # - '602072' # Aspergillus carbonarius ITEM 5010
+      # - '690307'  # Aspergillus aculeatus ATCC16872
+      # - '1160497'  # Aspergillus glaucus CBS 516.65
+      # - '331117'  # Neosartorya fischeri NRRL 181
+      # - '344612'  # Aspergillus clavatus NRRL 1
+      # - '332952'  # Aspergillus flavus NRRL 3357
+      # - '767770'  # Aspergillus tubingensis CBS 134.48 - not in GOA
+      # - '75750'  # Aspergillus sydowii - not in GOA
+      # - '451804'  # Aspergillus fumigatus A1163 - not in GOA
+      # - '1033177'  # Aspergillus kawachii - not in GOA
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'symbol'
+  - 'description'
+  - 'in_taxon'
+  - 'provided_by'
+
+
+transform_mode: 'flat'
+

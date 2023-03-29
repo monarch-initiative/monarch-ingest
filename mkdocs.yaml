@@ -38,13 +38,11 @@ nav:
     - ZFIN: 'Sources/ZFIN.md'
 
 
-
 theme:
     name: 'material'
     docs_dir: docs/
-    logo: 'images/monarch-initiative2.png'
-    favicon:
-        'images/favicon.ico'
+    logo: 'images/monarch-initiative.png'
+    favicon: 'images/favicon.ico'
     features:
         - navigation.expand
         - navigation.instant
@@ -52,13 +50,64 @@ theme:
         - navigation.tabs
         - navigation.tabs.sticky
     palette:
-        scheme: 'slate'
-        primary: 'teal'
-        accent: 'purple'
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-2
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
     font:
-        text: 'Roboto'
-        #code: 'Fira Mono'
+        text: 'Source Sans Pro'
+        code: 'Source Sans Pro Mono'
 
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ ./src/monarch_ingest ]
+          import:
+          - https://docs.python.org/3/objects.inv
+          - https://mkdocstrings.github.io/objects.inv
+          - https://mkdocstrings.github.io/griffe/objects.inv
+          options:
+            docstring_style: google
+            docstring_options:
+              ignore_init_summary: yes
+            merge_init_into_class: yes
+            # separate_signature: yes
+            show_signature: no
+            show_source: no
+            show_root_full_path: no
+            show_root_toc_entry: False
+            filters:
+              - "!^_[^_]"
+              - "^_[^_]"
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - attr_list
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true
+      
 
 extra:
   social:
@@ -67,15 +116,3 @@ extra:
     - icon: 'fontawesome/brands/github-alt'
       link: 'https://github.com/monarch-initiative'
 
-
-markdown_extensions:
-  - def_list # list support
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.tabbed
-  - pymdownx.keys
-  - attr_list
-  - pymdownx.betterem:
-      smart_enable: all
-      
