@@ -15,6 +15,7 @@ from koza.model.config.source_config import OutputFormat
 
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
 from monarch_ingest.utils.log_utils import get_logger
+# from koza.utils.log_utils import get_logger
 
 
 OUTPUT_DIR = "output"
@@ -55,7 +56,8 @@ def transform_one(
             output_dir=f"{output_dir}/transform_output",
             output_format=OutputFormat.tsv,
             row_limit=row_limit,
-            verbose=False if verbose == None else verbose,
+            verbose=verbose,
+            # verbose=False if verbose == None else verbose,
             # log=log
         )
     except ValueError as e:

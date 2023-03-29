@@ -20,6 +20,5 @@ def get_logger(name: str = None, verbose: bool = False):
             level = "DEBUG",
             format = LOGURU_FORMAT_SIMPLE,
             colorize = True,
-            # filter="koza"
         )
     return logger

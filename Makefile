@@ -24,7 +24,7 @@ install:
 
 .PHONY: test
 test: install
-	poetry run python -m pytest --ignore=ingest_template
+	poetry run python -m pytest tests
 
 
 .PHONY: docs

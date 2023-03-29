@@ -1,11 +1,30 @@
 from typing import List, Optional
+
 from kghub_downloader.download_utils import download_from_yaml
-from monarch_ingest.cli_utils import *
+from monarch_ingest.cli_utils import (
+    apply_closure, 
+    do_release,
+    load_sqlite, 
+    load_solr, 
+    merge_files, 
+    transform_one, 
+    transform_phenio, 
+    transform_all, 
+)
 
 import typer
 typer_app = typer.Typer()
 
 OUTPUT_DIR = "output"
+
+
+@typer_app.callback(invoke_without_command=True)
+def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=True)):
+    if version:
+        from monarch_ingest import __version__
+        typer.echo(f"monarch_ingest version: {__version__}")
+        raise typer.Exit() 
+
 
 @typer_app.command()
 def download(
@@ -99,6 +118,8 @@ def release():
     """Copy data to Monarch GCP data buckets"""
     do_release()
 
+
+#######################################################
 
 if __name__ == "__main__":
     typer_app()

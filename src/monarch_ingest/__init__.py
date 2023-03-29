@@ -1,1 +1,2 @@
-__version__ = "0.3.1"
+from importlib import metadata
+__version__ = metadata.version("monarch_ingest")
