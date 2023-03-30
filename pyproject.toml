@@ -16,7 +16,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-koza = "^0.2.5"
+koza = "^0.3.0"
 kghub-downloader = "^0.3.2"
 kgx = "^1.7.2"
 cat-merge = "^0.1.18"
