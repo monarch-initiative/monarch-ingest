@@ -76,7 +76,7 @@ def get_koza_rows(mock_koza: KozaApp, n_rows: int) -> List[Dict]:
 
 @pytest.fixture
 def bgee_yaml():
-    return "monarch_ingest/ingests/bgee/gene_to_expression.yaml"
+    return "src/monarch_ingest/ingests/bgee/gene_to_expression.yaml"
 
 
 @pytest.fixture

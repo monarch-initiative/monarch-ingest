@@ -1,4 +1,4 @@
-import logging
+
 import uuid
 from typing import List
 
@@ -10,7 +10,7 @@ from biolink.pydanticmodel import (
 from koza.cli_runner import koza_app
 
 # include logging if necessary
-LOG = logging.getLogger(__name__)
+from loguru import logger
 
 # the source name is used below to manage the reading and writing of files
 source_name = "gene-to-phenotype"
@@ -22,7 +22,7 @@ row = koza_app.get_row(source_name)
 
 # Why not log something!
 if row["some"]["property"] != 'what I expected':
-    LOG.warning("Whoa dude, let's log it")
+    logger.warning("Whoa dude, let's log it")
 
 # create entities
 gene_id = row["gene_id"]

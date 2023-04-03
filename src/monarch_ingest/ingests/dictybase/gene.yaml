@@ -1,0 +1,30 @@
+name: 'dictybase_gene'
+
+files:
+  - './data/dictybase/gene_information.txt'
+
+metadata: './src/monarch_ingest/ingests/dictybase/metadata.yaml'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+header: 0
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - 'GENE ID'
+  - 'Gene Name'
+  - 'Synonyms'
+  - 'Gene products'
+
+node_properties:
+  - 'id'
+  - 'category'
+  - 'name'
+  - 'symbol'
+  - 'in_taxon'
+  - 'provided_by'
+
+transform_mode: 'flat'

@@ -39,9 +39,9 @@ def gene_association_entities(mock_koza, gene_association_row, global_table, map
     return mock_koza(
         name="omim_gene_to_disease",
         data=iter([gene_association_row]),
-        transform_code="./monarch_ingest/ingests/omim/gene_to_disease.py",
+        transform_code="./src/monarch_ingest/ingests/omim/gene_to_disease.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/omim/omim-translation.yaml",
+        local_table="./src/monarch_ingest/ingests/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
 
@@ -77,9 +77,9 @@ def test_ignore_phenotype_modifiers(
     entities = mock_koza(
         name="omim_gene_to_disease",
         data=iter([gene_association_row]),
-        transform_code="./monarch_ingest/ingests/omim/gene_to_disease.py",
+        transform_code="./src/monarch_ingest/ingests/omim/gene_to_disease.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/omim/omim-translation.yaml",
+        local_table="./src/monarch_ingest/ingests/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
 
@@ -101,9 +101,9 @@ def test_genomic_entity_row(mock_koza, global_table, map_cache):
     entities = mock_koza(
         name="omim_gene_to_disease",
         data=iter([row]),
-        transform_code="./monarch_ingest/ingests/omim/gene_to_disease.py",
+        transform_code="./src/monarch_ingest/ingests/omim/gene_to_disease.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/omim/omim-translation.yaml",
+        local_table="./src/monarch_ingest/ingests/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
 
@@ -121,9 +121,9 @@ def test_susceptibility_row(mock_koza, gene_association_row, global_table, map_c
     entities = mock_koza(
         name="omim_gene_to_disease",
         data=iter([gene_association_row]),
-        transform_code="./monarch_ingest/ingests/omim/gene_to_disease.py",
+        transform_code="./src/monarch_ingest/ingests/omim/gene_to_disease.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/omim/omim-translation.yaml",
+        local_table="./src/monarch_ingest/ingests/omim/omim-translation.yaml",
         map_cache=map_cache,
     )
     assert len(entities) == 1

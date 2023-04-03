@@ -18,7 +18,7 @@ def script():
     """
     :return: string path to Xenbase Gene Orthology relationships ingest script
     """
-    return "./monarch_ingest/ingests/xenbase/non_entrez_orthologs.py"
+    return "./src/monarch_ingest/ingests/xenbase/non_entrez_orthologs.py"
 
 
 @pytest.fixture

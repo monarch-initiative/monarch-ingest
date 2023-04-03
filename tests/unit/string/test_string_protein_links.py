@@ -19,7 +19,7 @@ def script():
     """
     :return: string path to STRING protein links ingest script
     """
-    return "./monarch_ingest/ingests/string/protein_links.py"
+    return "./src/monarch_ingest/ingests/string/protein_links.py"
 
 
 @pytest.fixture
