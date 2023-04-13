@@ -26,9 +26,9 @@ def d2moi_entities(mock_koza, global_table):
     return mock_koza(
         name="hpoa_disease_mode_of_inheritance",
         data=row,
-        transform_code="./monarch_ingest/ingests/hpoa/disease_mode_of_inheritance.py",
+        transform_code="./src/monarch_ingest/ingests/hpoa/disease_mode_of_inheritance.py",
         global_table=global_table,
-        local_table="./monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
+        local_table="./src/monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
     )
 
 

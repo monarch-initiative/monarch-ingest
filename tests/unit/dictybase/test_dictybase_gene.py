@@ -20,7 +20,7 @@ def script():
     """
     :return: string path to Dictybase Gene ngest script
     """
-    return "./monarch_ingest/ingests/dictybase/gene.py"
+    return "./src/monarch_ingest/ingests/dictybase/gene.py"
 
 
 @pytest.fixture

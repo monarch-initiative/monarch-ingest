@@ -10,10 +10,13 @@ authors = [
     "Kent Shefchek <kent@tislab.org>",
     "Richard Bruskiewich <richard.bruskiewich@delphinai.com>",
 ]
+packages = [
+    { include = "monarch_ingest", from = "src" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-koza = "^0.2.5"
+koza = "^0.3.0"
 kghub-downloader = "^0.3.2"
 kgx = "^1.7.2"
 cat-merge = "^0.1.18"
@@ -26,7 +29,9 @@ greenlet = "^1.1.2"
 importlib-metadata = "^4.6.1"
 sh = "^1.14.3"
 typer = "^0.7"
-monarch-py = "^0.2.3"
+typer-cli = "^0.0.13"
+monarch-py = "^0.5.2"
+loguru = "*"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"

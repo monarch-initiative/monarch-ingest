@@ -19,7 +19,7 @@ pipeline {
         stage('download') {
             steps {
                 sh '''
-                poetry run downloader monarch_ingest/download.yaml
+                poetry run downloader src/monarch_ingest/download.yaml
                 '''
             }
         }

@@ -1,0 +1,28 @@
+name: 'sgd_publication_to_gene'
+
+files:
+  - './data/sgd/gene2pmid.tab'
+
+format: 'csv'
+
+delimiter: '\t'
+
+header: 'none'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+columns:
+  - 'gene name'
+  - 'PubMed ID'
+  - 'feature'
+
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+
+transform_mode: 'flat'

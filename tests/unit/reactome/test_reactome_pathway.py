@@ -8,7 +8,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/ingests/reactome/pathway.py"
+    return "./src/monarch_ingest/ingests/reactome/pathway.py"
 
 
 @pytest.fixture(scope="package")
@@ -16,7 +16,7 @@ def local_table():
     """
     :return: string path to Reactome annotation term mappings file
     """
-    return "monarch_ingest/ingests/reactome/reactome_id_mapping.yaml"
+    return "src/monarch_ingest/ingests/reactome/reactome_id_mapping.yaml"
 
 
 @pytest.fixture

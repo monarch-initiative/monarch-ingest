@@ -1,7 +1,7 @@
 """
 Unit tests for GO Annotations ingest
 """
-import logging
+
 from typing import Tuple
 
 import pytest
@@ -10,7 +10,7 @@ from biolink.pydanticmodel import Association
 
 from monarch_ingest.ingests.goa.goa_utils import parse_identifiers
 
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 @pytest.mark.parametrize(
@@ -60,7 +60,7 @@ def script():
     """
     :return: string path to GO Annotations ingest script
     """
-    return "./monarch_ingest/ingests/goa/go_annotation.py"
+    return "./src/monarch_ingest/ingests/goa/go_annotation.py"
 
 
 @pytest.fixture(scope="package")
@@ -68,7 +68,7 @@ def local_table():
     """
     :return: string path to Evidence Code to ECO term mappings file
     """
-    return "monarch_ingest/ingests/goa/gaf-eco-mapping.yaml"
+    return "src/monarch_ingest/ingests/goa/gaf-eco-mapping.yaml"
 
 
 @pytest.fixture

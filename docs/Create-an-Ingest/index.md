@@ -54,4 +54,4 @@
         ```
 
 --  
-**Now let's look at how to create and add a new ingest! First step: [Configure](Configure.md)**
+**Now let's look at how to create and add a new ingest! First step: [Propose a new Ingest](1.%20Propose.md)**

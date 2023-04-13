@@ -17,7 +17,7 @@ def script():
     """
     :return: string path to Panther Gene Orthology relationships ingest script
     """
-    return "./monarch_ingest/ingests/panther/genome_orthologs.py"
+    return "./src/monarch_ingest/ingests/panther/genome_orthologs.py"
 
 
 # The results expected is only distinguished by the above

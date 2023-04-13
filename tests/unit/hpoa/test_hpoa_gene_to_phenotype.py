@@ -16,7 +16,7 @@ def script():
     """
     :return: string path to HPOA Gene to Phenotype ingest script
     """
-    return "./monarch_ingest/ingests/hpoa/gene_to_phenotype.py"
+    return "./src/monarch_ingest/ingests/hpoa/gene_to_phenotype.py"
 
 
 @pytest.fixture

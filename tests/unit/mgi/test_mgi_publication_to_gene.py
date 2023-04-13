@@ -15,7 +15,7 @@ def source_name():
 
 @pytest.fixture
 def script():
-    return "./monarch_ingest/ingests/mgi/publication_to_gene.py"
+    return "./src/monarch_ingest/ingests/mgi/publication_to_gene.py"
 
 
 @pytest.fixture
