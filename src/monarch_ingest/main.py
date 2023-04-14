@@ -96,7 +96,7 @@ def merge(
     verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose"),
     ):
     """Merge nodes and edges into kg"""
-    merge_files(input_dir, output_dir, verbose)
+    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
 
 
 @typer_app.command()

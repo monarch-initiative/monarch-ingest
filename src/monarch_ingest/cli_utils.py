@@ -195,7 +195,8 @@ def transform_all(
     ):
 
     # if log: fh = add_log_fh(logger, Path(f"logs/all_ingests.log"))
-
+    logger = get_logger(name = "all_ingests" if log else None, verbose=verbose)
+    
     # TODO:
     # - check for data - download if missing (maybe y/n prompt?)
     # - check for difference in data? maybe implement in kghub downloder instead?
