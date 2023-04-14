@@ -20,6 +20,11 @@ all: install format test clean
 .PHONY: install
 install:
 	poetry install
+
+
+.PHONY: install-full
+install-full:
+	poetry install --with dev
 	
 
 .PHONY: test
@@ -28,7 +33,7 @@ test: install
 
 
 .PHONY: docs
-docs: install
+docs: install-full
 	poetry run typer src/monarch_ingest/main.py utils docs --name ingest --output docs/Usage.md
 	
 
@@ -41,14 +46,14 @@ clean:
 
 
 .PHONY: lint
-lint:
+lint: install-full
 	poetry run flake8 --exit-zero --max-line-length 120 src/monarch_ingest/ tests/
 	poetry run black --check --diff monarch_ingest tests
 	poetry run isort --check-only --diff monarch_ingest tests
 
 
 .PHONY: format
-format:
+format: install-full
 	poetry run autoflake \
 		--recursive \
 		--remove-all-unused-imports \

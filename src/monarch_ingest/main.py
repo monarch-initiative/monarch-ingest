@@ -45,6 +45,7 @@ def download(
             output_dir='.'
         )
 
+
 @typer_app.command()
 def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
@@ -92,10 +93,10 @@ def transform(
 def merge(
     input_dir: str = typer.Option(f"{OUTPUT_DIR}/transform_output", help="Directory with nodes and edges to be merged",),
     output_dir: str = typer.Option(f"{OUTPUT_DIR}", help="Directory to output data"),
+    verbose: Optional[bool] = typer.Option(None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose"),
     ):
     """Merge nodes and edges into kg"""
-    
-    merge_files(input_dir=input_dir, output_dir=output_dir)
+    merge_files(input_dir, output_dir, verbose)
 
 
 @typer_app.command()
@@ -114,9 +115,12 @@ def solr():
 
 
 @typer_app.command()
-def release():
+def release(
+    dir: str = typer.Option(f"{OUTPUT_DIR}", help="Directory with kg to be released"),
+    kghub: bool = typer.Option(False, help="Also release to kghub S3 bucket")
+    ):
     """Copy data to Monarch GCP data buckets"""
-    do_release()
+    do_release(dir, kghub)
 
 
 #######################################################
