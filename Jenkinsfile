@@ -22,7 +22,7 @@ pipeline {
                   
 
                     # poetry config experimental.new-installer false
-                    poetry install
+                    poetry install --with dev
                     poetry run which ingest
 
                 '''

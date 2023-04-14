@@ -228,8 +228,9 @@ def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
+    verbose: bool = None,
     ):
-
+    logger = get_logger(None, verbose)
     logger.info("Generating mappings...")
 
     mappings = []
@@ -267,19 +268,20 @@ def load_solr():
     sh.bash("scripts/load_solr.sh")
 
 
-def do_release(kghub: bool = False):
+def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     import datetime
     release_name = datetime.datetime.now().strftime("%Y-%m-%d")
     
+    logger = get_logger()
     logger.info(f"Creating dated release: {release_name}...")
 
     try:
         logger.debug(f"Uploading release to Google bucket...")
 
-        sh.touch(f"output/{release_name}")
+        sh.touch(f"{dir}/{release_name}")
         
         # copy to monarch-archive bucket
-        sh.gsutil('-q', '-m', 'cp', '-r', 'output/*', f'gs://monarch-archive/monarch-kg-dev/{release_name}')
+        sh.gsutil('-q', '-m', 'cp', '-r', f"{dir}/*", f'gs://monarch-archive/monarch-kg-dev/{release_name}')
 
         # copy to data-public bucket
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}")
@@ -288,10 +290,12 @@ def do_release(kghub: bool = False):
         sh.gsutil("-q", "-m", "rm", "-rf", f"gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         
-        # copy to kghub S3 bucket
+        # index and upload to kghub s3 bucket
         if kghub:
-            sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"s3://kg-hub-public-data/kg-monarch/{release_name}")
-            sh.gsutil("-q", "-m", "cp", "-r", f"gs://monarch-archive/monarch-kg-dev/{release_name}", f"s3://kg-hub-public-data/kg-monarch/current")
+            sh.multi_indexer('-v', '--directory', dir, '--prefix', f'https://kg-hub.berkeleybop.io/kg-monarch/{release_name}', '-x', '-u')
+            sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/{release_name}")
+            sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/current")
+
 
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_name}")
