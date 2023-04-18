@@ -33,6 +33,7 @@ sh = "^1.14.3"
 typer = "^0.7"
 typer-cli = "^0.0.13"
 loguru = "*"
+linkml-validator = "^0.4.5"
 
 [tool.poetry.group.dev]
 optional = true

@@ -2276,6 +2276,28 @@ linkml-runtime = ">=1.2.7,<2.0.0"
 pysolr = ">=3.9.0,<4.0.0"
 
 [[package]]
+name = "linkml-validator"
+version = "0.4.5"
+description = "LinkML Validator"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "linkml_validator-0.4.5-py3-none-any.whl", hash = "sha256:7a9799830cba3e1df203cde86263d8ea85f9ed9f6a45a218e3f752483abac030"},
+    {file = "linkml_validator-0.4.5.tar.gz", hash = "sha256:bce72053c1593a678ccefd28ed5cf4b39a878e78da884b5b41fef65610a23867"},
+]
+
+[package.dependencies]
+click = ">=7.0.0"
+linkml = ">=1.1.18"
+linkml-runtime = ">=1.2.0"
+pydantic = ">=1.8.2"
+stringcase = ">=1.2.0"
+
+[package.extras]
+dev = ["mkdocs", "mkdocs-material", "mkdocstrings", "mkdocstrings-python-legacy", "pytest", "pytest-cov"]
+
+[[package]]
 name = "loguru"
 version = "0.7.0"
 description = "Python logging made (stupidly) simple"
@@ -5228,4 +5250,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2ce17355eb3c22975ef1a57d62f81774b27ac56e51174059fd11363d3eefeb70"
+content-hash = "2d959525b62cabcb1f57976961376d956787649c775b20aa219124ebecb3b5cb"
