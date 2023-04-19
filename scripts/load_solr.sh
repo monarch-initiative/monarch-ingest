@@ -28,11 +28,11 @@ scripts/add_entity_fieldtypes.sh
 sleep 5
 
 echo "Adding entity schema"
-poetry run lsolr create-schema -C entity -s model.yaml
+poetry run lsolr create-schema -C entity -s model.yaml -t Entity
 sleep 5
 
 echo "Adding association schema"
-poetry run lsolr create-schema -C association -s model.yaml
+poetry run lsolr create-schema -C association -s model.yaml -t Association
 sleep 5
 
 # todo: this also should live in linkml-solr, and copy-fields should be based on the schema
