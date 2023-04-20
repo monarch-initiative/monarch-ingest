@@ -1503,24 +1503,6 @@ files = [
 docs = ["Sphinx"]
 
 [[package]]
-name = "griffe"
-version = "0.27.0"
-description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "griffe-0.27.0-py3-none-any.whl", hash = "sha256:f3a5726e2d5876ac882d48ff9ca1a95c5bc267196a8f114263e66e234141bb84"},
-    {file = "griffe-0.27.0.tar.gz", hash = "sha256:dcf3cc4205f33cbb16095324803a6904e0b293cd1630ceab4b66a9115af6b818"},
-]
-
-[package.dependencies]
-colorama = ">=0.4"
-
-[package.extras]
-async = ["aiofiles (>=0.7,<1.0)"]
-
-[[package]]
 name = "hbreader"
 version = "0.9.1"
 description = "Honey Badger reader - a generic file/url/string open and read tool"
@@ -2148,14 +2130,14 @@ regex = ["regex"]
 
 [[package]]
 name = "linkml"
-version = "1.4.11"
+version = "1.5.0"
 description = "Linked Open Data Modeling Language"
 category = "main"
 optional = false
 python-versions = ">=3.7.6,<4.0.0"
 files = [
-    {file = "linkml-1.4.11-py3-none-any.whl", hash = "sha256:2811af5c6a69fb5b8acc4c85741b6aa6d17ef5579a0118a5028025d8a2480866"},
-    {file = "linkml-1.4.11.tar.gz", hash = "sha256:ac5260a0cab15b36dbf2929afc43d7bc8e8af0e198ade7ee90be1dad8fd8d743"},
+    {file = "linkml-1.5.0-py3-none-any.whl", hash = "sha256:8f8d23f7f7bd6a10a5130d28ea576f7ceccd14e123ad4c0365bb53bc58664ba0"},
+    {file = "linkml-1.5.0.tar.gz", hash = "sha256:120fac9dd5a27d3dabc5e45fdeaf0b2fe187fe5f59bf7bc0806ebb5a884e6942"},
 ]
 
 [package.dependencies]
@@ -2168,7 +2150,7 @@ jinja2 = ">=3.1.0"
 jsonasobj2 = ">=1.0.3,<2.0.0"
 jsonschema = {version = ">=4.0.0", extras = ["format"]}
 linkml-dataops = "*"
-linkml-runtime = ">=1,<2"
+linkml-runtime = ">=1.5.0"
 myst-parser = "*"
 openpyxl = "*"
 parse = "*"
@@ -2259,21 +2241,25 @@ requests = "*"
 
 [[package]]
 name = "linkml-solr"
-version = "0.1.3"
+version = "0.1.4"
 description = ""
 category = "main"
 optional = false
-python-versions = ">=3.7.4,<4.0.0"
-files = [
-    {file = "linkml-solr-0.1.3.tar.gz", hash = "sha256:c59fa59864153e6683b33067c44ebf153db3adea30f6bccccd7639273ecca18b"},
-    {file = "linkml_solr-0.1.3-py3-none-any.whl", hash = "sha256:f1212a673d2ce54a3c2de440d8f2d1dee09bfb737450fc3bcd6dd472ec70d3d2"},
-]
+python-versions = "^3.7.6"
+files = []
+develop = false
 
 [package.dependencies]
-linkml = ">=1.2.0,<2.0.0"
-linkml-dataops = ">=0.1.0,<0.2.0"
-linkml-runtime = ">=1.2.7,<2.0.0"
-pysolr = ">=3.9.0,<4.0.0"
+linkml = "^1.5.0"
+linkml-dataops = "^0.1.0"
+linkml-runtime = "^1.2.7"
+pysolr = "^3.9.0"
+
+[package.source]
+type = "git"
+url = "git@github.com:linkml/linkml-solr.git"
+reference = "top_class"
+resolved_reference = "4b898c7c7a46af06d05cde51ed276d21f9c52f3c"
 
 [[package]]
 name = "linkml-validator"
@@ -2563,22 +2549,6 @@ i18n = ["babel (>=2.9.0)"]
 min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-import (==1.0)", "importlib-metadata (==4.3)", "jinja2 (==2.11.1)", "markdown (==3.2.1)", "markupsafe (==2.0.1)", "mergedeep (==1.3.4)", "packaging (==20.5)", "pyyaml (==5.1)", "pyyaml-env-tag (==0.1)", "typing-extensions (==3.10)", "watchdog (==2.0)"]
 
 [[package]]
-name = "mkdocs-autorefs"
-version = "0.4.1"
-description = "Automatically link across pages in MkDocs."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "mkdocs-autorefs-0.4.1.tar.gz", hash = "sha256:70748a7bd025f9ecd6d6feeba8ba63f8e891a1af55f48e366d6d6e78493aba84"},
-    {file = "mkdocs_autorefs-0.4.1-py3-none-any.whl", hash = "sha256:a2248a9501b29dc0cc8ba4c09f4f47ff121945f6ce33d760f145d6f89d313f5b"},
-]
-
-[package.dependencies]
-Markdown = ">=3.3"
-mkdocs = ">=1.1"
-
-[[package]]
 name = "mkdocs-material"
 version = "8.5.11"
 description = "Documentation that simply works"
@@ -2634,66 +2604,20 @@ requests = "*"
 setuptools = ">=18.5"
 
 [[package]]
-name = "mkdocstrings"
-version = "0.19.1"
-description = "Automatic documentation from sources, for MkDocs."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "mkdocstrings-0.19.1-py3-none-any.whl", hash = "sha256:32a38d88f67f65b264184ea71290f9332db750d189dea4200cbbe408d304c261"},
-    {file = "mkdocstrings-0.19.1.tar.gz", hash = "sha256:d1037cacb4b522c1e8c164ed5d00d724a82e49dcee0af80db8fb67b384faeef9"},
-]
-
-[package.dependencies]
-Jinja2 = ">=2.11.1"
-Markdown = ">=3.3"
-MarkupSafe = ">=1.1"
-mkdocs = ">=1.2"
-mkdocs-autorefs = ">=0.3.1"
-mkdocstrings-python = {version = ">=0.5.2", optional = true, markers = "extra == \"python\""}
-pymdown-extensions = ">=6.3"
-
-[package.extras]
-crystal = ["mkdocstrings-crystal (>=0.3.4)"]
-python = ["mkdocstrings-python (>=0.5.2)"]
-python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
-
-[[package]]
-name = "mkdocstrings-python"
-version = "0.8.3"
-description = "A Python handler for mkdocstrings."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "mkdocstrings-python-0.8.3.tar.gz", hash = "sha256:9ae473f6dc599339b09eee17e4d2b05d6ac0ec29860f3fc9b7512d940fc61adf"},
-    {file = "mkdocstrings_python-0.8.3-py3-none-any.whl", hash = "sha256:4e6e1cd6f37a785de0946ced6eb846eb2f5d891ac1cc2c7b832943d3529087a7"},
-]
-
-[package.dependencies]
-griffe = ">=0.24"
-mkdocstrings = ">=0.19"
-
-[[package]]
 name = "monarch-py"
-version = "0.5.5"
+version = "0.6.2"
 description = "Monarch Initiative data access library"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "monarch_py-0.5.5-py3-none-any.whl", hash = "sha256:2f2c5cb705689f2abc9593a15864bbdc873ff73802676c3b5b30b8751e4fb8f4"},
-    {file = "monarch_py-0.5.5.tar.gz", hash = "sha256:194f77a5a2c00e0778b91d71df397a93eaa61b0c45c24b31eaece716f7e3134f"},
+    {file = "monarch_py-0.6.2-py3-none-any.whl", hash = "sha256:5209aa19af7b1d1fcc937f1b12642d039bec7365ba8efa02512ee1855df8c7a5"},
+    {file = "monarch_py-0.6.2.tar.gz", hash = "sha256:f8233c915993db4685bc06e44c2e06c0082164dd2d770dc5f378f0c5431c99ee"},
 ]
 
 [package.dependencies]
 docker = ">=6.0.1,<7.0.0"
-linkml = ">=1.3.14,<2.0.0"
 loguru = "*"
-mkdocs = ">=1.4.2,<2.0.0"
-mkdocs-material = ">=8.5.10,<9.0.0"
-mkdocstrings = {version = ">=0.19.0,<0.20.0", extras = ["python"]}
 pydantic = ">=1.9.1,<2.0.0"
 pystow = ">=0.5.0"
 requests = ">=2.28.1,<3.0.0"
@@ -5250,4 +5174,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2d959525b62cabcb1f57976961376d956787649c775b20aa219124ebecb3b5cb"
+content-hash = "626d501143a13b0ccbcb4655720b08844039800c145e89d96139bd3632857946"
