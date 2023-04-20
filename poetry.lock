@@ -1971,14 +1971,14 @@ typer = ">=0.7.0,<0.8.0"
 
 [[package]]
 name = "kgx"
-version = "2.0.5"
+version = "2.0.6"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "kgx-2.0.5-py3-none-any.whl", hash = "sha256:4e187a42d23a51d9642a3c8d858360ec19054dd0a17b0c5ae983b2bdee6983a3"},
-    {file = "kgx-2.0.5.tar.gz", hash = "sha256:6b36f673d4f81fd2af397a03cf0fae948adb7d1ed3d05430734b6ddb6798559f"},
+    {file = "kgx-2.0.6-py3-none-any.whl", hash = "sha256:af2758d2e488d8c4cfe991e36987ff96372d42a3eba3f4ae96a499fc99ebea7c"},
+    {file = "kgx-2.0.6.tar.gz", hash = "sha256:69eb6448c952d419b535da8e2a51fcdf5785558aefae6b409da4916cf16d98cc"},
 ]
 
 [package.dependencies]
@@ -2257,7 +2257,7 @@ pysolr = "^3.9.0"
 
 [package.source]
 type = "git"
-url = "git@github.com:linkml/linkml-solr.git"
+url = "https://github.com/linkml/linkml-solr.git"
 reference = "top_class"
 resolved_reference = "4b898c7c7a46af06d05cde51ed276d21f9c52f3c"
 
@@ -5174,4 +5174,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "626d501143a13b0ccbcb4655720b08844039800c145e89d96139bd3632857946"
+content-hash = "740bf0631773552f4e64b43d815dfb6403307707d4fea078b6239dfbcc5088a4"
