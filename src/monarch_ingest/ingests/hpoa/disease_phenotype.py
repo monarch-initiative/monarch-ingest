@@ -40,16 +40,16 @@ koza_app = get_koza_app("hpoa_disease_phenotype")
 while (row := koza_app.get_row()) is not None:
 
     # Nodes
-    disease_id = row["DatabaseID"]
+    disease_id = row["database_id"]
 
     predicate = "biolink:has_phenotype"
 
-    hpo_id = row["HPO_ID"]
+    hpo_id = row["hpo_id"]
     assert hpo_id, "HPOA Disease to Phenotype has missing HP ontology ('HPO_ID') field identifier?"
 
     # Predicate negation
     negated: Optional[bool]
-    if row["Qualifier"] == "NOT":
+    if row["qualifier"] == "NOT":
         negated = True
     else:
         negated = None
@@ -58,19 +58,19 @@ while (row := koza_app.get_row()) is not None:
 
     # Translations to curies
     # Three letter ECO code to ECO class based on hpo documentation
-    evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
+    evidence_curie = koza_app.translation_table.resolve_term(row["evidence"])
 
     # female -> PATO:0000383
     # male -> PATO:0000384
-    sex: Optional[str] = row["Sex"]  # may be translated by local table
+    sex: Optional[str] = row["sex"]  # may be translated by local table
     sex_qualifier = (
         koza_app.translation_table.resolve_term(sex) if sex else None
     )
 
-    onset = row["Onset"]
+    onset = row["onset"]
 
     # Raw frequencies - HPO term curies, ratios, percentages - normalized to HPO terms
-    frequency_field = row["Frequency"]
+    frequency_field = row["frequency"]
     frequency_hpo: Optional[FrequencyHpoTerm] = None
     frequency_percentage: Optional[float] = None
     frequency_quotient: Optional[float] = None
@@ -80,7 +80,7 @@ while (row := koza_app.get_row()) is not None:
         frequency_hpo, frequency_percentage, frequency_quotient = frequency_parsed
 
     # Publications
-    publications_field: str = row["Reference"]
+    publications_field: str = row["reference"]
     publications: List[str] = publications_field.split(";")
 
     # Filter out some weird NCBI web endpoints
