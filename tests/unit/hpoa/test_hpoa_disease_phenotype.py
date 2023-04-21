@@ -8,18 +8,18 @@ def d2pf_entities_1(mock_koza, global_table):
     row = iter(
         [
             {
-                "DatabaseID": "OMIM:614856",
-                "DiseaseName": "Osteogenesis imperfecta, type XIII",
-                "Qualifier": "NOT",
-                "HPO_ID": "HP:0000343",
-                "Reference": "OMIM:614856",
-                "Evidence": "TAS",
-                "Onset": "HP:0003593",
-                "Frequency": "1/1",
-                "Sex": "FEMALE",
-                "Modifier": "",
-                "Aspect": "C",  # assert 'Clinical' test record
-                "Biocuration": "HPO:skoehler[2012-11-16]",
+                "database_id": "OMIM:614856",
+                "disease_name": "Osteogenesis imperfecta, type XIII",
+                "qualifier": "NOT",
+                "hpo_id": "HP:0000343",
+                "reference": "OMIM:614856",
+                "evidence": "TAS",
+                "onset": "HP:0003593",
+                "frequency": "1/1",
+                "sex": "FEMALE",
+                "modifier": "",
+                "aspect": "C",  # assert 'Clinical' test record
+                "biocuration": "HPO:skoehler[2012-11-16]",
             }
         ]
     )
@@ -51,7 +51,7 @@ def test_disease_to_phenotype_transform_1(d2pf_entities_1):
     assert association.has_percentage is None
     assert association.has_quotient == 1.0  # '1/1' implies Always present, i.e. in 100% of the cases.
     assert association.frequency_qualifier == "HP:0040280"  # '1/1' implies Always present, i.e. in 100% of the cases.
-    assert association.primary_knowledge_source == "infores:hpoa"
+    assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
@@ -60,18 +60,18 @@ def d2pf_entities_2(mock_koza, global_table):
     row = iter(
         [
             {
-                "DatabaseID": "OMIM:117650",
-                "DiseaseName": "Cerebrocostomandibular syndrome",
-                "Qualifier": "",
-                "HPO_ID": "HP:0001249",
-                "Reference": "OMIM:117650",
-                "Evidence": "TAS",
-                "Onset": "",
-                "Frequency": "50%",
-                "Sex": "",
-                "Modifier": "",
-                "Aspect": "P",
-                "Biocuration": "HPO:probinson[2009-02-17]",
+                "database_id": "OMIM:117650",
+                "disease_name": "Cerebrocostomandibular syndrome",
+                "qualifier": "",
+                "hpo_id": "HP:0001249",
+                "reference": "OMIM:117650",
+                "evidence": "TAS",
+                "onset": "",
+                "frequency": "50%",
+                "sex": "",
+                "modifier": "",
+                "aspect": "P",
+                "biocuration": "HPO:probinson[2009-02-17]",
             }
         ]
     )
@@ -103,7 +103,7 @@ def test_disease_to_phenotype_transform_2(d2pf_entities_2):
     assert association.has_percentage == 50.0  # '50%' implies Present in 30% to 79% of the cases.
     assert association.has_quotient is None
     assert association.frequency_qualifier == "HP:0040282"  # '50%' implies Present in 30% to 79% of the cases.
-    assert association.primary_knowledge_source == "infores:hpoa"
+    assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
@@ -112,18 +112,18 @@ def d2pf_entities_3(mock_koza, global_table):
     row = iter(
         [
             {
-                "DatabaseID": "OMIM:117650",
-                "DiseaseName": "Cerebrocostomandibular syndrome",
-                "Qualifier": "",
-                "HPO_ID": "HP:0001545",
-                "Reference": "OMIM:117650",
-                "Evidence": "TAS",
-                "Onset": "",
-                "Frequency": "HP:0040283",
-                "Sex": "",
-                "Modifier": "",
-                "Aspect": "P",
-                "Biocuration": "HPO:skoehler[2017-07-13]",
+                "database_id": "OMIM:117650",
+                "disease_name": "Cerebrocostomandibular syndrome",
+                "qualifier": "",
+                "hpo_id": "HP:0001545",
+                "reference": "OMIM:117650",
+                "evidence": "TAS",
+                "onset": "",
+                "frequency": "HP:0040283",
+                "sex": "",
+                "modifier": "",
+                "aspect": "P",
+                "biocuration": "HPO:skoehler[2017-07-13]",
             }
         ]
     )
@@ -155,5 +155,5 @@ def test_disease_to_phenotype_transform_3(d2pf_entities_3):
     assert association.has_percentage is None
     assert association.has_quotient is None
     assert association.frequency_qualifier == "HP:0040283"  # "HP:0040283" implies Present in 5% to 29% of the cases.
-    assert association.primary_knowledge_source == "infores:hpoa"
+    assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

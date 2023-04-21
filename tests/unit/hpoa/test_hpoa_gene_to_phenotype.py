@@ -25,15 +25,10 @@ def test_row():
     :return: Test HPOA Gene to Phenotype data row.
     """
     return {
-        "entrez-gene-id": "8192",
-        "entrez-gene-symbol": "CLPP",
-        "HPO-Term-ID": "HP:0000252",
-        "HPO-Term-Name": "Microcephaly",
-        "Frequency-Raw": "-",
-        "Frequency-HPO": "HP:0040283",
-        "Additional Info from G-D source": "-",
-        "G-D source": "mim2gene",
-        "disease-ID for link": "OMIM:614129"
+        "ncbi_gene_id": "8192",
+        "gene_symbol": "CLPP",
+        "hpo_id": "HP:0000252",
+        "hpo_name": "Microcephaly",
     }
 
 
@@ -79,8 +74,5 @@ def test_hpoa_g2p_association(basic_hpoa):
     assert basic_hpoa[0].subject == "NCBIGene:8192"
     assert basic_hpoa[0].object == "HP:0000252"
     assert basic_hpoa[0].predicate == "biolink:has_phenotype"
-    assert "OMIM:614129" in basic_hpoa[0].qualifiers  # Disease term
-    assert "HP:0040283" in basic_hpoa[0].frequency_qualifier   # Frequency term == "Occasional"  # 5% to 29% of cases.
-    assert "mim2gene" in basic_hpoa[0].has_evidence
-    assert association.primary_knowledge_source == "infores:hpoa"
+    assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
