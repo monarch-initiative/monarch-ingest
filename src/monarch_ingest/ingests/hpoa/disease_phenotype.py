@@ -108,6 +108,6 @@ while (row := koza_app.get_row()) is not None:
         frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
 
         aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:hpoa"
+        primary_knowledge_source="infores:hpo-annotations"
     )
     koza_app.write(association)

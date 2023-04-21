@@ -15,18 +15,19 @@ The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record i
 
 **phenotype.hpoa:** [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format), has the following fields:
 
-  - 'DatabaseID'
-  - 'DiseaseName'
-  - 'Qualifier'
-  - 'HPO_ID'
-  - 'Reference'
-  - 'Evidence'
-  - 'Onset'
-  - 'Frequency'
-  - 'Sex'
-  - 'Modifier'
-  - 'Aspect'
-  - 'Biocuration'
+  - 'database_id'
+  - 'disease_name'
+  - 'qualifier'
+  - 'hpo_id'
+  - 'reference'
+  - 'evidence'
+  - 'onset'
+  - 'frequency'
+  - 'sex'
+  - 'modifier'
+  - 'aspect'
+  - 'biocuration'
+
 
 Note that we're calling this the disease to phenotype file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'P' (phenotypic anomalies)**, but ignoring all other Aspects.
 
@@ -39,19 +40,6 @@ The 'Frequency' field of the aforementioned **phenotypes.hpoa** file has the fol
 The Disease to Phenotype ingest attempts to remap these raw frequency values onto a suitable HPO term.  A simplistic (perhaps erroneous?) assumption is that all such frequencies are conceptually comparable; however, researchers may wish to review the original publications to confirm fitness of purpose of the specific data points to their interpretation - specific values could designate phenotypic frequency at the population level; phenotypic frequency at the cohort level; or simply, be a measure of penetrance of a specific allele within carriers, etc..
 
 #### Biolink captured
-
-* biolink:Disease
-    * id ((OMIM|DECIPHER|ORPHA) id)
-  
-* biolink:PhenotypicFeature
-    * id
-
-* biolink:Onset
-    * id (HP term)
-
-* biolink:Publication
-    * id
-    * type
 
 * biolink:DiseaseToPhenotypicFeatureAssociation
     * id (random uuid)
@@ -80,15 +68,6 @@ However, we're calling this the 'disease to modes of inheritance' file because -
 
 #### Biolink captured
 
-* biolink:Disease
-    * id ((OMIM|DECIPHER|ORPHA) id)
-
-* biolink:GeneticInheritance
-    * id (HP term)
-
-* biolink:Publication
-    * id
-
 * biolink:DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
     * id (random uuid)
     * subject (disease.id)
@@ -97,40 +76,24 @@ However, we're calling this the 'disease to modes of inheritance' file because -
     * publications (List[publication.id])
     * has_evidence (List[Note [1]]),
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source ("infores:hpoa")
+    * primary_knowledge_source ("infores:hpo-annotations")
 
 ### Gene to Phenotype (with Disease and HPO Frequency Context)
 
 The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt) file, which has the following fields:
 
-  - entrez-gene-id
-  - entrez-gene-symbol
-  - HPO-Term-ID
-  - HPO-Term-Name
-  - Frequency-Raw
-  - Frequency-HPO
-  - Additional Info from G-D source
-  - G-D source
-  - disease-ID for link
+  - 'ncbi_gene_id'
+  - 'gene_symbol'
+  - 'hpo_id'
+  - 'hpo_name'
 
 #### Biolink captured
-
-* biolink:Gene
-    * id ("NCBIGene:<entrez-gene-id>")
-
-* biolink:PhenotypicFeature
-    * id ("<HPO-Term-ID>")
-
-* biolink:Disease
-    * id ("<disease-ID for link>")
 
 * biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * qualifiers (disease.id, (optional - phenotypicFeature.id, where the id is a given "<Frequency-HPO term>"))
-    * has_evidence (<G-D source name>)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:hpoa)
+    * primary_knowledge_source (infores:hpo-annotations)
  
