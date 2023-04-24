@@ -25,24 +25,24 @@ local_table: './src/monarch_ingest/ingests/hpoa/hpoa-translation.yaml'
 # We only concern ourselves with Aspect == 'I' (inheritance) records in this ingest.
 filters:
   - inclusion: 'include'
-    column: 'Aspect'
+    column: 'aspect'
     filter_code: 'eq'
     value: 'I'
 
 # For a csv/tsv file, list expected columns
 columns:
-  - 'DatabaseID'
-  - 'DiseaseName'
-  - 'Qualifier'
-  - 'HPO_ID'
-  - 'Reference'
-  - 'Evidence'
-  - 'Onset'
-  - 'Frequency'
-  - 'Sex'
-  - 'Modifier'
-  - 'Aspect'
-  - 'Biocuration'
+  - 'database_id'
+  - 'disease_name'
+  - 'qualifier'
+  - 'hpo_id'
+  - 'reference'
+  - 'evidence'
+  - 'onset'
+  - 'frequency'
+  - 'sex'
+  - 'modifier'
+  - 'aspect'
+  - 'biocuration'
 
 # Disease subject with annotated 'Mode of Inheritance'
 # DiseaseOrPhenotypicFeatureToModeOfGeneticInheritanceAssociation

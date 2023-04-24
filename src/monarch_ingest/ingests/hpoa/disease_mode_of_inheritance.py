@@ -4,11 +4,11 @@ curates and assembles over 115,000 annotations to hereditary diseases
 using the HPO ontology. Here we create Biolink associations
 between diseases and their mode of inheritance.
 
-This parser only processes out the "inheritance" (Aspect == 'I') annotation records.
+This parser only processes out the "inheritance" (aspect == 'I') annotation records.
 
 filters:
   - inclusion: 'include'
-    column: 'Aspect'
+    column: 'aspect'
     filter_code: 'eq'
     value: 'I'
 
@@ -36,7 +36,7 @@ while (row := koza_app.get_row()) is not None:
 
   # Object: Actually a Genetic Inheritance (as should be specified by a suitable HPO term)
   # TODO: perhaps load the proper (Genetic Inheritance) node concepts into the Monarch Graph (simply as Ontology terms?).
-  hpo_id = row["HPO_ID"]
+  hpo_id = row["hpo_id"]
 
   # We ignore records that don't map to a known HPO term for Genetic Inheritance
   # (as recorded in the locally bound 'hpoa-modes-of-inheritance' table)
@@ -45,7 +45,7 @@ while (row := koza_app.get_row()) is not None:
       # Nodes
 
       # Subject: Disease
-      disease_id = row["DatabaseID"]
+      disease_id = row["database_id"]
 
       # Predicate (canonical direction)
       predicate = "biolink:has_mode_of_inheritance"
@@ -53,10 +53,10 @@ while (row := koza_app.get_row()) is not None:
       # Annotations
 
       # Three letter ECO code to ECO class based on HPO documentation
-      evidence_curie = koza_app.translation_table.resolve_term(row["Evidence"])
+      evidence_curie = koza_app.translation_table.resolve_term(row["evidence"])
 
       # Publications
-      publications_field: str = row["Reference"]
+      publications_field: str = row["reference"]
       publications: List[str] = publications_field.split(";")
 
       # Filter out some weird NCBI web endpoints
@@ -71,7 +71,7 @@ while (row := koza_app.get_row()) is not None:
           publications=publications,
           has_evidence=[evidence_curie],
           aggregator_knowledge_source=["infores:monarchinitiative"],
-          primary_knowledge_source="infores:hpoa"
+          primary_knowledge_source="infores:hpo-annotations"
       )
       koza_app.write(association)
 
