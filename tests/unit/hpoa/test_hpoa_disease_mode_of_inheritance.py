@@ -8,18 +8,18 @@ def d2moi_entities(mock_koza, global_table):
     row = iter(
         [
             {
-                "DatabaseID": "OMIM:300425",
-                "DiseaseName": "Autism susceptibility, X-linked 1",
-                "Qualifier": "",
-                "HPO_ID": "HP:0001417",
-                "Reference": "OMIM:300425",
-                "Evidence": "IEA",
-                "Onset": "",
-                "Frequency": "",
-                "Sex": "",
-                "Modifier": "",
-                "Aspect": "I",  # assert 'Inheritance' test record
-                "Biocuration": "HPO:iea[2009-02-17]",
+                "database_id": "OMIM:300425",
+                "disease_name": "Autism susceptibility, X-linked 1",
+                "qualifier": "",
+                "hpo_id": "HP:0001417",
+                "reference": "OMIM:300425",
+                "evidence": "IEA",
+                "onset": "",
+                "frequency": "",
+                "sex": "",
+                "modifier": "",
+                "aspect": "I",  # assert 'Inheritance' test record
+                "biocuration": "HPO:iea[2009-02-17]",
             }
         ]
     )
@@ -47,5 +47,5 @@ def test_disease_to_mode_of_inheritance_transform(d2moi_entities):
     assert association.object == "HP:0001417"
     assert "OMIM:300425" in association.publications
     assert "ECO:0000501" in association.has_evidence  # from local HPOA translation table
-    assert association.primary_knowledge_source == "infores:hpoa"
+    assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
