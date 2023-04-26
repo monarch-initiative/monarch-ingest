@@ -15,7 +15,7 @@ The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record i
 
 This ingest replaces the direct OMIM ingest so that we share g2d associations 1:1 with HPO. The mapping between association_type and biolink predicates shown below is the one way in which this ingest is opinionated, but attempts to be a direct translation into the biolink model.
 
-**genes_to_disease.txt** [] with the following fields:
+**genes_to_disease.txt** with the following fields:
 
   - 'ncbi_gene_id'
   - 'gene_symbol'
