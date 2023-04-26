@@ -11,6 +11,34 @@ Association to "remarkable normality" may be added in the near future.
 
 The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record information out from the annotation file.
 
+### Gene to Disease
+
+This ingest replaces the direct OMIM ingest so that we share g2d associations 1:1 with HPO. The mapping between association_type and biolink predicates shown below is the one way in which this ingest is opinionated, but attempts to be a direct translation into the biolink model.
+
+**genes_to_disease.txt** [] with the following fields:
+
+  - 'ncbi_gene_id'
+  - 'gene_symbol'
+  - 'association_type'
+  - 'disease_id'
+  - 'source'
+
+### Biolink Captured
+
+* biolink:DiseaseToPhenotypicFeatureAssociation
+    * id (random uuid)
+    * subject (ncbi_gene_id)
+    * predicate (association_type)
+      * MENDELIAN: `biolink:causes`
+      * POLYGENIC: `biolink:contributes_to`
+      * UNKNOWN: `biolink:gene_associated_with_condition`
+    * object (disease_id)
+    * primary_knowledge_source (source)
+      * medgen: `infores:omim`
+      * orphanet: `infores:orphanet`
+    * aggregator_knowledge_source (["infores:monarchinitiative"])
+      * also for medgen: `infores:medgen`
+
 ### Disease to Phenotype
 
 **phenotype.hpoa:** [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format), has the following fields:
