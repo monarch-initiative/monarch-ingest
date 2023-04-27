@@ -22,6 +22,8 @@ hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
 hpoa_disease_phenotype:
   config: 'ingests/hpoa/disease_phenotype.yaml'
+hpoa_gene_to_disease:
+  config: 'ingests/hpoa/gene_to_disease.yaml'
 hpoa_disease_mode_of_inheritance:
   config: 'ingests/hpoa/disease_mode_of_inheritance.yaml'
 hpoa_gene_to_phenotype:
@@ -30,8 +32,6 @@ hpoa_gene_to_phenotype:
 #   config: 'ingests/mgi/publication_to_gene.yaml'
 ncbi_gene:
   config: 'ingests/ncbi/gene.yaml'
-omim_gene_to_disease:
-  config: 'ingests/omim/gene_to_disease.yaml'
 panther_genome_orthologs:
   config: 'ingests/panther/genome_orthologs.yaml'
 pombase_gene:

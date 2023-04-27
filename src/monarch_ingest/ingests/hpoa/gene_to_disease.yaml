@@ -1,0 +1,27 @@
+name: 'hpoa_gene_to_disease'
+
+files:
+#  - './data/hpoa/genes_to_disease.txt'
+  - './data/hpoa/subset_genes_to_disease.txt'
+
+format: 'csv'
+
+delimiter: '\t'
+
+columns:
+  - 'ncbi_gene_id'
+  - 'gene_symbol'
+  - 'association_type'
+  - 'disease_id'
+  - 'source'
+
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+
+transform_mode: 'flat'

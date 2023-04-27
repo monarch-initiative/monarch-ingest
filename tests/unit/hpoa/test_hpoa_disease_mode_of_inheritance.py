@@ -1,5 +1,4 @@
 import pytest
-
 from biolink.pydanticmodel import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
 
 

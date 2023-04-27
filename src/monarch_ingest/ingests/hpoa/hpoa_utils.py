@@ -6,6 +6,9 @@ from typing import Optional, List, Dict, Tuple, NamedTuple
 
 from loguru import logger
 
+from monarch_ingest.constants import INFORES_MEDGEN, INFORES_OMIM, INFORES_ORPHANET, BIOLINK_CAUSES, \
+    BIOLINK_CONTRIBUTES_TO, BIOLINK_GENE_ASSOCIATED_WITH_CONDITION
+
 
 class FrequencyHpoTerm(NamedTuple):
     curie: str
@@ -94,3 +97,39 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
         return None
 
     return hpo_term, percentage, quotient   # percentage and/or quotient will also be None if not applicable
+
+
+def get_knowledge_sources(original_source: str, additional_source: str) -> (str, List[str]):
+    """
+    Return a tuple of the primary_knowledge_source and original_knowledge_source
+    """
+    _primary_knowledge_source: str = ""
+    _aggregator_knowledge_source: List[str] = []
+
+    if additional_source is not None:
+        _aggregator_knowledge_source.append(additional_source)
+
+    if "medgen" in original_source:
+        _aggregator_knowledge_source.append(INFORES_MEDGEN)
+        _primary_knowledge_source = INFORES_OMIM
+    elif "orphadata" in original_source:
+        _primary_knowledge_source = INFORES_ORPHANET
+
+    if _primary_knowledge_source == "":
+        raise ValueError(f"Unknown knowledge source: {original_source}")
+
+    return _primary_knowledge_source, _aggregator_knowledge_source
+
+
+def get_predicate(original_predicate: str) -> str:
+    """
+    Convert the association column into a Biolink Model predicate
+    """
+    if original_predicate == 'MENDELIAN':
+        return BIOLINK_CAUSES
+    elif original_predicate == 'POLYGENIC':
+        return BIOLINK_CONTRIBUTES_TO
+    elif original_predicate == 'UNKNOWN':
+        return BIOLINK_GENE_ASSOCIATED_WITH_CONDITION
+    else:
+        raise ValueError(f"Unknown predicate: {original_predicate}")

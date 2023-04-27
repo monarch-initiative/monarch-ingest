@@ -1,5 +1,4 @@
 import pytest
-
 from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
 
 
@@ -35,11 +34,7 @@ def d2pf_entities_1(mock_koza, global_table):
 def test_disease_to_phenotype_transform_1(d2pf_entities_1):
     assert d2pf_entities_1
     assert len(d2pf_entities_1) == 1
-    association = [
-        entity
-        for entity in d2pf_entities_1
-        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-    ][0]
+    association = [entity for entity in d2pf_entities_1 if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)][0]
     assert association.subject == "OMIM:614856"
     assert association.predicate == "biolink:has_phenotype"
     assert association.negated
@@ -87,11 +82,7 @@ def d2pf_entities_2(mock_koza, global_table):
 def test_disease_to_phenotype_transform_2(d2pf_entities_2):
     assert d2pf_entities_2
     assert len(d2pf_entities_2) == 1
-    association = [
-        entity
-        for entity in d2pf_entities_2
-        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-    ][0]
+    association = [entity for entity in d2pf_entities_2 if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)][0]
     assert association.subject == "OMIM:117650"
     assert association.predicate == "biolink:has_phenotype"
     assert not association.negated
@@ -139,11 +130,7 @@ def d2pf_entities_3(mock_koza, global_table):
 def test_disease_to_phenotype_transform_3(d2pf_entities_3):
     assert d2pf_entities_3
     assert len(d2pf_entities_3) == 1
-    association = [
-        entity
-        for entity in d2pf_entities_3
-        if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)
-    ][0]
+    association = [entity for entity in d2pf_entities_3 if isinstance(entity, DiseaseToPhenotypicFeatureAssociation)][0]
     assert association.subject == "OMIM:117650"
     assert association.predicate == "biolink:has_phenotype"
     assert not association.negated
