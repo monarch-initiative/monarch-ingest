@@ -1,8 +1,7 @@
 name: 'hpoa_gene_to_disease'
 
 files:
-#  - './data/hpoa/genes_to_disease.txt'
-  - './data/hpoa/subset_genes_to_disease.txt'
+  - './data/hpoa/genes_to_disease.txt'
 
 format: 'csv'
 
