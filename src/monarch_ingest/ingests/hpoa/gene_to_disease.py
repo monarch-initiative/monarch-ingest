@@ -9,7 +9,7 @@ koza_app = get_koza_app("hpoa_gene_to_disease")
 
 while (row := koza_app.get_row()) is not None:
     gene_id = row["ncbi_gene_id"]
-    disease_id = row["disease_id"]
+    disease_id = row["disease_id"].replace("ORPHA:", "Orphanet:")
 
     predicate = get_predicate(row["association_type"])
 
