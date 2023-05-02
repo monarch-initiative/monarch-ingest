@@ -314,19 +314,6 @@
   local_name: data/ncbi/gene_info.gz
   tag: ncbi_gene
 
-### OMIM
-#  This should eventually pull from the source using the API key
--
-  # url: gs://monarch-ingest-data-cache/omim/morbidmap.txt
-  url: https://data.omim.org/downloads/{OMIM_API_KEY}/morbidmap.txt
-  local_name: data/omim/morbidmap.txt
-  tag: omim_gene_to_disease
--
-  # url: gs://monarch-ingest-data-cache/omim/mim2gene.txt
-  url: https://omim.org/static/omim/data/mim2gene.txt
-  local_name: data/omim/mim2gene.txt
-  tag: omim_gene_to_disease
-
 ### Panther Gene Orthology (from www.pantherdb.org)
 
 - url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
