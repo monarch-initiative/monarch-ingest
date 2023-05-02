@@ -237,6 +237,7 @@ def merge_files(
     mappings = []
     mappings.append("data/monarch/mondo.sssom.tsv")
     mappings.append("data/monarch/gene_mappings.tsv")
+    mappings.append("data/monarch/chebi-mesh.biomappings.sssom.tsv")
 
     logger.info("Merging knowledge graph...")
 
