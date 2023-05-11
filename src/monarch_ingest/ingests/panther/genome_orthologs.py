@@ -28,6 +28,9 @@ while (row := koza_app.get_row()) is not None:
             # unpack the species and gene id
             gene_ncbitaxon, gene_id = species_and_gene_id
 
+            if gene_id.upper().startswith("ENSEMBL"):
+                continue
+
             species_and_ortholog_id = parse_gene(row['Ortholog'])
 
             # unpack the orthogous gene id and its species
@@ -35,6 +38,9 @@ while (row := koza_app.get_row()) is not None:
                 continue
 
             ortholog_ncbitaxon, ortholog_id = species_and_ortholog_id
+
+            if ortholog_id.upper().startswith("ENSEMBL"):
+                continue
 
             # TODO: how do I discriminate between LDO and O? I don't care for now??
             #       However, this may result in KGX record duplication?
