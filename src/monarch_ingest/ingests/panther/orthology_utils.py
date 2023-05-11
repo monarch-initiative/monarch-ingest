@@ -32,6 +32,7 @@ ncbitaxon_catalog = {
     "YEAST": "4932",
 }
 
+
 def ncbitaxon_by_name(species_tag: str) -> Optional[str]:
     """
     Retrieves the NCBI Taxon ID of a given species, only if we are interested in it...

@@ -10,8 +10,6 @@ from biolink.pydanticmodel import GeneToGeneHomologyAssociation
 
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene, ncbitaxon_catalog
 
-from loguru import logger
-
 koza_app = get_koza_app("panther_genome_orthologs")
 
 while (row := koza_app.get_row()) is not None:
