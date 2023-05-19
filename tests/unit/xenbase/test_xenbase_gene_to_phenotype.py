@@ -1,10 +1,5 @@
 import pytest
-
-from biolink.pydanticmodel import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
 
 
 @pytest.fixture
@@ -30,27 +25,19 @@ def entities(
             }
         ]
     )
-    return mock_koza(
-        "xenbase_gene_to_phenotype", row, "./src/monarch_ingest/ingests/xenbase/gene_to_phenotype.py"
-    )
+    return mock_koza("xenbase_gene_to_phenotype", row, "./src/monarch_ingest/ingests/xenbase/gene_to_phenotype.py")
 
 
 def test_gene2_phenotype_transform(entities):
     assert entities
     assert len(entities) == 1
-    association = [
-        entity
-        for entity in entities
-        if isinstance(entity, GeneToPhenotypicFeatureAssociation)
-    ][0]
+    association = [entity for entity in entities if isinstance(entity, GeneToPhenotypicFeatureAssociation)][0]
     assert association.primary_knowledge_source == "infores:xenbase"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 # TODO: can this test be shared across all g2p loads?
-@pytest.mark.parametrize(
-    "cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation]
-)
+@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation])
 def confirm_one_of_each_classes(cls, entities):
     class_entities = [entity for entity in entities if isinstance(entity, cls)]
     assert class_entities
@@ -59,11 +46,7 @@ def confirm_one_of_each_classes(cls, entities):
 
 
 def test_gene2_phenotype_transform_publications(entities):
-    association = [
-        entity
-        for entity in entities
-        if isinstance(entity, GeneToPhenotypicFeatureAssociation)
-    ][0]
+    association = [entity for entity in entities if isinstance(entity, GeneToPhenotypicFeatureAssociation)][0]
     assert association.publications[0] == "PMID:17112317"
     assert association.primary_knowledge_source == "infores:xenbase"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

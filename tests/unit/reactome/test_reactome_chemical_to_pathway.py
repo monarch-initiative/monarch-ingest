@@ -21,23 +21,12 @@ def local_table():
 
 @pytest.fixture
 def basic_row():
-    return {
-        "component": "10033",
-        "pathway_id": "R-RNO-6806664",
-        "go_ecode": "IEA",
-        "species_nam": "Rattus norvegicus"
-    }
+    return {"component": "10033", "pathway_id": "R-RNO-6806664", "go_ecode": "IEA", "species_nam": "Rattus norvegicus"}
 
 
 @pytest.fixture
 def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
-    return mock_koza(
-        source_name,
-        iter([basic_row]),
-        script,
-        global_table=global_table,
-        local_table=local_table
-    )
+    return mock_koza(source_name, iter([basic_row]), script, global_table=global_table, local_table=local_table)
 
 
 def test_association(basic_g2p):

@@ -16,9 +16,7 @@ def map_cache():
     eqe2zp = {
         "0-0-ZFA:0000042-PATO:0000638-0-0-0": {"iri": "ZP:0004225"},
         "BSPO:0000112-BFO:0000050-ZFA:0000042-PATO:0000638-0-0-0": {"iri": "ZP:0011243"},
-        "BSPO:0000000-BFO:0000050-ZFA:0000823-PATO:0000642-BSPO:0000007-BFO:0000050-ZFA:0000823": {
-            "iri": "ZP:0000157"
-        },
+        "BSPO:0000000-BFO:0000050-ZFA:0000823-PATO:0000642-BSPO:0000007-BFO:0000050-ZFA:0000823": {"iri": "ZP:0000157"},
     }
     return {"eqe2zp": eqe2zp}
 
@@ -88,6 +86,7 @@ def test_association(basic_g2p):
     assert association.primary_knowledge_source == "infores:zfin"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
+
 # @pytest.fixture
 # def postcomposed(mock_koza, source_name, basic_row, script, map_cache, global_table):
 
@@ -137,9 +136,7 @@ def test_association(basic_g2p):
 
 
 @pytest.mark.parametrize("tag", ["normal", "exacerbated", "ameliorated"])
-def test_excluded_tags(
-    mock_koza, source_name, basic_row, script, map_cache, tag, global_table
-):
+def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tag, global_table):
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,
@@ -152,9 +149,7 @@ def test_excluded_tags(
 
 
 @pytest.mark.parametrize("tag", ["abnormal"])
-def test_included_tags(
-    mock_koza, source_name, basic_row, script, map_cache, tag, global_table
-):
+def test_included_tags(mock_koza, source_name, basic_row, script, map_cache, tag, global_table):
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,

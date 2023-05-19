@@ -1,39 +1,35 @@
-import pytest
 import types
-import yaml
+from typing import Dict, List
+
 import pandas as pd
-from pathlib import PosixPath
-from typing import List, Dict
-
-from koza.app import KozaApp
-from koza.model.source import Source
-from koza.io.yaml_loader import UniqueIncludeLoader
-from koza.model.config.source_config import PrimaryFileConfig, OutputFormat
-
+import pytest
+import yaml
 from biolink.pydanticmodel import GeneToExpressionSiteAssociation
-from monarch_ingest.ingests.bgee.gene_to_expression_utils import get_row_group, filter_group_by_rank, write_group
+from koza.app import KozaApp
+from koza.io.yaml_loader import UniqueIncludeLoader
+from koza.model.config.source_config import OutputFormat, PrimaryFileConfig
+from koza.model.source import Source
+
+from monarch_ingest.ingests.bgee.gene_to_expression_utils import filter_group_by_rank, get_row_group, write_group
 
 
 def get_mock_koza(
-        yaml_file: str,
-        translation_table: str,
-        output_dir: str,
-        output_format: str,
-        files: List[str]) -> KozaApp:
+    yaml_file: str, translation_table: str, output_dir: str, output_format: str, files: List[str]
+) -> KozaApp:
     """Function to mock a KozaApp:
 
-        Creates a mock KozaApp from KozaApp by changing input files and write function:
+    Creates a mock KozaApp from KozaApp by changing input files and write function:
 
-        Args:
-            yaml_file (str): The yaml file used for the Koza ingest of interest.
-            translation_table (str): The translation table for the Koza ingest.
-            output_dir (str): The directory for KozaApp output.
-            output_format (str): The format for output from the KozaApp.
-            files (List[PosixPath]): The files to use for the mock KozaApp.
+    Args:
+        yaml_file (str): The yaml file used for the Koza ingest of interest.
+        translation_table (str): The translation table for the Koza ingest.
+        output_dir (str): The directory for KozaApp output.
+        output_format (str): The format for output from the KozaApp.
+        files (List[PosixPath]): The files to use for the mock KozaApp.
 
-        Returns:
-            KozaApp: Returns a mock KozaApp for the indicated ingest modifying files, output, and write function.
-        """
+    Returns:
+        KozaApp: Returns a mock KozaApp for the indicated ingest modifying files, output, and write function.
+    """
     with open(yaml_file, 'r') as source_fh:
         yaml_data = yaml.load(source_fh, Loader=UniqueIncludeLoader)
 
@@ -44,7 +40,8 @@ def get_mock_koza(
         source=Source(source_config),
         translation_table=translation_table,
         output_dir=output_dir,
-        output_format=OutputFormat(output_format))
+        output_format=OutputFormat(output_format),
+    )
 
     def _mock_write(self, *entities):
         if hasattr(self, '_entities'):
@@ -59,15 +56,15 @@ def get_mock_koza(
 def get_koza_rows(mock_koza: KozaApp, n_rows: int) -> List[Dict]:
     """Function to get specified number of rows from mock Koza:
 
-        Read n rows from mock Koza:
+    Read n rows from mock Koza:
 
-        Args:
-            mock_koza (KozaApp): The mock koza object to read rows from.
-            n_rows (int): The number of rows to return.
+    Args:
+        mock_koza (KozaApp): The mock koza object to read rows from.
+        n_rows (int): The number of rows to return.
 
-        Returns:
-            List[Dict]: Returns a list of ros in Koza dict format.
-        """
+    Returns:
+        List[Dict]: Returns a list of ros in Koza dict format.
+    """
     rows = []
     for i in range(0, n_rows):
         rows.append(mock_koza.get_row())
@@ -178,6 +175,7 @@ def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
         assert type(i) is dict
 
     assert row_group == row_group_1
+
 
 # Ignoring process_koza_sources for now as it depends completely on above tested functions but goes deeper into Koza.
 # def test_process_koza_source(bgee_mock_koza):

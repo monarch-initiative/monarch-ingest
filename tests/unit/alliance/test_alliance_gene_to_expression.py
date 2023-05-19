@@ -69,11 +69,7 @@ def rattus(rat_row, mock_koza, source_name, script, global_table):
 
 def test_rattus_association(rattus):
     assert len(rattus) > 0
-    association = [
-        association
-        for association in rattus
-        if isinstance(association, GeneToExpressionSiteAssociation)
-    ][0]
+    association = [association for association in rattus if isinstance(association, GeneToExpressionSiteAssociation)][0]
     assert association.subject == "RGD:3143"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "GO:0030141"
@@ -124,11 +120,7 @@ def mouse(mgi_row, mock_koza, source_name, script, global_table):
 
 
 def test_mouse_association(mouse):
-    association = [
-        association
-        for association in mouse
-        if isinstance(association, GeneToExpressionSiteAssociation)
-    ][0]
+    association = [association for association in mouse if isinstance(association, GeneToExpressionSiteAssociation)][0]
     assert association.subject == "MGI:99180"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "EMAPA:16039"
@@ -184,9 +176,7 @@ def zebrafish(zfin_row, mock_koza, source_name, script, global_table):
 def test_zebrafish_association(zebrafish):
     assert len(zebrafish) > 0
     association = [
-        association
-        for association in zebrafish
-        if isinstance(association, GeneToExpressionSiteAssociation)
+        association for association in zebrafish if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
     assert association.subject == "ZFIN:ZDB-GENE-031222-3"
     assert association.predicate == "biolink:expressed_in"
@@ -234,9 +224,7 @@ def drosophila(fly_row, mock_koza, source_name, script, global_table):
 
 def test_drosophila_association(drosophila):
     association = [
-        association
-        for association in drosophila
-        if isinstance(association, GeneToExpressionSiteAssociation)
+        association for association in drosophila if isinstance(association, GeneToExpressionSiteAssociation)
     ][0]
     assert association.subject == "FB:FBgn0010339"
     assert association.predicate == "biolink:expressed_in"
@@ -288,11 +276,7 @@ def worm(worm_row, mock_koza, source_name, script, global_table):
 
 
 def test_worm_association(worm):
-    association = [
-        association
-        for association in worm
-        if isinstance(association, GeneToExpressionSiteAssociation)
-    ][0]
+    association = [association for association in worm if isinstance(association, GeneToExpressionSiteAssociation)][0]
     assert association.subject == "WB:WBGene00001386"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "WBbt:0000100"
@@ -337,11 +321,7 @@ def yeast(sgd_row, mock_koza, source_name, script, global_table):
 
 def test_yeast_association(yeast):
     assert len(yeast) > 0
-    association = [
-        association
-        for association in yeast
-        if isinstance(association, GeneToExpressionSiteAssociation)
-    ][0]
+    association = [association for association in yeast if isinstance(association, GeneToExpressionSiteAssociation)][0]
     assert association.subject == "SGD:S000002429"
     assert association.predicate == "biolink:expressed_in"
     assert association.object == "GO:1990316"

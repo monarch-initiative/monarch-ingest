@@ -1,10 +1,5 @@
 import pytest
-
-from biolink.pydanticmodel import (
-    Gene,
-    GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature
-)
+from biolink.pydanticmodel import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
 
 
 @pytest.fixture
@@ -51,11 +46,7 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
 
 
 def test_association_publication(rat):
-    association = [
-        association
-        for association in rat
-        if isinstance(association, GeneToPhenotypicFeatureAssociation)
-    ][0]
+    association = [association for association in rat if isinstance(association, GeneToPhenotypicFeatureAssociation)][0]
     assert association.publications[0] == "PMID:11549339"
 
 
@@ -78,9 +69,7 @@ def conditions_row(rat_row):
 
 
 @pytest.fixture
-def conditions_entities(
-    conditions_row, mock_koza, source_name, script, map_cache, global_table
-):
+def conditions_entities(conditions_row, mock_koza, source_name, script, map_cache, global_table):
     rows = iter([conditions_row])
 
     return mock_koza(
@@ -98,16 +87,14 @@ def test_conditions(conditions_entities):
         for association in conditions_entities
         if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ][0]
-    assert "ZECO:0000111"  in association.qualifiers
+    assert "ZECO:0000111" in association.qualifiers
     assert association.primary_knowledge_source == "infores:rgd"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
     assert "infores:alliancegenome" in association.aggregator_knowledge_source
 
 
 # TODO: can this test be shared across all g2p loads?
-@pytest.mark.parametrize(
-    "cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation]
-)
+@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation])
 def confirm_one_of_each_classes(cls, rat):
     class_entities = [entity for entity in rat if isinstance(entity, cls)]
     assert class_entities

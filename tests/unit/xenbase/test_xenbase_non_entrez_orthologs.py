@@ -29,11 +29,7 @@ def ne_orthology_records(mock_koza, source_name, script):
         'MGI': "1891834",
         'ZFIN': "ZDB-GENE-070705-255",
     }
-    return mock_koza(
-        name=source_name,
-        data=iter([row]),
-        transform_code=script
-    )
+    return mock_koza(name=source_name, data=iter([row]), transform_code=script)
 
 
 def test_ne_orthology_records(ne_orthology_records):

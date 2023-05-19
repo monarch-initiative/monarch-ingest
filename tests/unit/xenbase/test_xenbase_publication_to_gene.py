@@ -1,13 +1,8 @@
 import pytest
-
-from biolink.pydanticmodel import (
-    Gene,
-    InformationContentEntityToNamedThingAssociation,
-    Publication,
-)
+from biolink.pydanticmodel import Gene, InformationContentEntityToNamedThingAssociation, Publication
+from koza.cli_runner import get_translation_table
 from loguru import logger
 
-from koza.cli_runner import get_translation_table
 
 @pytest.fixture
 def gene_literature_entities(mock_koza, global_table):
@@ -60,13 +55,13 @@ def gene_literature_entities(mock_koza, global_table):
         }
     }
     get_translation_table("src/monarch_ingest/translation_table.yaml", None, logger),
-    
+
     return mock_koza(
         name="xenbase_publication_to_gene",
         data=row,
         transform_code="./src/monarch_ingest/ingests/xenbase/publication_to_gene.py",
         map_cache=map_cache,
-        global_table=global_table
+        global_table=global_table,
     )
 
 
@@ -75,10 +70,8 @@ def test_gene_literature_entities(gene_literature_entities):
 
 
 def test_gene_literature_entity_types(gene_literature_entities):
-    publications = [
-        entity for entity in gene_literature_entities if isinstance(entity, Publication)
-    ]
-    genes = [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
+    publications = [entity for entity in gene_literature_entities if isinstance(entity, Publication)]
+    [entity for entity in gene_literature_entities if isinstance(entity, Gene)]
     association = [
         entity
         for entity in gene_literature_entities

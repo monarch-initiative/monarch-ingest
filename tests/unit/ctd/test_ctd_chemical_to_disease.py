@@ -1,5 +1,4 @@
 import pytest
-
 from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 
 
@@ -93,15 +92,10 @@ def test_therapeutic_entities(therapeutic):
     entities = therapeutic
     assert entities
     assert len(entities) == 1
-    association = [
-        e
-        for e in entities
-        if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)
-    ][0]
+    association = [e for e in entities if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)][0]
     assert association
     assert association.predicate == "biolink:treats"
     assert 'PMID:17516704' in association.publications
     assert 'PMID:123' in association.publications
     assert association.primary_knowledge_source == "infores:ctd"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
-

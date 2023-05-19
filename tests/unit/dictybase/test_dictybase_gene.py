@@ -1,10 +1,7 @@
-from typing import Dict, List
+from typing import List
+
 import pytest
-
 from biolink.pydanticmodel import Gene
-from monarch_ingest.ingests.dictybase.utils import parse_gene_id
-
-
 
 
 @pytest.fixture
@@ -28,11 +25,7 @@ def test_row_1():
     """
     :return: Test Dictybase Gene input data row.
     """
-    return {
-        'GENE ID': 'DDB_G0269222',
-        'Gene Name': 'gefB',
-        'Synonyms': 'RasGEFB, RasGEF'
-    }
+    return {'GENE ID': 'DDB_G0269222', 'Gene Name': 'gefB', 'Synonyms': 'RasGEFB, RasGEF'}
 
 
 @pytest.fixture
@@ -58,11 +51,7 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table):
 
 
 def test_dictybase_ncbi_mapped_gene_ingest(basic_dictybase_1):
-    entity: List[Gene] = [
-        entity
-        for entity in basic_dictybase_1
-        if isinstance(entity, Gene)
-    ]
+    entity: List[Gene] = [entity for entity in basic_dictybase_1 if isinstance(entity, Gene)]
     assert len(entity) == 1
 
     assert entity[0]
@@ -73,4 +62,3 @@ def test_dictybase_ncbi_mapped_gene_ingest(basic_dictybase_1):
     assert 'RasGEF' in entity[0].synonym
     assert "NCBITaxon:44689" in entity[0].in_taxon
     assert "infores:dictybase" in entity[0].provided_by
-

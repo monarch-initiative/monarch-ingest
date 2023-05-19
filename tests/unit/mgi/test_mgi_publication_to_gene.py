@@ -1,10 +1,7 @@
 import pytest
-
 from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
-pubmed_ids = (
-    "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"
-)
+pubmed_ids = "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"
 markers = "Cbe1|Smrp1"
 
 
@@ -56,18 +53,14 @@ def basic_entities(mock_koza, source_name, basic_row, script, global_table):
 
 def test_association_count(basic_entities):
     associations = [
-        entity
-        for entity in basic_entities
-        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
+        entity for entity in basic_entities if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
     assert len(associations) == 9
 
 
 def test_association_values(basic_entities):
     associations = [
-        entity
-        for entity in basic_entities
-        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
+        entity for entity in basic_entities if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ]
 
     # This is sort of unintentionally testing order, if that breaks and this

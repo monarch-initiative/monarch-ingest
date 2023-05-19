@@ -25,19 +25,13 @@ def basic_row():
         "component": "8627890",
         "pathway_id": "R-DDI-73762",
         "go_ecode": "IEA",
-        "species_nam": "Dictyostelium discoideum"
+        "species_nam": "Dictyostelium discoideum",
     }
 
 
 @pytest.fixture
 def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
-    return mock_koza(
-        source_name,
-        iter([basic_row]),
-        script,
-        global_table=global_table,
-        local_table=local_table
-    )
+    return mock_koza(source_name, iter([basic_row]), script, global_table=global_table, local_table=local_table)
 
 
 def test_association(basic_g2p):

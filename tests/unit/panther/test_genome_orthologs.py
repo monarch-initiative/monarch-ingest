@@ -84,7 +84,7 @@ result_expected = {
     "NCBIGene:395772": [  # CHICK 'GeneID'
         "HGNC:6445",
         "NCBITaxon:9606",
-        "NCBITaxon:9031",   # Gallus gallus
+        "NCBITaxon:9031",  # Gallus gallus
         "biolink:orthologous_to",
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR45616",
@@ -92,7 +92,7 @@ result_expected = {
     "ENSEMBL:ENSSSCG00000002799": [  # PIG 'GeneID'
         "MGI:2442402",
         "NCBITaxon:10090",
-        "NCBITaxon:9823",   # Sus scrofa
+        "NCBITaxon:9823",  # Sus scrofa
         "biolink:orthologous_to",
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR13162",
@@ -100,16 +100,15 @@ result_expected = {
     "ENSEMBL:AN4965.2": [  # Aspergillus
         "MGI:2442402",
         "NCBITaxon:10090",
-        "NCBITaxon:227321",   # Emericella nidulans (strain FGSC A4 etc.)
+        "NCBITaxon:227321",  # Emericella nidulans (strain FGSC A4 etc.)
         "biolink:orthologous_to",
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR13162",
-    ]
+    ],
 }
 
 
 def assert_association(data):
-
     assert data
 
     association = data[0]
@@ -250,7 +249,7 @@ def well_behaved_pombase_record(mock_koza, source_name, script, global_table):
         "Ortholog": "SCHPO|PomBase=SPAC20G8.06|UniProtKB=P87112",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Opisthokonts",
-        "Panther Ortholog ID": "PTHR13162"
+        "Panther Ortholog ID": "PTHR13162",
     }
     return mock_koza(
         name=source_name,
@@ -406,7 +405,7 @@ def gene_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
         "Ortholog": "CHICK|Gene=KATNA1|UniProtKB=Q1HGK7",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Amniota",
-        "Panther Ortholog ID": "PTHR23074"
+        "Panther Ortholog ID": "PTHR23074",
     }
     return mock_koza(
         name=source_name,
@@ -428,7 +427,7 @@ def geneid_prefix_gene_spec_string(mock_koza, source_name, script, global_table)
         "Ortholog": "CHICK|GeneID=395772|UniProtKB=O93532",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Amniota",
-        "Panther Ortholog ID": "PTHR45616"
+        "Panther Ortholog ID": "PTHR45616",
     }
     return mock_koza(
         name=source_name,
@@ -452,7 +451,7 @@ def gene_orfname_prefix_gene_spec_string(mock_koza, source_name, script, global_
         "Ortholog": "DANRE|ZFIN=ZDB-GENE-121214-325|UniProtKB=E7F704",
         "Type of ortholog": "O",
         "Common ancestor for the orthologs": "Euteleostomi",
-        "Panther Ortholog ID": "PTHR19232"
+        "Panther Ortholog ID": "PTHR19232",
     }
     return mock_koza(
         name=source_name,
@@ -476,7 +475,7 @@ def gene_orderedlocusname_prefix_gene_spec_string(mock_koza, source_name, script
         "Ortholog": "CHICK|Gene_OrderedLocusName=CGI-12|UniProtKB=Q5ZJC8",
         "Type of ortholog": "LDO",
         "Common ancestor for the orthologs": "Amniota",
-        "Panther Ortholog ID": "PTHR13068"
+        "Panther Ortholog ID": "PTHR13068",
     }
     return mock_koza(
         name=source_name,

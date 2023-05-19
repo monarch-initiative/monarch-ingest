@@ -1,7 +1,8 @@
 from typing import Dict, List
-import pytest
 
+import pytest
 from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
+
 from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
 
 
@@ -16,7 +17,7 @@ def map_cache() -> Dict:
         "aberrant spore morphology": {"id": "DDPHENO:0000163"},
         "delayed aggregation": {"id": "DDPHENO:0000156"},
         "increased cell-substrate adhesion": {"id": "DDPHENO:0000213"},
-        "decreased cell motility": {"id": "DDPHENO:0000148"}
+        "decreased cell motility": {"id": "DDPHENO:0000148"},
     }
 
     return {
@@ -32,30 +33,30 @@ def map_cache() -> Dict:
                 # empty 'Phenotypes' field
                 "Phenotypes": None
             },
-            None
+            None,
         ),
         (
             {
                 # Unrecognized phenotype
                 "Phenotypes": "this is not a phenotype"
             },
-            None
+            None,
         ),
         (
             {
                 # Single known phenotype mappings (with flanking blank space?)
                 "Phenotypes": " decreased slug migration "
             },
-            "DDPHENO:0000225"
+            "DDPHENO:0000225",
         ),
         (
             {
                 # Multiple known phenotype mappings
                 "Phenotypes": " decreased slug migration | aberrant spore morphology "
             },
-            "DDPHENO:0000163"
-        )
-    ]
+            "DDPHENO:0000163",
+        ),
+    ],
 )
 def test_parse_phenotypes(query, map_cache):
     phenotypes: List[str] = parse_phenotypes(query[0], map_cache["dictybase_phenotype_names_to_ids"])
@@ -88,7 +89,7 @@ def test_row_1():
         "Strain_Descriptor": "CHE10",
         "Associated gene(s)": "cbpC",
         "DDB_G_ID": "DDB_G0283613",
-        "Phenotypes": " decreased slug migration | aberrant spore morphology "
+        "Phenotypes": " decreased slug migration | aberrant spore morphology ",
     }
 
 
@@ -107,17 +108,11 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, 
     :return: mock_koza application
     """
     return mock_koza(
-        name=source_name,
-        data=iter([test_row_1]),
-        transform_code=script,
-        global_table=global_table,
-        map_cache=map_cache
+        name=source_name, data=iter([test_row_1]), transform_code=script, global_table=global_table, map_cache=map_cache
     )
 
 
-@pytest.mark.parametrize(
-    "cls", [GeneToPhenotypicFeatureAssociation]
-)
+@pytest.mark.parametrize("cls", [GeneToPhenotypicFeatureAssociation])
 def test_confirm_one_of_each_classes(cls, basic_dictybase_1):
     class_entities = [entity for entity in basic_dictybase_1 if isinstance(entity, cls)]
     assert class_entities
@@ -127,9 +122,7 @@ def test_confirm_one_of_each_classes(cls, basic_dictybase_1):
 
 def test_dictybase_g2p_association_ncbi_gene(basic_dictybase_1):
     associations = [
-        association
-        for association in basic_dictybase_1
-        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        association for association in basic_dictybase_1 if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 2
 
@@ -152,7 +145,7 @@ def test_row_2():
         "Strain Descriptor": "DDB_G0274679-",
         "Associated gene(s)": "DDB_G0274679",
         "DDB_G_ID": "DDB_G0283613",
-        "Phenotypes": "delayed aggregation | increased cell-substrate adhesion | decreased cell motility"
+        "Phenotypes": "delayed aggregation | increased cell-substrate adhesion | decreased cell motility",
     }
 
 
@@ -171,19 +164,13 @@ def basic_dictybase_2(mock_koza, source_name, script, test_row_2, global_table, 
     :return: mock_koza application
     """
     return mock_koza(
-        name=source_name,
-        data=iter([test_row_2]),
-        transform_code=script,
-        global_table=global_table,
-        map_cache=map_cache
+        name=source_name, data=iter([test_row_2]), transform_code=script, global_table=global_table, map_cache=map_cache
     )
 
 
 def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
     associations = [
-        association
-        for association in basic_dictybase_2
-        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        association for association in basic_dictybase_2 if isinstance(association, GeneToPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 3
 
