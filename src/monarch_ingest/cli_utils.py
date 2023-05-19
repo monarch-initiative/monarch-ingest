@@ -184,14 +184,6 @@ def transform_phenio(
 
     # assign level association category if edge category is empty
     edges_df['category'].fillna('biolink:Association', inplace=True)
-    valid_predicates = {f"biolink:{convert_to_snake_case(pred)}" for pred in biolink_model_schema.slot_descendants("related to")}
-    phenio_predicates = set(edges_df['predicate'].unique())
-    invalid_predicates = phenio_predicates - valid_predicates
-    if invalid_predicates:
-        logger.error(f"Invalid predicates found in Phenio associations: {invalid_predicates}")
-        invalid_edges_df = edges_df[edges_df['predicate'].isin(invalid_predicates)]
-        logger.error(f"Removing {invalid_edges_df.shape[0]} edges with invalid predicates")
-        edges_df = edges_df[~edges_df['predicate'].isin(invalid_predicates)]
 
     # Hopefully this won't be necessary long term, but these IDs are coming
     # in with odd OBO prefixes from Phenio currently.
@@ -202,6 +194,24 @@ def transform_phenio(
     # Only keep edges where the subject and object both are within our allowable prefix list
     edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
                         & edges_df["object"].str.startswith(tuple(prefixes))]
+
+    valid_predicates = {f"biolink:{convert_to_snake_case(pred)}" for pred in biolink_model_schema.slot_descendants("related to")}
+    phenio_predicates = set(edges_df['predicate'].unique())
+    invalid_predicates = phenio_predicates - valid_predicates
+    if invalid_predicates:
+        logger.error(f"Invalid predicates found in Phenio associations: {invalid_predicates}")
+        invalid_edges_df = edges_df[edges_df['predicate'].isin(invalid_predicates)]
+        logger.error(f"Removing {invalid_edges_df.shape[0]} edges with invalid predicates")
+        edges_df = edges_df[~edges_df['predicate'].isin(invalid_predicates)]
+
+    valid_edge_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("association")}
+    phenio_edge_categories = set(edges_df['category'].unique())
+    invalid_edge_categories = phenio_edge_categories - valid_edge_categories
+    if invalid_edge_categories:
+        logger.error(f"Invalid edge categories: {invalid_edge_categories}")
+        invalid_edge_categories_df = edges_df[edges_df['category'].isin(invalid_edge_categories)]
+        logger.error(f"Removing {len(invalid_edge_categories_df)} edges with invalid categories")
+        edges_df = edges_df[~edges_df['category'].isin(invalid_edge_categories)]
 
     edges_df.to_csv(edges, sep='\t', index=False)
     Path(f"data/monarch/{nodefile}").unlink()
