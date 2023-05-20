@@ -2,7 +2,6 @@
 Unit tests for STRING protein links ingest
 """
 import pytest
-
 from biolink.pydanticmodel import PairwiseGeneToGeneInteraction
 
 
@@ -136,9 +135,7 @@ def multigene_row():
 
 
 @pytest.fixture
-def multigene_entities(
-    mock_koza, source_name, multigene_row, script, global_table, map_cache
-):
+def multigene_entities(mock_koza, source_name, multigene_row, script, global_table, map_cache):
     return mock_koza(
         name=source_name,
         data=iter([multigene_row]),
@@ -150,8 +147,6 @@ def multigene_entities(
 
 def test_multigene_associations(multigene_entities):
     associations = [
-        association
-        for association in multigene_entities
-        if isinstance(association, PairwiseGeneToGeneInteraction)
+        association for association in multigene_entities if isinstance(association, PairwiseGeneToGeneInteraction)
     ]
     assert len(associations) == 6

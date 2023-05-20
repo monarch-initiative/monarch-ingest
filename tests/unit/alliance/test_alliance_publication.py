@@ -1,5 +1,7 @@
-import pytest
 import datetime
+
+import pytest
+
 
 @pytest.fixture
 def source_name():
@@ -39,9 +41,7 @@ def row():
         "volume": "111",
         "issueName": "6",
         "resourceAbbreviation": "Biophys J",
-        "tags": [
-            {"referenceId": "PMID:27653487", "tagSource": "SGD", "tagName": "inCorpus"}
-        ],
+        "tags": [{"referenceId": "PMID:27653487", "tagSource": "SGD", "tagName": "inCorpus"}],
     }
 
 
@@ -50,13 +50,13 @@ def test_research_article(mock_koza, source_name, row, script, global_table):
     pub = entities[0]
     assert pub
     assert pub.id == "PMID:27653487"
-    assert pub.name == "The Effect of Temperature on Microtubule-Based Transport " +\
-                       "by Cytoplasmic Dynein and Kinesin-1 Motors."
+    assert (
+        pub.name
+        == "The Effect of Temperature on Microtubule-Based Transport " + "by Cytoplasmic Dynein and Kinesin-1 Motors."
+    )
 
 
-@pytest.mark.parametrize(
-    "mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"]
-)
+@pytest.mark.parametrize("mesh_term", ["MESH:Q000502", "MESH:D002940", "MESH:Q000502", "MESH:D012890"])
 def test_mesh_terms(mock_koza, source_name, row, script, global_table, mesh_term):
     row["meshTerms"] = [
         {
@@ -79,9 +79,7 @@ def test_mesh_terms(mock_koza, source_name, row, script, global_table, mesh_term
     assert mesh_term in pub.mesh_terms
 
 
-@pytest.mark.parametrize(
-    "author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"]
-)
+@pytest.mark.parametrize("author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"])
 def test_research_authors(mock_koza, source_name, row, script, global_table, author):
     entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
@@ -106,13 +104,11 @@ def test_time_parser(mock_koza, source_name, row, script, global_table, creation
     assert isinstance(d, datetime.date) or isinstance(d, datetime.datetime)
 
 
-@pytest.mark.parametrize(
-    "creation_date", ["Unknown", "2016 Jul-Aug", "2003 ?%p?\b\bhP\u0007 19", "2000 Dec 14-28"]
-)
+@pytest.mark.parametrize("creation_date", ["Unknown", "2016 Jul-Aug", "2003 ?%p?\b\bhP\u0007 19", "2000 Dec 14-28"])
 def test_notatime_parser(mock_koza, source_name, row, script, global_table, creation_date):
     row["datePublished"] = creation_date
     entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
     pub = entities[0]
-    #assert pub.creation_date == None or isinstance(pub.creation_date, datetime.datetime)
+    # assert pub.creation_date == None or isinstance(pub.creation_date, datetime.datetime)
     d = pub.creation_date
     assert d is None

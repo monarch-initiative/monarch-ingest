@@ -27,7 +27,7 @@ def orthology_record(mock_koza, source_name, script, global_table):
         'entrez_id': "8928",
         'xb_genepage_id': "XB-GENEPAGE-478063",
         'xb_gene_symbol': "foxh1.2",
-        'xb_gene_name': "forkhead box H1, gene 2"
+        'xb_gene_name': "forkhead box H1, gene 2",
     }
     return mock_koza(
         name=source_name,
@@ -40,9 +40,7 @@ def orthology_record(mock_koza, source_name, script, global_table):
 def test_orthology_record(orthology_record):
     assert orthology_record
     association = [
-        association
-        for association in orthology_record
-        if isinstance(association, GeneToGeneHomologyAssociation)
+        association for association in orthology_record if isinstance(association, GeneToGeneHomologyAssociation)
     ][0]
     assert association.subject == "Xenbase:XB-GENEPAGE-478063"
     assert association.predicate == "biolink:orthologous_to"

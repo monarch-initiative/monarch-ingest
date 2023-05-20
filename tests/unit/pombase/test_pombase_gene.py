@@ -3,7 +3,6 @@ import pytest
 
 @pytest.fixture
 def gene_information_entities(mock_koza, global_table):
-
     row = {
         'systematic ID': 'SPAC1002.06c',
         'curie': 'POMBASE:SPAC1002.06c',

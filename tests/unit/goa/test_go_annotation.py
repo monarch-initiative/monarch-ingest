@@ -5,12 +5,10 @@ Unit tests for GO Annotations ingest
 from typing import Tuple
 
 import pytest
-
 from biolink.pydanticmodel import Association
+from loguru import logger
 
 from monarch_ingest.ingests.goa.goa_utils import parse_identifiers
-
-from loguru import logger
 
 
 @pytest.mark.parametrize(
@@ -37,9 +35,9 @@ from loguru import logger
                 "Gene_Product_Form_ID": "",
             },
             "AspGD:AN9339",
-            "NCBITaxon:227321"
+            "NCBITaxon:227321",
         )
-    ]
+    ],
 )
 def test_parse_identifiers(query: Tuple):
     gene_id, ncbitaxa = parse_identifiers(query[0])
@@ -452,7 +450,6 @@ result_expected = {
 
 
 def test_association(basic_goa):
-
     if not len(basic_goa):
         logger.warning("test_association() null test?")
         return
@@ -503,11 +500,7 @@ def mgi_entities(mock_koza, source_name, test_rows, script, global_table, local_
 
 
 def test_mgi_curie(mgi_entities):
-    association = [
-        association
-        for association in mgi_entities
-        if isinstance(association, Association)
-    ][0]
+    association = [association for association in mgi_entities if isinstance(association, Association)][0]
     assert association
     assert association.subject == "MGI:1918911"
     assert association.primary_knowledge_source == "infores:goa"

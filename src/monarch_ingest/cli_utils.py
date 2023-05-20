@@ -2,8 +2,12 @@ import csv
 import tarfile
 from pathlib import Path
 from typing import Optional
+from biolink import model # import the pythongen biolink model to get the version
+from linkml_runtime import SchemaView
+from linkml.utils.helpers import convert_to_snake_case
 
 # from loguru import logger
+
 import pandas
 import sh
 
@@ -12,6 +16,7 @@ from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_runner import transform_source
 from koza.model.config.source_config import OutputFormat
+from linkml_runtime.utils.formatutils import camelcase
 
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
 from monarch_ingest.utils.log_utils import get_logger
@@ -103,6 +108,10 @@ def transform_phenio(
     # if log: fh = add_log_fh(logger, "logs/phenio.log")
     logger = get_logger(name = "phenio" if log else None, verbose=verbose)
 
+    # TODO: can this be fetched from a purl?
+    biolink_model_schema = SchemaView(
+        f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml")
+
     phenio_tar = 'data/monarch/kg-phenio.tar.gz'
     if not Path(phenio_tar).is_file():
         # if log: logger.removeHandler(fh)
@@ -150,6 +159,15 @@ def transform_phenio(
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
+    valid_node_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("named thing")}
+    phenio_node_categories = set(nodes_df['category'].unique())
+    invalid_node_categories = phenio_node_categories - valid_node_categories
+    if invalid_node_categories:
+        logger.error(f"Invalid node categories: {invalid_node_categories}")
+        invalid_node_categories_df = nodes_df[nodes_df['category'].isin(invalid_node_categories)]
+        logger.error(f"Removing {len(invalid_node_categories_df)} nodes with invalid categories")
+        nodes_df = nodes_df[~nodes_df['category'].isin(invalid_node_categories)]
+
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
     edges_df = pandas.read_csv(f"data/monarch/{edgefile}", sep='\t', dtype="string",
@@ -164,6 +182,9 @@ def transform_phenio(
 
     edges_df = edges_df[edges_df["predicate"].str.contains(":")]
 
+    # assign level association category if edge category is empty
+    edges_df['category'].fillna('biolink:Association', inplace=True)
+
     # Hopefully this won't be necessary long term, but these IDs are coming
     # in with odd OBO prefixes from Phenio currently.
     for prefix in obo_prefixes_to_repair:
@@ -173,6 +194,24 @@ def transform_phenio(
     # Only keep edges where the subject and object both are within our allowable prefix list
     edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
                         & edges_df["object"].str.startswith(tuple(prefixes))]
+
+    valid_predicates = {f"biolink:{convert_to_snake_case(pred)}" for pred in biolink_model_schema.slot_descendants("related to")}
+    phenio_predicates = set(edges_df['predicate'].unique())
+    invalid_predicates = phenio_predicates - valid_predicates
+    if invalid_predicates:
+        logger.error(f"Invalid predicates found in Phenio associations: {invalid_predicates}")
+        invalid_edges_df = edges_df[edges_df['predicate'].isin(invalid_predicates)]
+        logger.error(f"Removing {invalid_edges_df.shape[0]} edges with invalid predicates")
+        edges_df = edges_df[~edges_df['predicate'].isin(invalid_predicates)]
+
+    valid_edge_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("association")}
+    phenio_edge_categories = set(edges_df['category'].unique())
+    invalid_edge_categories = phenio_edge_categories - valid_edge_categories
+    if invalid_edge_categories:
+        logger.error(f"Invalid edge categories: {invalid_edge_categories}")
+        invalid_edge_categories_df = edges_df[edges_df['category'].isin(invalid_edge_categories)]
+        logger.error(f"Removing {len(invalid_edge_categories_df)} edges with invalid categories")
+        edges_df = edges_df[~edges_df['category'].isin(invalid_edge_categories)]
 
     edges_df.to_csv(edges, sep='\t', index=False)
     Path(f"data/monarch/{nodefile}").unlink()

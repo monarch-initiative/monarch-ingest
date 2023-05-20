@@ -1,5 +1,4 @@
 import pytest
-
 from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
 
 
@@ -36,9 +35,7 @@ def basic_entities(mock_koza, basic_row, global_table):
 
 def test_association(basic_entities):
     association = [
-        entity
-        for entity in basic_entities
-        if isinstance(entity, InformationContentEntityToNamedThingAssociation)
+        entity for entity in basic_entities if isinstance(entity, InformationContentEntityToNamedThingAssociation)
     ][0]
     print(association)
     assert association.subject == "ZFIN:ZDB-PUB-140801-12"

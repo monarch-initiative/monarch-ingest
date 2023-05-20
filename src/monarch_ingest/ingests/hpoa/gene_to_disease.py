@@ -1,3 +1,5 @@
+import uuid
+
 from biolink.pydanticmodel import GeneToDiseaseAssociation
 from koza.cli_runner import get_koza_app
 
@@ -16,6 +18,7 @@ while (row := koza_app.get_row()) is not None:
     primary_knowledge_source, aggregator_knowledge_source = get_knowledge_sources(row["source"], INFORES_MONARCHINITIATIVE)
 
     association = GeneToDiseaseAssociation(
+        id="uuid:" + str(uuid.uuid1()),
         subject=gene_id,
         predicate=predicate,
         object=disease_id,
