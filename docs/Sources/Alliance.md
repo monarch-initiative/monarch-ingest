@@ -13,7 +13,6 @@ Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog)
     * id
     * symbol
     * name
-    * type (Sequence Ontology term ID)
     * in_taxon
     * source
     * synonyms
