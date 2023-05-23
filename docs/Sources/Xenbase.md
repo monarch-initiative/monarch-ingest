@@ -15,7 +15,7 @@ This ingest is built against a one-off OBAN formatted file, which makes for a tr
 * biolink:PhenotypicFeature
     * id
 
-* biolink:GeneToPhenotypicFeatureAssociation
+* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)

@@ -24,7 +24,7 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
 
 #### Biolink captured
 
-* biolink:GeneToPhenotypicFeatureAssociation
+* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
