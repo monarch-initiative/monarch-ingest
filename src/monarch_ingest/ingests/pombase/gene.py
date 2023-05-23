@@ -13,7 +13,8 @@ while (row := koza_app.get_row()) is not None:
     gene = Gene(
         id=row["curie"],
         symbol=row["primary gene name"],
-        type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
+        # No place in the schema for gene type (SO term) right now
+        # type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
         in_taxon=["NCBITaxon:4896"],
         provided_by=["infores:pombase"]
     )

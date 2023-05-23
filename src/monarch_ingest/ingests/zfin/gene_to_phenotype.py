@@ -3,7 +3,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToDiseaseOrPhenotypicFeatureAssociation
 
 from loguru import logger
 
@@ -33,7 +33,7 @@ while (row := koza_app.get_row()) is not None:
 
             gene_id = "ZFIN:" + row["Gene ID"]
 
-            association = GeneToPhenotypicFeatureAssociation(
+            association = GeneToDiseaseOrPhenotypicFeatureAssociation(
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene_id,
                 predicate="biolink:has_phenotype",

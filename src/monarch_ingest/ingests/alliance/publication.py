@@ -34,7 +34,7 @@ while (row := koza_app.get_row()) is not None:
         name=row["title"],
         summary=row["abstract"] if "abstract" in row.keys() else None,
         xref=xrefs,
-        type=koza_app.translation_table.resolve_term("publication"),
+        type=[koza_app.translation_table.resolve_term("publication")],
         creation_date=creation_date,
         provided_by=[source]
     )
@@ -59,6 +59,6 @@ while (row := koza_app.get_row()) is not None:
         pub.keywords = row["keywords"]
 
     if row["allianceCategory"] in ["Preprint", "Research Article", "Review Article"]:
-        pub.type = koza_app.translation_table.resolve_term("journal article")
+        pub.type = [koza_app.translation_table.resolve_term("journal article")]
 
     koza_app.write(pub)

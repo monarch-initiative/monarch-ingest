@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import pytest
-from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToDiseaseOrPhenotypicFeatureAssociation
 
 from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
 
@@ -112,7 +112,7 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, 
     )
 
 
-@pytest.mark.parametrize("cls", [GeneToPhenotypicFeatureAssociation])
+@pytest.mark.parametrize("cls", [GeneToDiseaseOrPhenotypicFeatureAssociation])
 def test_confirm_one_of_each_classes(cls, basic_dictybase_1):
     class_entities = [entity for entity in basic_dictybase_1 if isinstance(entity, cls)]
     assert class_entities
@@ -122,7 +122,7 @@ def test_confirm_one_of_each_classes(cls, basic_dictybase_1):
 
 def test_dictybase_g2p_association_ncbi_gene(basic_dictybase_1):
     associations = [
-        association for association in basic_dictybase_1 if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        association for association in basic_dictybase_1 if isinstance(association, GeneToDiseaseOrPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 2
 
@@ -170,7 +170,7 @@ def basic_dictybase_2(mock_koza, source_name, script, test_row_2, global_table, 
 
 def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
     associations = [
-        association for association in basic_dictybase_2 if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        association for association in basic_dictybase_2 if isinstance(association, GeneToDiseaseOrPhenotypicFeatureAssociation)
     ]
     assert len(associations) == 3
 
