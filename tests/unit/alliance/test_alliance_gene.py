@@ -196,12 +196,6 @@ def test_gene_information_id(pax2a):
     gene = pax2a[0]
     assert gene.id == "ZFIN:ZDB-GENE-990415-8"
 
-
-def test_gene_information_type(pax2a):
-    gene = pax2a[0]
-    assert gene.type == "SO:0001217"
-
-
 def test_gene_information_no_synonyms(no_synonym_gene):
     gene = no_synonym_gene[0]
     assert gene.synonym is None or len(gene.synonym) == 0

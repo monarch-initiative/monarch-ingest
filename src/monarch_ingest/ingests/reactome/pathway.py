@@ -18,7 +18,6 @@ while (row := koza_app.get_row()) is not None:
         pathway = Pathway(
             id="REACT:" + row["ID"],
             name=row["Name"],
-            type=koza_app.translation_table.resolve_term("pathway"),
             in_taxon=[taxon_id],
             provided_by=["infores:reactome"]
         )

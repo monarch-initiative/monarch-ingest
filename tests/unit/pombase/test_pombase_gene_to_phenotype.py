@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from biolink.pydanticmodel import Gene, GeneToDiseaseOrPhenotypicFeatureAssociation, PhenotypicFeature
 
 
 @pytest.fixture
@@ -40,7 +40,7 @@ def entities(mock_koza, global_table):
 
 
 # TODO: can this test be shared across all g2p loads?
-@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation])
+@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToDiseaseOrPhenotypicFeatureAssociation])
 def confirm_one_of_each_classes(cls, entities):
     class_entities = [entity for entity in entities if isinstance(entity, cls)]
     assert class_entities
@@ -50,7 +50,7 @@ def confirm_one_of_each_classes(cls, entities):
 
 def test_pombase_g2p_association_publication(entities):
     association = [
-        association for association in entities if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        association for association in entities if isinstance(association, GeneToDiseaseOrPhenotypicFeatureAssociation)
     ][0]
     assert association.subject == "PomBase:SPAC24B11.06c"
     assert association.predicate == "biolink:has_phenotype"

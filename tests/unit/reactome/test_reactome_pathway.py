@@ -32,5 +32,4 @@ def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_tab
 def test_pathway_id(basic_g2p):
     pathway = basic_g2p[0]
     assert pathway.id == "REACT:R-BTA-73843"
-    assert pathway.type == "PW:0000001"
     assert "infores:reactome" in pathway.provided_by

@@ -13,7 +13,6 @@ PomBase genes are captured directly from the PomBase (names and identifiers)[htt
 * biolink:Gene
   * id
   * symbol
-  * type (SO term ids mapped through the global translation table)
   * xref (UniProfKB curie if provided)
   * synonym
   * provided_by(["infores:pombase"])
@@ -32,7 +31,7 @@ Penetrance and Severity columns are available, but not captured as a part of thi
 * biolink:PhenotypicFeature
     * id
 
-* biolink:GeneToPhenotypicFeatureAssociation
+* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)

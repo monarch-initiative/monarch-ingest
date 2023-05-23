@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from biolink.pydanticmodel import Gene, GeneToDiseaseOrPhenotypicFeatureAssociation, PhenotypicFeature
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
 
 
 def test_association_publication(rat):
-    association = [association for association in rat if isinstance(association, GeneToPhenotypicFeatureAssociation)][0]
+    association = [association for association in rat if isinstance(association, GeneToDiseaseOrPhenotypicFeatureAssociation)][0]
     assert association.publications[0] == "PMID:11549339"
 
 
@@ -85,7 +85,7 @@ def test_conditions(conditions_entities):
     association = [
         association
         for association in conditions_entities
-        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+        if isinstance(association, GeneToDiseaseOrPhenotypicFeatureAssociation)
     ][0]
     assert "ZECO:0000111" in association.qualifiers
     assert association.primary_knowledge_source == "infores:rgd"
@@ -94,7 +94,7 @@ def test_conditions(conditions_entities):
 
 
 # TODO: can this test be shared across all g2p loads?
-@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToPhenotypicFeatureAssociation])
+@pytest.mark.parametrize("cls", [Gene, PhenotypicFeature, GeneToDiseaseOrPhenotypicFeatureAssociation])
 def confirm_one_of_each_classes(cls, rat):
     class_entities = [entity for entity in rat if isinstance(entity, cls)]
     assert class_entities

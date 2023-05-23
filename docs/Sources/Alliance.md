@@ -13,7 +13,6 @@ Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog)
     * id
     * symbol
     * name
-    * type (Sequence Ontology term ID)
     * in_taxon
     * source
     * synonyms
@@ -25,7 +24,7 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
 
 #### Biolink captured
 
-* biolink:GeneToPhenotypicFeatureAssociation
+* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
