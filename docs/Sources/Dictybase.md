@@ -24,12 +24,12 @@ Data is available in a well-documented easy-to-parse GAF-like format with associ
 * biolink:PhenotypicFeature
     * id
 
-* biolink:GeneToPhenotypeAssociation
+* biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
     * object (phenotypicFeature.id)
-    * category (GeneToPhenotypeAssociation)
+    * category (GeneToPhenotypicFeatureAssociation)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:dictybase)
 

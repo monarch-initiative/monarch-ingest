@@ -282,14 +282,14 @@ lxml = ["lxml"]
 
 [[package]]
 name = "biolink-model"
-version = "3.4.1"
+version = "3.4.2"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "biolink-model-3.4.1.tar.gz", hash = "sha256:6c35545c3bebe071cf7f5a47adb08cf43cb1a1d0d4d91064ba3f71d7f2c63ff1"},
-    {file = "biolink_model-3.4.1-py3-none-any.whl", hash = "sha256:6c173f0bc5a2ead559bad2efffe37dea7f9f9b074a818da7dbc2640633fd0491"},
+    {file = "biolink-model-3.4.2.tar.gz", hash = "sha256:5fd38d032720a80d365b9bf465fbac23b6b11b10eb8bca7ab83aab2bb34e1335"},
+    {file = "biolink_model-3.4.2-py3-none-any.whl", hash = "sha256:4684a55141ba85312986602c55f7148ca254bdcdb55613983075a7db4fae8c52"},
 ]
 
 [package.dependencies]
@@ -5281,4 +5281,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "bb4b78280b35b7c9c7c24eb47812a3c111948897f95b51c9f6a27a32da58c403"
+content-hash = "2d303e9721dba6c7ae5ebcc82323aeabc38c9d7aa049174b8d1299bda30901a4"

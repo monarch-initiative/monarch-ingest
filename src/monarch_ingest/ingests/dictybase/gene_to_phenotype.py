@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
-from biolink.pydanticmodel import GeneToPhenotypeAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
@@ -23,7 +23,7 @@ while (row := koza_app.get_row()) is not None:
             # Create one S-P-O statement per phenotype
             # TODO: how do we capture the 'Strain Descriptor' (genotype) context of
             #       Dictylostelium via which a (mutant) gene (allele) is tied to its phenotype?
-            association = GeneToPhenotypeAssociation(
+            association = GeneToPhenotypicFeatureAssociation(
                 id="uuid:" + str(uuid.uuid1()),
                 subject=gene_identifier[0],  # gene[0] is the resolved gene ID
                 predicate='biolink:has_phenotype',
