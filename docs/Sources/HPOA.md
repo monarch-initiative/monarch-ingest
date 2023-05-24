@@ -25,7 +25,7 @@ This ingest replaces the direct OMIM ingest so that we share g2d associations 1:
 
 ### Biolink Captured
 
-* biolink:DiseaseToPhenotypicFeatureAssociation
+* biolink:CorrelatedGeneToDiseaseAssociation or biolink:CausalGeneToDiseaseAssociation (depending on predicate)
     * id (random uuid)
     * subject (ncbi_gene_id)
     * predicate (association_type)
