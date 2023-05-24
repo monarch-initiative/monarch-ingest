@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import GeneToDiseaseOrPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def basic_hpoa(mock_koza, source_name, script, test_row):
     return mock_koza(name=source_name, data=iter([test_row]), transform_code=script)
 
 
-@pytest.mark.parametrize("cls", [GeneToDiseaseOrPhenotypicFeatureAssociation])
+@pytest.mark.parametrize("cls", [GeneToPhenotypicFeatureAssociation])
 def test_confirm_one_of_each_classes(cls, basic_hpoa):
     class_entities = [entity for entity in basic_hpoa if isinstance(entity, cls)]
     assert class_entities
@@ -57,7 +57,7 @@ def test_confirm_one_of_each_classes(cls, basic_hpoa):
 def test_hpoa_g2p_association(basic_hpoa):
     assert basic_hpoa
     assert len(basic_hpoa) == 1
-    association = [entity for entity in basic_hpoa if isinstance(entity, GeneToDiseaseOrPhenotypicFeatureAssociation)][0]
+    association = [entity for entity in basic_hpoa if isinstance(entity, GeneToPhenotypicFeatureAssociation)][0]
     assert len(basic_hpoa) == 1
     assert basic_hpoa[0]
     assert basic_hpoa[0].subject == "NCBIGene:8192"

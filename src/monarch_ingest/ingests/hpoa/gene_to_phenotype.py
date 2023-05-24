@@ -8,7 +8,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import GeneToDiseaseOrPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 koza_app = get_koza_app("hpoa_gene_to_phenotype")
 
@@ -16,7 +16,7 @@ while (row := koza_app.get_row()) is not None:
     gene_id = "NCBIGene:" + row["ncbi_gene_id"]
     phenotype_id = row["hpo_id"]
 
-    association = GeneToDiseaseOrPhenotypicFeatureAssociation(
+    association = GeneToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene_id,
         predicate="biolink:has_phenotype",

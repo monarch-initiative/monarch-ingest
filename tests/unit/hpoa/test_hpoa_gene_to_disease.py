@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from biolink.pydanticmodel import GeneToDiseaseAssociation
+from biolink.pydanticmodel import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation
 
 from monarch_ingest.constants import (
     BIOLINK_CAUSES,
@@ -74,7 +74,7 @@ def basic_g2d_entities(mock_koza, row):
 def test_hpoa_gene_to_disease(basic_g2d_entities):
     assert len(basic_g2d_entities) == 1
     association = basic_g2d_entities[0]
-    assert isinstance(association, GeneToDiseaseAssociation)
+    assert isinstance(association, CausalGeneToDiseaseAssociation)
     assert association.subject == "NCBIGene:64170"
     assert association.object == "OMIM:212050"
     assert association.predicate == "biolink:causes"

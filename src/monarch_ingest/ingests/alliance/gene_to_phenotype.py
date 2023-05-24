@@ -5,7 +5,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from biolink.pydanticmodel import GeneToDiseaseOrPhenotypicFeatureAssociation
+from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
 
 
 from loguru import logger
@@ -34,7 +34,7 @@ while (row := koza_app.get_row()) is not None:
 
         source = source_map[row["objectId"].split(':')[0]]
 
-        association = GeneToDiseaseOrPhenotypicFeatureAssociation(
+        association = GeneToPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=gene_id,
             predicate="biolink:has_phenotype",

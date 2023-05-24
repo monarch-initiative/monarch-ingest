@@ -14,7 +14,7 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
 * biolink:PhenotypicFeature
     * id
 
-* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
+* biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
