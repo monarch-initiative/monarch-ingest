@@ -4,7 +4,7 @@ from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import (
     Gene,
-    GeneToDiseaseOrPhenotypicFeatureAssociation,
+    GeneToPhenotypeAssociation,
     PhenotypicFeature
 )
 
@@ -22,7 +22,7 @@ while (row := koza_app.get_row()) is not None:
     phenotype = PhenotypicFeature(id=row["OBJECT"], provided_by=["infores:xenbase"])
 
     # relation = row["RELATION"].replace("_", ":"),
-    association = GeneToDiseaseOrPhenotypicFeatureAssociation(
+    association = GeneToPhenotypeAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=gene.id,
         predicate="biolink:has_phenotype",

@@ -31,7 +31,7 @@ Penetrance and Severity columns are available, but not captured as a part of thi
 * biolink:PhenotypicFeature
     * id
 
-* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
+* biolink:GeneToPhenotypeAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)

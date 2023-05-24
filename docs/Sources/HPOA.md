@@ -117,7 +117,7 @@ The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype
 
 #### Biolink captured
 
-* biolink:GeneToDiseaseOrPhenotypicFeatureAssociation
+* biolink:GeneToPhenotypeAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (has_phenotype)
