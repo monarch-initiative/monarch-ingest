@@ -4,6 +4,7 @@ from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure, 
     do_release,
+    load_jsonl,
     load_sqlite, 
     load_solr, 
     merge_files, 
@@ -103,6 +104,9 @@ def merge(
 def closure():
     apply_closure()
 
+@typer_app.command()
+def jsonl():
+    load_jsonl()
 
 @typer_app.command()
 def sqlite():

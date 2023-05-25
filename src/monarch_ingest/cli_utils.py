@@ -1,4 +1,6 @@
 import csv
+import gc
+import os
 import tarfile
 from pathlib import Path
 from typing import Optional
@@ -308,6 +310,42 @@ def load_sqlite():
 def load_solr():
     sh.bash("scripts/load_solr.sh")
 
+def load_jsonl():
+    biolink_model = SchemaView(
+        f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml")
+
+    class_ancestor_dict = {}
+    for c in biolink_model.all_classes().values():
+        class_ancestor_dict[f"biolink:{camelcase(c.name)}"] = [f"biolink:{camelcase(a)}" for a in
+                                                               biolink_model.class_ancestors(c.name)]
+
+    with tarfile.open("output/monarch-kg.tar.gz", "r:*") as tar:
+        node_path = tar.getmember("monarch-kg_nodes.tsv")
+        edge_path = tar.getmember("monarch-kg_edges.tsv")
+
+        with tar.extractfile(node_path) as node_file:
+            nodes_df = pandas.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE,
+                                   comment='#')
+            nodes_df["category"] = nodes_df["category"].map(class_ancestor_dict)
+            nodes_df.to_json("output/monarch-kg_nodes.jsonl", orient="records", lines=True)
+            del nodes_df
+            gc.collect()
+
+        with tar.extractfile(edge_path) as edge_file:
+            edges_df = pandas.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE,
+                                   comment='#')
+            edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
+            edges_df.to_json("output/monarch-kg_edges.jsonl", orient="records", lines=True)
+            del edges_df
+            gc.collect()
+
+    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
+    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
+    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
+    jsonl_tar.close()
+
+    os.remove("output/monarch-kg_nodes.jsonl")
+    os.remove("output/monarch-kg_edges.jsonl")
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     import datetime
