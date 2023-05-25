@@ -1,4 +1,6 @@
 from koza.cli_runner import get_koza_app
+
+from monarch_ingest.constants import taxon_labels
 from source_translation import source_map
 
 from biolink.pydanticmodel import Gene
@@ -18,13 +20,17 @@ while (row := koza_app.get_row()) is not None:
     if "name" not in row.keys():
         row["name"] = row["symbol"]
 
+    taxon_id = row["basicGeneticEntity"]["taxonId"]
+    taxon_label = taxon_labels[taxon_id]
+
     gene = Gene(
         id=gene_id,
         symbol=row["symbol"],
         name=row["name"],
         # No place in the schema for gene type (SO term) right now
         # type=row["soTermId"],
-        in_taxon=[row["basicGeneticEntity"]["taxonId"]],
+        in_taxon=[taxon_label],
+        in_taxon_label=[taxon_label],
         provided_by=[source]
     )
 

@@ -32,8 +32,8 @@ node_properties:
   - 'name'
   - 'symbol'
   - 'description'
-  - 'type' # soTermId
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'xref'
   - 'synonym'
   - 'provided_by'
