@@ -6,10 +6,10 @@ transform:
     monarch-kg:
       input:
         name: "Monarch KG"
-        format: tsv
-        compression: tar.gz
+        format: jsonl
         filename:
-          - output/monarch-kg.tar.gz
+          - output/monarch-kg_edges.jsonl
+          - output/monarch-kg_nodes.jsonl
       output:
         format: neo4j
         uri: neo4j://localhost:7687
