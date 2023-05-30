@@ -5,7 +5,9 @@
 The Monarch Ingest generates [KGX](https://github.com/biolink/kgx/blob/master/specification/kgx-format.md) formatted files conforming to the [BioLink Model](https://biolink.github.io/biolink-model/) from a wide variety of biomedical data sources.
 
 The eventual output of the Monarch Ingest process is the **Monarch KG**.  
-The latest version of this can be found at [data.monarchinitiative.org](https://data.monarchinitiative.org/monarch-kg/latest/monarch-kg.tar.gz)
+The latest version of this can be found at [data.monarchinitiative.org](https://data.monarchinitiative.org/monarch-kg-dev/latest/monarch-kg.tar.gz)
+
+See also the folder [monarch-kg-dev/latest](https://data.monarchinitiative.org/monarch-kg-dev/latest/)
 
 Monarch Ingest is built using [Poetry](https://python-poetry.org), which will create its own virtual environment. 
 
