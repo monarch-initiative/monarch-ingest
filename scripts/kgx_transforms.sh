@@ -1,9 +1,5 @@
 #!/bin/bash
 
-
-
-#rm output/monarch-kg_edges.jsonl
-#rm output/monarch-kg_nodes.jsonl
 echo "kgx transform to rdf"
 poetry run kgx transform -i tsv -c tar.gz -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.tar.gz
 
