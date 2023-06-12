@@ -27,7 +27,9 @@ while (row := koza_app.get_row()) is not None:
     gene = Gene(
         id=row["hgnc_id"],
         symbol=row["symbol"],
-        name=row["name"],
+        name=row["symbol"],
+        # full name is not yet available in biolink
+        # full_name=row["name"],
         xref=xref_list,
         synonym=synonyms_list,
         in_taxon=["NCBITaxon:9606"],

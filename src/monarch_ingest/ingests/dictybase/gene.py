@@ -14,6 +14,8 @@ while (row := koza_app.get_row()) is not None:
         id='dictyBase:' + row['GENE ID'],
         symbol=row['Gene Name'],
         name=row['Gene Name'],
+        # full name is not yet available in biolink
+        # full_name=row['Gene Name'],
         synonym=synonyms,
         in_taxon=["NCBITaxon:44689"],
         provided_by=["infores:dictybase"]

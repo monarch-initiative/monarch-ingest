@@ -32,8 +32,10 @@ columns:
 node_properties:
   - 'id'
   - 'category'
+  - 'name'
   - 'symbol'
-  - 'type'
+# full_name is not available in biolink
+#  - 'full_name'
   - 'in_taxon'
   - 'xref'
   - 'synonym'
