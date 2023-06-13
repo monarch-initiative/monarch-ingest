@@ -33,7 +33,7 @@ jobs:
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: site
+          folder: docs
           target-folder: docs
           clean: true
           
