@@ -143,6 +143,14 @@ def transform_phenio(
         axis=1,
         inplace=True
     )
+    # drop node rows where the name column is an empty string or NaN
+
+    empty_node_name_df = nodes_df[nodes_df["name"].isna()]
+    nodes_df = nodes_df[nodes_df["name"] != ""]
+
+    logger.error(f"Removing {empty_node_name_df.shape[0]} nodes with empty names")
+
+    # drop some specific nodes that we know we don't want
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
