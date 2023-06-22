@@ -157,7 +157,8 @@ def transform_phenio(
     # associations that we'll also need
     prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
                 "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
-                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA"]
+                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA",
+                "NCBITaxon", "ECO"]
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
@@ -296,12 +297,24 @@ def apply_closure(
         output_dir: str = OUTPUT_DIR
     ):
     
-    output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
-    add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
+    edge_output_file = f"{name}-denormalized-edges.tsv"
+    node_output_file = f"{name}-denormalized-nodes.tsv"
+    add_closure(node_file=f"{name}_nodes.tsv",
+                edge_file=f"{name}_edges.tsv",
+                path="output",
+                kg_archive=f"{name}.tar.gz",
                 closure_file=closure_file,
-                output_file=output_file)
-    sh.gzip(output_file)
-
+                node_output_file=node_output_file,
+                edge_output_file=edge_output_file,
+                node_fields_to_label_expand=['in_taxon'],
+                edge_fields_to_expand=['subject',
+                        'object',
+                        'frequency_qualifier',
+                        'onset_qualifier',
+                        'sex_qualifier',
+                        'stage_qualifier'])
+    sh.gzip(edge_output_file, overwrite=True)
+    sh.gzip(node_output_file, overwrite=True)
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
