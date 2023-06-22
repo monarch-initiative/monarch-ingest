@@ -87,14 +87,14 @@ files = [
 
 [[package]]
 name = "biolink-model"
-version = "3.4.2"
+version = "3.4.3"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "biolink-model-3.4.2.tar.gz", hash = "sha256:5fd38d032720a80d365b9bf465fbac23b6b11b10eb8bca7ab83aab2bb34e1335"},
-    {file = "biolink_model-3.4.2-py3-none-any.whl", hash = "sha256:4684a55141ba85312986602c55f7148ca254bdcdb55613983075a7db4fae8c52"},
+    {file = "biolink-model-3.4.3.tar.gz", hash = "sha256:9d31263cd58be1ee30419cb0f15d0186fd888e53a84cd09e28387ffe187de45a"},
+    {file = "biolink_model-3.4.3-py3-none-any.whl", hash = "sha256:c77f516066bf2fb03d308e01b75e289f20250a06ababf8988d0db4aa837e9fd5"},
 ]
 
 [package.dependencies]
@@ -378,20 +378,24 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.1.7"
+version = "0.2.0"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "closurizer-0.1.7-py3-none-any.whl", hash = "sha256:31beb73914cabf6f55e08f3a22697761d110b033d62c31e967f8dc87dcaf8688"},
-    {file = "closurizer-0.1.7.tar.gz", hash = "sha256:a4d4aca3dd007d8e35ef03dc951cea4bf38ceb2b083982188ee721f832acff7d"},
-]
+python-versions = "^3.8"
+files = []
+develop = false
 
 [package.dependencies]
-click = ">=8,<9"
-petl = ">=1.7.10,<2.0.0"
-SQLAlchemy = ">=1.4.37,<2.0.0"
+click = "^8"
+petl = "^1.7.10"
+SQLAlchemy = "^1.4.37"
+
+[package.source]
+type = "git"
+url = "https://github.com/monarch-initiative/closurizer.git"
+reference = "add_taxon_labels"
+resolved_reference = "c2844a5cc9ece17e2ef704e459accab34601f377"
 
 [[package]]
 name = "colorama"
@@ -3721,4 +3725,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f95a5fad3a3593d22959e5ec970ce9ce9760b0aeda8fac78f79ac399ef6447f3"
+content-hash = "0787e62496bcdd6904f7922750100fb1a2ec6eeff27d74de6b16348dfa76c7a7"

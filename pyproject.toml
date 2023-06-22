@@ -26,7 +26,7 @@ monarch-py = {git = "https://github.com/monarch-initiative/monarch-py.git", bran
 kgx = {git = "https://github.com/biolink/kgx.git", branch = "remove-closurizer-dependency"}
 #kgx = "2.0.7"
 multi-indexer = "*"
-biolink-model = "3.4.2"
+biolink-model = "^3.4.3"
 linkml = "^1.5.5"
 #linkml-solr = "^0.1.3"
 linkml-solr = {git = "https://github.com/linkml/linkml-solr.git", branch = "top_class"}

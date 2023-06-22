@@ -1,0 +1,22 @@
+name: 'taxon-labels'
+
+metadata:
+  description: 'Lookup file for NCBITaxon labels generated from Phenio'
+
+delimiter: '\t'
+
+# This is generated from phenio by scripts/after_download.sh
+files:
+  - './data/monarch/taxon_labels.tsv'
+
+header: 'none'
+
+columns:
+  - 'id'
+  - 'label'
+
+key: 'id'
+
+values:
+  - 'label'
+
