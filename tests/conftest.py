@@ -77,3 +77,11 @@ def mock_koza():
         return koza_app._entities
 
     return _transform
+
+@pytest.fixture
+def taxon_label_map_cache():
+    return {"taxon-labels": {
+        "NCBITaxon:7955": {"label": "Danio rerio"},
+        "NCBITaxon:6239": {"label": "Caenorhabditis elegans"},
+        "NCBITaxon:44689": {"label": "Dictyostelium discoideum"},
+    }}

@@ -19,12 +19,16 @@ columns:
   - 'Synonyms'
   - 'Gene products'
 
+depends_on:
+  - './src/monarch_ingest/maps/taxon-labels.yaml'
+
 node_properties:
   - 'id'
   - 'category'
   - 'name'
   - 'symbol'
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'provided_by'
 
 transform_mode: 'flat'
