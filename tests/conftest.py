@@ -84,4 +84,5 @@ def taxon_label_map_cache():
         "NCBITaxon:7955": {"label": "Danio rerio"},
         "NCBITaxon:6239": {"label": "Caenorhabditis elegans"},
         "NCBITaxon:44689": {"label": "Dictyostelium discoideum"},
+        "NCBITaxon:9606" : {"label": "Homo sapiens"}
     }}
