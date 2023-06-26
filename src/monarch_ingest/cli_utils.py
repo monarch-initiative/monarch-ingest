@@ -155,10 +155,27 @@ def transform_phenio(
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
-    prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
-                "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
-                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA",
-                "NCBITaxon", "ECO"]
+    prefixes = [
+        "CHEBI",
+        "ECO"
+        "EMAPA",
+        "FBbt",
+        "FYPO",
+        "GO",
+        "HP",
+        "MESH",
+        "MONDO",
+        "MP",
+        "NCBITaxon",
+        "OMIM",
+        "ORPHA",
+        "UBERON",
+        "WBbt",
+        "WBPhenotype",
+        "XPO",
+        "ZFA",
+        "ZP",
+    ]
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
