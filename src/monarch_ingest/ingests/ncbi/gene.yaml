@@ -67,12 +67,16 @@ filters:
       # - '451804'  # Aspergillus fumigatus A1163 - not in GOA
       # - '1033177'  # Aspergillus kawachii - not in GOA
 
+depends_on:
+  - './src/monarch_ingest/maps/taxon-labels.yaml'
+
 node_properties:
   - 'id'
   - 'category'
   - 'symbol'
   - 'description'
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'provided_by'
 
 

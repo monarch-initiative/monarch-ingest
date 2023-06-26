@@ -12,7 +12,7 @@ def script():
 
 
 @pytest.fixture
-def pax2a_row():
+def gene_row():
     return {
         "hgnc_id": "HGNC:24086",
         "pubmed_id": "11072063",
@@ -28,12 +28,13 @@ def pax2a_row():
 
 
 @pytest.fixture
-def pax2a(mock_koza, source_name, pax2a_row, script, global_table):
-    row = iter([pax2a_row])
+def pax2a(mock_koza, source_name, gene_row, script, taxon_label_map_cache, global_table):
+    row = iter([gene_row])
     return mock_koza(
         source_name,
         row,
         script,
+        map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
 

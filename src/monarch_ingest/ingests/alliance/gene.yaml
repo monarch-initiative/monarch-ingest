@@ -25,6 +25,9 @@ required_properties:
   - 'basicGeneticEntity.primaryId'
   - 'basicGeneticEntity.taxonId'
 
+depends_on:
+  - './src/monarch_ingest/maps/taxon-labels.yaml'
+
 node_properties:
   - 'id'
   - 'category'
@@ -32,8 +35,8 @@ node_properties:
   - 'name'
   - 'symbol'
   - 'description'
-  - 'type' # soTermId
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'xref'
   - 'synonym'
   - 'provided_by'
