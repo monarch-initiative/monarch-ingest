@@ -378,24 +378,20 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.2.0"
+version = "0.1.7"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 category = "main"
 optional = false
-python-versions = "^3.8"
-files = []
-develop = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "closurizer-0.1.7-py3-none-any.whl", hash = "sha256:31beb73914cabf6f55e08f3a22697761d110b033d62c31e967f8dc87dcaf8688"},
+    {file = "closurizer-0.1.7.tar.gz", hash = "sha256:a4d4aca3dd007d8e35ef03dc951cea4bf38ceb2b083982188ee721f832acff7d"},
+]
 
 [package.dependencies]
-click = "^8"
-petl = "^1.7.10"
-SQLAlchemy = "^1.4.37"
-
-[package.source]
-type = "git"
-url = "https://github.com/monarch-initiative/closurizer.git"
-reference = "add_taxon_labels"
-resolved_reference = "c2844a5cc9ece17e2ef704e459accab34601f377"
+click = ">=8,<9"
+petl = ">=1.7.10,<2.0.0"
+SQLAlchemy = ">=1.4.37,<2.0.0"
 
 [[package]]
 name = "colorama"
@@ -1413,48 +1409,45 @@ version = "2.1.0"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 category = "main"
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "kgx-2.1.0-py3-none-any.whl", hash = "sha256:e7390b60618ef134b1de03a471827e723877cc979274bd52cca908a2c9753a7f"},
+    {file = "kgx-2.1.0.tar.gz", hash = "sha256:1434b2e4697a11895fb183e68d7c83e34addd1c478fe996b33639d28c25fdbbe"},
+]
 
 [package.dependencies]
-bmt = "^1.0.15"
-cachetools = "^5.0.0"
+bmt = ">=1.0.15,<2.0.0"
+cachetools = ">=5.0.0,<6.0.0"
 Click = "*"
-deprecation = "^2.1.0"
-docker = "^6.0.0"
-docutils = "^0.18.1"
-ijson = "^3.1.3"
-inflection = "^0.5.1"
-jsonlines = "^3.1.0"
-jsonstreams = "^0.6.0"
-linkml = "^1.5.0"
-linkml-runtime = "^1.5.0"
+closurizer = ">=0.1.7,<0.2.0"
+deprecation = ">=2.1.0,<3.0.0"
+docker = ">=6.0.0,<7.0.0"
+docutils = ">=0.18.1,<0.19.0"
+ijson = ">=3.1.3,<4.0.0"
+inflection = ">=0.5.1,<0.6.0"
+jsonlines = ">=3.1.0,<4.0.0"
+jsonstreams = ">=0.6.0,<0.7.0"
+linkml = ">=1.5.0,<2.0.0"
+linkml-runtime = ">=1.5.0,<2.0.0"
 mypy = "*"
-neo4j = "^4.4.10"
-networkx = "^2.8"
-ordered-set = "^4.0.2"
-pandas = "^1.0.3"
-prefixcommons = "^0.1.4"
-prologterms = "^0.0.6"
+neo4j = ">=4.4.10,<5.0.0"
+networkx = ">=2.8,<3.0"
+ordered-set = ">=4.0.2,<5.0.0"
+pandas = ">=1.0.3,<2.0.0"
+prefixcommons = ">=0.1.4,<0.2.0"
+prologterms = ">=0.0.6,<0.0.7"
 pytest = "*"
-python-dateutil = "^2.8.1"
+python-dateutil = ">=2.8.1,<3.0.0"
 pyyaml = "*"
-rdflib = "^6.3.1"
+rdflib = ">=6.3.1,<7.0.0"
 recommonmark = "*"
 shexjsg = "*"
-SPARQLWrapper = "^1.8.2"
+SPARQLWrapper = ">=1.8.2,<2.0.0"
 Sphinx = "*"
-stringcase = "^1.2.0"
-terminaltables = "^3.1.0"
-tox = "^3.0"
-validators = "^0.20.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/biolink/kgx.git"
-reference = "remove-closurizer-dependency"
-resolved_reference = "287afdbd087d9dd7ccb795ffb0ae171f965022b0"
+stringcase = ">=1.2.0,<2.0.0"
+terminaltables = ">=3.1.0,<4.0.0"
+tox = ">=3.0,<4.0"
+validators = ">=0.20.0,<0.21.0"
 
 [[package]]
 name = "koza"
@@ -3725,4 +3718,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0787e62496bcdd6904f7922750100fb1a2ec6eeff27d74de6b16348dfa76c7a7"
+content-hash = "14d21f2b51435ece8de425e605f55762284c293f64568cf45bc4b5e80ac63a1b"

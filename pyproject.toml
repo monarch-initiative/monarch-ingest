@@ -19,12 +19,10 @@ python = "^3.10"
 kghub-downloader = "^0.3.2"
 koza = "^0.3.0"
 cat-merge = "^0.1.18"
-#closurizer = "^0.1.7"
-closurizer = {git = "https://github.com/monarch-initiative/closurizer.git", branch="add_taxon_labels"}
+closurizer = "^0.1.7"
 #monarch-py = "^0.9.1"
 monarch-py = {git = "https://github.com/monarch-initiative/monarch-py.git", branch="single-value-subject-object-categories"}
-kgx = {git = "https://github.com/biolink/kgx.git", branch = "remove-closurizer-dependency"}
-#kgx = "2.0.7"
+kgx = "^2.1.0"
 multi-indexer = "*"
 biolink-model = "^3.4.3"
 linkml = "^1.5.5"
