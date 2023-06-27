@@ -324,7 +324,7 @@ def apply_closure(
                         'onset_qualifier',
                         'sex_qualifier',
                         'stage_qualifier'])
-    sh.gzip(output_file, overwrite=True)
+    sh.gzip(output_file, force=True)
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")

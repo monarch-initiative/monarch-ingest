@@ -3,6 +3,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from monarch_ingest.constants import BIOLINK_AFFECTS
 
 koza_app = get_koza_app("ctd_chemical_to_disease")
 
@@ -15,7 +16,7 @@ while (row := koza_app.get_row()) is not None:
         disease_id = row['DiseaseID']
 
         # Update this if we start bringing in marker/mechanism records
-        predicate = "biolink:treats"
+        predicate = BIOLINK_AFFECTS
         relation = koza_app.translation_table.resolve_term("is substance that treats")
 
         association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(

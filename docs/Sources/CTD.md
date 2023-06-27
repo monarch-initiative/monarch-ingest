@@ -6,25 +6,16 @@ CTD is a robust, publicly available database that aims to advance understanding 
 
 This ingest takes only the chemical to disease rows where a direct evidence label is applied, and creates ChemicalEntity and Disease nodes connected by a ChemicalToDiseaseOrPhenotypicFeatureAssociation. The the chemical ID row is expected to need a 'MESH:' prefix added, the disease id is used as-is. 
 
-If the direct evidence field is 'marker/mechanism' the `biolink:biomarker_for` predicate is used along with the "is marker for" relation from RO.
-If the direct evidence field is 'therapeutic' the `biolink:treats` predicate is used along with the "is substance that treats" relation from RO.
+Rows are included only if the direct evidence field is 'therapeutic' and the `biolink:affects` predicate is used to avoid making too strong a claim.
 
 #### Biolink captured
-
-* ChemicalEntity
-  * id (MeSH id)
-  * name
-
-* Disease
-  * id (MeSH or OMIM)
-  * name
 
 * ChemicalToDiseaseOrPhenotypicFeatureAssociation
   * id (random uuid)
   * subject (chemical id)
-  * predicate (mapping from DirectEvidence column)
+  * predicate (`biolink:affects`)
   * object (disease id)
   * publication (pubmed ids provided by file)
-  * aggregating_knowledge_source (["infores:monarchinitiative"])
-  * primary_knowledge_source (infores:ctd)
+  * aggregating_knowledge_source (`["infores:monarchinitiative"]`)
+  * primary_knowledge_source (`infores:ctd`)
 
