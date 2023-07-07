@@ -29,7 +29,7 @@ def test_row_1():
 
 
 @pytest.fixture
-def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table):
+def basic_dictybase_1(mock_koza, source_name, script, taxon_label_map_cache, test_row_1, global_table):
     """
     Mock Koza run for Dictybase Gene ingest.
 
@@ -46,6 +46,7 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table):
         name=source_name,
         data=iter([test_row_1]),
         transform_code=script,
+        map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
 

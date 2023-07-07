@@ -155,9 +155,27 @@ def transform_phenio(
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
-    prefixes = ["MONDO", "OMIM", "HP", "ZP", "MP", "CHEBI", "FBbt",
-                "FYPO", "WBPhenotype", "GO", "MESH", "XPO",
-                "ZFA", "UBERON", "WBbt", "ORPHA", "EMAPA"]
+    prefixes = [
+        "CHEBI",
+        "ECO"
+        "EMAPA",
+        "FBbt",
+        "FYPO",
+        "GO",
+        "HP",
+        "MESH",
+        "MONDO",
+        "MP",
+        "NCBITaxon",
+        "OMIM",
+        "ORPHA",
+        "UBERON",
+        "WBbt",
+        "WBPhenotype",
+        "XPO",
+        "ZFA",
+        "ZP",
+    ]
 
     nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
 
@@ -299,9 +317,14 @@ def apply_closure(
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
                 closure_file=closure_file,
-                output_file=output_file)
-    sh.gzip(output_file)
-
+                output_file=output_file,
+                fields=['subject',
+                        'object',
+                        'frequency_qualifier',
+                        'onset_qualifier',
+                        'sex_qualifier',
+                        'stage_qualifier'])
+    sh.gzip(output_file, force=True)
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
@@ -371,6 +394,8 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
         
         # index and upload to kghub s3 bucket
         if kghub:
+            sh.mkdir('-p', f'{dir}/stats')
+            sh.mv('merged_graph_stats.yaml','stats')
             sh.multi_indexer('-v', '--directory', dir, '--prefix', f'https://kg-hub.berkeleybop.io/kg-monarch/{release_name}', '-x', '-u')
             sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/{release_name}")
             sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/current")

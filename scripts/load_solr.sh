@@ -8,7 +8,7 @@ if test -f "output/monarch-kg.tar.gz"; then
 fi
 
 if test -f "output/monarch-kg-denormalized-edges.tsv.gz"; then
-    gunzip output/monarch-kg-denormalized-edges.tsv.gz
+    gunzip --force output/monarch-kg-denormalized-edges.tsv.gz
 fi
 
 echo "Extracting the schema from monarch-py"

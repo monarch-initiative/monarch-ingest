@@ -4,6 +4,7 @@ from source_translation import source_map
 from biolink.pydanticmodel import Gene
 
 koza_app = get_koza_app("alliance_gene")
+taxon_labels = koza_app.get_map("taxon-labels")
 
 while (row := koza_app.get_row()) is not None:
 
@@ -18,6 +19,9 @@ while (row := koza_app.get_row()) is not None:
     if "name" not in row.keys():
         row["name"] = row["symbol"]
 
+    in_taxon = row["basicGeneticEntity"]["taxonId"]
+    in_taxon_label = taxon_labels[in_taxon]['label']
+
     gene = Gene(
         id=gene_id,
         symbol=row["symbol"],
@@ -26,7 +30,8 @@ while (row := koza_app.get_row()) is not None:
         # full_name=row["name"],
         # No place in the schema for gene type (SO term) right now
         # type=row["soTermId"],
-        in_taxon=[row["basicGeneticEntity"]["taxonId"]],
+        in_taxon=[in_taxon],
+        in_taxon_label=in_taxon_label,
         provided_by=[source]
     )
 

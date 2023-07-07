@@ -28,6 +28,8 @@ columns:
   - "product type"
   - "synonyms"
 
+depends_on:
+  - './src/monarch_ingest/maps/taxon-labels.yaml'
 
 node_properties:
   - 'id'
@@ -37,6 +39,7 @@ node_properties:
 # full_name is not available in biolink
 #  - 'full_name'
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'xref'
   - 'synonym'
   - 'provided_by'

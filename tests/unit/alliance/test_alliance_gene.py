@@ -148,34 +148,37 @@ def no_name_row():
 
 
 @pytest.fixture
-def pax2a(mock_koza, source_name, pax2a_row, script, global_table):
+def pax2a(mock_koza, source_name, pax2a_row, taxon_label_map_cache, script, global_table):
     row = iter([pax2a_row])
     return mock_koza(
         source_name,
         row,
         script,
+        map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
 
 
 @pytest.fixture
-def no_synonym_gene(mock_koza, source_name, no_synonym_row, script, global_table):
+def no_synonym_gene(mock_koza, source_name, no_synonym_row, taxon_label_map_cache, script, global_table):
     row = iter([no_synonym_row])
     return mock_koza(
         source_name,
         row,
         script,
+        map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
 
 
 @pytest.fixture
-def no_name_gene(mock_koza, source_name, no_name_row, script, global_table):
+def no_name_gene(mock_koza, source_name, no_name_row, taxon_label_map_cache, script, global_table):
     row = iter([no_name_row])
     return mock_koza(
         source_name,
         row,
         script,
+        map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
 
@@ -185,6 +188,10 @@ def test_gene_information_gene(pax2a):
     gene = pax2a[0]
     assert gene
 
+def test_gene_taxon(pax2a):
+    gene = pax2a[0]
+    assert 'NCBITaxon:7955' in gene.in_taxon
+    assert gene.in_taxon_label == 'Danio rerio'
 
 def test_gene_information_synonym(pax2a):
     gene = pax2a[0]

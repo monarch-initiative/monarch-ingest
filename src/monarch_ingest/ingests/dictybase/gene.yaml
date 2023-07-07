@@ -19,6 +19,9 @@ columns:
   - 'Synonyms'
   - 'Gene products'
 
+depends_on:
+  - './src/monarch_ingest/maps/taxon-labels.yaml'
+
 node_properties:
   - 'id'
   - 'category'
@@ -27,6 +30,7 @@ node_properties:
 # full_name is not available in biolink
 #  - 'full_name'
   - 'in_taxon'
+  - 'in_taxon_label'
   - 'provided_by'
 
 transform_mode: 'flat'
