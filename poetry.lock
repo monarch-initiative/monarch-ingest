@@ -153,14 +153,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "bmt"
-version = "1.0.15"
+version = "1.1.0"
 description = "Biolink Model Toolkit: A Python API for working with the Biolink Model"
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "bmt-1.0.15-py3-none-any.whl", hash = "sha256:933899224f6ab18936716c045a0578e4d1275a0fe24d0ae2b069a9c87267a41b"},
-    {file = "bmt-1.0.15.tar.gz", hash = "sha256:3c010b6f495b8b4c6fd2c1019e85132a7e9d221011bbc95708111b71759fae2b"},
+    {file = "bmt-1.1.0-py3-none-any.whl", hash = "sha256:a7cd8fb656c81a7492483e8e570a5e575e43e9f00334faefa19f0f886d25add2"},
+    {file = "bmt-1.1.0.tar.gz", hash = "sha256:2e1afaba29625d0894df8d07a7f81c12bd5a1fd828b85bf94ac21cdac985c547"},
 ]
 
 [package.dependencies]
@@ -378,14 +378,14 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.1.7"
+version = "0.2.0"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "closurizer-0.1.7-py3-none-any.whl", hash = "sha256:31beb73914cabf6f55e08f3a22697761d110b033d62c31e967f8dc87dcaf8688"},
-    {file = "closurizer-0.1.7.tar.gz", hash = "sha256:a4d4aca3dd007d8e35ef03dc951cea4bf38ceb2b083982188ee721f832acff7d"},
+    {file = "closurizer-0.2.0-py3-none-any.whl", hash = "sha256:a2066a53a24cd8de536d23e59a56382775777936cdac933c0ac19b2a3ce1b925"},
+    {file = "closurizer-0.2.0.tar.gz", hash = "sha256:a22d71e7007c73a38b672d508339f02dac94980a7b4f052b292381462f4179a3"},
 ]
 
 [package.dependencies]
@@ -1405,21 +1405,20 @@ typer = ">=0.7.0,<0.8.0"
 
 [[package]]
 name = "kgx"
-version = "2.1.0"
+version = "2.2.0"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "kgx-2.1.0-py3-none-any.whl", hash = "sha256:e7390b60618ef134b1de03a471827e723877cc979274bd52cca908a2c9753a7f"},
-    {file = "kgx-2.1.0.tar.gz", hash = "sha256:1434b2e4697a11895fb183e68d7c83e34addd1c478fe996b33639d28c25fdbbe"},
+    {file = "kgx-2.2.0-py3-none-any.whl", hash = "sha256:d5a9529bc60e7408fd902df69b58b931a2264248ea1e80642391493d55090c54"},
+    {file = "kgx-2.2.0.tar.gz", hash = "sha256:b23e488a1f34b0bde1f7e5ab28afb2b2eec170c5c8d25adc77eba4ed7d3f6c73"},
 ]
 
 [package.dependencies]
-bmt = ">=1.0.15,<2.0.0"
+bmt = ">=1.1.0,<2.0.0"
 cachetools = ">=5.0.0,<6.0.0"
 Click = "*"
-closurizer = ">=0.1.7,<0.2.0"
 deprecation = ">=2.1.0,<3.0.0"
 docker = ">=6.0.0,<7.0.0"
 docutils = ">=0.18.1,<0.19.0"
@@ -1811,27 +1810,34 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.12.3"
-description = "Monarch Initiative data access library"
+version = "0.13.0"
+description = "Python package for interacting with Monarch Initiative knowledge graph"
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "monarch_py-0.12.3-py3-none-any.whl", hash = "sha256:4386f4cee278efdb3b72d1e14ce15aadfac4c19c64b7e62ab0d770016768265f"},
-    {file = "monarch_py-0.12.3.tar.gz", hash = "sha256:732bd2b4c33316ae94ed25b1515962c3a2a998743e0c99f2c44d95c17e0ef315"},
-]
+python-versions = "^3.9"
+files = []
+develop = false
 
 [package.dependencies]
-docker = ">=6.0.1,<7.0.0"
-linkml = ">=1.5.5,<2.0.0"
+docker = "^6.0.1"
+linkml = "^1.5.5"
 loguru = "*"
-pydantic = ">=1.9.1,<2.0.0"
+pydantic = "^1.10.2"
 pystow = ">=0.5.0"
-requests = ">=2.28.1,<3.0.0"
+requests = "^2.28.1"
 rich = "*"
-typer = ">=0.7.0,<0.8.0"
-typer-cli = ">=0.0.13,<0.0.14"
+typer = "^0.7.0"
+typer-cli = "^0.0.13"
 
+[package.extras]
+api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.10,<0.6.0)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/monarch-initiative/monarch-app.git"
+reference = "evidence_count"
+resolved_reference = "6f1c2480051547c6bda437ea33ecf57784b936be"
+subdirectory = "backend"
 [[package]]
 name = "multi-indexer"
 version = "0.0.5"
@@ -3714,4 +3720,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "058c903f191676a02810c67d04c192c4ddab6c86a32e7ec24dea803acde4f1f9"
+content-hash = "528399e12d1492868eb7b7dcd83d0012e67a7f786cd06e404cee46275f462aeb"
