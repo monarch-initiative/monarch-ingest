@@ -4,13 +4,13 @@ import pytest
 @pytest.fixture
 def gene_information_entities(mock_koza, taxon_label_map_cache, global_table):
     row = {
-        'systematic ID': 'SPAC1002.06c',
-        'curie': 'POMBASE:SPAC1002.06c',
-        'primary gene name': 'bqt2',
-        'chromosome': 'chromosome_1',
-        'product description': 'bouquet formation protein Bqt2',
-        'UniProtKB accession': 'Q9US52',
-        'product type': 'protein coding gene',
+        'gene_systematic_id': 'SPAC1002.06c',
+        'gene_systematic_id_with_prefix': 'POMBASE:SPAC1002.06c',
+        'gene_name': 'bqt2',
+        'chromosome_id': 'chromosome_1',
+        'gene_product': 'bouquet formation protein Bqt2',
+        'uniprot_id': 'Q9US52',
+        'gene type': 'protein coding gene',
         'synonyms': 'mug18,rec23',
     }
 

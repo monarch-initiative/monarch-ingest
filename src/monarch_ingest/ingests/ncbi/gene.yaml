@@ -73,7 +73,9 @@ depends_on:
 node_properties:
   - 'id'
   - 'category'
+  - 'name'
   - 'symbol'
+  - 'full_name'
   - 'description'
   - 'in_taxon'
   - 'in_taxon_label'

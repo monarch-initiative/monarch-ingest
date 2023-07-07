@@ -87,14 +87,14 @@ files = [
 
 [[package]]
 name = "biolink-model"
-version = "3.4.3"
+version = "3.5.0"
 description = "'A high level datamodel of biological entities and associations'"
 category = "main"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "biolink-model-3.4.3.tar.gz", hash = "sha256:9d31263cd58be1ee30419cb0f15d0186fd888e53a84cd09e28387ffe187de45a"},
-    {file = "biolink_model-3.4.3-py3-none-any.whl", hash = "sha256:c77f516066bf2fb03d308e01b75e289f20250a06ababf8988d0db4aa837e9fd5"},
+    {file = "biolink-model-3.5.0.tar.gz", hash = "sha256:db57f01eab926ca09770e5fa7f5fe6149db6f88b62b669f806bf25d687ddccdd"},
+    {file = "biolink_model-3.5.0-py3-none-any.whl", hash = "sha256:49381133f6784adada2ac910f8cee747e1e5e77d1fdfa55305c608b913d0a204"},
 ]
 
 [package.dependencies]
@@ -1810,7 +1810,7 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.12.0"
+version = "0.13.0"
 description = "Python package for interacting with Monarch Initiative knowledge graph"
 category = "main"
 optional = false
@@ -1836,7 +1836,7 @@ api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.10,<0.6.0)"]
 type = "git"
 url = "https://github.com/monarch-initiative/monarch-app.git"
 reference = "evidence_count"
-resolved_reference = "a2cad8c1fe3adfe7c590a9b10f1410054e455d1b"
+resolved_reference = "6f1c2480051547c6bda437ea33ecf57784b936be"
 subdirectory = "backend"
 [[package]]
 name = "multi-indexer"
@@ -3720,4 +3720,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f42aaa1a55796cf7472bbdeaa787176c8c3f569873dfbbd3be4b7473823542b1"
+content-hash = "528399e12d1492868eb7b7dcd83d0012e67a7f786cd06e404cee46275f462aeb"

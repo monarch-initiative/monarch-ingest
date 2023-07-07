@@ -17,6 +17,7 @@ while (row := koza_app.get_row()) is not None:
         id='dictyBase:' + row['GENE ID'],
         symbol=row['Gene Name'],
         name=row['Gene Name'],
+        full_name=row['Gene Name'],
         synonym=synonyms,
         in_taxon=[in_taxon],
         in_taxon_label=taxon_labels[in_taxon]['label'],
