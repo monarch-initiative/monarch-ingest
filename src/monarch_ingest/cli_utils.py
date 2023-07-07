@@ -323,7 +323,8 @@ def apply_closure(
                         'frequency_qualifier',
                         'onset_qualifier',
                         'sex_qualifier',
-                        'stage_qualifier'])
+                        'stage_qualifier'],
+                evidence_fields=['has_evidence', 'publications', 'primary_knowledge_source', 'provided_by'])
     sh.gzip(output_file, force=True)
 
 def load_sqlite():
