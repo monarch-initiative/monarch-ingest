@@ -19,13 +19,13 @@ filters:
     value: 'protein coding gene'
 
 columns:
-  - "systematic ID"
-  - "curie"
-  - "primary gene name"
-  - "chromosome"
-  - "product description"
-  - "UniProtKB accession"
-  - "product type"
+  - "gene_systematic_id"
+  - "gene_systematic_id_with_prefix"
+  - "gene_name"
+  - "chromosome_id"
+  - "gene_product"
+  - "uniprot_id"
+  - "gene type"
   - "synonyms"
 
 depends_on:
@@ -36,8 +36,7 @@ node_properties:
   - 'category'
   - 'name'
   - 'symbol'
-# full_name is not available in biolink
-#  - 'full_name'
+  - 'full_name'
   - 'in_taxon'
   - 'in_taxon_label'
   - 'xref'

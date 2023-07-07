@@ -26,8 +26,7 @@ while (row := koza_app.get_row()) is not None:
         id=gene_id,
         symbol=row["symbol"],
         name=row["symbol"],
-        # full name is not yet available in biolink
-        # full_name=row["name"],
+        full_name=row["name"],
         # No place in the schema for gene type (SO term) right now
         # type=row["soTermId"],
         in_taxon=[in_taxon],

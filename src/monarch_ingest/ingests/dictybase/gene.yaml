@@ -27,8 +27,7 @@ node_properties:
   - 'category'
   - 'name'
   - 'symbol'
-# full_name is not available in biolink
-#  - 'full_name'
+  - 'full_name'
   - 'in_taxon'
   - 'in_taxon_label'
   - 'provided_by'

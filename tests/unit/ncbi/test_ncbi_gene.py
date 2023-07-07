@@ -16,6 +16,7 @@ def gene_row():
     return {
         "GeneID": "373854",
         "Symbol": "TENM2",
+        "Full_name_from_nomenclature_authority": "teneurin transmembrane protein 2",
         "description": "teneurin transmembrane protein 2",
         "tax_id": "9031",
     }

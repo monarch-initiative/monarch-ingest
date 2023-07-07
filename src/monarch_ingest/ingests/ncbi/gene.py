@@ -13,8 +13,7 @@ while (row := koza_app.get_row()) is not None:
         id='NCBIGene:' + row["GeneID"],
         symbol=row["Symbol"],
         name=row["Symbol"],
-        # full name is not yet available in biolink
-        # full_name=row["Full_name_from_nomenclature_authority"],
+        full_name=row["Full_name_from_nomenclature_authority"],
         description=row["description"],
         in_taxon=[in_taxon],
         in_taxon_label=in_taxon_label,

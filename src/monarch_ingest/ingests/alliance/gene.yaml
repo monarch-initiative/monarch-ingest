@@ -34,8 +34,7 @@ node_properties:
   - 'provided_by'
   - 'name'
   - 'symbol'
-# full_name is not available in biolink
-#  - 'full_name'
+  - 'full_name'
   - 'description'
   - 'in_taxon'
   - 'in_taxon_label'

@@ -32,8 +32,7 @@ while (row := koza_app.get_row()) is not None:
         id=row["hgnc_id"],
         symbol=row["symbol"],
         name=row["symbol"],
-        # full name is not yet available in biolink
-        # full_name=row["name"],
+        full_name=row["name"],
         xref=xref_list,
         synonym=synonyms_list,
         in_taxon=[in_taxon],

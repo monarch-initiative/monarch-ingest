@@ -15,9 +15,9 @@ while (row := koza_app.get_row()) is not None:
     in_taxon_label = taxon_labels[in_taxon]["label"]
 
     gene = Gene(
-        id=row["curie"],
-        symbol=row["gene_systematic_id"],
-        name=row["gene_systematic_id"],        
+        id=row["gene_systematic_id_with_prefix"],
+        symbol=row["gene_name"],
+        name=row["gene_name"],
         full_name=row["gene_name"],
         # No place in the schema for gene type (SO term) right now
         # type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
