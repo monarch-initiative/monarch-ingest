@@ -15,8 +15,10 @@ while (row := koza_app.get_row()) is not None:
     in_taxon_label = taxon_labels[in_taxon]["label"]
 
     gene = Gene(
-        id=row["curie"],
-        symbol=row["primary gene name"],
+        id=row["gene_systematic_id_with_prefix"],
+        symbol=row["gene_name"],
+        name=row["gene_name"],
+        full_name=row["gene_name"],
         # No place in the schema for gene type (SO term) right now
         # type=koza_app.translation_table.resolve_term(row["product type"].replace(' ', '_')),
         in_taxon=[in_taxon],
@@ -24,8 +26,8 @@ while (row := koza_app.get_row()) is not None:
         provided_by=["infores:pombase"]
     )
 
-    if row["UniProtKB accession"]:
-        gene.xref = ["UniProtKB:" + row["UniProtKB accession"]]
+    if row["uniprot_id"]:
+        gene.xref = ["UniProtKB:" + row["uniprot_id"]]
 
     if row["synonyms"]:
         gene.synonym = row["synonyms"].split(",")
