@@ -1810,14 +1810,14 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.13.0"
+version = "0.13.2"
 description = "Python package for interacting with Monarch Initiative knowledge graph"
 category = "main"
 optional = false
-python-versions = ">=3.9,<3.12"
+python-versions = ">=3.9,<4.0"
 files = [
-    {file = "monarch_py-0.13.0-py3-none-any.whl", hash = "sha256:cb5853ce38bc890e852567cca8b6e60b1139c17ff51f8fd916347d0904c5f1f7"},
-    {file = "monarch_py-0.13.0.tar.gz", hash = "sha256:bf2fa0624dc3c5a667b265310b437a7801a0cd8d078da4e26d0133f88d3dfb8d"},
+    {file = "monarch_py-0.13.2-py3-none-any.whl", hash = "sha256:9f64abf1d53a5c00db75581fa94dad83d3c6039b7f7dbd459c4844c5ab8890b9"},
+    {file = "monarch_py-0.13.2.tar.gz", hash = "sha256:b5aa92b459f99d281444dd1967d708cd33918eb491e0a572a323ce4419b6560b"},
 ]
 
 [package.dependencies]
@@ -3716,4 +3716,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "09d70e24f01d7b7b74240a14fdb0851fc34ba72855b939da196ebddf8d18d102"
+content-hash = "1f4685decd261cda567c4665f4b700b576af3c7e70d7262752c504f8f1496b8d"
