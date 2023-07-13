@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "monarch-ingest"
-version = "0.6.0"
+version = "0.7.0"
 description = ""
 authors = [
     "The Monarch Initiative <info@monarchinitiative.org>",
@@ -15,13 +15,12 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
 kghub-downloader = "^0.3.2"
 koza = "^0.3.0"
 cat-merge = "^0.1.18"
-closurizer = "^0.2.0"
-#monarch-py = "^0.12.3"
-monarch-py = {git = "https://github.com/monarch-initiative/monarch-app.git", branch = "evidence_count", subdirectory = "backend"}
+closurizer = "^0.2.1"
+monarch-py = "^0.13.2"
 kgx = "^2.1.0"
 multi-indexer = "*"
 biolink-model = "3.5.0"

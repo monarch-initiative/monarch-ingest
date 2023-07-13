@@ -378,14 +378,14 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.2.0"
+version = "0.2.1"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "closurizer-0.2.0-py3-none-any.whl", hash = "sha256:a2066a53a24cd8de536d23e59a56382775777936cdac933c0ac19b2a3ce1b925"},
-    {file = "closurizer-0.2.0.tar.gz", hash = "sha256:a22d71e7007c73a38b672d508339f02dac94980a7b4f052b292381462f4179a3"},
+    {file = "closurizer-0.2.1-py3-none-any.whl", hash = "sha256:8b24eb3bbe03b4791bb3ecc7f4ddb227aa9a7d173716cf48648d273f7e677a6d"},
+    {file = "closurizer-0.2.1.tar.gz", hash = "sha256:d3d4523db6290d416e57b1fabf08c530bf99e578bc254f93708f181d1825e690"},
 ]
 
 [package.dependencies]
@@ -1810,34 +1810,30 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.13.0"
+version = "0.13.2"
 description = "Python package for interacting with Monarch Initiative knowledge graph"
 category = "main"
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "monarch_py-0.13.2-py3-none-any.whl", hash = "sha256:9f64abf1d53a5c00db75581fa94dad83d3c6039b7f7dbd459c4844c5ab8890b9"},
+    {file = "monarch_py-0.13.2.tar.gz", hash = "sha256:b5aa92b459f99d281444dd1967d708cd33918eb491e0a572a323ce4419b6560b"},
+]
 
 [package.dependencies]
-docker = "^6.0.1"
-linkml = "^1.5.5"
+docker = ">=6.0.1,<7.0.0"
+linkml = ">=1.5.5,<2.0.0"
 loguru = "*"
-pydantic = "^1.10.2"
+pydantic = ">=1.10.2,<2.0.0"
 pystow = ">=0.5.0"
-requests = "^2.28.1"
+requests = ">=2.28.1,<3.0.0"
 rich = "*"
-typer = "^0.7.0"
-typer-cli = "^0.0.13"
+typer = ">=0.7.0,<0.8.0"
+typer-cli = ">=0.0.13,<0.0.14"
 
 [package.extras]
 api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.10,<0.6.0)"]
 
-[package.source]
-type = "git"
-url = "https://github.com/monarch-initiative/monarch-app.git"
-reference = "evidence_count"
-resolved_reference = "6f1c2480051547c6bda437ea33ecf57784b936be"
-subdirectory = "backend"
 [[package]]
 name = "multi-indexer"
 version = "0.0.5"
@@ -3719,5 +3715,5 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.10"
-content-hash = "528399e12d1492868eb7b7dcd83d0012e67a7f786cd06e404cee46275f462aeb"
+python-versions = ">=3.10,<3.12"
+content-hash = "1f4685decd261cda567c4665f4b700b576af3c7e70d7262752c504f8f1496b8d"
