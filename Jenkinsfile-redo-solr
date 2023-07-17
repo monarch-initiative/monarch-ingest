@@ -5,7 +5,7 @@ pipeline {
         PATH = "/opt/poetry/bin:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        RELEASE=sh(script: """/bin/bash -c 'gsutil ls gs://data-public-monarchinitiative/monarch-kg-dev/latest/ | grep -Eo \"(\\d){4}-(\\d){2}-(\\d){2}\"' """, returnStdout: true).trim()
+        RELEASE=sh(script: 'scripts/latest_release.sh', returnStdout: true).trim()
     }
     stages {
         stage('setup') {
