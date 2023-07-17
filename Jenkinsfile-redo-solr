@@ -80,10 +80,10 @@ pipeline {
 //            }
 //        }
     }
-    post {
-        always {
-            sh 'docker rm -f neo || true'
+//    post {
+//        always {
+        //    sh 'docker rm -f neo || true'
         //    sh 'docker rm my_solr || true'
-        }
-    }
+//        }
+//    }
 }
