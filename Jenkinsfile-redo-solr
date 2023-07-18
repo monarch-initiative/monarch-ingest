@@ -5,14 +5,11 @@ pipeline {
         PATH = "/opt/poetry/bin:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        RELEASE=sh(script: '$HOME/scripts/latest_release.sh', returnStdout: true).trim()
     }
     stages {
         stage('setup') {
             steps {
                 sh '''
-                    echo "Release: $RELEASE"
-
                     echo "Current directory: $(pwd)"
                     # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
@@ -42,22 +39,22 @@ pipeline {
         }
         stage('denormalize') {
             steps {
-                sh 'echo poetry run ingest closure'
+                sh 'poetry run ingest closure'
             }
         }
         stage('solr') {
             steps {
-                sh 'echo poetry run ingest solr'
+                sh 'poetry run ingest solr'
             }
         }
         stage('sqlite') {
             steps {
-                sh 'echo poetry run ingest sqlite'
+                sh 'poetry run ingest sqlite'
             }
         }
 //        stage('upload files') {
 //            steps {
-//                sh 'poetry run ingest release --kghub'
+//                sh 'scripts/update_latest_release.sh'
 //            }
 //        }
 //        stage('index') {
