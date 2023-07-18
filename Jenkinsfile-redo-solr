@@ -31,7 +31,9 @@ pipeline {
             steps {
                 sh '''
                     mkdir output || true
+                    mkdir data || true
                     gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/latest/* output/
+                    gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
                     ls -lasdf
                 '''
             }
