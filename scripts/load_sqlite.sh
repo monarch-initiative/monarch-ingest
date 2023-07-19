@@ -17,8 +17,8 @@ sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/monarch-kg-denorm
 
 echo "Cleaning up..."
 rm output/monarch-kg_*.tsv
-gzip output/qc/monarch-kg-dangling-edges.tsv
-gzip output/monarch-kg-denormalized-edges.tsv
+gzip --force output/qc/monarch-kg-dangling-edges.tsv
+gzip --force output/monarch-kg-denormalized-edges.tsv
 
 echo "Compressing database"
-gzip output/monarch-kg.db
+gzip --force output/monarch-kg.db
