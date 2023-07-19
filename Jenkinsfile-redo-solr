@@ -11,6 +11,7 @@ pipeline {
             steps {
                 script {
                     properties([
+                        parameters([
                             booleanParam(
                                 defaultValue: true,
                                 description: 'Re-run denormalization step',
