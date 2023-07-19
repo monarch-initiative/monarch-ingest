@@ -88,4 +88,5 @@ pipeline {
                 sh 'scripts/update_latest_release.sh'
             }
         }
+    }
 }
