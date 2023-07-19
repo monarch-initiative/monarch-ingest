@@ -17,6 +17,11 @@ pipeline {
                                 description: 'Re-run denormalization step',
                                 name: 'RUN_CLOSURIZER'
                             ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Upload to bucket',
+                                name: 'UPLOAD'
+                            ),
                         ])
                     ])
                 }
@@ -73,35 +78,14 @@ pipeline {
                 sh 'poetry run ingest sqlite'
             }
         }
-//        stage('upload files') {
-//            steps {
-//                sh 'scripts/update_latest_release.sh'
-//            }
-//        }
-//        stage('index') {
-//            steps {
-//                sh '''
-//                    echo "Current directory: $(pwd)"
-//                    python3 --version
-//                    pip --version
-//                    export PATH=$HOME/.local/bin:$PATH
-//                    echo "Path: $PATH"
-//
-//                    cd $HOME
-//                    mkdir data-public
-//                    gcsfuse --implicit-dirs data-public-monarchinitiative data-public
-
-//                    git clone https://github.com/monarch-initiative/monarch-file-server.git
-//                    pip install -r monarch-file-server/scripts/requirements.txt
-//                    python3 monarch-file-server/scripts/directory_indexer.py --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x
-//                '''
-//            }
-//        }
-    }
-//    post {
-//        always {
-        //    sh 'docker rm -f neo || true'
-        //    sh 'docker rm my_solr || true'
-//        }
-//    }
+        stage('upload files') {
+            when {
+                expression {
+                   return params.UPLOAD
+                }
+            }
+            steps {
+                sh 'scripts/update_latest_release.sh'
+            }
+        }
 }
