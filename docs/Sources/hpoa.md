@@ -1,3 +1,5 @@
+# Human Phenotype Ontology Annotations (HPOA)
+
 The [Human Phenotype Ontology](http://human-phenotype-ontology.org) group
 curates and assembles over 115,000 annotations to hereditary diseases
 using the HPO ontology. Here we create Biolink associations
@@ -11,7 +13,7 @@ Association to "remarkable normality" may be added in the near future.
 
 The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record information out from the annotation file.
 
-### Gene to Disease
+## [Gene to Disease](#gene_to_disease)
 
 This ingest replaces the direct OMIM ingest so that we share g2d associations 1:1 with HPO. The mapping between association_type and biolink predicates shown below is the one way in which this ingest is opinionated, but attempts to be a direct translation into the biolink model.
 
@@ -23,7 +25,7 @@ This ingest replaces the direct OMIM ingest so that we share g2d associations 1:
   - 'disease_id'
   - 'source'
 
-### Biolink Captured
+__**Biolink Captured**__
 
 * biolink:CorrelatedGeneToDiseaseAssociation or biolink:CausalGeneToDiseaseAssociation (depending on predicate)
     * id (random uuid)
@@ -39,7 +41,7 @@ This ingest replaces the direct OMIM ingest so that we share g2d associations 1:
     * aggregator_knowledge_source (["infores:monarchinitiative"])
       * also for medgen: `infores:medgen`
 
-### Disease to Phenotype
+## [Disease to Phenotype](#disease_to_phenotype)
 
 **phenotype.hpoa:** [A description of this file is found here](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format), has the following fields:
 
@@ -59,7 +61,7 @@ This ingest replaces the direct OMIM ingest so that we share g2d associations 1:
 
 Note that we're calling this the disease to phenotype file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'P' (phenotypic anomalies)**, but ignoring all other Aspects.
 
-#### Frequencies
+__**Frequencies**__
 
 The 'Frequency' field of the aforementioned **phenotypes.hpoa** file has the following definition, excerpted from its [Annotation Format](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format) page:
 
@@ -67,7 +69,7 @@ The 'Frequency' field of the aforementioned **phenotypes.hpoa** file has the fol
 
 The Disease to Phenotype ingest attempts to remap these raw frequency values onto a suitable HPO term.  A simplistic (perhaps erroneous?) assumption is that all such frequencies are conceptually comparable; however, researchers may wish to review the original publications to confirm fitness of purpose of the specific data points to their interpretation - specific values could designate phenotypic frequency at the population level; phenotypic frequency at the cohort level; or simply, be a measure of penetrance of a specific allele within carriers, etc..
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:DiseaseToPhenotypicFeatureAssociation
     * id (random uuid)
@@ -88,13 +90,13 @@ Notes:
 2. female -> PATO:0000383, male -> PATO:0000384 or None
 3. See the [Frequencies](#frequencies) section above.
 
-### Disease to Modes of Inheritance
+## [Disease to Modes of Inheritance](#disease_modes_of_inheritance)
 
 Same as above, we again parse the [phenotype.hpoa file](https://hpo-annotation-qc.readthedocs.io/en/latest/annotationFormat.html#phenotype-hpoa-format).
 
 However, we're calling this the 'disease to modes of inheritance' file because - using the YAML file filter configuration for the ingest - we are only parsing rows with **Aspect == 'I' (inheritance)**, but ignoring all other Aspects.
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
     * id (random uuid)
@@ -106,7 +108,7 @@ However, we're calling this the 'disease to modes of inheritance' file because -
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source ("infores:hpo-annotations")
 
-### Gene to Phenotype (with Disease and HPO Frequency Context)
+## [Gene to Phenotype](#gene_to_phenotype)
 
 The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt) file, which has the following fields:
 
@@ -115,7 +117,7 @@ The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype
   - 'hpo_id'
   - 'hpo_name'
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)

@@ -1,14 +1,14 @@
-## Gene Ontology Annotation Database
+# Gene Ontology Annotation (GOA) Database
 
 The Gene Ontology Annotation Database compiles high-quality [Gene Ontology (GO)](http://www.geneontology.org/) annotations to proteins in the [UniProt Knowledgebase (UniProtKB)](https://www.uniprot.org/), RNA molecules from [RNACentral](http://rnacentral.org/) and protein complexes from the [Complex Portal](https://www.ebi.ac.uk/complexportal/home).
 
 Manual annotation is the direct assignment of GO terms to proteins, ncRNA and protein complexes by curators from evidence extracted during the review of published scientific literature, with an appropriate evidence code assigned to give an assessment of the strength of the evidence.  GOA files contain a mixture of manual annotation supplied by members of the Gene Ontology Consortium and computationally assigned GO terms describing gene products. Annotation type is clearly indicated by associated evidence codes and there are links to the source data.
 
-### GO Annotations (Source Files)
+## [GO Annotations](#go_annotation)
 
 There is a ReadMe.txt file that explains the different annotation files available.  The ingested Gene Annotation File (GAF) is a 17 column tab-delimited file. The file format conforms to the specifications demanded by the GO Consortium and therefore GO IDs and not GO term names are shown.
 
-#### Biolink captured
+__**Biolink captured**__
 
 ##### Subject Concept Node (Gene)
 
@@ -34,7 +34,7 @@ There is a ReadMe.txt file that explains the different annotation files availabl
 * **biolink:PhysiologicalProcess**
   * id (GO ID)
 
-#### Associations
+__**Associations**__
 
 * **biolink:FunctionalAssociation**
     * id (random uuid)
@@ -78,7 +78,7 @@ OR
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:goa)
 
-##### Possible Additional Gene to Gene Ontology Term Association?
+__**Possible Additional Gene to Gene Ontology Term Association?**__
 
 * **biolink:GeneToGoTermAssociation**:
     * id (random uuid)

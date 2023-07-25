@@ -35,7 +35,7 @@ from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_te
 
 from loguru import logger
 
-koza_app = get_koza_app("hpoa_disease_phenotype")
+koza_app = get_koza_app("hpoa_disease_to_phenotype")
 
 while (row := koza_app.get_row()) is not None:
 

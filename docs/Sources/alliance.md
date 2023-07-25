@@ -1,13 +1,15 @@
+# Alliance 
+
 The Alliance of Genome Resources contains a subset of model organism data from member databases that is harmonized to the same model. Over time, as the alliance adds additional data types, individual MOD ingests can be replaced by collective Alliance ingest. The Alliance has bulk data downloads, ingest data formats, and an API. The preference should be bulk downloads first, followed by ingest formats, finally by API calls. In some cases it may continue to be more practical to load from individual MODs when data is not yet fully harmonized in the Alliance.
 
 * [Alliance Bulk Downloads](https://www.alliancegenome.org/downloads)
 * [Alliance schemas](https://github.com/alliance-genome/agr_schemas)
 
-### Gene Information
+## [Gene Information](#gene)
 
 Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog) are loaded using the [BGI formatted](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/gene) ingest files, as there are no Gene export files.
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:Gene
     * id
@@ -18,11 +20,11 @@ Genes for all Alliance species (Human, Rat, Mouse, Fish, Fly, Worm, Yeast, Frog)
     * synonyms
     * xref
 
-### Gene to Phenotype
+## [Gene to Phenotype](#gene_to_phenotype)
 
 Phenotype for the subset of Alliance species which use phenotype ontologies (Human, Rat, Mouse, Worm) are loaded using the [phenotype ingest format](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/phenotype), since there is not yet a phenotype export file from the Alliance. This file contains both Gene and Allele phenotypes, so a single column TSV is produced from BGI files listing Gene IDs to check the category and only genes are included. Environmental conditions are present for some species and are captured using the qualifier.
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:GeneToPhenotypicFeatureAssociation
     * id (random uuid)
@@ -34,7 +36,7 @@ Phenotype for the subset of Alliance species which use phenotype ontologies (Hum
     * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
     * primary_knowledge_source (`infores` mapped from row['Source'])
 
-### Gene to Disease
+## [Gene to Disease](#gene_to_disease)
 
 Alliance disease associations 
 
@@ -54,7 +56,7 @@ Need a predicate for each kind of relationship:
 | is_model_of | biolink:model_of |
 | is_not_implicated_in | biolink:contributes_to + negated=true |
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:GeneToDiseaseAssociation
     * id (random uuid)
@@ -66,43 +68,7 @@ Need a predicate for each kind of relationship:
     * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
     * primary_knowledge_source (`infores` mapped from row['Source'])
 
-### Literature
-
-The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/resourcesAndReferences) literature ingest format that aligns publications from MOD members. 
-
-Mapping of Alliance publication category to biolink category
-
-| Alliance category          | Biolink publication type |
-|----------------------------|--------------------------|
-| Research Article           | IAO:0000013              |
-| Review Article             | IAO:0000013              |
-| Thesis                     | IAO:0000311              |
-| Book                       | IAO:0000311              |
-| Other                      | IAO:0000311              |
-| Preprint                   | IAO:0000013              |
-| Conference Publication     | IAO:0000311              |
-| Personal Communication     | IAO:0000311              |
-| Direct Data Submission     | IAO:0000311              |
-| Internal Process Reference | IAO:0000311              |
-| Unknown                    | IAO:0000311              |
-| Retraction                 | IAO:0000311              |
-
-This ingest doesn't make an effort to sort these publication categories into more specific classes than biolink:Publication, but does set the type.
-
-#### Biolink Captured
-
-* biolink:Publication
-    * id (primaryId) 
-    * name (title)
-    * summary (abstract)
-    * authors (authors.name flattened as a comma separated string)
-    * xref (crossReferences.id)
-    * mesh terms (meshTerms.meshHeadingTerm , meshTerms.meshQualifierTerm)
-    * type (IAO:0000311 for publication, IAO:0000013 for article)
-    * creation date (datePublished)
-    * keywords (keywords)
-
-### Gene Expression
+## [Gene Expression](#gene_to_expression)
 
 This is the full data model of the Alliance file ingested; however, not all fields are currently used in the current ingest (in most cases, these fields are not yet set in the input data sets; see the gene_to_expression.yaml file)
 
@@ -130,15 +96,11 @@ This is the full data model of the Alliance file ingested; however, not all fiel
 * Source
 * Reference
 
-#### Discussion Group
+**Discussion Group**: https://www.alliancegenome.org/working-groups#expression  
 
-https://www.alliancegenome.org/working-groups#expression
+**Download**: https://www.alliancegenome.org/downloads#expression
 
-#### Download
-
-https://www.alliancegenome.org/downloads#expression
-
-#### Biolink Captured
+__**Biolink captured**__
 
 * biolink:Gene
     * id (row['GeneID'])
@@ -172,3 +134,39 @@ https://www.alliancegenome.org/downloads#expression
     * publications (row['Reference'])
     * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
     * primary_knowledge_source (`infores` mapped from row['Source'])
+
+## [Literature](#publication)
+
+The Alliance has a [well defined](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/resourcesAndReferences) literature ingest format that aligns publications from MOD members. 
+
+Mapping of Alliance publication category to biolink category
+
+| Alliance category          | Biolink publication type |
+|----------------------------|--------------------------|
+| Research Article           | IAO:0000013              |
+| Review Article             | IAO:0000013              |
+| Thesis                     | IAO:0000311              |
+| Book                       | IAO:0000311              |
+| Other                      | IAO:0000311              |
+| Preprint                   | IAO:0000013              |
+| Conference Publication     | IAO:0000311              |
+| Personal Communication     | IAO:0000311              |
+| Direct Data Submission     | IAO:0000311              |
+| Internal Process Reference | IAO:0000311              |
+| Unknown                    | IAO:0000311              |
+| Retraction                 | IAO:0000311              |
+
+This ingest doesn't make an effort to sort these publication categories into more specific classes than biolink:Publication, but does set the type.
+
+__**Biolink captured**__
+
+* biolink:Publication
+    * id (primaryId) 
+    * name (title)
+    * summary (abstract)
+    * authors (authors.name flattened as a comma separated string)
+    * xref (crossReferences.id)
+    * mesh terms (meshTerms.meshHeadingTerm , meshTerms.meshQualifierTerm)
+    * type (IAO:0000311 for publication, IAO:0000013 for article)
+    * creation date (datePublished)
+    * keywords (keywords)

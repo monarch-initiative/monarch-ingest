@@ -1,12 +1,14 @@
+# ZFIN
+
 ZFIN is the Zebrafish Model Organism Database. 
 
 * [ZFIN bulk downloads](https://zfin.org/downloads)
 
-### Gene to Phenotype
+## [Gene to Phenotype](#gene_to_phenotype)
 
 This ingest uses ZFIN's clean gene phenotype download file, which only contains phenotypes which can safely be associated to a single affected gene. This ingest is distinct from the Alliance phenotype index because ZFIN builds Entity-Quality-Entity phenotype statements that can be built from post-composed terms (E1a+E1b+Q+E2a+E2b), 
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:Gene
     * id
@@ -23,11 +25,11 @@ This ingest uses ZFIN's clean gene phenotype download file, which only contains 
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:zfin)
 
-### Gene to Publication
+## [Gene Literature](#publication_to_gene)
 
 This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. We have also opted to use the ZDB-ID for the publication node rather than a pubmed ID, on the assumption that kgx will clique merge them later.
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:Gene
     * id
