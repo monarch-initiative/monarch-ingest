@@ -1,4 +1,4 @@
-name: 'hpoa_disease_phenotype'
+name: 'hpoa_disease_to_phenotype'
 
 metadata:
   ingest_title: 'Human Phenotype Ontology Annotations'

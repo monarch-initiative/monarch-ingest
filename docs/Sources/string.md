@@ -1,10 +1,10 @@
-## STRING: functional protein association networks
+# STRING: functional protein association networks
 
 [STRING is a database of known and predicted protein-protein interactions](https://string-db.org/cgi/about). The interactions include direct (physical) and indirect (functional) associations; they stem from computational prediction, from knowledge transfer between organisms, and from interactions aggregated from other (primary) databases.
 
 * [STRING bulk downloads](https://stringdb-static.org/download)
 
-### Protein Links (Source File)
+## [Protein Links](#protein_links)
 
 This ingest uses a given version (currently, **11.5**) of the STRING's <taxon>.protein.links.detailed.<version>.txt.gz files, for a subset of NCBI <taxon> ID designated species. We filter the input data on the **combined_score** field (currently with the threshhold recorded in the **protein_links.yaml** file). The various [taxon specific entrez_2_string mapping files](https://string-db.org/mapping_files/entrez) are used to map protein subject and concept nodes onto Entrez gene id's.
 

@@ -1,12 +1,14 @@
+# Reactome
+
 Reactome is a free, open-source, curated and peer reviewed pathway database. Our goal is to provide intuitive bioinformatics tools for the visualization, interpretation and analysis of pathway knowledge to support basic research, genome analysis, modeling, systems biology and education.
 
 * [Reactome bulk downloads](http://www.reactome.org/download/current/)
 
-### Pathway
+## [Pathway](#pathway)
 
 This ingest uses Reactome's pathway download file. 
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:Pathway
     * id
@@ -14,11 +16,11 @@ This ingest uses Reactome's pathway download file.
     * in_taxon
     * provided_by (["infores:reactome"])
 
-### Gene to Pathway
+## [Gene to Pathway](#gene_to_pathway)
 
 This ingest uses Reactome's gene to pathway download file, which contains all entities and only assocations between pathways and genes that are denoted in some way in the pathyways. 
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:Gene
     * id
@@ -34,11 +36,11 @@ This ingest uses Reactome's gene to pathway download file, which contains all en
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:reactome)
 
-### Chemical to Pathway
+## [Chemical to Pathway](#chemical_to_pathway)
 
 This ingest uses Reactome's chemical to pathway download file, which contains all entities and only assocations between pathways and chemicals that are denoted in some way in the pathyways. 
 
-#### Biolink captured
+__**Biolink captured**__
 
 * biolink:ChemicalEntity
     * id

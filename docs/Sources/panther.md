@@ -1,4 +1,6 @@
-## Panther Gene Orthology
+# PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System
+
+## [Panther Gene Orthology](#genome_orthologs)
 
 Gene orthology analyses generate testable hypothesis about gene function and biological processes using experimental results from other (especially highly studied so-called 'model' species) using protein (and sometimes, simply nucleic acid level) alignments of genomic sequences.  The source of gene orthology data for this ingest is from the  [PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System](http://www.pantherdb.org/). Panther was designed to classify proteins (and their genes) in order to facilitate high-throughput analysis. Proteins have been classified according to:
 - _Family and subfamily:_ families are groups of evolutionarily related proteins; subfamilies are related proteins that also have the same function
