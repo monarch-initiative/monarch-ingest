@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "monarch-ingest"
-version = "0.7.0"
+version = "0.7.1"
 description = ""
 authors = [
     "The Monarch Initiative <info@monarchinitiative.org>",
