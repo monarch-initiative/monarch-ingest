@@ -28,12 +28,14 @@ jobs:
         run: poetry install --with dev
 
       - name: Build Documentation
-        run: make docs
+        run: |
+          make docs
+          poetry run mkdocs build
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs
-          target-folder: site
+          folder: site
+#           target-folder: site
           clean: true
           
