@@ -1,0 +1,92 @@
+pipeline {
+    agent { label 'monarch-agent-large' }
+    environment {
+        HOME = "${env.WORKSPACE}"
+        PATH = "/opt/poetry/bin:${env.PATH}"
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+    stages {
+        stage('Setup parameters') {
+            steps {
+                script {
+                    properties([
+                        parameters([
+                            booleanParam(
+                                defaultValue: true,
+                                description: 'Re-run denormalization step',
+                                name: 'RUN_CLOSURIZER'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Upload to bucket',
+                                name: 'UPLOAD'
+                            ),
+                        ])
+                    ])
+                }
+            }
+        }
+        stage('setup') {
+            steps {
+                sh '''
+                    echo "Current directory: $(pwd)"
+                    # export PATH=$PATH:$HOME/.local/bin
+                    echo "Path: $PATH"
+                    
+                    # echo $SHELL
+                    python3 --version
+                    pip --version
+                    poetry --version
+                  
+
+                    # poetry config experimental.new-installer false
+                    poetry install --with dev
+                    poetry run which ingest
+
+                '''
+            }
+        }
+        stage('download kg artifacts') {
+            steps {
+                sh '''
+                    mkdir output || true
+                    mkdir data || true
+                    gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/latest/* output/
+                    gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
+                    ls -lasdf
+                '''
+            }
+        }
+        stage('denormalize') {
+            when {
+                expression {
+                   return params.RUN_CLOSURIZER
+                }
+            }
+            steps {
+                sh 'poetry run ingest closure'
+            }
+        }
+        stage('solr') {
+            steps {
+                sh 'poetry run ingest solr'
+            }
+        }
+        stage('sqlite') {
+            steps {
+                sh 'poetry run ingest sqlite'
+            }
+        }
+        stage('upload files') {
+            when {
+                expression {
+                   return params.UPLOAD
+                }
+            }
+            steps {
+                sh 'scripts/update_latest_release.sh'
+            }
+        }
+    }
+}
