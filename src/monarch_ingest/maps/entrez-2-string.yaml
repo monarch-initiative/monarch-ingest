@@ -15,12 +15,12 @@ files:
   #       https://github.com/monarch-initiative/koza/tree/main/examples/data,
   # is now deprecated in the project?
   #
-  #  - './data/string/test_entrez_2_string.tsv.gz'
-  #  - './data/string/additional_test_entrez_2_string.tsv.gz'
+  #  - './data/string/test_entrez_2_string.tsv'
+  #  - './data/string/additional_test_entrez_2_string.tsv'
   #
   # Full set of STRING taxon-specific mapping data
   # This contains more species than we need and can be filtered if necessary.
-  - './data/string/entrez_2_string.tsv.gz'
+  - './data/string/entrez_2_string.tsv'
 
 columns:
   - 'NCBI taxid'
