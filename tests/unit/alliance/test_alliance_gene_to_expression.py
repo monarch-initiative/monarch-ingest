@@ -1,22 +1,6 @@
 import pytest
 from biolink.pydanticmodel import GeneToExpressionSiteAssociation
 
-#
-# test of utility function - proven to work, unless modified in the future?
-#
-# def test_get_data():
-#     entry = {
-#         "testing": {
-#             "one": {
-#                 "two": {
-#                     "three": "Success!"
-#                 }
-#             }
-#         }
-#     }
-#     assert get_data(entry, "testing.one.two.three") == "Success!"
-
-
 @pytest.fixture
 def source_name():
     return "alliance_gene_to_expression"
@@ -75,7 +59,7 @@ def test_rattus_association(rattus):
     assert association.object == "GO:0030141"
     assert not association.stage_qualifier
     assert "PMID:12615975" in association.publications
-    assert "MMO:0000640" in association.has_evidence
+    assert "MMO:0000640" in association.qualifiers
     assert association.primary_knowledge_source == "infores:rgd"
     assert aggregator_knowledge_sources(association)
 
@@ -126,8 +110,8 @@ def test_mouse_association(mouse):
     assert association.object == "EMAPA:16039"
     assert association.stage_qualifier is None
     assert "MGI:1199209" in association.publications
-    assert "MMO:0000655" in association.has_evidence
-    assert "MGI:1203979" in association.has_evidence
+    assert "MGI:1203979" in association.publications
+    assert "MMO:0000655" in association.qualifiers
     assert association.primary_knowledge_source == "infores:mgi"
     assert aggregator_knowledge_sources(association)
 
@@ -183,8 +167,8 @@ def test_zebrafish_association(zebrafish):
     assert association.object == "ZFA:0001094"
     assert association.stage_qualifier == "ZFS:0000035"
     assert "PMID:18544660" in association.publications
-    assert "MMO:0000655" in association.has_evidence
-    assert "ZFIN:ZDB-FIG-080908-4" in association.has_evidence
+    assert "ZFIN:ZDB-FIG-080908-4" in association.publications
+    assert "MMO:0000655" in association.qualifiers
     assert association.primary_knowledge_source == "infores:zfin"
     assert aggregator_knowledge_sources(association)
 
@@ -231,7 +215,7 @@ def test_drosophila_association(drosophila):
     assert association.object == "FBbt:00003007"
     assert association.stage_qualifier == "FBdv:00005369"
     assert "FB:FBrf0231198" in association.publications
-    assert "MMO:0000534" in association.has_evidence
+    assert "MMO:0000534" in association.qualifiers
     assert association.primary_knowledge_source == "infores:flybase"
     assert aggregator_knowledge_sources(association)
 
@@ -282,8 +266,8 @@ def test_worm_association(worm):
     assert association.object == "WBbt:0000100"
     assert association.stage_qualifier == "WBls:0000057"
     assert association.publications[0] == "PMID:1782857"
-    assert "MMO:0000670" in association.has_evidence
-    assert "WB:Expr1" in association.has_evidence
+    assert "WB:Expr1" in association.publications
+    assert "MMO:0000670" in association.qualifiers
     assert association.primary_knowledge_source == "infores:wormbase"
     assert aggregator_knowledge_sources(association)
 
@@ -327,6 +311,6 @@ def test_yeast_association(yeast):
     assert association.object == "GO:1990316"
     assert not association.stage_qualifier
     assert association.publications[0] == "PMID:26753620"
-    assert "MMO:0000642" in association.has_evidence
+    assert "MMO:0000642" in association.qualifiers
     assert association.primary_knowledge_source == "infores:sgd"
     assert aggregator_knowledge_sources(association)

@@ -33,16 +33,14 @@ while (row := koza_app.get_row()) is not None:
         #       but may have an UBERON term that we can use
         # stage_term_id = get_data(row, "whenExpressed.stageUberonSlimTerm.uberonTerm")
 
-        evidence = list()
-        assay = get_data(row, "assay")  # e.g. "MMO:0000658"
-        if assay:
-            evidence.append(assay)
+
+
+        publication_ids = [get_data(row, "evidence.publicationId")]
 
         xref = get_data(row, "crossReference.id")
         if xref:
-            evidence.append(xref)
+            publication_ids.append(xref)
 
-        publication_ids = get_data(row, "evidence.publicationId")
 
         # Our current ingest policy is to first use a reported Anatomical structure term...
         if anatomical_entity_id:
@@ -53,8 +51,8 @@ while (row := koza_app.get_row()) is not None:
                     predicate='biolink:expressed_in',
                     object=anatomical_entity_id,
                     stage_qualifier=stage_term_id,
-                    has_evidence=evidence,
-                    publications=[publication_ids],
+                    qualifiers=([get_data(row, "assay")] if get_data(row, "assay") else None),
+                    publications=publication_ids,
                     aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
                     primary_knowledge_source=source
                 )
@@ -70,8 +68,8 @@ while (row := koza_app.get_row()) is not None:
                     predicate='biolink:expressed_in',
                     object=cellular_component_id,
                     stage_qualifier=stage_term_id,
-                    has_evidence=evidence,
-                    publications=[publication_ids],
+                    qualifiers=([get_data(row, "assay")] if get_data(row, "assay") else None),
+                    publications=publication_ids,
                     aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
                     primary_knowledge_source=source
                 )
