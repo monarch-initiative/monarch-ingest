@@ -16,8 +16,8 @@ files:
   - './data/string/7227.protein_links.txt.gz'   # Drosophila melanogaster (fruit fly)
   - './data/string/6239.protein_links.txt.gz'   # Caenorhabditis elegans (nematodes)
   - './data/string/44689.protein_links.txt.gz'  # Dictyostelium discoideum  (slime mold)
-  - './data/string/162425.protein_links.txt.gz' # Aspergillus nidulans
-  - './data/string/4896.protein_links.txt.gz'   # Schizosaccharomyces pombe ("fission" yeast)
+  - './data/string/227321.protein_links.txt.gz' # Aspergillus nidulans
+  - './data/string/284812.protein_links.txt.gz'   # Schizosaccharomyces pombe ("fission" yeast)
   - './data/string/4932.protein_links.txt.gz'   # Saccharomyces cerevisiae (baker's "budding" yeast)
 
 depends_on:
