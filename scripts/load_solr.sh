@@ -24,7 +24,7 @@ sleep 10
 
 # todo: ideally, this will live in linkml-solr
 echo "Adding additional fieldtypes"
-scripts/add_entity_fieldtypes.sh
+scripts/add_fieldtypes.sh
 sleep 5
 
 echo "Adding entity schema"
@@ -38,6 +38,7 @@ sleep 5
 # todo: this also should live in linkml-solr, and copy-fields should be based on the schema
 echo "Add dynamic fields and copy fields declarations"
 scripts/add_entity_copyfields.sh
+scripts/add_association_copyfields.sh
 sleep 5
 
 echo "Loading entities"
