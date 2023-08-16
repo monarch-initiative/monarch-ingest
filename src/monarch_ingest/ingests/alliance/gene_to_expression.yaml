@@ -46,7 +46,7 @@ edge_properties:
   - 'object'
   - 'stage_qualifier'
   - 'category'
-  - 'has_evidence'
+  - 'qualifiers'
   - 'publications'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'

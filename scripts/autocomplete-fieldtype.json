@@ -1,0 +1,26 @@
+{
+    "add-field-type": {
+      "name": "autocomplete",
+      "class": "solr.TextField",
+      "positionIncrementGap": "100",
+      "indexAnalyzer": {
+        "tokenizer": { "class": "solr.StandardTokenizerFactory" },
+        "filters": [
+          { "class": "solr.ASCIIFoldingFilterFactory" },
+          { "class": "solr.LowerCaseFilterFactory" },
+          {
+            "class": "solr.EdgeNGramFilterFactory",
+            "minGramSize": "1",
+            "maxGramSize": "25"
+          }
+        ]
+      },
+      "queryAnalyzer": {
+        "tokenizer": { "class": "solr.StandardTokenizerFactory" },
+        "filters": [
+          { "class": "solr.ASCIIFoldingFilterFactory" },
+          { "class": "solr.LowerCaseFilterFactory" }
+        ]
+      }
+    }
+}
