@@ -5,13 +5,15 @@ from biolink.pydanticmodel import Gene
 koza_app = get_koza_app("dictybase_gene")
 taxon_labels = koza_app.get_map("taxon-labels")
 
+in_taxon = "NCBITaxon:44689"
+in_taxon_label = taxon_labels[in_taxon]['label'] if in_taxon in taxon_labels else "Dictyostelium discoideum"
+
 while (row := koza_app.get_row()) is not None:
     
     synonyms = []
     if row['Synonyms'] is not None:
         synonyms = row['Synonyms'].split(", ")
 
-    in_taxon = "NCBITaxon:44689"
 
     gene = Gene(
         id='dictyBase:' + row['GENE ID'],
@@ -20,7 +22,7 @@ while (row := koza_app.get_row()) is not None:
         full_name=row['Gene Name'],
         synonym=synonyms,
         in_taxon=[in_taxon],
-        in_taxon_label=taxon_labels[in_taxon]['label'],
+        in_taxon_label=in_taxon_label,
         provided_by=["infores:dictybase"]
     )
 
