@@ -1,6 +1,7 @@
 import csv
 import gc
 import os
+import pathlib
 import tarfile
 from pathlib import Path
 from typing import Optional
@@ -155,29 +156,16 @@ def transform_phenio(
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
-    prefixes = [
-        "CHEBI",
-        "ECO"
-        "EMAPA",
-        "FBbt",
-        "FYPO",
-        "GO",
-        "HP",
-        "MESH",
-        "MONDO",
-        "MP",
-        "NCBITaxon",
-        "OMIM",
-        "ORPHA",
-        "UBERON",
-        "WBbt",
-        "WBPhenotype",
-        "XPO",
-        "ZFA",
-        "ZP",
+    exclude_prefixes = [
+        "HGNC",
+        "FlyBase",
+        "http",
+        "biolink"
     ]
 
-    nodes_df = nodes_df[nodes_df["id"].str.startswith(tuple(prefixes))]
+    pathlib.Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
+    nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))].to_csv(f"{output_dir}/qc/excluded_phenio_nodes.tsv", sep='\t', index=False)
+    nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
     valid_node_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("named thing")}
     phenio_node_categories = set(nodes_df['category'].unique())
@@ -212,8 +200,8 @@ def transform_phenio(
             edges_df[field] = edges_df[field].str.replace(f"OBO:{prefix}_", f"{prefix}:")
 
     # Only keep edges where the subject and object both are within our allowable prefix list
-    edges_df = edges_df[edges_df["subject"].str.startswith(tuple(prefixes))
-                        & edges_df["object"].str.startswith(tuple(prefixes))]
+    edges_df = edges_df[~edges_df["subject"].str.startswith(tuple(exclude_prefixes))
+                        & ~edges_df["object"].str.startswith(tuple(exclude_prefixes))]
 
     valid_predicates = {f"biolink:{convert_to_snake_case(pred)}" for pred in biolink_model_schema.slot_descendants("related to")}
     phenio_predicates = set(edges_df['predicate'].unique())
