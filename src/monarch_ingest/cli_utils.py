@@ -398,7 +398,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
         if kghub:
             sh.mkdir('-p', f'{dir}/stats')
-            sh.mv('merged_graph_stats.yaml','stats')
+            sh.mv(f'{dir}/merged_graph_stats.yaml',f'{dir}/stats')
             sh.multi_indexer('-v', '--directory', dir, '--prefix', f'https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_name}', '-x', '-u')
             sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/{kghub_release_name}")
             sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/current")
