@@ -394,11 +394,13 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
         sh.gsutil("-q", "-m", "cp", "-r", f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}", "gs://data-public-monarchinitiative/monarch-kg-dev/latest")
         
         # index and upload to kghub s3 bucket
+        kghub_release_name = release_name.replace('-','')
+
         if kghub:
             sh.mkdir('-p', f'{dir}/stats')
-            sh.mv('merged_graph_stats.yaml','stats')
-            sh.multi_indexer('-v', '--directory', dir, '--prefix', f'https://kg-hub.berkeleybop.io/kg-monarch/{release_name}', '-x', '-u')
-            sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/{release_name}")
+            sh.mv(f'{dir}/merged_graph_stats.yaml',f'{dir}/stats')
+            sh.multi_indexer('-v', '--directory', dir, '--prefix', f'https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_name}', '-x', '-u')
+            sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/{kghub_release_name}")
             sh.gsutil("-q", "-m", "cp", "-r", f"{dir}/*", f"s3://kg-hub-public-data/kg-monarch/current")
 
 
