@@ -347,6 +347,10 @@ def load_jsonl():
             edges_df = pandas.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE,
                                    comment='#')
             edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
+            # Prefixing only these two fields is an odd thing that Translator needs, so
+            # they're being duplicated with the prefixes here
+            edges_df["biolink:primary_knowledge_source"] = edges_df["primary_knowledge_source"]
+            edges_df["biolink:aggregator_knowledge_source"] = edges_df["aggregator_knowledge_source"]
             edges_df.to_json("output/monarch-kg_edges.jsonl", orient="records", lines=True)
             del edges_df
             gc.collect()
