@@ -203,6 +203,9 @@ def transform_phenio(
     edges_df = edges_df[~edges_df["subject"].str.startswith(tuple(exclude_prefixes))
                         & ~edges_df["object"].str.startswith(tuple(exclude_prefixes))]
 
+    # Remove edges where the subject or object is NA
+    edges_df = edges_df[~edges_df["subject"].isna() & ~edges_df["object"].isna()]
+
     valid_predicates = {f"biolink:{convert_to_snake_case(pred)}" for pred in biolink_model_schema.slot_descendants("related to")}
     phenio_predicates = set(edges_df['predicate'].unique())
     invalid_predicates = phenio_predicates - valid_predicates
