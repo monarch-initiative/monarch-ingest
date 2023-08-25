@@ -15,6 +15,16 @@ sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/qc/monarch-kg-dan
 echo "Loading denormalized edges..."
 sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import output/monarch-kg-denormalized-edges.tsv denormalized_edges"
 
+sqlite3 output/monarch-kg.db "CREATE TABLE closure (subject TEXT, predicate TEXT, object TEXT)"
+sqlite3 -cmd ".mode tabs" output/monarch-kg.db ".import data/monarch/phenio-relation-graph.tsv closure"
+
+echo "Creating indices..."
+sqlite3 output/monarch-kg.db "create index if not exists edges_subject_index on edges (subject)"
+sqlite3 output/monarch-kg.db "create index if not exists edges_object_index on edges (object)"
+sqlite3 output/monarch-kg.db "create index if not exists closure_subject_index on closure (subject)"
+sqlite3 output/monarch-kg.db "create index if not exists denormalized_edges_subject_index on denormalized_edges (subject)"
+sqlite3 output/monarch-kg.db "create index if not exists denormalized_edges_object_index on denormalized_edges (object)"
+
 echo "Cleaning up..."
 rm output/monarch-kg_*.tsv
 gzip --force output/qc/monarch-kg-dangling-edges.tsv
