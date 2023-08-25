@@ -20,8 +20,8 @@ goa_go_annotation:
   config: 'ingests/goa/go_annotation.yaml'
 hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
-hpoa_disease_phenotype:
-  config: 'ingests/hpoa/disease_phenotype.yaml'
+hpoa_disease_to_phenotype:
+  config: 'ingests/hpoa/disease_to_phenotype.yaml'
 hpoa_gene_to_disease:
   config: 'ingests/hpoa/gene_to_disease.yaml'
 hpoa_disease_mode_of_inheritance:

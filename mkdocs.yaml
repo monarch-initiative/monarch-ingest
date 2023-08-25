@@ -17,6 +17,7 @@ nav:
   - KG Build Process: 'KG-Build-Process/kg-build-process.md'
   - Principles: 'Principles/modeling-principles.md'
   - Sources:
+    - Overview: 'Sources/index.md'
     - Alliance: 'Sources/alliance.md'
     - BGee: 'Sources/bgee.md'
     - CTD: 'Sources/ctd.md'
