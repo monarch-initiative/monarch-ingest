@@ -210,13 +210,13 @@ files = [
 
 [[package]]
 name = "cat-merge"
-version = "0.1.19"
+version = "0.1.20"
 description = ""
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "cat_merge-0.1.19-py3-none-any.whl", hash = "sha256:cfe5134045577f3aff6cef7511b1a0be661b934e6a07482f0ed3a853ea31df77"},
-    {file = "cat_merge-0.1.19.tar.gz", hash = "sha256:505ce17f97ff38302b44109f920bc475a5fecc3ba8a82a9fa0ce20dcc3317e0f"},
+    {file = "cat_merge-0.1.20-py3-none-any.whl", hash = "sha256:107e0c67adb7d4629a94b77434a0e3de48e0b41b7140b244a372b834c7f97b55"},
+    {file = "cat_merge-0.1.20.tar.gz", hash = "sha256:fe020385e2a994119d8b2253962eef509c08b57264f265b1bee934cdfad88a9f"},
 ]
 
 [package.dependencies]
@@ -1720,17 +1720,17 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.14.1"
+version = "0.15.1"
 description = "Python package for interacting with Monarch Initiative knowledge graph"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "monarch_py-0.14.1-py3-none-any.whl", hash = "sha256:e582ec49e85b4a9392d1674c0491d8439595502883bf6cd53ac3ac00c999586f"},
-    {file = "monarch_py-0.14.1.tar.gz", hash = "sha256:5466b584e1f5b62ec6ae45b513455466f478ff797251fa13ee08fb7fdb2adb9d"},
+    {file = "monarch_py-0.15.1-py3-none-any.whl", hash = "sha256:36c5a5d42eb2faecec894af57b79670ec7bb8774565be3350ac27ef223e5731a"},
+    {file = "monarch_py-0.15.1.tar.gz", hash = "sha256:80a38cf3873294e9071003aa39f6af267d6c94c121577bda332eb11f0585610d"},
 ]
 
 [package.dependencies]
-curies = ">=0.5.6,<0.6.0"
+curies = "<1"
 docker = ">=6.0.1,<7.0.0"
 linkml = ">=1.5.5,<2.0.0"
 loguru = "*"
@@ -1743,7 +1743,7 @@ typer = ">=0.7.0,<0.8.0"
 typer-cli = ">=0.0.13,<0.0.14"
 
 [package.extras]
-api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.10,<0.6.0)"]
+api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.17)"]
 
 [[package]]
 name = "multi-indexer"
@@ -3542,4 +3542,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "8754b99894a5881c6f694066daeb973646fc5b5135b5cfe2515247aca3b3f518"
+content-hash = "abb5774d33df1bcbb803777a5ff95c1c844a0fd3841c7196b53ddedcc91dc7d9"
