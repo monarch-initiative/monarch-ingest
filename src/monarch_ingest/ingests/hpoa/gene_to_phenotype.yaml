@@ -14,6 +14,8 @@ columns:
   - 'gene_symbol'
   - 'hpo_id'
   - 'hpo_name'
+  - 'frequency'
+  - 'disease_id'
 
 edge_properties:
   - 'id'
@@ -22,7 +24,6 @@ edge_properties:
   - 'predicate'
   - 'object'
   - 'qualifiers'
-  - 'evidence'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
 

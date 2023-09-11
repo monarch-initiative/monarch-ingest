@@ -14,7 +14,7 @@ header: none
 
 filters:
   - inclusion: 'include'
-    column: "product type"
+    column: "gene_type"
     filter_code: 'eq'
     value: 'protein coding gene'
 
@@ -25,7 +25,7 @@ columns:
   - "chromosome_id"
   - "gene_product"
   - "uniprot_id"
-  - "gene type"
+  - "gene_type"
   - "synonyms"
 
 depends_on:
