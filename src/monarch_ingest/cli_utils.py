@@ -333,15 +333,21 @@ def load_jsonl():
     for c in biolink_model.all_classes().values():
         class_ancestor_dict[f"biolink:{camelcase(c.name)}"] = [f"biolink:{camelcase(a)}" for a in
                                                                biolink_model.class_ancestors(c.name)]
+    all_slot_names = biolink_model.all_slots().keys()
 
     with tarfile.open("output/monarch-kg.tar.gz", "r:*") as tar:
         node_path = tar.getmember("monarch-kg_nodes.tsv")
         edge_path = tar.getmember("monarch-kg_edges.tsv")
 
         with tar.extractfile(node_path) as node_file:
-            nodes_df = pandas.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE,
-                                   comment='#')
+            nodes_df = pandas.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE)
             nodes_df["category"] = nodes_df["category"].map(class_ancestor_dict)
+            # for each column in nodes_df, if schemaview says it's multivalued, convert the contents to a list splitting on |
+            for col in nodes_df.columns:
+                if col in all_slot_names:
+                    slot = biolink_model.induced_slot(col)
+                    if slot and slot.multivalued:
+                        nodes_df[col] = nodes_df[col].str.split("|")
             nodes_df.to_json("output/monarch-kg_nodes.jsonl", orient="records", lines=True)
             del nodes_df
             gc.collect()
@@ -350,6 +356,13 @@ def load_jsonl():
             edges_df = pandas.read_csv(edge_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE,
                                    comment='#')
             edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
+
+            for col in edges_df.columns:
+                if col in all_slot_names:
+                    slot = biolink_model.induced_slot(col)
+                    if slot and slot.multivalued:
+                        edges_df[col] = edges_df[col].str.split("|")
+
             # Prefixing only these two fields is an odd thing that Translator needs, so
             # they're being duplicated with the prefixes here
             edges_df["biolink:primary_knowledge_source"] = edges_df["primary_knowledge_source"]

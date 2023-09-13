@@ -207,13 +207,13 @@ files = [
 
 [[package]]
 name = "cat-merge"
-version = "0.1.20"
+version = "0.1.21"
 description = ""
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "cat_merge-0.1.20-py3-none-any.whl", hash = "sha256:107e0c67adb7d4629a94b77434a0e3de48e0b41b7140b244a372b834c7f97b55"},
-    {file = "cat_merge-0.1.20.tar.gz", hash = "sha256:fe020385e2a994119d8b2253962eef509c08b57264f265b1bee934cdfad88a9f"},
+    {file = "cat_merge-0.1.21-py3-none-any.whl", hash = "sha256:06d7f5abb585d5663ecd721cb28eac357b98f0fbe91d0798200304362068b5f0"},
+    {file = "cat_merge-0.1.21.tar.gz", hash = "sha256:f9116a51ffc5903e0a1434292f7179f0a7ca8b1082e9c7b21ec33a3a2282b903"},
 ]
 
 [package.dependencies]
@@ -3672,4 +3672,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "0757e754e388d8dfc75a5820faa07c6c0f501b2f3af3073ddeef883aa54cc3cf"
+content-hash = "ba3fa06e7c52c3783cf9954034586372536163f330e706bacb1484ad1b9d8ff3"
