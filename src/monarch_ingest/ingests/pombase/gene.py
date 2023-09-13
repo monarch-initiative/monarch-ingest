@@ -12,7 +12,7 @@ taxon_labels = koza_app.get_map("taxon-labels")
 while (row := koza_app.get_row()) is not None:
 
     in_taxon = "NCBITaxon:4896"
-    in_taxon_label = taxon_labels[in_taxon]["label"]
+    in_taxon_label = taxon_labels[in_taxon]['label'] if in_taxon in taxon_labels else "Schizosaccharomyces pombe"
 
     gene = Gene(
         id=row["gene_systematic_id_with_prefix"],
