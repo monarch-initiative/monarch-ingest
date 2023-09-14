@@ -344,7 +344,7 @@ def load_jsonl():
             nodes_df["category"] = nodes_df["category"].map(class_ancestor_dict)
             # for each column in nodes_df, if schemaview says it's multivalued, convert the contents to a list splitting on |
             for col in nodes_df.columns:
-                if col in all_slot_names:
+                if col.replace("_", " ") in all_slot_names:
                     slot = biolink_model.induced_slot(col.replace("_", " "))
                     if slot and slot.multivalued and col != 'category':
                         nodes_df[col] = nodes_df[col].str.split("|")
@@ -358,7 +358,7 @@ def load_jsonl():
             edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
 
             for col in edges_df.columns:
-                if col in all_slot_names:
+                if col.replace("_", " ") in all_slot_names:
                     # lookup using spaces rather than underscores
                     slot = biolink_model.induced_slot(col.replace("_", " "))
                     if slot and slot.multivalued and col != 'category':
