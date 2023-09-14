@@ -345,8 +345,8 @@ def load_jsonl():
             # for each column in nodes_df, if schemaview says it's multivalued, convert the contents to a list splitting on |
             for col in nodes_df.columns:
                 if col in all_slot_names:
-                    slot = biolink_model.induced_slot(col)
-                    if slot and slot.multivalued:
+                    slot = biolink_model.induced_slot(col.replace("_", " "))
+                    if slot and slot.multivalued and col != 'category':
                         nodes_df[col] = nodes_df[col].str.split("|")
             nodes_df.to_json("output/monarch-kg_nodes.jsonl", orient="records", lines=True)
             del nodes_df
@@ -359,8 +359,9 @@ def load_jsonl():
 
             for col in edges_df.columns:
                 if col in all_slot_names:
-                    slot = biolink_model.induced_slot(col)
-                    if slot and slot.multivalued:
+                    # lookup using spaces rather than underscores
+                    slot = biolink_model.induced_slot(col.replace("_", " "))
+                    if slot and slot.multivalued and col != 'category':
                         edges_df[col] = edges_df[col].str.split("|")
 
             # Prefixing only these two fields is an odd thing that Translator needs, so

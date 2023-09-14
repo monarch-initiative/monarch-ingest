@@ -20,7 +20,29 @@ while (row := koza_app.get_row()) is not None:
         row["name"] = row["symbol"]
 
     in_taxon = row["basicGeneticEntity"]["taxonId"]
-    in_taxon_label = taxon_labels[in_taxon]['label']
+    if in_taxon in taxon_labels.keys():
+        in_taxon_label = taxon_labels[in_taxon]['label']
+    else:
+        if in_taxon == "NCBITaxon:10090":
+            in_taxon_label = "Mus musculus"
+        elif in_taxon == "NCBITaxon:7955":
+            in_taxon_label = "Danio rerio"
+        elif in_taxon == "NCBITaxon:10116":
+            in_taxon_label = "Rattus norvegicus"
+        elif in_taxon == "NCBITaxon:6239":
+            in_taxon_label = "Caenorhabditis elegans"
+        elif in_taxon == "NCBITaxon:7227":
+            in_taxon_label = "Drosophila melanogaster"
+        elif in_taxon == "NCBITaxon:8355":
+            in_taxon_label = "Xenopus laevis"
+        elif in_taxon == "NCBITaxon:8364":
+            in_taxon_label = "Xenopus tropicalis"
+        elif in_taxon == "NCBITaxon:4932":
+            in_taxon_label = "Saccharomyces cerevisiae"
+        elif in_taxon == "NCBITaxon:559292":
+            in_taxon_label = "Saccharomyces cerevisiae S288C"
+        else:
+            raise ValueError(f"Can't find taxon name for: {in_taxon}")
 
     gene = Gene(
         id=gene_id,
