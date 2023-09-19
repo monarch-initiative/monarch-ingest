@@ -306,6 +306,10 @@
   url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.tar.gz
   local_name: data/monarch/phenio-relation-graph.tar.gz
   tag: phenio
+-
+  url: https://s3.amazonaws.com/bbop-sqlite/phenio.db.gz
+  local_name: data/monarch/phenio.db.gz
+  tag: phenio
 
 # -
 #   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json

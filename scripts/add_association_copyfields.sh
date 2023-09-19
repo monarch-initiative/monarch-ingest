@@ -36,7 +36,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 
 # now add copyfields declarations for subject_label, subject_closure_label, object_label, object_closure_label
 
-for field in subject_label subject_closure_label subject_taxon subject_taxon_label predicate object_label object_closure_label object_taxon object_taxon_label primary_knowledge_source in_taxon_label qualifier_label onset_qualifier_label frequency_qualifier_label sex_qualifier_label
+for field in subject_label subject_closure_label subject_taxon subject_taxon_label predicate object_label object_closure_label object_taxon object_taxon_label primary_knowledge_source qualifier_label onset_qualifier_label frequency_qualifier_label sex_qualifier_label
 do
   curl -X POST -H 'Content-type:application/json' --data-binary "{
   \"add-copy-field\": {
