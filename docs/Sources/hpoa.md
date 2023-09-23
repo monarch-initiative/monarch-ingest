@@ -83,7 +83,7 @@ __**Biolink captured**__
     * onset_qualifier (Onset.id)
     * frequency_qualifier (Note [3])
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source ("infores:hpoa")
+    * primary_knowledge_source ("infores:hpo-annotations")
 
 Notes:
 1. CURIE of [Evidence and Conclusion Ontology(https://bioportal.bioontology.org/ontologies/ECO)] term
