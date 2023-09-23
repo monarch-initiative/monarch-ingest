@@ -1746,13 +1746,13 @@ files = [
 
 [[package]]
 name = "monarch-py"
-version = "0.15.1"
+version = "0.15.6"
 description = "Python package for interacting with Monarch Initiative knowledge graph"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "monarch_py-0.15.1-py3-none-any.whl", hash = "sha256:36c5a5d42eb2faecec894af57b79670ec7bb8774565be3350ac27ef223e5731a"},
-    {file = "monarch_py-0.15.1.tar.gz", hash = "sha256:80a38cf3873294e9071003aa39f6af267d6c94c121577bda332eb11f0585610d"},
+    {file = "monarch_py-0.15.6-py3-none-any.whl", hash = "sha256:62ec5b1f31b6db5dadbfbfe71fa76acdeacea59ea0fd821df226b7d7b3b9dfeb"},
+    {file = "monarch_py-0.15.6.tar.gz", hash = "sha256:68d56181cbf4564506e2f3a091814fa4ff56c1a2b85f4115c9bf62eb3f2cf95a"},
 ]
 
 [package.dependencies]
@@ -1769,7 +1769,7 @@ typer = ">=0.7.0,<0.8.0"
 typer-cli = ">=0.0.13,<0.0.14"
 
 [package.extras]
-api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (>=0.5.17)"]
+api = ["fastapi (>=0.87.0,<0.88.0)", "oaklib (==0.5.18rc2)"]
 
 [[package]]
 name = "multi-indexer"
@@ -3672,4 +3672,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "ba3fa06e7c52c3783cf9954034586372536163f330e706bacb1484ad1b9d8ff3"
+content-hash = "edf8862b6f956073bfbbbc654c75cc095ab7e4a189e6c98e74407998e7442b73"
