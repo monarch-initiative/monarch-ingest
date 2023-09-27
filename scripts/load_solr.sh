@@ -11,8 +11,10 @@ if test -f "output/monarch-kg-denormalized-edges.tsv.gz"; then
     gunzip --force output/monarch-kg-denormalized-edges.tsv.gz
 fi
 
-echo "Extracting the schema from monarch-py"
-poetry run monarch schema > model.yaml
+echo "Download the schema from monarch-py"
+# This replaces poetry run monarch schema > model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/v0.15.8/backend/src/monarch_py/datamodels/model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/v0.15.8/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
 poetry run lsolr start-server
