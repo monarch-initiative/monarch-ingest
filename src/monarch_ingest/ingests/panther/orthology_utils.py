@@ -50,7 +50,7 @@ _db_to_curie = {
     "FlyBase": "FB",
     "Ensembl": "ENSEMBL",
     "EnsemblGenome": "ENSEMBL",  # TODO: review and fix this later?
-    "PomBase": "POMBASE",
+    "PomBase": "PomBase",
     "WormBase": "WB",  # Wormbase supports 'WormBase:' but alliancegenome.org and identifiers.org supports 'WB:'
     "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
     "Gene": None,                  # seems to be the gene symbol - we ignore it for now?

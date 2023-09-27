@@ -49,7 +49,7 @@ result_expected = {
         "RO:HOM0000017",
         "PANTHER.FAMILY:PTHR12434",
     ],
-    "POMBASE:SPAC20G8.06": [
+    "PomBase:SPAC20G8.06": [
         "ZFIN:ZDB-GENE-040915-1",
         "NCBITaxon:7955",
         "NCBITaxon:4896",
