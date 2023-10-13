@@ -58,5 +58,6 @@ edge_properties:
   - 'object'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
+  - 'has_evidence'
 
 transform_mode: 'flat'
