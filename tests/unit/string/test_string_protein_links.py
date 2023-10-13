@@ -106,6 +106,8 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
 #     assert "NCBITaxon:10090" in gene_b.in_taxon
 
 #     assert gene_b.source == "infores:entrez"
+INCLUDED_ECO_CODES = ['ECO:0000075', 'ECO:0000006', 'ECO:0007833']
+EXCLUDED_ECO_CODES = ['ECO:0000044', 'ECO:0000124', 'ECO:0000080', 'ECO:0007636']
 
 
 def test_association(basic_pl):
@@ -115,6 +117,9 @@ def test_association(basic_pl):
     assert association.object == "NCBIGene:56480"
     assert association.predicate == "biolink:interacts_with"
     assert association.primary_knowledge_source == "infores:string"
+    assert association.has_evidence
+    assert all([eco_code in INCLUDED_ECO_CODES for eco_code in association.has_evidence])
+    assert all([eco_code not in EXCLUDED_ECO_CODES for eco_code in association.has_evidence])
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 

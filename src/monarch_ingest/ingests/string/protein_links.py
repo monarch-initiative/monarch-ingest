@@ -1,11 +1,14 @@
 import uuid
-
+from typing import Optional, List
 
 from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel import PairwiseGeneToGeneInteraction
 
 from loguru import logger
+
+from string_utils import map_evidence_codes
+
 koza_app = get_koza_app("string_protein_links")
 
 while (row := koza_app.get_row()) is not None:
@@ -28,6 +31,8 @@ while (row := koza_app.get_row()) is not None:
 
         entities = []
 
+        has_evidence: List[str] = map_evidence_codes(row)
+
         for gid_a in gene_ids_a.split("|"):
 
             for gid_b in gene_ids_b.split("|"):
@@ -41,6 +46,10 @@ while (row := koza_app.get_row()) is not None:
                     subject=gene_id_a,
                     object=gene_id_b,
                     predicate="biolink:interacts_with",
+
+                    # sanity check: set to 'None' if empty list
+                    has_evidence=has_evidence if has_evidence else None,
+
                     aggregator_knowledge_source=["infores:monarchinitiative"],
                     primary_knowledge_source="infores:string"
                 )
