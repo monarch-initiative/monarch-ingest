@@ -164,7 +164,7 @@ def transform_phenio(
     ]
 
     pathlib.Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
-    nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))].to_csv(f"{output_dir}/qc/excluded_phenio_nodes.tsv", sep='\t', index=False)
+    excluded_nodes = nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
     valid_node_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("named thing")}
@@ -173,8 +173,11 @@ def transform_phenio(
     if invalid_node_categories:
         logger.error(f"Invalid node categories: {invalid_node_categories}")
         invalid_node_categories_df = nodes_df[nodes_df['category'].isin(invalid_node_categories)]
+        excluded_nodes = pandas.concat([excluded_nodes, invalid_node_categories_df])
         logger.error(f"Removing {len(invalid_node_categories_df)} nodes with invalid categories")
         nodes_df = nodes_df[~nodes_df['category'].isin(invalid_node_categories)]
+
+    excluded_nodes.to_csv(f"{output_dir}/qc/excluded_phenio_nodes.tsv", sep='\t', index=False)
 
     nodes_df.to_csv(nodes, sep='\t', index=False)
 
@@ -315,7 +318,7 @@ def apply_closure(
                         'onset_qualifier',
                         'sex_qualifier',
                         'stage_qualifier'],
-                evidence_fields=['has_evidence', 'publications', 'primary_knowledge_source', 'provided_by'])
+                evidence_fields=['has_evidence', 'publications'])
     sh.gzip(output_file, force=True)
 
 def load_sqlite():
