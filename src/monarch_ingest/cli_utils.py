@@ -167,6 +167,11 @@ def transform_phenio(
     excluded_nodes = nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
+    # Replace biolink:Occurrent category with biolink:BiologicalProcessOrActivity as a fallback to rescue
+    # GO nodes that are getting a mixin category of Occurrent that we don't want to exclude all of
+    nodes_df['category'] = nodes_df['category'].str.replace('biolink:Occurrent', 'biolink:BiologicalProcessOrActivity')
+
+
     valid_node_categories = {f"biolink:{camelcase(cat)}" for cat in biolink_model_schema.class_descendants("named thing")}
     phenio_node_categories = set(nodes_df['category'].unique())
     invalid_node_categories = phenio_node_categories - valid_node_categories
