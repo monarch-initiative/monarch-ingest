@@ -357,13 +357,13 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.3.1"
+version = "0.3.2"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "closurizer-0.3.1-py3-none-any.whl", hash = "sha256:2c15afb18a34d35f14933be3e69fb78aab09bd72c923b297fb95cd7aee355d77"},
-    {file = "closurizer-0.3.1.tar.gz", hash = "sha256:efd5040ef92664d9c81fa0af8dad2c3a4750e584a84b4834187cab86a287365d"},
+    {file = "closurizer-0.3.2-py3-none-any.whl", hash = "sha256:656b5a3275b3d88e7a9ce91fae5dd43cd044b73f4b5842d32e0da98c256c7a99"},
+    {file = "closurizer-0.3.2.tar.gz", hash = "sha256:9db271727db4b85ccc2a661afd361b0efd27e62bf4627b014e6fb9289b315edd"},
 ]
 
 [package.dependencies]
@@ -3568,4 +3568,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "ad6354ab736a4f61d4684a24d2769372c3c899f9b2ea6182dd44c90a58ca4068"
+content-hash = "67d172d649a7aa6751c9eccc71a2b2fd2c509dd5e0263cbbcd4754dce1f4ff42"
