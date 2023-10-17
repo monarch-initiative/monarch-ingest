@@ -8,6 +8,7 @@ $ ingest [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
+* `--version`
 * `--install-completion`: Install completion for the current shell.
 * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 * `--help`: Show this message and exit.
@@ -16,6 +17,7 @@ $ ingest [OPTIONS] COMMAND [ARGS]...
 
 * `closure`
 * `download`: Downloads data defined in download.yaml
+* `jsonl`
 * `merge`: Merge nodes and edges into kg
 * `release`: Copy data to Monarch GCP data buckets
 * `solr`
@@ -50,6 +52,18 @@ $ ingest download [OPTIONS]
 * `--all / --no-all`: Download all ingest datasets  [default: no-all]
 * `--help`: Show this message and exit.
 
+## `ingest jsonl`
+
+**Usage**:
+
+```console
+$ ingest jsonl [OPTIONS]
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
+
 ## `ingest merge`
 
 Merge nodes and edges into kg
@@ -64,6 +78,7 @@ $ ingest merge [OPTIONS]
 
 * `--input-dir TEXT`: Directory with nodes and edges to be merged  [default: output/transform_output]
 * `--output-dir TEXT`: Directory to output data  [default: output]
+* `-d, --debug / -q, --quiet`: Use --quiet to suppress log output, --debug for verbose
 * `--help`: Show this message and exit.
 
 ## `ingest release`
@@ -78,6 +93,8 @@ $ ingest release [OPTIONS]
 
 **Options**:
 
+* `--dir TEXT`: Directory with kg to be released  [default: output]
+* `--kghub / --no-kghub`: Also release to kghub S3 bucket  [default: no-kghub]
 * `--help`: Show this message and exit.
 
 ## `ingest solr`
