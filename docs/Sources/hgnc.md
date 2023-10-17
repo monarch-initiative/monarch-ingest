@@ -24,3 +24,7 @@ __**Biolink Captured**__
       * omim id
     * in_taxon (["NCBITaxon:9606"])
     * provided_by  (["infores:hgnc"])
+
+## Citation
+
+HGNC Database, HUGO Gene Nomenclature Committee (HGNC), European Molecular Biology Laboratory, European Bioinformatics Institute (EMBL-EBI), Wellcome Genome Campus, Hinxton, Cambridge CB10 1SD, United Kingdom www.genenames.org. 

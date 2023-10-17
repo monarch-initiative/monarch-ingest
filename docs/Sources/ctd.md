@@ -21,3 +21,6 @@ __**Biolink Captured**__
   * aggregating_knowledge_source (`["infores:monarchinitiative"]`)
   * primary_knowledge_source (`infores:ctd`)
 
+## Citation
+
+Davis AP, Wiegers TC, Johnson RJ, Sciaky D, Wiegers J, Mattingly CJ Comparative Toxicogenomics Database (CTD): update 2023. Nucleic Acids Res. 2022 Sep 28.

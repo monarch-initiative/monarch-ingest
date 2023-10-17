@@ -23,3 +23,7 @@ __**Biolink captured**__
     * object (publication.id)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:mgi)
+
+## Citation
+
+Blake JA, Baldarelli R, Kadin JA, Richardson JE, Smith CL, Bult CJ; Mouse Genome Database Group. 2021. Mouse Genome Database (MGD): Knowledgebase for mouse-human comparative biology. Nucleic Acids Res. 2021 Jan 8;49(D1):D981-D987.

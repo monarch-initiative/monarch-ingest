@@ -24,3 +24,7 @@ __**Biolink captured**__
     * predicate (mentions)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:rgd)
+
+## Citation
+
+Vedi M, Smith JR, Thomas Hayman G, Tutaj M, Brodie KC, De Pons JL, Demos WM, Gibson AC, Kaldunski ML, Lamers L, Laulederkind SJF, Thota J, Thorat K, Tutaj MA, Wang SJ, Zacher S, Dwinell MR, Kwitek AE. 2022 updates to the Rat Genome Database: a Findable, Accessible, Interoperable, and Reusable (FAIR) resource. Genetics. 2023 May 4;224(1):iyad042. doi: 10.1093/genetics/iyad042. PMID: 36930729; PMCID: PMC10474928.

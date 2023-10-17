@@ -33,3 +33,8 @@ We could potentially import `has evidence` from the advanced file comparing `Aff
 Stage and Strain information is also available in all_conditions file. We have elected to not import the stage information due to multiple duplicate edges based on strain.
 
 
+## Citation
+
+"Bastian FB, Roux J, Niknejad A, Comte A, Fonseca Costa SS, Mendes de Farias T, Moretti S, Parmentier G, Rech de Laval V, Rosikiewicz M, Wollbrett J, Echchiki A, Escoriza A, Gharib W, Gonzales-Porta M, Jarosz Y, Laurenczy B, Moret P, Person E, Roelli P, Sanjeev K, Seppey M, Robinson-Rechavi M. 
+The Bgee suite: integrated curated expression atlas and comparative transcriptomics in animals
+in Nucleic Acids Research, Volume 49, Issue D1, 8 January 2021, Pages D831-D847"

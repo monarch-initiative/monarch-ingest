@@ -138,3 +138,7 @@ __**Biolink captured**__
     * type (IAO:0000311 for publication, IAO:0000013 for article)
     * creation date (datePublished)
     * keywords (keywords)
+
+## Citation
+
+Harmonizing model organism data in the Alliance of Genome Resources. 2022. Alliance of Genome Resources Consortium. Genetics, Volume 220, Issue 4, April 2022. Published Online: 25 February 2022. doi: doi.org/10.1093/genetics/iyac022. PMID: 35380658;  PMCID: PMC8982023.
