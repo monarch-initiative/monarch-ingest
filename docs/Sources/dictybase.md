@@ -35,3 +35,7 @@ __**Biolink Captured**__
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:dictybase)
 
+
+## Citation
+
+Fey, P., Dodson, R., Basu, S., Chisholm, R. L. (2013). 'One Stop Shop for Everything Dictyostelium: dictyBase and the Dicty Stock Center'. Dictyostelium discoideum Protocols. Methods Mol. Biol. 983:59-92, edited by Ludwig Eichinger and Francisco Rivero.

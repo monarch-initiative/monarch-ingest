@@ -44,3 +44,7 @@ __**Biolink captured**__
     * object (publication.id)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:zfin)
+
+## Citation
+
+Bradford, Y.M., Van Slyke, C.E., Ruzicka, L., Singer, A., Eagle, A., Fashena, D., Howe, D.G., Frazer, K., Martin, R., Paddock, H., Pich, C., Ramachandran, S., Westerfield, M. (2022) Zebrafish Information Network, the knowledgebase for Danio rerio research. Genetics. 220(4).

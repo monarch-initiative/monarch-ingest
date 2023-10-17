@@ -89,3 +89,7 @@ __**Possible Additional Gene to Gene Ontology Term Association?**__
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:goa)
+
+## Citation
+
+Ashburner et al. Gene ontology: tool for the unification of biology. Nat Genet. 2000 May;25(1):25-9.  The Gene Ontology Consortium. The Gene Ontology knowledgebase in 2023. Genetics. 2023 May 4;224(1):iyad031

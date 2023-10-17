@@ -45,3 +45,7 @@ __**Biolink captured**__
     * object (publication.id)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:xenbase)
+
+## Citation
+
+Fisher et al. 2023, Genetics, 2023;, iyad018, doi:10.1093/genetics/iyad018 (Xenbase / PubMed / Genetics)

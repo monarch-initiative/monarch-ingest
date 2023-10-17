@@ -235,3 +235,7 @@ Only a subset of the available species will be ingested into Monarch at this tim
      * object (pathway.id)
      * aggregating_knowledge_source (["infores:monarchinitiative"])
      * primary_knowledge_source (infores:panther)
+
+## Citation
+
+Paul D. Thomas, Dustin Ebert, Anushya Muruganujan, Tremayne Mushayahama, Laurent-Philippe Albou and Huaiyu Mi Protein Society. 2022;31(1):8-22. doi:10.1002/pro.4218

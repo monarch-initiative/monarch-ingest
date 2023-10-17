@@ -36,38 +36,6 @@ __**Biolink captured**__
     * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
     * primary_knowledge_source (`infores` mapped from row['Source'])
 
-## [Gene to Disease](#gene_to_disease)
-
-Alliance disease associations 
-
-Notes: 
-including only genes
-excluding any experimental conditions to start, since they're just text descriptions rather than terms.  (could exclude only rows that have 'Induced By' prefixing the conditions description?)
-Still needs to be updated to handle the ECO terms when supported by the biolink model.
-
-Need a predicate for each kind of relationship:
-
-| Alliance AssociationType | predicate | 
-|  ----------------------- | --------- |
-| biomarker_via_orthology  | biolink:biomarker_for |
-| implicated_via_orthology  | biolink:contributes_to |
-| is_implicated_in | biolink:contributes_to |
-| is_marker_for | biolink:biomarker_for |
-| is_model_of | biolink:model_of |
-| is_not_implicated_in | biolink:contributes_to + negated=true |
-
-__**Biolink captured**__
-
-* biolink:GeneToDiseaseAssociation
-    * id (random uuid)
-    * subject (gene.id)
-    * predicates (see table above)
-    * object (disease.id)
-    * negated (for 'is not implicated in')
-    * publications (row['Reference'])
-    * aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])
-    * primary_knowledge_source (`infores` mapped from row['Source'])
-
 ## [Gene Expression](#gene_to_expression)
 
 This is the full data model of the Alliance file ingested; however, not all fields are currently used in the current ingest (in most cases, these fields are not yet set in the input data sets; see the gene_to_expression.yaml file)
@@ -170,3 +138,7 @@ __**Biolink captured**__
     * type (IAO:0000311 for publication, IAO:0000013 for article)
     * creation date (datePublished)
     * keywords (keywords)
+
+## Citation
+
+Harmonizing model organism data in the Alliance of Genome Resources. 2022. Alliance of Genome Resources Consortium. Genetics, Volume 220, Issue 4, April 2022. Published Online: 25 February 2022. doi: doi.org/10.1093/genetics/iyac022. PMID: 35380658;  PMCID: PMC8982023.

@@ -42,3 +42,8 @@ __**Biolink Captured**__
     * qualifiers (optionally included from condition row)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:pombase)
+
+## Citation
+
+"Harris MA, Rutherford KM, Hayles J, Lock A, Bähler J, Oliver S, Mata J, Wood V Fission stories: Using PomBase to understand Schizosaccharomyces pombe biology
+Genetics, 2021; iyab222"

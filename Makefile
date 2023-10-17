@@ -34,7 +34,7 @@ test: install
 
 .PHONY: docs
 docs: install-full
-	poetry run typer src/monarch_ingest/main.py utils docs --name ingest --output docs/Usage.md
+	poetry run typer src/monarch_ingest/main.py utils docs --name ingest --output docs/CLI.md
 	
 
 .PHONY: clean

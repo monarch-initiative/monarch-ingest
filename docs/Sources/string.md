@@ -42,3 +42,7 @@ A separate Entrez to String identifier mapping file is not available for _Rattus
     * object (gene.id)
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source (infores:string)
+
+## Citation
+
+Damian Szklarczyk, Andrea Franceschini, Stefan Wyder, Kristoffer Forslund, Davide Heller, Jaime Huerta-Cepas, Milan Simonovic, Alexander Roth, Alberto Santos, Kalliopi P. Tsafou, Michael Kuhn, Peer Bork, Lars J. Jensen, Christian von Mering, STRING v10: protein–protein interaction networks, integrated over the tree of life, Nucleic Acids Research, Volume 43, Issue D1, 28 January 2015, Pages D447–D452, https://doi.org/10.1093/nar/gku1003
