@@ -596,13 +596,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gene-to-disease" class="md-nav__link">
-    Gene to Disease
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#gene-expression" class="md-nav__link">
     Gene Expression
   </a>
@@ -612,6 +605,13 @@
         <li class="md-nav__item">
   <a href="#literature" class="md-nav__link">
     Literature
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citation" class="md-nav__link">
+    Citation
   </a>
   
 </li>
@@ -659,34 +659,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../dictybase/" class="md-nav__link">
-        Dictybase
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../flybase/" class="md-nav__link">
-        Flybase
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../goa/" class="md-nav__link">
         GOA
       </a>
@@ -717,20 +689,6 @@
     <li class="md-nav__item">
       <a href="../hpoa/" class="md-nav__link">
         HPOA
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mgi/" class="md-nav__link">
-        MGI
       </a>
     </li>
   
@@ -813,50 +771,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../rgd/" class="md-nav__link">
-        RGD
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sgd/" class="md-nav__link">
-        SGD
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../string/" class="md-nav__link">
         String
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../xenbase/" class="md-nav__link">
-        Xenbase
       </a>
     </li>
   
@@ -924,13 +840,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gene-to-disease" class="md-nav__link">
-    Gene to Disease
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#gene-expression" class="md-nav__link">
     Gene Expression
   </a>
@@ -940,6 +849,13 @@
         <li class="md-nav__item">
   <a href="#literature" class="md-nav__link">
     Literature
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citation" class="md-nav__link">
+    Citation
   </a>
   
 </li>
@@ -996,61 +912,6 @@
 <li>object (phenotypicFeature.id)</li>
 <li>publications</li>
 <li>qualifiers (condition terms)</li>
-<li>aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])</li>
-<li>primary_knowledge_source (<code>infores</code> mapped from row['Source'])</li>
-</ul>
-</li>
-</ul>
-<h2 id="gene-to-disease"><a href="#gene_to_disease">Gene to Disease</a></h2>
-<p>Alliance disease associations </p>
-<p>Notes: 
-including only genes
-excluding any experimental conditions to start, since they're just text descriptions rather than terms.  (could exclude only rows that have 'Induced By' prefixing the conditions description?)
-Still needs to be updated to handle the ECO terms when supported by the biolink model.</p>
-<p>Need a predicate for each kind of relationship:</p>
-<table>
-<thead>
-<tr>
-<th>Alliance AssociationType</th>
-<th>predicate</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>biomarker_via_orthology</td>
-<td>biolink:biomarker_for</td>
-</tr>
-<tr>
-<td>implicated_via_orthology</td>
-<td>biolink:contributes_to</td>
-</tr>
-<tr>
-<td>is_implicated_in</td>
-<td>biolink:contributes_to</td>
-</tr>
-<tr>
-<td>is_marker_for</td>
-<td>biolink:biomarker_for</td>
-</tr>
-<tr>
-<td>is_model_of</td>
-<td>biolink:model_of</td>
-</tr>
-<tr>
-<td>is_not_implicated_in</td>
-<td>biolink:contributes_to + negated=true</td>
-</tr>
-</tbody>
-</table>
-<p><strong><strong>Biolink captured</strong></strong></p>
-<ul>
-<li>biolink:GeneToDiseaseAssociation<ul>
-<li>id (random uuid)</li>
-<li>subject (gene.id)</li>
-<li>predicates (see table above)</li>
-<li>object (disease.id)</li>
-<li>negated (for 'is not implicated in')</li>
-<li>publications (row['Reference'])</li>
 <li>aggregating_knowledge_source (["infores:monarchinitiative", "infores:alliancegenome"])</li>
 <li>primary_knowledge_source (<code>infores</code> mapped from row['Source'])</li>
 </ul>
@@ -1213,6 +1074,8 @@ Still needs to be updated to handle the ECO terms when supported by the biolink 
 </ul>
 </li>
 </ul>
+<h2 id="citation">Citation</h2>
+<p>Harmonizing model organism data in the Alliance of Genome Resources. 2022. Alliance of Genome Resources Consortium. Genetics, Volume 220, Issue 4, April 2022. Published Online: 25 February 2022. doi: doi.org/10.1093/genetics/iyac022. PMID: 35380658;  PMCID: PMC8982023.</p>
 
 
 

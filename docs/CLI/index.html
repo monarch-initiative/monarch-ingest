@@ -391,6 +391,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-jsonl" class="md-nav__link">
+    ingest jsonl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-merge" class="md-nav__link">
     ingest merge
   </a>
@@ -671,34 +678,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/dictybase/" class="md-nav__link">
-        Dictybase
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Sources/flybase/" class="md-nav__link">
-        Flybase
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../Sources/goa/" class="md-nav__link">
         GOA
       </a>
@@ -729,20 +708,6 @@
     <li class="md-nav__item">
       <a href="../Sources/hpoa/" class="md-nav__link">
         HPOA
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Sources/mgi/" class="md-nav__link">
-        MGI
       </a>
     </li>
   
@@ -825,50 +790,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/rgd/" class="md-nav__link">
-        RGD
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Sources/sgd/" class="md-nav__link">
-        SGD
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../Sources/string/" class="md-nav__link">
         String
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Sources/xenbase/" class="md-nav__link">
-        Xenbase
       </a>
     </li>
   
@@ -936,6 +859,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-jsonl" class="md-nav__link">
+    ingest jsonl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-merge" class="md-nav__link">
     ingest merge
   </a>
@@ -996,6 +926,7 @@
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
+<li><code>--version</code></li>
 <li><code>--install-completion</code>: Install completion for the current shell.</li>
 <li><code>--show-completion</code>: Show completion for the current shell, to copy it or customize the installation.</li>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1004,6 +935,7 @@
 <ul>
 <li><code>closure</code></li>
 <li><code>download</code>: Downloads data defined in download.yaml</li>
+<li><code>jsonl</code></li>
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>release</code>: Copy data to Monarch GCP data buckets</li>
 <li><code>solr</code></li>
@@ -1029,6 +961,14 @@
 <li><code>--all / --no-all</code>: Download all ingest datasets  [default: no-all]</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
+<h2 id="ingest-jsonl"><code>ingest jsonl</code></h2>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>jsonl<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
 <h2 id="ingest-merge"><code>ingest merge</code></h2>
 <p>Merge nodes and edges into kg</p>
 <p><strong>Usage</strong>:</p>
@@ -1038,6 +978,7 @@
 <ul>
 <li><code>--input-dir TEXT</code>: Directory with nodes and edges to be merged  [default: output/transform_output]</li>
 <li><code>--output-dir TEXT</code>: Directory to output data  [default: output]</li>
+<li><code>-d, --debug / -q, --quiet</code>: Use --quiet to suppress log output, --debug for verbose</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-release"><code>ingest release</code></h2>
@@ -1047,6 +988,8 @@
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
+<li><code>--dir TEXT</code>: Directory with kg to be released  [default: output]</li>
+<li><code>--kghub / --no-kghub</code>: Also release to kghub S3 bucket  [default: no-kghub]</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-solr"><code>ingest solr</code></h2>
