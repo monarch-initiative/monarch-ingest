@@ -74,7 +74,7 @@ columns:
   - DB_Object_Type
   - Taxon
   - Date
-  - Assigned_By
+  -
   - Annotation_Extension
   - Gene_Product_Form_ID
 
