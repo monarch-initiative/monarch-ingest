@@ -439,7 +439,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
                 )
             )
             sh.gsutil(
-                *"-q -m -cp -r".split(" "),
+                *"-q -m -cp -r -a public-read".split(" "),
                 f"{dir}/*",  # source files
                 f"s3://kg-hub-public-data/kg-monarch/{kghub_release_name}",  # destination
             )
