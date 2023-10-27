@@ -12,13 +12,10 @@ if test -f "output/monarch-kg-denormalized-edges.tsv.gz"; then
 fi
 
 echo "Download the schema from monarch-py"
-# This replaces poetry run monarch schema > model.yaml
+# This replaces poetry run monarch schema > model.yaml and just awkwardly pulls from a github raw link
 
-# temporarily retrieve from a branch that has the sssom changes
-
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/schema-sssom-and-grouping/backend/src/monarch_py/datamodels/model.yaml
-#curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/v0.15.8/backend/src/monarch_py/datamodels/model.yaml
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/v0.15.8/backend/src/monarch_py/datamodels/similarity.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
 poetry run lsolr start-server
