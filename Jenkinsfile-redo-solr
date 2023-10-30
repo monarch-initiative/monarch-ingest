@@ -19,6 +19,16 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
+                                description: 'Load Solr',
+                                name: 'SOLR'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Load sqlite',
+                                name: 'SQLITE'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
                                 description: 'Upload to bucket',
                                 name: 'UPLOAD'
                             ),
@@ -69,11 +79,21 @@ pipeline {
             }
         }
         stage('solr') {
+            when {
+                expression {
+                   return params.SOLR
+                }
+            }
             steps {
                 sh 'poetry run ingest solr'
             }
         }
         stage('sqlite') {
+            when {
+                expression {
+                   return params.SQLITE
+                }
+            }
             steps {
                 sh 'poetry run ingest sqlite'
             }
