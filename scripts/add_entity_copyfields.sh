@@ -84,3 +84,45 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+# taxon label
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "in_taxon_label",
+        "dest": "in_taxon_label_t"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "in_taxon_label",
+        "dest": "in_taxon_label_ac"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+# taxon id
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "in_taxon",
+        "dest": "in_taxon"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+# description
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "description",
+        "dest": "description_t"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+# xref
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "xref",
+        "dest": "xref_t"
+    }
+}' http://localhost:8983/solr/entity/schema
