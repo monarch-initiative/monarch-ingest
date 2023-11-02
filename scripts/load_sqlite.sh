@@ -27,8 +27,8 @@ sqlite3 output/monarch-kg.db "create index if not exists denormalized_edges_obje
 
 echo "Cleaning up..."
 rm output/monarch-kg_*.tsv
-gzip --force output/qc/monarch-kg-dangling-edges.tsv
-gzip --force output/monarch-kg-denormalized-edges.tsv
+pigz --force output/qc/monarch-kg-dangling-edges.tsv
+pigz --force output/monarch-kg-denormalized-edges.tsv
 
 echo "Populate phenio db term_association..."
 cp data/monarch/phenio.db.gz output/phenio.db.gz
@@ -36,5 +36,5 @@ gunzip output/phenio.db.gz
 sqlite3 -cmd "attach 'monarch-kg.db' as monarch" phenio.db "insert into term_association (id, subject, predicate, object, evidence_type, publication, source) select id, subject, predicate, object, has_evidence as evidence_type, publications as publication, primary_knowledge_source as source from monarch.edges where predicate = 'biolink:has_phenotype' and negated <> 'True'"
 
 echo "Compressing databases"
-gzip --force output/phenio.db
-gzip --force output/monarch-kg.db
+pigz --force output/phenio.db
+pigz --force output/monarch-kg.db

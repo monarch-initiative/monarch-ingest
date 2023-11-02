@@ -326,7 +326,7 @@ def apply_closure(
                         'stage_qualifier'],
                 evidence_fields=['has_evidence', 'publications'],
                 grouping_fields=['subject', 'negated', 'predicate', 'object'])
-    sh.gzip(output_file, force=True)
+    sh.pigz(output_file, force=True)
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")

@@ -78,4 +78,4 @@ chmod -R a+rX solr-data
 
 tar czf solr.tar.gz -C solr-data data
 mv solr.tar.gz output/
-gzip --force output/monarch-kg-denormalized-edges.tsv
+pigz --force output/monarch-kg-denormalized-edges.tsv
