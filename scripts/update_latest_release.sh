@@ -11,4 +11,4 @@ gsutil cp output/monarch-kg-denormalized-edges.tsv.gz gs://monarch-archive/monar
 gsutil cp output/solr.tar.gz gs://monarch-archive/monarch-kg-dev/$RELEASE/
 
 gsutil cp "gs://monarch-archive/monarch-kg-dev/$RELEASE/*.gz" gs://data-public-monarchinitiative/monarch-kg-dev/$RELEASE/
-gsutil cp "gs://monarch-archive/monarch-kg-dev/$RELEASE/*.gz" gs://monarch-archive/monarch-kg/latest/
+gsutil cp "gs://monarch-archive/monarch-kg-dev/$RELEASE/*.gz" gs://data-public-monarchinitiative/monarch-kg-dev/latest/
