@@ -320,14 +320,19 @@ def apply_closure(
     output_dir: str = OUTPUT_DIR,
 ):
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
-    add_closure(
-        kg_archive=f"{output_dir}/{name}.tar.gz",
-        closure_file=closure_file,
-        output_file=output_file,
-        fields=["subject", "object", "frequency_qualifier", "onset_qualifier", "sex_qualifier", "stage_qualifier"],
-        evidence_fields=["has_evidence", "publications"],
-    )
-    sh.gzip(output_file, force=True)
+    add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
+                closure_file=closure_file,
+                output_file=output_file,
+                fields=['subject',
+                        'object',
+                        'qualifiers',
+                        'frequency_qualifier',
+                        'onset_qualifier',
+                        'sex_qualifier',
+                        'stage_qualifier'],
+                evidence_fields=['has_evidence', 'publications'],
+                grouping_fields=['subject', 'negated', 'predicate', 'object'])
+    sh.pigz(output_file, force=True)
 
 
 def load_sqlite():
