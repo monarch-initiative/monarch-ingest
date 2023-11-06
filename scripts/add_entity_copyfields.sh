@@ -105,7 +105,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 curl -X POST -H 'Content-type:application/json' --data-binary '{
     "add-copy-field": {
         "source": "in_taxon",
-        "dest": "in_taxon"
+        "dest": "in_taxon_t"
     }
 }' http://localhost:8983/solr/entity/schema
 
