@@ -9,10 +9,11 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from src.monarch_ingest.ingests.goa.goa_utils import (
+from monarch_ingest.ingests.goa.goa_utils import (
     parse_identifiers,
     get_biolink_classes,
-    lookup_predicate
+    lookup_predicate,
+    get_infores
 )
 from loguru import logger
 
@@ -100,13 +101,15 @@ while (row := koza_app.get_row()) is not None:
             )
 
         else:
+            logger.info(f"predicate == {str(predicate)}")
+
             # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
             go_concept_node_class, gene_go_term_association_class = get_biolink_classes(
                 go_aspect
             )
 
             # actual primary knowledge source of the GOA knowledge statement
-            assigned_by = row['Assigned_By']
+            assigned_by = get_infores(row['Assigned_By'])
 
             # Instantiate the appropriate Gene-to-GO Term instance
             association = gene_go_term_association_class(

@@ -16,7 +16,6 @@ from biolink.pydanticmodel import (
 )
 
 
-
 def parse_ncbi_taxa(taxon: str) -> List[str]:
     ncbi_taxa: List[str] = list()
     if taxon:
@@ -110,7 +109,7 @@ _predicate_by_name = {
 }
 
 
-def lookup_predicate(name: str = None) -> Optional[Tuple[str, Any]]:
+def lookup_predicate(name: str = None) -> str:  # see 'return' comment below Optional[Tuple[str, Any]]:
     """
     :param name: string name of predicate to be looked up
     :return: tuple(biolink:predicate, mapping to relation) if available; None otherwise
@@ -121,7 +120,9 @@ def lookup_predicate(name: str = None) -> Optional[Tuple[str, Any]]:
         logger.error(f"Encountered unknown GAF qualifier '{str(name)}'?")
         return None
 
-    return entry["predicate"], entry["mapping"]
+    # Oct 2023 - we don't care about the RO relation anymore
+    # return entry["predicate"], entry["mapping"]
+    return entry["predicate"]
 
 
 _biolink_class_by_go_aspect = {
@@ -142,3 +143,19 @@ def get_biolink_classes(go_aspect: str) -> Tuple:
     :return: (category, association) tuple of Biolink Model Pydantic classes associated with the given GO aspect
     """
     return _biolink_class_by_go_aspect[go_aspect.upper()]
+
+
+INFORES_OBJECT_ID_MAP = {
+    "MGI": "mgi"
+}
+
+
+def get_infores(source: Optional[str]) -> str:
+    if source:
+        if source in INFORES_OBJECT_ID_MAP:
+            infores = "infores:"+INFORES_OBJECT_ID_MAP[source]
+        else:
+            infores = "infores:" + source
+            logger.warning(f"Encountered source '{source}'? Inferring infores as {infores}")
+        return infores
+    return ""

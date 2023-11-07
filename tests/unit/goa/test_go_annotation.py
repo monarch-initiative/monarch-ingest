@@ -8,7 +8,7 @@ import pytest
 from biolink.pydanticmodel import Association
 from loguru import logger
 
-from src.monarch_ingest.ingests.goa.goa_utils import parse_identifiers
+from monarch_ingest.ingests.goa.goa_utils import parse_identifiers
 
 
 @pytest.mark.parametrize(
