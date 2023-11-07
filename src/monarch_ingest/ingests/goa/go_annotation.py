@@ -101,7 +101,6 @@ while (row := koza_app.get_row()) is not None:
             )
 
         else:
-            logger.info(f"predicate == {str(predicate)}")
 
             # Retrieve the GO aspect related NamedThing category-associated 'node' and Association 'edge' classes
             go_concept_node_class, gene_go_term_association_class = get_biolink_classes(

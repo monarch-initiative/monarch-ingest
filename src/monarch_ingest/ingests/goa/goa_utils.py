@@ -109,7 +109,7 @@ _predicate_by_name = {
 }
 
 
-def lookup_predicate(name: str = None) -> str:  # see 'return' comment below Optional[Tuple[str, Any]]:
+def lookup_predicate(name: str = None) -> Optional[str]:  # see 'return' comment below Optional[Tuple[str, Any]]:
     """
     :param name: string name of predicate to be looked up
     :return: tuple(biolink:predicate, mapping to relation) if available; None otherwise
@@ -144,18 +144,36 @@ def get_biolink_classes(go_aspect: str) -> Tuple:
     """
     return _biolink_class_by_go_aspect[go_aspect.upper()]
 
+#
+# See comment below
+#
+# INFORES_OBJECT_ID_MAP = {
+#     "MGI": "mgi",
+#     "AspGD": "aspgd",
+#     "UniProt": "uniprot",
+# }
 
-INFORES_OBJECT_ID_MAP = {
-    "MGI": "mgi"
-}
 
+def get_infores(source: Optional[str]) -> Optional[str]:
 
-def get_infores(source: Optional[str]) -> str:
     if source:
-        if source in INFORES_OBJECT_ID_MAP:
-            infores = "infores:"+INFORES_OBJECT_ID_MAP[source]
-        else:
-            infores = "infores:" + source
-            logger.warning(f"Encountered source '{source}'? Inferring infores as {infores}")
-        return infores
-    return ""
+        # Our original vision was to do a proper mapping to known InfoRes CURIEs
+        # in the "Translator" # infores catalog but since the GOA file has such
+        # weird diversity in 'Assigned By' source values, one gets the sense that,
+        # for now, it is adequate to simply build a sensible infores "just-in-time".
+
+        # if source not in INFORES_OBJECT_ID_MAP:
+        #     INFORES_OBJECT_ID_MAP[source] = str(source).lower()
+        #     # logger.warning(
+        #     #     f"Encountered source '{source}'?" +
+        #     #     f" Inferring 'infores' as {INFORES_OBJECT_ID_MAP[source]}"
+        #     # )
+        #     print(INFORES_OBJECT_ID_MAP[source], flush=True)
+        # return f"infores:{INFORES_OBJECT_ID_MAP[source]}"
+
+        # Reformat the source string to infores reference ID syntax standards
+        infores_id = str(source).strip().lower().replace("_", "-")
+        # Then prepend the namespace...
+        return f"infores:{infores_id}"
+
+    return None
