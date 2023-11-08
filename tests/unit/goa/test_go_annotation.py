@@ -463,12 +463,12 @@ def test_association(basic_goa):
     assert association.negated == result_expected[association.subject][7]
     assert result_expected[association.subject][8] in association.has_evidence
 
-    assert association.primary_knowledge_source == "infores:goa"
+    assert association.primary_knowledge_source == "infores:uniprot"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
 
 @pytest.fixture
-def mgi_entities(mock_koza, source_name, test_rows, script, global_table, local_table):
+def mgi_entities(mock_koza, source_name, script, global_table, local_table):
     row = {
         'DB': 'MGI',
         'DB_Object_ID': 'MGI:1918911',
@@ -503,5 +503,5 @@ def test_mgi_curie(mgi_entities):
     association = [association for association in mgi_entities if isinstance(association, Association)][0]
     assert association
     assert association.subject == "MGI:1918911"
-    assert association.primary_knowledge_source == "infores:goa"
+    assert association.primary_knowledge_source == "infores:mgi"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

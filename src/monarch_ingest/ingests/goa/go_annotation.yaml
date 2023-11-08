@@ -10,7 +10,7 @@ files:
   # genus Aspergillus, taxon:5052, not just Aspergillus nidulans
   - './data/goa/4932.go_annotations.gaf.gz'
   - './data/goa/4896.go_annotations.gaf.gz'
-  - './data/goa/5052.go_annotations.gaf.gz' 
+  - './data/goa/5052.go_annotations.gaf.gz'
   - './data/goa/6239.go_annotations.gaf.gz'
   - './data/goa/7227.go_annotations.gaf.gz'
   - './data/goa/7955.go_annotations.gaf.gz'
@@ -32,7 +32,6 @@ filters:
       - 'taxon:9606'
       - 'taxon:10090'
       - 'taxon:10116'
-      - 'taxon:10116'
       - 'taxon:9615'
       - 'taxon:9913'
       - 'taxon:9823'
@@ -43,7 +42,9 @@ filters:
       - 'taxon:44689'
       - 'taxon:4932'
       - 'taxon:4896'
-      # Aspergillus nidulans FGSC A4 - primary genomic reference for Aspergillus nidulanse, data inside 5052.go_annotations.gaf.gz
+      # Aspergillus nidulans FGSC A4 - primary genomic reference
+      # for Aspergillus nidulanse,
+      # data inside 5052.go_annotations.gaf.gz
       - 'taxon:227321'
       - 'taxon:559292'
 

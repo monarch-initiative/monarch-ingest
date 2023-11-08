@@ -16,7 +16,6 @@ from biolink.pydanticmodel import (
 )
 
 
-
 def parse_ncbi_taxa(taxon: str) -> List[str]:
     ncbi_taxa: List[str] = list()
     if taxon:
@@ -110,7 +109,7 @@ _predicate_by_name = {
 }
 
 
-def lookup_predicate(name: str = None) -> Optional[Tuple[str, Any]]:
+def lookup_predicate(name: str = None) -> Optional[str]:  # see 'return' comment below Optional[Tuple[str, Any]]:
     """
     :param name: string name of predicate to be looked up
     :return: tuple(biolink:predicate, mapping to relation) if available; None otherwise
@@ -121,7 +120,9 @@ def lookup_predicate(name: str = None) -> Optional[Tuple[str, Any]]:
         logger.error(f"Encountered unknown GAF qualifier '{str(name)}'?")
         return None
 
-    return entry["predicate"], entry["mapping"]
+    # Oct 2023 - we don't care about the RO relation anymore
+    # return entry["predicate"], entry["mapping"]
+    return entry["predicate"]
 
 
 _biolink_class_by_go_aspect = {
@@ -142,3 +143,37 @@ def get_biolink_classes(go_aspect: str) -> Tuple:
     :return: (category, association) tuple of Biolink Model Pydantic classes associated with the given GO aspect
     """
     return _biolink_class_by_go_aspect[go_aspect.upper()]
+
+#
+# See comment below
+#
+# INFORES_OBJECT_ID_MAP = {
+#     "MGI": "mgi",
+#     "AspGD": "aspgd",
+#     "UniProt": "uniprot",
+# }
+
+
+def get_infores(source: Optional[str]) -> Optional[str]:
+
+    if source:
+        # Our original vision was to do a proper mapping to known InfoRes CURIEs
+        # in the "Translator" # infores catalog but since the GOA file has such
+        # weird diversity in 'Assigned By' source values, one gets the sense that,
+        # for now, it is adequate to simply build a sensible infores "just-in-time".
+
+        # if source not in INFORES_OBJECT_ID_MAP:
+        #     INFORES_OBJECT_ID_MAP[source] = str(source).lower()
+        #     # logger.warning(
+        #     #     f"Encountered source '{source}'?" +
+        #     #     f" Inferring 'infores' as {INFORES_OBJECT_ID_MAP[source]}"
+        #     # )
+        #     print(INFORES_OBJECT_ID_MAP[source], flush=True)
+        # return f"infores:{INFORES_OBJECT_ID_MAP[source]}"
+
+        # Reformat the source string to infores reference ID syntax standards
+        infores_id = str(source).strip().lower().replace("_", "-")
+        # Then prepend the namespace...
+        return f"infores:{infores_id}"
+
+    return None
