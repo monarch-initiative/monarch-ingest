@@ -23,6 +23,7 @@ from linkml_runtime.utils.formatutils import camelcase
 
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
 from monarch_ingest.utils.log_utils import get_logger
+from monarch_ingest.utils.export_utils import export
 
 # from koza.utils.log_utils import get_logger
 
@@ -401,6 +402,8 @@ def load_jsonl():
     os.remove("output/monarch-kg_nodes.jsonl")
     os.remove("output/monarch-kg_edges.jsonl")
 
+def export_tsv():
+    export()
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     import datetime
