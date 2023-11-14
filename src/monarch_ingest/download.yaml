@@ -161,6 +161,11 @@
   local_name: data/bgee/Gallus_gallus_expr_simple.tsv.gz
   tag: bgee_gene_to_expression
 
+### BioGRID
+- url: https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.226/BIOGRID-ALL-4.4.226.mitab.zip
+  local_name: data/biogrid/biogrid.mitab.zip
+  tag: biogrid
+
 ### CTD
 -
   url: http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz

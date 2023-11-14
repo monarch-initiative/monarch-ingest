@@ -8,6 +8,8 @@ alliance_gene_to_phenotype:
 #  config: 'ingests/alliance/publication.yaml'
 bgee_gene_to_expression:
   config: 'ingests/bgee/gene_to_expression.yaml'
+biogrid:
+  config: 'ingests/biogrid/biogrid.yaml'
 ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
 # flybase_publication_to_gene::

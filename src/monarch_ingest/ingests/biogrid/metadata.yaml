@@ -1,0 +1,7 @@
+name: 'biogrid'
+
+dataset_description:
+  ingest_title: 'BioGRID'
+  ingest_url: 'https://thebiogrid.org/'
+  description: 'BioGRID: Database of Protein, Genetic and Chemical Interactions'
+  rights: 'https://wiki.thebiogrid.org/doku.php/partners'
