@@ -4,6 +4,7 @@ from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure, 
     do_release,
+    export_tsv,
     load_jsonl,
     load_sqlite, 
     load_solr, 
@@ -117,6 +118,9 @@ def sqlite():
 def solr():
     load_solr()
 
+@typer_app.command()
+def export():
+    export_tsv()
 
 @typer_app.command()
 def release(
