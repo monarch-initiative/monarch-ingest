@@ -436,6 +436,9 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             "gs://data-public-monarchinitiative/monarch-kg-dev/latest",
         )
 
+        # copy data to monarch-archive bucket only, so that we don't keep so many copies of the same huge files
+        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_name}/".split(" "))
+
         # index and upload to kghub s3 bucket
         if kghub:
             kghub_release_name = release_name.replace("-", "")
