@@ -34,6 +34,7 @@ typer-cli = "^0.0.13"
 loguru = "*"
 linkml-validator = "^0.4.5"
 bmt = "^1.0.15"
+linkml-runtime = "1.6.0"
 
 [tool.poetry.group.dev]
 optional = true
