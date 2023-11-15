@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://monarch-initiative.github.io/monarch-ingest/CLI/">
       
       <link rel="icon" href="../images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-8.5.10">
     
     
       
@@ -391,6 +391,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-export" class="md-nav__link">
+    ingest export
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     ingest jsonl
   </a>
@@ -748,7 +755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/phenio/" class="md-nav__link">
+      <a href="../Sources/phenio.md" class="md-nav__link">
         Phenio
       </a>
     </li>
@@ -859,6 +866,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-export" class="md-nav__link">
+    ingest export
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     ingest jsonl
   </a>
@@ -935,6 +949,7 @@
 <ul>
 <li><code>closure</code></li>
 <li><code>download</code>: Downloads data defined in download.yaml</li>
+<li><code>export</code></li>
 <li><code>jsonl</code></li>
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>release</code>: Copy data to Monarch GCP data buckets</li>
@@ -959,6 +974,14 @@
 <ul>
 <li><code>--ingests TEXT</code>: Which ingests to download data for</li>
 <li><code>--all / --no-all</code>: Download all ingest datasets  [default: no-all]</li>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-export"><code>ingest export</code></h2>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-jsonl"><code>ingest jsonl</code></h2>
