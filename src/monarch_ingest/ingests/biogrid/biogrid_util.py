@@ -16,13 +16,9 @@ def get_gene_id(raw_id: str) -> str:
     return gid
 
 EVIDENCE_CODE_MAPPINGS = {
-    # "neighborhood": "ECO:0000044",
-    # "fusion": "ECO:0000124",
-    # "cooccurence": "ECO:0000080",
-    # "coexpression": "ECO:0000075",
-    # "experimental": "ECO:0000006",
-    # "database": "ECO:0007636",
-    # "textmining": "ECO:0007833"
+    # TODO: Need to somehow manually curate mappings of definitions at
+    #          https://wiki.thebiogrid.org/doku.php/experimental_systems
+    #       onto ECO codes
 }
 
 
@@ -40,13 +36,14 @@ def get_evidence(methods: str) -> Optional[List[str]]:
             if not method:
                 continue
             # databaseName:identifier(methodName)
-            detection_method = method.rstrip(")").split('(')
-            if detection_method not in EVIDENCE_CODE_MAPPINGS:
-                logger.warning(
-                    f"Unknown evidence code for detection method '{detection_method}'. Adding method as proxy."
-                )
-                EVIDENCE_CODE_MAPPINGS[detection_method] = detection_method
-            evidence_codes.append(EVIDENCE_CODE_MAPPINGS[detection_method])
+            detection_methods = method.rstrip(")").split('(')
+            for method in detection_methods:
+                if method not in EVIDENCE_CODE_MAPPINGS.keys():
+                    logger.warning(
+                        f"Unknown evidence code for detection method '{method}'. Adding method as proxy."
+                    )
+                    EVIDENCE_CODE_MAPPINGS[method] = method
+            evidence_codes.append(EVIDENCE_CODE_MAPPINGS[method])
     return evidence_codes if evidence_codes else None
 
 

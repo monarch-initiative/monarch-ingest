@@ -12,7 +12,7 @@ while (row := koza_app.get_row()) is not None:
     gid_a = get_gene_id(row['ID Interactor A'])
     gid_b = get_gene_id(row['ID Interactor B'])
 
-    evidence = get_evidence(row['Publication Identifiers'])
+    evidence = get_evidence(row['Interaction Detection Method'])
 
     publications = get_publication_ids(row['Publication Identifiers'])
 
