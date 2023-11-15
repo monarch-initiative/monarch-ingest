@@ -142,11 +142,6 @@ def transform_phenio(
     nodes_df = pandas.read_csv(
         f"data/monarch/{nodefile}", sep="\t", dtype="string", quoting=csv.QUOTE_NONE, lineterminator="\n"
     )
-    nodes_df.drop(
-        nodes_df.columns.difference(["id", "category", "name", "description", "xref", "provided_by", "synonym"]),
-        axis=1,
-        inplace=True,
-    )
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
