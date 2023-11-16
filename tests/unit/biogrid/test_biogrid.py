@@ -81,6 +81,7 @@ def test_association(basic_pl):
     assert association.predicate == "biolink:interacts_with"
     assert "PMID:9006895" in association.publications
     assert "PMID:10727406" in association.publications
+    assert len(association.has_evidence) == 1
     assert "two hybrid" in association.has_evidence
     assert association.primary_knowledge_source == "infores:biogrid"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

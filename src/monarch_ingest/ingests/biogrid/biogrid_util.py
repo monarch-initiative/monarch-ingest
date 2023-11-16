@@ -1,9 +1,11 @@
 """
 Some functions to assist parsing of BioGRID fields.
 """
+from sys import stderr
 from typing import List, Optional
 
 from loguru import logger
+
 
 def get_gene_id(raw_id: str) -> str:
     """
@@ -15,10 +17,25 @@ def get_gene_id(raw_id: str) -> str:
     gid = raw_id.replace("entrez gene/locuslink", "NCBIGene")
     return gid
 
+
 EVIDENCE_CODE_MAPPINGS = {
     # TODO: Need to somehow manually curate mappings of definitions at
     #          https://wiki.thebiogrid.org/doku.php/experimental_systems
     #       onto ECO codes
+    #
+    # Method: two hybrid
+    # Method: affinity chromatography technology
+    # Method: genetic interference
+    # Method: pull down
+    # Method: enzymatic study
+    # Method: x-ray crystallography
+    # Method: far western blotting
+    # Method: fluorescent resonance energy transfer
+    # Method: unspecified method
+    # Method: imaging technique
+    # Method: protein complementation assay
+    # Method: biochemical
+    # Method: bioid
 }
 
 
@@ -36,14 +53,15 @@ def get_evidence(methods: str) -> Optional[List[str]]:
             if not method:
                 continue
             # databaseName:identifier(methodName)
-            detection_methods = method.rstrip(")").split('(')
-            for method in detection_methods:
-                if method not in EVIDENCE_CODE_MAPPINGS.keys():
-                    logger.warning(
-                        f"Unknown evidence code for detection method '{method}'. Adding method as proxy."
-                    )
-                    EVIDENCE_CODE_MAPPINGS[method] = method
+            method = method.rstrip(")").split('(')[-1]
+            if method not in EVIDENCE_CODE_MAPPINGS.keys():
+                # logger.warning(
+                #     f"Unknown evidence code for detection method '{method}'. Adding method as proxy."
+                # )
+                print(f"Method: {method}", file=stderr)
+                EVIDENCE_CODE_MAPPINGS[method] = method
             evidence_codes.append(EVIDENCE_CODE_MAPPINGS[method])
+
     return evidence_codes if evidence_codes else None
 
 

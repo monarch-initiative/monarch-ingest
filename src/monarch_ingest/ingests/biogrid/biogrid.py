@@ -1,7 +1,5 @@
 import uuid
-
 from koza.cli_runner import get_koza_app
-
 from biolink.pydanticmodel import PairwiseGeneToGeneInteraction
 from biogrid_util import get_gene_id, get_evidence, get_publication_ids
 

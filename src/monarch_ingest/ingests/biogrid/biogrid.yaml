@@ -5,7 +5,7 @@ format: 'csv'
 delimiter: '\t'
 
 files:
-  - './data/biogrid/biogrid.mitab.zip'
+  - './data/biogrid/biogrid.mitab.tsv'
 
 metadata:
   ingest_title: 'BioGRID'
@@ -14,21 +14,21 @@ metadata:
   rights: 'https://wiki.thebiogrid.org/doku.php/partners'
 
 columns:
-  - ID Interactor A
-  - ID Interactor B
-  - Alt IDs Interactor A
-  - Alt IDs Interactor B
-  - Aliases Interactor A
-  - Aliases Interactor B
-  - Interaction Detection Method
-  - Publication 1st Author
-  - Publication Identifiers
-  - Taxid Interactor A
-  - Taxid Interactor B
-  - Interaction Types
-  - Source Database
-  - Interaction Identifiers
-  - Confidence Values
+  - 'ID Interactor A'
+  - 'ID Interactor B'
+  - 'Alt IDs Interactor A'
+  - 'Alt IDs Interactor B'
+  - 'Aliases Interactor A'
+  - 'Aliases Interactor B'
+  - 'Interaction Detection Method'
+  - 'Publication 1st Author'
+  - 'Publication Identifiers'
+  - 'Taxid Interactor A'
+  - 'Taxid Interactor B'
+  - 'Interaction Types'
+  - 'Source Database'
+  - 'Interaction Identifiers'
+  - 'Confidence Values'
 
 edge_properties:
   - 'id'
@@ -36,6 +36,7 @@ edge_properties:
   - 'subject'
   - 'predicate'
   - 'object'
+  - 'has_evidence'
   - 'publications'
   - 'primary_knowledge_source'
   - 'aggregator_knowledge_source'
