@@ -103,25 +103,19 @@ lxml = ["lxml"]
 
 [[package]]
 name = "biolink-model"
-version = "3.3.3.post25.dev0+93c02412c"
-description = "Entity and association taxonomy and datamodel for life-sciences data"
+version = "3.6.0"
+description = "'A high level datamodel of biological entities and associations'"
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
+python-versions = ">=3.9"
+files = [
+    {file = "biolink-model-3.6.0.tar.gz", hash = "sha256:8fd3dc3d3364fa9714775e73857aff97cc72a3809ecd2916826d6c39c5a70ee4"},
+    {file = "biolink_model-3.6.0-py3-none-any.whl", hash = "sha256:78cc0827bb6657ea4712d5be439dddd4307daddb51d38b03e6b53f884417d60f"},
+]
 
 [package.dependencies]
-bs4 = "^0.0.1"
-curies = "^0.7.4"
-linkml = ">=1.6.3"
-prefixmaps = "^0.2.0"
-pytest = "^7.3.1"
-
-[package.source]
-type = "git"
-url = "https://github.com/glass-ships/biolink-model/"
-reference = "dependencies"
-resolved_reference = "1fc1df5e22e5788766d613a4d976fb45851ebb7f"
+curies = "*"
+linkml = "*"
+prefixmaps = "*"
 
 [[package]]
 name = "black"
@@ -218,19 +212,6 @@ urllib3 = {version = ">=1.25.4,<2.1", markers = "python_version >= \"3.10\""}
 
 [package.extras]
 crt = ["awscrt (==0.19.17)"]
-
-[[package]]
-name = "bs4"
-version = "0.0.1"
-description = "Dummy package for Beautiful Soup"
-optional = false
-python-versions = "*"
-files = [
-    {file = "bs4-0.0.1.tar.gz", hash = "sha256:36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a"},
-]
-
-[package.dependencies]
-beautifulsoup4 = "*"
 
 [[package]]
 name = "cachetools"
@@ -3953,4 +3934,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "b8d5ca9159c49ecd65a819795a5e5d17f3ed7f5ad3e65eabc1cc22be39607d74"
+content-hash = "e70b283ddd05fe949e75364ff54f108b24d986d99595a85d7f6b2250471107de"
