@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import (
+from biolink.pydanticmodel_v2 import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature

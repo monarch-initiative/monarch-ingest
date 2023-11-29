@@ -1,6 +1,6 @@
 import uuid
 from koza.cli_runner import get_koza_app
-from biolink.pydanticmodel import ChemicalToPathwayAssociation
+from biolink.pydanticmodel_v2 import ChemicalToPathwayAssociation
 
 koza_app = get_koza_app("reactome_chemical_to_pathway")
 

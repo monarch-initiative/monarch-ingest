@@ -6,7 +6,7 @@ from typing import Any, Optional, Tuple, List, Dict
 
 from loguru import logger
 
-from biolink.pydanticmodel import (
+from biolink.pydanticmodel_v2 import (
     BiologicalProcess,
     CellularComponent,
     MacromolecularMachineToBiologicalProcessAssociation,

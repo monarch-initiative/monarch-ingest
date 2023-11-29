@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import DiseaseToPhenotypicFeatureAssociation
+from biolink.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
 
 
 @pytest.fixture
