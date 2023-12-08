@@ -1,11 +1,11 @@
 name: 'biogrid'
 
 format: 'csv'
-
 delimiter: '\t'
+header_prefix: '#'
 
 files:
-  - './data/biogrid/biogrid.mitab.tsv'
+  - './data/biogrid/biogrid.mitab.zip'
 
 metadata:
   ingest_title: 'BioGRID'

@@ -2,7 +2,7 @@ import types
 from typing import Iterable
 
 import pytest
-from koza.cli_runner import get_koza_app, get_translation_table, set_koza_app, test_koza
+from koza.cli_runner import get_koza_app, get_translation_table, _set_koza_app, test_koza
 from koza.model.config.source_config import PrimaryFileConfig
 from koza.model.source import Source
 from loguru import logger
@@ -39,7 +39,7 @@ def mock_koza():
         mock_source_file = Source(mock_source_file_config)
         mock_source_file._reader = data
 
-        set_koza_app(
+        _set_koza_app(
             source=mock_source_file,
             translation_table=get_translation_table(global_table, local_table, logger),
             logger=logger,

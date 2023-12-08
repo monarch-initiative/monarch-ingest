@@ -142,11 +142,6 @@ def transform_phenio(
     nodes_df = pandas.read_csv(
         f"data/monarch/{nodefile}", sep="\t", dtype="string", quoting=csv.QUOTE_NONE, lineterminator="\n"
     )
-    nodes_df.drop(
-        nodes_df.columns.difference(["id", "category", "name", "description", "xref", "provided_by", "synonym"]),
-        axis=1,
-        inplace=True,
-    )
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
@@ -435,6 +430,9 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",
             "gs://data-public-monarchinitiative/monarch-kg-dev/latest",
         )
+
+        # copy data to monarch-archive bucket only, so that we don't keep so many copies of the same huge files
+        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_name}/".split(" "))
 
         # index and upload to kghub s3 bucket
         if kghub:

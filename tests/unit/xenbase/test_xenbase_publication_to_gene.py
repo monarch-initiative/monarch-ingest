@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import Gene, InformationContentEntityToNamedThingAssociation, Publication
+from biolink.pydanticmodel_v2 import Gene, InformationContentEntityToNamedThingAssociation, Publication
 from koza.cli_runner import get_translation_table
 from loguru import logger
 

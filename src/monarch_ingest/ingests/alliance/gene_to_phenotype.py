@@ -5,7 +5,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from biolink.pydanticmodel import GeneToPhenotypicFeatureAssociation
+from biolink.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
 
 
 from loguru import logger

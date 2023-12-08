@@ -4,7 +4,7 @@ from typing import Dict, List
 import pandas as pd
 import pytest
 import yaml
-from biolink.pydanticmodel import GeneToExpressionSiteAssociation
+from biolink.pydanticmodel_v2 import GeneToExpressionSiteAssociation
 from koza.app import KozaApp
 from koza.io.yaml_loader import UniqueIncludeLoader
 from koza.model.config.source_config import OutputFormat, PrimaryFileConfig
