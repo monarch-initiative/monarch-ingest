@@ -899,7 +899,7 @@
 <h5 id="imports-and-setup">Imports and setup</h5>
 <p>Start with the imports, and make sure to set the source_name, which will be used for communicating with the reader and writer.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">koza.cli_runner</span> <span class="kn">import</span> <span class="n">koza_app</span>
-<span class="kn">from</span> <span class="nn">biolink.pydanticmodel</span> <span class="kn">import</span> <span class="n">Gene</span>
+<span class="kn">from</span> <span class="nn">biolink.pydanticmodel_v2</span> <span class="kn">import</span> <span class="n">Gene</span>
 
 <span class="c1"># The source name is used for reading and writing</span>
 <span class="n">source_name</span> <span class="o">=</span> <span class="s2">&quot;gene-information&quot;</span>
@@ -916,7 +916,7 @@
 </code></pre></div>
 <h4 id="creating-entities">Creating entities</h4>
 <p>At this step, hopefully your documentation is so good that you're just letting your fingers take on the last step of converting what you've already planned into Python syntax. Ideally not much logic will be needed here, and if there's a lot, it might be worth considering whether an ingest (even on the same file) can be split across multiple transforms so that each is as easy to read as possible. Aim to add all properties when creating the instance, but in some cases adding optional lists might need to happen below. </p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">biolink.pydanticmodel</span> <span class="kn">import</span> <span class="n">Gene</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">biolink.pydanticmodel_v2</span> <span class="kn">import</span> <span class="n">Gene</span>
 <span class="n">gene</span> <span class="o">=</span> <span class="n">Gene</span><span class="p">(</span>
     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;somethingbase:&#39;</span><span class="o">+</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span>
     <span class="n">name</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
