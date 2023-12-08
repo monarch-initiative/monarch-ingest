@@ -1,0 +1,44 @@
+name: 'biogrid'
+
+format: 'csv'
+delimiter: '\t'
+header_prefix: '#'
+
+files:
+  - './data/biogrid/biogrid.mitab.zip'
+
+metadata:
+  ingest_title: 'BioGRID'
+  ingest_url: 'https://thebiogrid.org/'
+  description: 'BioGRID: Database of Protein, Genetic and Chemical Interactions'
+  rights: 'https://wiki.thebiogrid.org/doku.php/partners'
+
+columns:
+  - 'ID Interactor A'
+  - 'ID Interactor B'
+  - 'Alt IDs Interactor A'
+  - 'Alt IDs Interactor B'
+  - 'Aliases Interactor A'
+  - 'Aliases Interactor B'
+  - 'Interaction Detection Method'
+  - 'Publication 1st Author'
+  - 'Publication Identifiers'
+  - 'Taxid Interactor A'
+  - 'Taxid Interactor B'
+  - 'Interaction Types'
+  - 'Source Database'
+  - 'Interaction Identifiers'
+  - 'Confidence Values'
+
+edge_properties:
+  - 'id'
+  - 'category'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'has_evidence'
+  - 'publications'
+  - 'primary_knowledge_source'
+  - 'aggregator_knowledge_source'
+
+transform_mode: 'flat'

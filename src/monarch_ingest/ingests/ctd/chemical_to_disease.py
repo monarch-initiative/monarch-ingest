@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from biolink.pydanticmodel_v2 import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 from monarch_ingest.constants import BIOLINK_AFFECTS
 
 koza_app = get_koza_app("ctd_chemical_to_disease")

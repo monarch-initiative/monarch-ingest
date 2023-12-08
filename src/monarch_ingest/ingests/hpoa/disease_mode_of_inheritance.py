@@ -25,7 +25,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
+from biolink.pydanticmodel_v2 import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
 
 
 from loguru import logger
