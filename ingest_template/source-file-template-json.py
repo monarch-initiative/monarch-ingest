@@ -2,7 +2,7 @@
 import uuid
 from typing import List
 
-from biolink.pydanticmodel import (
+from biolink.pydanticmodel_v2 import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,

@@ -89,6 +89,11 @@ pipeline {
                 sh 'poetry run ingest sqlite'
             }
         }
+        stage('make exports') {
+            steps {
+                sh 'poetry run ingest export'
+            }
+        }
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --kghub'

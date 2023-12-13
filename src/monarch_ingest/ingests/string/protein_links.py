@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import PairwiseGeneToGeneInteraction
+from biolink.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
 
 from loguru import logger
 

@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from biolink.pydanticmodel_v2 import ChemicalToDiseaseOrPhenotypicFeatureAssociation
 from monarch_ingest.constants import BIOLINK_AFFECTS
 
 @pytest.fixture

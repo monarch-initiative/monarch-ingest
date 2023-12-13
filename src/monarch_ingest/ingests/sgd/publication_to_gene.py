@@ -2,7 +2,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel import InformationContentEntityToNamedThingAssociation
+from biolink.pydanticmodel_v2 import InformationContentEntityToNamedThingAssociation
 
 koza_app = get_koza_app("sgd_publication_to_gene")
 

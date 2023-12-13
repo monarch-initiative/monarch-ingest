@@ -1,6 +1,6 @@
 import uuid
 
-from biolink.pydanticmodel import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation, \
+from biolink.pydanticmodel_v2 import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation, \
     CorrelatedGeneToDiseaseAssociation
 from koza.cli_runner import get_koza_app
 
