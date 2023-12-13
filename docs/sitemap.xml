@@ -66,6 +66,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://monarch-initiative.github.io/monarch-ingest/Sources/biogrid/</loc>
+         <lastmod>2023-12-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://monarch-initiative.github.io/monarch-ingest/Sources/ctd/</loc>
          <lastmod>2023-12-13</lastmod>
          <changefreq>daily</changefreq>
