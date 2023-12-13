@@ -35,7 +35,7 @@ def test_association(basic_g2p):
     assert association
     assert association.subject == "CHEBI:10033"
     assert association.predicate == "biolink:participates_in"
-    assert association.object == "REACT:R-RNO-6806664"
+    assert association.object == "Reactome:R-RNO-6806664"
     assert "ECO:0000501" in association.has_evidence
     assert association.primary_knowledge_source == "infores:reactome"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

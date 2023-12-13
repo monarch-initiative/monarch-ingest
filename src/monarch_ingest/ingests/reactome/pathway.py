@@ -16,7 +16,7 @@ while (row := koza_app.get_row()) is not None:
     # We only continue of the species is in our local reactome_id_mapping table
     if taxon_id:
         pathway = Pathway(
-            id="REACT:" + row["ID"],
+            id="Reactome:" + row["ID"],
             name=row["Name"],
             in_taxon=[taxon_id],
             provided_by=["infores:reactome"]
