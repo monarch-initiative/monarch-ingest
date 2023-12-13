@@ -295,9 +295,9 @@
 
 ### Monarch
 -
-  url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.tsv'
+  url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.sssom.tsv'
   # url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
-  local_name: data/monarch/gene_mappings.tsv
+  local_name: data/monarch/gene_mappings.sssom.tsv
   tag: mapping
 -
   url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
