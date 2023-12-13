@@ -18,7 +18,7 @@ while (row := koza_app.get_row()) is not None:
     if taxon_id:
 
         gene_id = 'NCBIGene:' + row["component"]
-        pathway_id = "REACT:" + row["pathway_id"]  # pathways themselves are an independent ingest now...
+        pathway_id = "Reactome:" + row["pathway_id"]  # pathways themselves are an independent ingest now...
 
         go_evidence_code = row["go_ecode"]
         evidence_code_term = koza_app.translation_table.resolve_term(go_evidence_code)

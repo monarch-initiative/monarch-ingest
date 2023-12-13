@@ -15,11 +15,16 @@ while (row := koza_app.get_row()) is not None:
 
     # We only continue of the species is in our local reactome_id_mapping table
     if taxon_id:
+        pathway_id = "Reactome:" + row["ID"]
         pathway = Pathway(
-            id="REACT:" + row["ID"],
+            id=pathway_id,
             name=row["Name"],
             in_taxon=[taxon_id],
-            provided_by=["infores:reactome"]
+            provided_by=["infores:reactome"],
+
+            # the identifier is duplicated here as a xref to become visible as
+            # an external link in the entity display page of the Monarch App
+            xref=[pathway_id]
         )
 
         koza_app.write(pathway)
