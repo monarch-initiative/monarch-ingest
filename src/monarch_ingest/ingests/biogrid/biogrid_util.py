@@ -14,7 +14,10 @@ def get_gene_id(raw_id: str) -> str:
     :param raw_id: str, raw BioGRID input string (a pseudo-CURIE)
     :return:
     """
-    gid = raw_id.replace("entrez gene/locuslink", "NCBIGene")
+    gid = (raw_id
+           .replace("entrez gene/locuslink:", "NCBIGene:")
+           .replace("uniprot/swiss-prot:", "UniProtKB:"))
+
     return gid
 
 

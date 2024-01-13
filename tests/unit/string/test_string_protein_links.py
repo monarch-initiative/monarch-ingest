@@ -53,6 +53,34 @@ def basic_row():
         "combined_score": "183",
     }
 
+@pytest.fixture
+def inverse_duplicate_rows():
+    return [
+        {
+            "protein1": "10090.ENSMUSP00000000001",
+            "protein2": "10090.ENSMUSP00000020316",
+            "neighborhood": "0",
+            "fusion": "0",
+            "cooccurence": "0",
+            "coexpression": "116",
+            "experimental": "90",
+            "database": "0",
+            "textmining": "67",
+            "combined_score": "183",
+        },
+        {
+            "protein1": "10090.ENSMUSP00000020316",
+            "protein2": "10090.ENSMUSP00000000001",
+            "neighborhood": "0",
+            "fusion": "0",
+            "cooccurence": "0",
+            "coexpression": "116",
+            "experimental": "90",
+            "database": "0",
+            "textmining": "67",
+            "combined_score": "183",
+        }
+    ]
 
 @pytest.fixture
 def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache):
@@ -75,6 +103,26 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
         map_cache=map_cache,
     )
 
+@pytest.fixture
+def duplicate_row_entities(mock_koza, source_name, inverse_duplicate_rows, script, global_table, map_cache):
+    """
+    Mock Koza run for STRING protein links ingest.
+
+    :param mock_koza:
+    :param source_name:
+    :param inverse_duplicate_rows:
+    :param script:
+    :param global_table:
+    :param map_cache:
+    :return:
+    """
+    return mock_koza(
+        name=source_name,
+        data=iter(inverse_duplicate_rows),
+        transform_code=script,
+        global_table=global_table,
+        map_cache=map_cache,
+    )
 
 # def test_proteins(basic_pl):
 #     gene_a = basic_pl[0]
@@ -155,3 +203,9 @@ def test_multigene_associations(multigene_entities):
         association for association in multigene_entities if isinstance(association, PairwiseGeneToGeneInteraction)
     ]
     assert len(associations) == 6
+
+def test_duplicates_are_removed(duplicate_row_entities):
+    associations = [
+        association for association in duplicate_row_entities if isinstance(association, PairwiseGeneToGeneInteraction)
+    ]
+    assert len(associations) == 1

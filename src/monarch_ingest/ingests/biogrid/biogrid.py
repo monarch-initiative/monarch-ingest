@@ -14,15 +14,18 @@ while (row := koza_app.get_row()) is not None:
 
     publications = get_publication_ids(row['Publication Identifiers'])
 
-    association = PairwiseGeneToGeneInteraction(
-        id="uuid:" + str(uuid.uuid1()),
-        subject=gid_a,
-        predicate="biolink:interacts_with",
-        object=gid_b,
-        has_evidence=evidence,
-        publications=publications,
-        primary_knowledge_source="infores:biogrid",
-        aggregator_knowledge_source=["infores:monarchinitiative"]
-    )
+    # Only keep interactions using NCBIGene or UniProtKB identifiers, could also filter on taxid
+    if gid_a.startswith("NCBIGene:") or gid_a.startswith("UniProtKB:") \
+            and gid_b.startswith("NCBIGene:") or gid_b.startswith("UniProtKB:"):
+        association = PairwiseGeneToGeneInteraction(
+            id="uuid:" + str(uuid.uuid1()),
+            subject=gid_a,
+            predicate="biolink:interacts_with",
+            object=gid_b,
+            has_evidence=evidence,
+            publications=publications,
+            primary_knowledge_source="infores:biogrid",
+            aggregator_knowledge_source=["infores:monarchinitiative"]
+        )
 
-    koza_app.write(association)
+        koza_app.write(association)

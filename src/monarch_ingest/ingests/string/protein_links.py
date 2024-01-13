@@ -11,7 +11,12 @@ from string_utils import map_evidence_codes
 
 koza_app = get_koza_app("string_protein_links")
 
-while (row := koza_app.get_row()) is not None:
+seen_rows = set([])
+
+def sorted_id_pair(row) -> str:
+    sorted([row['protein1'], row['protein2']])
+
+while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in seen_rows:
     
     entrez_2_string = koza_app.get_map('entrez_2_string')
 
@@ -53,7 +58,7 @@ while (row := koza_app.get_row()) is not None:
                     aggregator_knowledge_source=["infores:monarchinitiative"],
                     primary_knowledge_source="infores:string"
                 )
-
+                seen_rows.add(sorted_id_pair(row))
                 entities.append(association)
 
         koza_app.write(*entities)
