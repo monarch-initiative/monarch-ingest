@@ -23,7 +23,7 @@ nav:
     - CTD: 'Sources/ctd.md'
     # - Dictybase: 'Sources/dictybase.md'
     # - Flybase: 'Sources/flybase.md'
-    - GOA: 'Sources/goa.md'
+    - GO: 'Sources/go.md'
     - HGNC: 'Sources/hgnc.md'
     - HPOA: 'Sources/hpoa.md'
     # - MGI: 'Sources/mgi.md'

@@ -8,7 +8,7 @@ import pytest
 from biolink.pydanticmodel_v2 import Association
 from loguru import logger
 
-from monarch_ingest.ingests.goa.goa_utils import parse_identifiers
+from monarch_ingest.ingests.go.annotation_utils import parse_identifiers
 
 
 @pytest.mark.parametrize(
@@ -50,7 +50,7 @@ def source_name():
     """
     :return: string source name of GO Annotations ingest
     """
-    return "goa_go_annotation"
+    return "go_annotation"
 
 
 @pytest.fixture
@@ -58,7 +58,7 @@ def script():
     """
     :return: string path to GO Annotations ingest script
     """
-    return "./src/monarch_ingest/ingests/goa/go_annotation.py"
+    return "./src/monarch_ingest/ingests/go/annotation.py"
 
 
 @pytest.fixture(scope="package")
@@ -66,7 +66,7 @@ def local_table():
     """
     :return: string path to Evidence Code to ECO term mappings file
     """
-    return "src/monarch_ingest/ingests/goa/gaf-eco-mapping.yaml"
+    return "src/monarch_ingest/ingests/go/gaf-eco-mapping.yaml"
 
 
 @pytest.fixture
@@ -301,7 +301,7 @@ def test_rows():
 
 
 @pytest.fixture
-def basic_goa(mock_koza, source_name, test_rows, script, global_table, local_table):
+def basic_go(mock_koza, source_name, test_rows, script, global_table, local_table):
     """
     Mock Koza run for GO annotation ingest.
 
@@ -449,12 +449,12 @@ result_expected = {
 }
 
 
-def test_association(basic_goa):
-    if not len(basic_goa):
+def test_association(basic_go):
+    if not len(basic_go):
         logger.warning("test_association() null test?")
         return
 
-    association = basic_goa[2]
+    association = basic_go[2]
     assert association
     assert association.subject in result_expected.keys()
 

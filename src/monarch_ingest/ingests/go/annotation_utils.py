@@ -2,7 +2,7 @@
 Some Gene Ontology Annotation ingest utility functions.
 """
 from re import sub, IGNORECASE, compile, Pattern
-from typing import Any, Optional, Tuple, List, Dict
+from typing import Optional, Tuple, List, Dict
 
 from loguru import logger
 

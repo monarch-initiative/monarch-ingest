@@ -1,4 +1,4 @@
-name: 'goa_go_annotation'
+name: 'go_annotation'
 
 format: 'csv'  # is 'gaf' specifically recognized, or does it need to be specifically recognized?
 delimiter: '\t'
@@ -8,21 +8,21 @@ comment_char: '!'
 files:
   # Need to filter out 5052 - Contains data from multiple species of the
   # genus Aspergillus, taxon:5052, not just Aspergillus nidulans
-  - './data/goa/4932.go_annotations.gaf.gz'
-  - './data/goa/4896.go_annotations.gaf.gz'
-  - './data/goa/5052.go_annotations.gaf.gz'
-  - './data/goa/6239.go_annotations.gaf.gz'
-  - './data/goa/7227.go_annotations.gaf.gz'
-  - './data/goa/7955.go_annotations.gaf.gz'
-  - './data/goa/9031.go_annotations.gaf.gz'
-  - './data/goa/9606.go_annotations.gaf.gz'
-  - './data/goa/9615.go_annotations.gaf.gz'
-  - './data/goa/9823.go_annotations.gaf.gz'
-  - './data/goa/9913.go_annotations.gaf.gz'
-  - './data/goa/10090.go_annotations.gaf.gz'
-  - './data/goa/10116.go_annotations.gaf.gz'
-  - './data/goa/44689.go_annotations.gaf.gz'
-  # - './data/goa/162425.go_annotations.gaf.gz'
+  - './data/go/4932.go_annotations.gaf.gz'
+  - './data/go/4896.go_annotations.gaf.gz'
+  - './data/go/5052.go_annotations.gaf.gz'
+  - './data/go/6239.go_annotations.gaf.gz'
+  - './data/go/7227.go_annotations.gaf.gz'
+  - './data/go/7955.go_annotations.gaf.gz'
+  - './data/go/9031.go_annotations.gaf.gz'
+  - './data/go/9606.go_annotations.gaf.gz'
+  - './data/go/9615.go_annotations.gaf.gz'
+  - './data/go/9823.go_annotations.gaf.gz'
+  - './data/go/9913.go_annotations.gaf.gz'
+  - './data/go/10090.go_annotations.gaf.gz'
+  - './data/go/10116.go_annotations.gaf.gz'
+  - './data/go/44689.go_annotations.gaf.gz'
+  # - './data/go/162425.go_annotations.gaf.gz'
 
 filters:
   - inclusion: 'include'
@@ -48,16 +48,12 @@ filters:
       - 'taxon:227321'
       - 'taxon:559292'
 
-metadata:
-  ingest_title: 'GOA DB'
-  ingest_url: 'http://geneontology.org/'
-  description: 'Gene Ontology Annotations Database'
-  rights: 'http://geneontology.org/docs/go-citation-policy/'
+metadata: !include ./src/monarch_ingest/ingests/go/metadata.yaml
 
 global_table: './src/monarch_ingest/translation_table.yaml'
 
 # Evidence Code to ECO term mappings file
-local_table: './src/monarch_ingest/ingests/goa/gaf-eco-mapping.yaml'
+local_table: './src/monarch_ingest/ingests/go/gaf-eco-mapping.yaml'
 
 # http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/
 columns:

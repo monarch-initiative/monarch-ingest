@@ -1,4 +1,4 @@
-# Gene Ontology Annotation (GOA) Database
+# Gene Ontology (GO) Annotation Database
 
 The Gene Ontology Annotation Database compiles high-quality [Gene Ontology (GO)](http://www.geneontology.org/) annotations to proteins in the [UniProt Knowledgebase (UniProtKB)](https://www.uniprot.org/), RNA molecules from [RNACentral](http://rnacentral.org/) and protein complexes from the [Complex Portal](https://www.ebi.ac.uk/complexportal/home).
 
@@ -44,7 +44,7 @@ __**Associations**__
     * negated
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:goa)
+    * primary_knowledge_source
 
 OR
 
@@ -56,7 +56,7 @@ OR
     * negated
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:goa)
+    * primary_knowledge_source
     
 * **biolink:MacromolecularMachineToBiologicalProcessAssociation**:
     * id (random uuid)
@@ -66,7 +66,7 @@ OR
     * negated
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:goa)
+    * primary_knowledge_source
 
 * **biolink:MacromolecularMachineToCellularComponentAssociation**:
     * id (random uuid)
@@ -76,7 +76,7 @@ OR
     * negated
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:goa)
+    * primary_knowledge_source
 
 __**Possible Additional Gene to Gene Ontology Term Association?**__
 
@@ -88,7 +88,7 @@ __**Possible Additional Gene to Gene Ontology Term Association?**__
     * negated
     * has_evidence
     * aggregating_knowledge_source (["infores:monarchinitiative"])
-    * primary_knowledge_source (infores:goa)
+    * primary_knowledge_source
 
 ## Citation
 
