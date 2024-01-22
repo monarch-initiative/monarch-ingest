@@ -1,30 +1,29 @@
-import os, pkgutil
+import os
+import pkgutil
 from pathlib import Path
 import yaml
 
+from koza.io.yaml_loader import UniqueIncludeLoader
+
 
 def get_ingests():
-    return yaml.safe_load(pkgutil.get_data("monarch_ingest", 'ingests.yaml'))
+    return yaml.safe_load(pkgutil.get_data("monarch_ingest", "ingests.yaml"))
 
 
 def get_ingest(source: str):
     ingests = get_ingests
-    return yaml.load(
-        pkgutil.get_data("monarch_ingest", ingests[source]['config']), yaml.FullLoader
-    )
+    return yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
 
 
 def file_exists(file):
-    return (Path(file).is_file() and os.stat(file).st_size > 1000)
+    return Path(file).is_file() and os.stat(file).st_size > 1000
 
 
 def ingest_output_exists(source, output_dir):
     ingests = get_ingests()
 
-    ingest_config = yaml.load(
-        pkgutil.get_data("monarch_ingest", ingests[source]['config']), yaml.FullLoader
-    )
-
+    ingest_config = yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
+    
     has_node_properties = "node_properties" in ingest_config
     has_edge_properties = "edge_properties" in ingest_config
 
@@ -37,4 +36,3 @@ def ingest_output_exists(source, output_dir):
         return False
 
     return True
-

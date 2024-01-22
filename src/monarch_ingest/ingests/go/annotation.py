@@ -4,12 +4,11 @@ Gene Ontology Annotations Ingest module.
 Gene to GO term Associations
 (to MolecularActivity, BiologicalProcess and CellularComponent)
 """
-from typing import List
 import uuid
 
 from koza.cli_runner import get_koza_app
 
-from monarch_ingest.ingests.goa.goa_utils import (
+from monarch_ingest.ingests.go.annotation_utils import (
     parse_identifiers,
     get_biolink_classes,
     lookup_predicate,
@@ -18,7 +17,7 @@ from monarch_ingest.ingests.goa.goa_utils import (
 from loguru import logger
 
 
-koza_app = get_koza_app("goa_go_annotation")
+koza_app = get_koza_app("go_annotation")
 
 # for row in koza_app.source: # doesn't play nice with tests
 while (row := koza_app.get_row()) is not None:

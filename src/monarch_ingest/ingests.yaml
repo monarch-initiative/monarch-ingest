@@ -18,8 +18,8 @@ dictybase_gene:
   config: 'ingests/dictybase/gene.yaml'
 dictybase_gene_to_phenotype:
   config: 'ingests/dictybase/gene_to_phenotype.yaml'
-goa_go_annotation:
-  config: 'ingests/goa/go_annotation.yaml'
+go_annotation:
+  config: 'ingests/go/annotation.yaml'
 hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
 hpoa_disease_to_phenotype:
