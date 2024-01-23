@@ -292,10 +292,10 @@ def get_data_versions(output_dir: str = OUTPUT_DIR):
 
     data = {}
     data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
-    data["hpo"] = r.get("https://api.github.com/repos/obophenotype/human-phenotype-ontology/releases").json()[0][
-        "tag_name"
-    ]
-    data["mondo"] = r.get("https://api.github.com/repos/monarch-initiative/mondo/releases").json()[0]["tag_name"]
+    # data["hpo"] = r.get("https://api.github.com/repos/obophenotype/human-phenotype-ontology/releases").json()[0][
+    #     "tag_name"
+    # ]
+    # data["mondo"] = r.get("https://api.github.com/repos/monarch-initiative/mondo/releases").json()[0]["tag_name"]
     data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
     Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
     with open(f"{output_dir}/versions.yaml", "w") as f:
