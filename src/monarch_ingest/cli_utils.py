@@ -2,6 +2,7 @@ import csv
 import gc
 import os
 import tarfile
+import yaml
 from pathlib import Path
 from typing import Optional
 from biolink import model  # import the pythongen biolink model to get the version
@@ -297,39 +298,34 @@ def get_data_versions(output_dir: str = OUTPUT_DIR):
 
     data = {}
     data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
-    # data["hpo"] = r.get("https://api.github.com/repos/obophenotype/human-phenotype-ontology/releases").json()[0][
-    #     "tag_name"
-    # ]
-    # data["mondo"] = r.get("https://api.github.com/repos/monarch-initiative/mondo/releases").json()[0]["tag_name"]
     data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
     Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
     with open(f"{output_dir}/versions.yaml", "w") as f:
         f.write("data:\n")
         for data_source, version in data.items():
-            f.write(f"  {data_source}: {version}\n")
+            f.write(f"  {data_source}: {str(version)}\n")
 
 
 def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: str = None):
-    import yaml
     from importlib.metadata import version
 
     packages = {}
     packages["biolink"] = version("biolink-model")
-    packages["monarch-ingest"] = version("monarch-ingest")
     packages["koza"] = version("koza")
-    packages["kg-release"] = release_version if release_version else get_relase_ver()
-
+    packages["monarch-ingest"] = version("monarch-ingest")
+    kg_version = get_relase_ver() if release_version is None else release_version
     with open("data/versions.yaml", "r") as f:
         data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
 
     Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
     with open(f"{output_dir}/versions.yaml", "w") as f:
+        f.write(f"kg-version: {str(kg_version)}\n\n")
         f.write("packages:\n")
-        for p, v in packages.items():
-            f.write(f"  {p}: {v}\n")
+        for k, v in packages.items():
+            f.write(f"  {k}: {str(v)}\n")
         f.write("\ndata:\n")
-        for d, v in data_versions.items():
-            f.write(f"  {d}: {v}\n")
+        for k, v in data_versions.items():
+            f.write(f"  {k}: {str(v)}\n")
 
 
 def merge_files(
@@ -448,7 +444,10 @@ def export_tsv():
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
-    release_ver = get_relase_ver()
+
+    with open(f"{dir}/versions.yaml", "r") as f:
+        versions = yaml.load(f, Loader=yaml.FullLoader)
+    release_ver = versions["kg-version"]
 
     logger = get_logger()
     logger.info(f"Creating dated release: {release_ver}...")
