@@ -287,6 +287,11 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
+def get_relase_ver():
+    import datetime
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
 def get_data_versions(output_dir: str = OUTPUT_DIR):
     import requests as r
 
@@ -304,7 +309,7 @@ def get_data_versions(output_dir: str = OUTPUT_DIR):
             f.write(f"  {data_source}: {version}\n")
 
 
-def get_pkg_versions(output_dir: str = OUTPUT_DIR):
+def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: str = None):
     import yaml
     from importlib.metadata import version
 
@@ -312,6 +317,7 @@ def get_pkg_versions(output_dir: str = OUTPUT_DIR):
     packages["biolink"] = version("biolink-model")
     packages["monarch-ingest"] = version("monarch-ingest")
     packages["koza"] = version("koza")
+    packages["kg-release"] = release_version if release_version else get_relase_ver()
 
     with open("data/versions.yaml", "r") as f:
         data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
@@ -442,53 +448,51 @@ def export_tsv():
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
-    import datetime
-
-    release_name = datetime.datetime.now().strftime("%Y-%m-%d")
+    release_ver = get_relase_ver()
 
     logger = get_logger()
-    logger.info(f"Creating dated release: {release_name}...")
+    logger.info(f"Creating dated release: {release_ver}...")
 
     try:
         logger.debug(f"Uploading release to Google bucket...")
 
-        sh.touch(f"{dir}/{release_name}")
+        sh.touch(f"{dir}/{release_ver}")
 
         # copy to monarch-archive bucket
-        sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_name}".split(" "))
+        sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_ver}".split(" "))
 
         # copy to data-public bucket
         sh.gsutil(
             *"-q -m cp -r".split(" "),
-            f"gs://monarch-archive/monarch-kg-dev/{release_name}",
-            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",
+            f"gs://monarch-archive/monarch-kg-dev/{release_ver}",
+            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_ver}",
         )
 
         # update "latest"
         sh.gsutil(*"-q -m rm -rf gs://data-public-monarchinitiative/monarch-kg-dev/latest".split(" "))
         sh.gsutil(
             *"-q -m cp -r".split(" "),
-            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",
+            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_ver}",
             "gs://data-public-monarchinitiative/monarch-kg-dev/latest",
         )
 
         # copy data to monarch-archive bucket only, so that we don't keep so many copies of the same huge files
-        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_name}/".split(" "))
+        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_ver}/".split(" "))
 
         # index and upload to kghub s3 bucket
         if kghub:
-            kghub_release_name = release_name.replace("-", "")
+            kghub_release_ver = release_ver.replace("-", "")
             sh.mkdir("-p", f"{dir}/stats")
             sh.mv(f"{dir}/merged_graph_stats.yaml", f"{dir}/stats")
             sh.multi_indexer(
-                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_name} -x -u".split(
+                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_ver} -x -u".split(
                     " "
                 )
             )
             sh.gsutil(
                 *"-q -m -cp -r -a public-read".split(" "),
                 f"{dir}/*",  # source files
-                f"s3://kg-hub-public-data/kg-monarch/{kghub_release_name}",  # destination
+                f"s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}",  # destination
             )
             sh.gsutil(
                 *"-q -m cp -r -a public-read".split(" "),  # make public
@@ -497,7 +501,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             )
 
         logger.debug("Cleaning up files...")
-        sh.rm(f"output/{release_name}")
+        sh.rm(f"output/{release_ver}")
 
         logger.info(f"Successfuly uploaded release!")
     except BaseException as e:
