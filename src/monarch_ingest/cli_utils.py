@@ -1,7 +1,6 @@
 import csv
 import gc
 import os
-import pathlib
 import tarfile
 from pathlib import Path
 from typing import Optional
@@ -10,7 +9,6 @@ from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
 # from loguru import logger
-
 import pandas
 import sh
 
@@ -24,8 +22,6 @@ from linkml_runtime.utils.formatutils import camelcase
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.export_utils import export
-
-# from koza.utils.log_utils import get_logger
 
 
 OUTPUT_DIR = "output"
@@ -134,7 +130,7 @@ def transform_phenio(
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    if (force == False) and file_exists(nodes) and file_exists(edges):
+    if (force is False) and file_exists(nodes) and file_exists(edges):
         logger.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
         # if log: logger.removeHandler(fh)
         return
@@ -155,7 +151,7 @@ def transform_phenio(
     # associations that we'll also need
     exclude_prefixes = ["HGNC", "FlyBase", "http", "biolink"]
 
-    pathlib.Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
+    Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
     excluded_nodes = nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
@@ -291,6 +287,45 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
+def get_data_versions(output_dir: str = OUTPUT_DIR):
+    import requests as r
+
+    data = {}
+    data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
+    data["hpo"] = r.get("https://api.github.com/repos/obophenotype/human-phenotype-ontology/releases").json()[0][
+        "tag_name"
+    ]
+    data["mondo"] = r.get("https://api.github.com/repos/monarch-initiative/mondo/releases").json()[0]["tag_name"]
+    data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
+    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
+    with open(f"{output_dir}/versions.yaml", "w") as f:
+        f.write("data:\n")
+        for data_source, version in data.items():
+            f.write(f"  {data_source}: {version}\n")
+
+
+def get_pkg_versions(output_dir: str = OUTPUT_DIR):
+    import yaml
+    from importlib.metadata import version
+
+    packages = {}
+    packages["biolink"] = version("biolink-model")
+    packages["monarch-ingest"] = version("monarch-ingest")
+    packages["koza"] = version("koza")
+
+    with open("data/versions.yaml", "r") as f:
+        data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
+
+    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
+    with open(f"{output_dir}/versions.yaml", "w") as f:
+        f.write("packages:\n")
+        for p, v in packages.items():
+            f.write(f"  {p}: {v}\n")
+        f.write("\ndata:\n")
+        for d, v in data_versions.items():
+            f.write(f"  {d}: {v}\n")
+
+
 def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
@@ -316,18 +351,22 @@ def apply_closure(
     output_dir: str = OUTPUT_DIR,
 ):
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
-    add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
-                closure_file=closure_file,
-                output_file=output_file,
-                fields=['subject',
-                        'object',
-                        'qualifiers',
-                        'frequency_qualifier',
-                        'onset_qualifier',
-                        'sex_qualifier',
-                        'stage_qualifier'],
-                evidence_fields=['has_evidence', 'publications'],
-                grouping_fields=['subject', 'negated', 'predicate', 'object'])
+    add_closure(
+        kg_archive=f"{output_dir}/{name}.tar.gz",
+        closure_file=closure_file,
+        output_file=output_file,
+        fields=[
+            "subject",
+            "object",
+            "qualifiers",
+            "frequency_qualifier",
+            "onset_qualifier",
+            "sex_qualifier",
+            "stage_qualifier",
+        ],
+        evidence_fields=["has_evidence", "publications"],
+        grouping_fields=["subject", "negated", "predicate", "object"],
+    )
     sh.pigz(output_file, force=True)
 
 
@@ -397,8 +436,10 @@ def load_jsonl():
     os.remove("output/monarch-kg_nodes.jsonl")
     os.remove("output/monarch-kg_edges.jsonl")
 
+
 def export_tsv():
     export()
+
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     import datetime
