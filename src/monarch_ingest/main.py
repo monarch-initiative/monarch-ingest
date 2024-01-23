@@ -31,7 +31,8 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
 @typer_app.command()
 def download(
     ingests: Optional[List[str]] = typer.Option(None,  help="Which ingests to download data for"),
-    all: bool = typer.Option(False, help="Download all ingest datasets")
+    all: bool = typer.Option(False, help="Download all ingest datasets"),
+    write_versions: bool = typer.Option(False, help="Write versions of ingests to versions.yaml")
     ):
     """Downloads data defined in download.yaml"""
 
@@ -46,6 +47,40 @@ def download(
             yaml_file='src/monarch_ingest/download.yaml',
             output_dir='.'
         )
+
+    if write_versions:
+        # TODO: 
+        # - Find a way to get versions of other data sources
+        # - May need beautifulsoup to scrape some web pages
+        # - Split data and packages into separate sections
+        import requests as r
+        from importlib.metadata import version
+
+        packages = {}
+        data = {} 
+        
+        # get biolink model version
+        packages["biolink"] = version("biolink-model")
+        packages["monarch-ingest"] = version("monarch-ingest")
+        
+        # github api query for mondo, phenio, hpo versions
+        data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
+        data["hpo"] = r.get("https://api.github.com/repos/obophenotype/human-phenotype-ontology/releases").json()[0]["tag_name"]
+        data["mondo"] = r.get("https://api.github.com/repos/monarch-initiative/mondo/releases").json()[0]["tag_name"]
+        
+        # get alliance version from alliance api endpoint
+        data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
+
+        # zfin -> daily build, no version (or use beautifulsoup)
+
+        # write to versions.yaml
+        with open("versions.yaml", "w") as f:
+            f.write("packages:\n")
+            for package, version in packages.items():
+                f.write(f"  {package}: {version}\n")
+            f.write("data:\n")
+            for data_source, version in data.items():
+                f.write(f"  {data_source}: {version}\n")
 
 
 @typer_app.command()
