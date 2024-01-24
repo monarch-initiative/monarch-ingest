@@ -447,6 +447,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
     with open(f"{dir}/versions.yaml", "r") as f:
         versions = yaml.load(f, Loader=yaml.FullLoader)
+        
     release_ver = versions["kg-version"]
 
     logger = get_logger()
