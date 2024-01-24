@@ -293,16 +293,22 @@
   local_name: data/mgi/MRK_Reference.rpt
   tag: mgi_publication_to_gene
 
-### Monarch
+### Mapping files
 -
-  url: 'http://data.monarchinitiative.org/monarch-gene-mapping/latest/gene_mappings.sssom.tsv'
-  # url: 'http://storage.googleapis.com/data-public-monarchinitiative/monarch-gene-mapping/latest/gene_mappings.tsv'
+  url: 'https://data.monarchinitiative.org/mappings/latest/gene_mappings.sssom.tsv'
   local_name: data/monarch/gene_mappings.sssom.tsv
   tag: mapping
 -
-  url: https://raw.githubusercontent.com/monarch-initiative/mondo/master/src/ontology/mappings/mondo.sssom.tsv
+  url: https://data.monarchinitiative.org/mappings/latest/mondo.sssom.tsv
   local_name: data/monarch/mondo.sssom.tsv
   tag: mapping
+
+- 
+  url: https://data.monarchinitiative.org/mappings/latest/mesh_chebi_biomappings.sssom.tsv
+  local_name: data/monarch/mesh_chebi_biomappings.sssom.tsv
+  tag: mapping
+
+### Monarch
 -
   url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
   local_name: data/monarch/kg-phenio.tar.gz
@@ -315,7 +321,6 @@
   url: https://s3.amazonaws.com/bbop-sqlite/phenio.db.gz
   local_name: data/monarch/phenio.db.gz
   tag: phenio
-
 # -
 #   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
 #   local_name: data/monarch/monarch.json
