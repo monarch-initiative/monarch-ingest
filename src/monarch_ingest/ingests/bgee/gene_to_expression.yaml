@@ -9,7 +9,7 @@ files:
 #  - './data/bgee/Danio_rerio_expr_simple.tsv.gz'
 #  - './data/bgee/Drosophila_melanogaster_expr_simple.tsv.gz'
   - './data/bgee/Gallus_gallus_expr_simple.tsv.gz'
-#  - './data/bgee/Homo_sapiens_expr_simple.tsv.gz'
+  - './data/bgee/Homo_sapiens_expr_simple.tsv.gz'
 #  - './data/bgee/Mus_musculus_expr_simple.tsv.gz'
 #  - './data/bgee/Rattus_norvegicus_expr_simple.tsv.gz'
   - './data/bgee/Sus_scrofa_expr_simple.tsv.gz'
