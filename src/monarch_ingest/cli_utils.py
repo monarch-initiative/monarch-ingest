@@ -303,7 +303,7 @@ def merge_files(
     mappings = []
     mappings.append("data/monarch/mondo.sssom.tsv")
     mappings.append("data/monarch/gene_mappings.sssom.tsv")
-    mappings.append("data/monarch/chebi-mesh.biomappings.sssom.tsv")
+    mappings.append("data/monarch/mesh_chebi_biomappings.sssom.tsv")
 
     logger.info("Merging knowledge graph...")
 
@@ -316,18 +316,22 @@ def apply_closure(
     output_dir: str = OUTPUT_DIR,
 ):
     output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
-    add_closure(kg_archive=f"{output_dir}/{name}.tar.gz",
-                closure_file=closure_file,
-                output_file=output_file,
-                fields=['subject',
-                        'object',
-                        'qualifiers',
-                        'frequency_qualifier',
-                        'onset_qualifier',
-                        'sex_qualifier',
-                        'stage_qualifier'],
-                evidence_fields=['has_evidence', 'publications'],
-                grouping_fields=['subject', 'negated', 'predicate', 'object'])
+    add_closure(
+        kg_archive=f"{output_dir}/{name}.tar.gz",
+        closure_file=closure_file,
+        output_file=output_file,
+        fields=[
+            "subject",
+            "object",
+            "qualifiers",
+            "frequency_qualifier",
+            "onset_qualifier",
+            "sex_qualifier",
+            "stage_qualifier",
+        ],
+        evidence_fields=["has_evidence", "publications"],
+        grouping_fields=["subject", "negated", "predicate", "object"],
+    )
     sh.pigz(output_file, force=True)
 
 
@@ -397,8 +401,10 @@ def load_jsonl():
     os.remove("output/monarch-kg_nodes.jsonl")
     os.remove("output/monarch-kg_edges.jsonl")
 
+
 def export_tsv():
     export()
+
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     import datetime
