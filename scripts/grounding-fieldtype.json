@@ -1,0 +1,15 @@
+{
+  "add-field-type": {
+    "name": "grounding",
+    "class": "solr.TextField",
+    "positionIncrementGap": "100",
+    "analyzer": {
+      "tokenizer": {
+        "class": "solr.KeywordTokenizerFactory"
+      },
+      "filters": [
+        { "class": "solr.LowerCaseFilterFactory" }
+      ]
+    }
+  }
+}
