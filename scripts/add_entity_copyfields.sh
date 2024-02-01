@@ -33,6 +33,17 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+# Add a dynamic field for the grounding field type
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-dynamic-field": {
+        "name": "*_grounding",
+        "type": "grounding",
+        "indexed": true,
+        "stored": false,
+        "multiValued": true,
+    }
+}' http://localhost:8983/solr/entity/schema
 
 # now add copyfields declarations for name, symbol and synonym
 
@@ -52,6 +63,13 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "name",
+        "dest": "name_grounding"
+    }
+}' http://localhost:8983/solr/entity/schema
+
 # symbol
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{
@@ -68,6 +86,13 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "symbol",
+        "dest": "symbol_grounding"
+    }
+}' http://localhost:8983/solr/entity/schema
+
 # synonym
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{
@@ -81,6 +106,13 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     "add-copy-field": {
         "source": "synonym",
         "dest": "synonym_ac"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "synonym",
+        "dest": "synonym_grounding"
     }
 }' http://localhost:8983/solr/entity/schema
 
