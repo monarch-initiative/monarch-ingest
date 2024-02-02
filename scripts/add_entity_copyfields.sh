@@ -70,6 +70,29 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+# full_name
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "full_name",
+        "dest": "full_name_t"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "full_name",
+        "dest": "full_name_ac"
+    }
+}' http://localhost:8983/solr/entity/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "full_name",
+        "dest": "full_name_grounding"
+    }
+}' http://localhost:8983/solr/entity/schema
+
 # symbol
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{
