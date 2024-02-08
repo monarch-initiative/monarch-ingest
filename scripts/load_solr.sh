@@ -3,11 +3,11 @@
 docker stop my_solr || true
 docker rm my_solr || true
 
-if test -f "output/monarch-kg.tar.gz"; then
-    tar zxf output/monarch-kg.tar.gz -C output
+if test -f "output/monarch-kg-denormalized-edges.tsv.gz"; then
+    gunzip --force output/monarch-kg-denormalized-edges.tsv.gz
 fi
 
-if test -f "output/monarch-kg-denormalized-edges.tsv.gz"; then
+if test -f "output/monarch-kg-denormalized-nodes.tsv.gz"; then
     gunzip --force output/monarch-kg-denormalized-edges.tsv.gz
 fi
 
@@ -16,8 +16,8 @@ echo "Download the schema from monarch-py"
 
 # temporarily retrieve from a branch that has the sssom changes, they can't be merged until the new build runs
 
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/denormalized-node-schema-update/backend/src/monarch_py/datamodels/model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/denormalized-node-schema-update/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
 poetry run lsolr start-server
@@ -59,7 +59,7 @@ poetry run lsolr bulkload -C sssom -s model.yaml data/monarch/gene_mappings.tsv
 poetry run lsolr bulkload -C sssom -s model.yaml data/monarch/chebi-mesh.biomappings.sssom.tsv
 
 echo "Loading entities"
-poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg_nodes.tsv
+poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
 
 echo "Loading associations"
 poetry run lsolr bulkload -C association -s model.yaml output/monarch-kg-denormalized-edges.tsv
