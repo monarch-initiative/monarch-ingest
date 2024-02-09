@@ -34,7 +34,7 @@ pipeline {
                 sh '''
                     mkdir data || true
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    ls -lasdf
+                    ls -lafs
                     ls -la data
                 '''
             }
@@ -97,6 +97,11 @@ pipeline {
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --kghub'
+            }
+        }
+        stage('create github release') {
+            steps {
+                sh 'python scripts/create_github_release.py --kg-version ${RELEASE}'
             }
         }
         stage('index') {
