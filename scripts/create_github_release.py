@@ -69,6 +69,6 @@ def main(kg_ver: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--kg-version", type=str, help="A name")
+    parser.add_argument("--kg-version", type=str, help="KG Version to create tag and release for, ex. 2022-11-28")
     args = parser.parse_args()
     main(args.kg_version)
