@@ -317,6 +317,7 @@ def apply_closure(
 ):
     edges_output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     nodes_output_file = f"{output_dir}/{name}-denormalized-nodes.tsv"
+    database = f"{name}.duckdb"
     add_closure(
         kg_archive=f"{output_dir}/{name}.tar.gz",
         closure_file=closure_file,
@@ -325,7 +326,7 @@ def apply_closure(
         edge_fields=[
             "subject",
             "object",
-            "qualifiers"
+            "qualifiers",
             "frequency_qualifier",
             "onset_qualifier",
             "sex_qualifier",
@@ -336,6 +337,8 @@ def apply_closure(
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
+    sh.mv(database, f'{output_dir}/')
+    sh.pigz(f"{output_dir}/{database}", force=True)
     sh.pigz(edges_output_file, force=True)
     sh.pigz(nodes_output_file, force=True)
 
