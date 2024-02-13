@@ -315,12 +315,15 @@ def apply_closure(
     closure_file: str = f"data/monarch/phenio-relation-filtered.tsv",
     output_dir: str = OUTPUT_DIR,
 ):
-    output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
+    edges_output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
+    nodes_output_file = f"{output_dir}/{name}-denormalized-nodes.tsv"
+    database = f"{name}.duckdb"
     add_closure(
         kg_archive=f"{output_dir}/{name}.tar.gz",
         closure_file=closure_file,
-        output_file=output_file,
-        fields=[
+        edges_output_file=edges_output_file,
+        nodes_output_file=nodes_output_file,
+        edge_fields=[
             "subject",
             "object",
             "qualifiers",
@@ -329,10 +332,15 @@ def apply_closure(
             "sex_qualifier",
             "stage_qualifier",
         ],
+        node_fields=['has_phenotype'],
         evidence_fields=["has_evidence", "publications"],
+        additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
-    sh.pigz(output_file, force=True)
+    sh.mv(database, f'{output_dir}/')
+    sh.pigz(f"{output_dir}/{database}", force=True)
+    sh.pigz(edges_output_file, force=True)
+    sh.pigz(nodes_output_file, force=True)
 
 
 def load_sqlite():
