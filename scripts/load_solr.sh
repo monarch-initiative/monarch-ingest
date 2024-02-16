@@ -14,10 +14,10 @@ fi
 echo "Download the schema from monarch-py"
 # This replaces poetry run monarch schema > model.yaml and just awkwardly pulls from a github raw link
 
-# temporarily retrieve from a branch that has the denormalized node changes, they can't be merged until the new build runs
+# retrieve the schema from the main branch on monarch-app
 
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/denormalized-node-schema-update/backend/src/monarch_py/datamodels/model.yaml
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/denormalized-node-schema-update/backend/src/monarch_py/datamodels/similarity.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
 poetry run lsolr start-server
