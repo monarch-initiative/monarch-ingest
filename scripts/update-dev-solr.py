@@ -19,7 +19,6 @@ sh.gcloud(
 # Download the latest solr.tar.gz on the solr node
 ssh_command = "compute ssh --zone us-central1-a monarch-v3-dev-solr"
 vm_command = """
-docker container stop monarch-v3_solr
 cd /srv/monarch-v3
 wget https://data.monarchinitiative.org/monarch-kg-dev/latest/solr.tar.gz -O solr.tar.gz
 tar -xzf solr.tar.gz
