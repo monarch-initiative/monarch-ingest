@@ -1,3 +1,11 @@
+"""
+This script is used to update the solr service in the monarch-v3-dev cluster.
+It stops the solr service, downloads the latest solr.tar.gz, and starts the solr service.
+
+This could be a bash script, but Python allows for easier string manipulation,
+and better encapsulation of the commands to be executed inside the VM.
+"""
+
 import sh
 
 
