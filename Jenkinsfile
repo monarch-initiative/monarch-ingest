@@ -100,6 +100,11 @@ pipeline {
                 sh 'poetry run ingest release --kghub'
             }
         }
+        stage('update dev deployment') {
+            steps {
+                sh 'poetry run python scripts/update-dev-solr.py'
+            }
+        }
         stage('index') {
             steps {
                 sh '''
@@ -117,11 +122,6 @@ pipeline {
                     pip install -r monarch-file-server/scripts/requirements.txt
                     python3 monarch-file-server/scripts/directory_indexer.py --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x
                 '''
-            }
-        }
-        stage('update dev deployment') {
-            steps {
-                sh 'poetry run python scripts/update-dev-solr.py'
             }
         }
     }
