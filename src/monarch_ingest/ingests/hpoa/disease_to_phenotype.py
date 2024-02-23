@@ -52,7 +52,7 @@ while (row := koza_app.get_row()) is not None:
     if row["qualifier"] == "NOT":
         negated = True
     else:
-        negated = None
+        negated = False
 
     # Annotations
 
@@ -77,7 +77,7 @@ while (row := koza_app.get_row()) is not None:
     frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float, float]] = \
         phenotype_frequency_to_hpo_term(frequency_field=frequency_field)
     if frequency_parsed:
-        frequency_hpo, frequency_percentage, frequency_quotient = frequency_parsed
+        frequency_hpo, frequency_percentage, frequency_quotient, has_count, has_total = frequency_parsed
 
     # Publications
     publications_field: str = row["reference"]
@@ -106,7 +106,8 @@ while (row := koza_app.get_row()) is not None:
         has_percentage=frequency_percentage if frequency_percentage else None,
         has_quotient=frequency_quotient if frequency_quotient else None,
         frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
-
+        has_count=has_count if has_count else None,
+        has_total=has_total if has_total else None,
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpo-annotations"
     )

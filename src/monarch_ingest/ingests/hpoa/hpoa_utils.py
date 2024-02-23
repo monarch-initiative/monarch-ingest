@@ -68,6 +68,8 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
     hpo_term: Optional[FrequencyHpoTerm] = None
     quotient: Optional[float] = None
     percentage: Optional[float] = None
+    has_count: Optional[int] = None
+    has_total: Optional[int] = None
     if frequency_field:
         try:
             # Pass HPO term format 1 through but map formats 2 and 3 into HP terms
@@ -76,12 +78,16 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
 
             elif frequency_field.endswith("%"):
                 percentage = float(frequency_field.removesuffix("%"))
+                quotient = percentage / 100.0
                 hpo_term = map_percentage_frequency_to_hpo_term(percentage)
 
             else:
                 # assume a ratio
                 ratio_parts = frequency_field.split("/")
-                quotient = float(int(ratio_parts[0]) / int(ratio_parts[1]))
+                has_count = int(ratio_parts[0])
+                has_total = int(ratio_parts[1])
+                quotient = float(has_count / has_total)
+                percentage = quotient * 100.0
                 hpo_term = map_percentage_frequency_to_hpo_term(quotient*100.0)
 
         except Exception:
@@ -96,7 +102,7 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
         # Input value could not be classified
         return None
 
-    return hpo_term, percentage, quotient   # percentage and/or quotient will also be None if not applicable
+    return hpo_term, percentage, quotient, has_count, has_total   # percentage and/or quotient will also be None if not applicable
 
 
 def get_knowledge_sources(original_source: str, additional_source: str) -> (str, List[str]):
