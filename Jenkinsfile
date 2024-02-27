@@ -7,6 +7,7 @@ pipeline {
         PATH = "/opt/poetry/bin:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        GH_RELEASE_TOKEN = credentials('GH_RELEASE_TOKEN')
     }
     stages {
         stage('setup') {
@@ -34,7 +35,7 @@ pipeline {
                 sh '''
                     mkdir data || true
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    ls -lasdf
+                    ls -lafs
                     ls -la data
                 '''
             }
@@ -97,6 +98,11 @@ pipeline {
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --kghub'
+            }
+        }
+        stage('update dev deployment') {
+            steps {
+                sh 'poetry run python scripts/update-dev-solr.py'
             }
         }
         stage('index') {
