@@ -43,9 +43,11 @@ def test_disease_to_phenotype_transform_1(d2pf_entities_1):
     assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
     assert association.sex_qualifier == "PATO:0000383"
     assert association.onset_qualifier == "HP:0003593"
+    assert association.has_count == 1
+    assert association.has_total == 1
     assert association.has_quotient == 1.0  # '1/1' implies Always present, i.e. in 100% of the cases.
     assert association.has_percentage == 100.0
-    assert association.frequency_qualifier == "HP:0040280"  # '1/1' implies Always present, i.e. in 100% of the cases.
+    assert association.frequency_qualifier is None # No implied frequency qualifier based on the '1/1' ratio.
     assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
@@ -93,7 +95,7 @@ def test_disease_to_phenotype_transform_2(d2pf_entities_2):
     assert not association.onset_qualifier
     assert association.has_percentage == 50.0  # '50%' implies Present in 30% to 79% of the cases.
     assert association.has_quotient == 0.5
-    assert association.frequency_qualifier == "HP:0040282"  # '50%' implies Present in 30% to 79% of the cases.
+    assert association.frequency_qualifier is None # No implied frequency qualifier based on the '50%' ratio.
     assert association.primary_knowledge_source == "infores:hpo-annotations"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
 
@@ -139,6 +141,8 @@ def test_disease_to_phenotype_transform_3(d2pf_entities_3):
     assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
     assert not association.sex_qualifier
     assert not association.onset_qualifier
+    assert association.has_count is None
+    assert association.has_total is None
     assert association.has_percentage is None
     assert association.has_quotient is None
     assert association.frequency_qualifier == "HP:0040283"  # "HP:0040283" implies Present in 5% to 29% of the cases.
