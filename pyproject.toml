@@ -27,7 +27,7 @@ kgx = { git = "https://github.com/biolink/kgx", branch = "master" } # ">=2.1"
 koza = ">=0.5.2"
 linkml = "^1.6.3"
 linkml-runtime = "1.6.2"
-linkml-solr = {git = "https://github.com/linkml/linkml-solr.git", branch = "add-bulkload-processor-option"} # "^0.1.3"
+linkml-solr = "0.1.5" # "^0.1.3"
 multi-indexer = "0.0.5"
 # Other Dependencies
 botocore = "^1.31"
