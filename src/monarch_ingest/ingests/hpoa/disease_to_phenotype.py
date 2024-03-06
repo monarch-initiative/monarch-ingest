@@ -30,8 +30,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 
 from biolink.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
-from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm
-
+from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm, Frequency
 
 from loguru import logger
 
@@ -52,7 +51,7 @@ while (row := koza_app.get_row()) is not None:
     if row["qualifier"] == "NOT":
         negated = True
     else:
-        negated = None
+        negated = False
 
     # Annotations
 
@@ -70,14 +69,7 @@ while (row := koza_app.get_row()) is not None:
     onset = row["onset"]
 
     # Raw frequencies - HPO term curies, ratios, percentages - normalized to HPO terms
-    frequency_field = row["frequency"]
-    frequency_hpo: Optional[FrequencyHpoTerm] = None
-    frequency_percentage: Optional[float] = None
-    frequency_quotient: Optional[float] = None
-    frequency_parsed: Optional[Tuple[FrequencyHpoTerm, float, float]] = \
-        phenotype_frequency_to_hpo_term(frequency_field=frequency_field)
-    if frequency_parsed:
-        frequency_hpo, frequency_percentage, frequency_quotient = frequency_parsed
+    frequency: Frequency = phenotype_frequency_to_hpo_term(row["frequency"])
 
     # Publications
     publications_field: str = row["reference"]
@@ -103,10 +95,11 @@ while (row := koza_app.get_row()) is not None:
 
         # TODO: not totally sure if HPO term now ought to be assigned to
         #       percentage and quotient frequency values anymore?
-        has_percentage=frequency_percentage if frequency_percentage else None,
-        has_quotient=frequency_quotient if frequency_quotient else None,
-        frequency_qualifier=frequency_hpo.curie if frequency_hpo else None,
-
+        has_percentage=frequency.has_percentage,
+        has_quotient=frequency.has_quotient,
+        frequency_qualifier=frequency.frequency_qualifier if frequency.frequency_qualifier else None,
+        has_count=frequency.has_count,
+        has_total=frequency.has_total,
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpo-annotations"
     )

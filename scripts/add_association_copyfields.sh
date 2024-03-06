@@ -45,3 +45,26 @@ do
   }
 }" http://localhost:8983/solr/association/schema
 done
+
+# add a dynamic field for sortable floats
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-dynamic-field": {
+        "name": "*_sortable_float",
+        "type": "sortable_float",
+        "indexed": true,
+        "stored": false,
+        "multiValued": true
+    }
+}' http://localhost:8983/solr/association/schema
+
+# add copy fields for sortable floats for has_quotient and has_percentage
+
+for field in has_quotient has_percentage
+do
+  curl -X POST -H 'Content-type:application/json' --data-binary "{
+  \"add-copy-field\": {
+      \"source\":\"$field\",
+      \"dest\": \"${field}_sortable_float\"
+  }
+}" http://localhost:8983/solr/association/schema
+done

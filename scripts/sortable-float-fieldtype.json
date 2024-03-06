@@ -1,0 +1,10 @@
+{
+  "add-field-type": {
+    "name": "sortable_float",
+    "class": "solr.TrieFloatField",
+    "sortMissingLast": true,
+    "docValues": true,
+    "stored": false,
+    "indexed": true
+  }
+}

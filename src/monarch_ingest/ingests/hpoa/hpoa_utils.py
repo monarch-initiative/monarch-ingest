@@ -5,26 +5,34 @@ from typing import Optional, List, Dict, Tuple, NamedTuple
 
 
 from loguru import logger
+from pydantic import BaseModel
 
 from monarch_ingest.constants import INFORES_MEDGEN, INFORES_OMIM, INFORES_ORPHANET, BIOLINK_CAUSES, \
     BIOLINK_CONTRIBUTES_TO, BIOLINK_GENE_ASSOCIATED_WITH_CONDITION
 
 
-class FrequencyHpoTerm(NamedTuple):
+class FrequencyHpoTerm(BaseModel):
     curie: str
     name: str
     lower: float
     upper: float
 
+class Frequency(BaseModel):
+    frequency_qualifier: Optional[str] = None
+    has_percentage: Optional[float] = None
+    has_quotient: Optional[float] = None
+    has_count: Optional[int] = None
+    has_total: Optional[int] = None
+    # convert the fields above to pydantic field declarations
 
 # HPO "HP:0040279": representing the frequency of phenotypic abnormalities within a patient cohort.
 hpo_term_to_frequency: Dict = {
-    "HP:0040280": FrequencyHpoTerm("HP:0040280", "Obligate", 100.0, 100.0),  # Always present,i.e. in 100% of the cases.
-    "HP:0040281": FrequencyHpoTerm("HP:0040281", "Very frequent", 80.0, 99.0),  # Present in 80% to 99% of the cases.
-    "HP:0040282": FrequencyHpoTerm("HP:0040282", "Frequent", 30.0, 79.0),       # Present in 30% to 79% of the cases.
-    "HP:0040283": FrequencyHpoTerm("HP:0040283", "Occasional", 5.0, 29.0),      # Present in 5% to 29% of the cases.
-    "HP:0040284": FrequencyHpoTerm("HP:0040284", "Very rare", 1.0, 4.0),        # Present in 1% to 4% of the cases.
-    "HP:0040285": FrequencyHpoTerm("HP:0040285", "Excluded", 0.0, 0.0)          # Present in 0% of the cases.
+    "HP:0040280": FrequencyHpoTerm(curie="HP:0040280", name="Obligate", lower=100.0, upper=100.0),  # Always present,i.e. in 100% of the cases.
+    "HP:0040281": FrequencyHpoTerm(curie="HP:0040281", name="Very frequent", lower=80.0, upper=99.0),  # Present in 80% to 99% of the cases.
+    "HP:0040282": FrequencyHpoTerm(curie="HP:0040282", name="Frequent", lower=30.0, upper=79.0),       # Present in 30% to 79% of the cases.
+    "HP:0040283": FrequencyHpoTerm(curie="HP:0040283", name="Occasional", lower=5.0, upper=29.0),      # Present in 5% to 29% of the cases.
+    "HP:0040284": FrequencyHpoTerm(curie="HP:0040284", name="Very rare", lower=1.0, upper=4.0),        # Present in 1% to 4% of the cases.
+    "HP:0040285": FrequencyHpoTerm(curie="HP:0040285", name="Excluded", lower=0.0, upper=0.0)          # Present in 0% of the cases.
 }
 
 
@@ -51,7 +59,7 @@ def map_percentage_frequency_to_hpo_term(percentage_or_quotient: float) -> Optio
 
 def phenotype_frequency_to_hpo_term(
         frequency_field: Optional[str]
-) -> Optional[Tuple[FrequencyHpoTerm, Optional[float], Optional[float]]]:
+) -> Frequency:
     """
 Maps a raw frequency field onto HPO, for consistency. This is needed since the **phenotypes.hpoa**
 file field #8 which tracks phenotypic frequency, has a variable values. There are three allowed options for this field:
@@ -68,21 +76,25 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
     hpo_term: Optional[FrequencyHpoTerm] = None
     quotient: Optional[float] = None
     percentage: Optional[float] = None
+    has_count: Optional[int] = None
+    has_total: Optional[int] = None
     if frequency_field:
         try:
-            # Pass HPO term format 1 through but map formats 2 and 3 into HP terms
+
             if frequency_field.startswith("HP:"):
                 hpo_term = get_hpo_term(hpo_id=frequency_field)
 
             elif frequency_field.endswith("%"):
                 percentage = float(frequency_field.removesuffix("%"))
-                hpo_term = map_percentage_frequency_to_hpo_term(percentage)
+                quotient = percentage / 100.0
 
             else:
                 # assume a ratio
                 ratio_parts = frequency_field.split("/")
-                quotient = float(int(ratio_parts[0]) / int(ratio_parts[1]))
-                hpo_term = map_percentage_frequency_to_hpo_term(quotient*100.0)
+                has_count = int(ratio_parts[0])
+                has_total = int(ratio_parts[1])
+                quotient = float(has_count / has_total)
+                percentage = quotient * 100.0
 
         except Exception:
             # expected ratio not recognized
@@ -90,13 +102,13 @@ file field #8 which tracks phenotypic frequency, has a variable values. There ar
             frequency_field = None
     else:
         # may be None, if original field was empty or has an invalid value
-        return None
+        return Frequency()
 
-    if not hpo_term:
-        # Input value could not be classified
-        return None
-
-    return hpo_term, percentage, quotient   # percentage and/or quotient will also be None if not applicable
+    return Frequency(frequency_qualifier=hpo_term.curie if hpo_term else None,
+                     has_percentage=percentage,
+                     has_quotient=quotient,
+                     has_count=has_count,
+                     has_total=has_total)
 
 
 def get_knowledge_sources(original_source: str, additional_source: str) -> (str, List[str]):
