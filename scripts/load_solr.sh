@@ -50,6 +50,9 @@ scripts/add_entity_copyfields.sh
 scripts/add_association_copyfields.sh
 sleep 5
 
+echo "Adding update processor for phenotype frequency to association core"
+scripts/add_update_processor.sh
+
 # todo: this should probably happen after associations, but putting it first for testing
 echo "Loading SSSOM mappings"
 grep -v "^#" data/monarch/mondo.sssom.tsv > headless.mondo.sssom.tsv
@@ -62,7 +65,7 @@ echo "Loading entities"
 poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
 
 echo "Loading associations"
-poetry run lsolr bulkload -C association -s model.yaml output/monarch-kg-denormalized-edges.tsv
+poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor output/monarch-kg-denormalized-edges.tsv
 curl "http://localhost:8983/solr/association/select?q=*:*"
 
 mkdir solr-data || true

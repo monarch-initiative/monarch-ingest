@@ -3,6 +3,8 @@
     "name": "sortable_float",
     "class": "solr.TrieFloatField",
     "sortMissingLast": true,
-    "docValues": true
+    "docValues": true,
+    "stored": false,
+    "indexed": true
   }
 }
