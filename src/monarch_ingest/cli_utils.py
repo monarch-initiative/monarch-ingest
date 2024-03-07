@@ -29,12 +29,12 @@ OUTPUT_DIR = "output"
 
 
 def transform_one(
-    ingest: str = None,
+    ingest: Optional[str] = None,
     output_dir: str = OUTPUT_DIR,
-    row_limit: int = None,
+    row_limit: Optional[int] = None,
     rdf: bool = False,
-    force: bool = False,
-    verbose: bool = None,
+    force: Optional[bool] = False,
+    verbose: Optional[bool] = None,
     log: bool = False,
 ):
     logger = get_logger(name=ingest if log else None, verbose=verbose)
@@ -59,7 +59,7 @@ def transform_one(
     logger.info(f"Running ingest: {ingest}")
     try:
         transform_source(
-            source=source_file,
+            source=source_file.as_posix(),
             output_dir=f"{output_dir}/transform_output",
             output_format=OutputFormat.tsv,
             row_limit=row_limit,
@@ -103,7 +103,7 @@ def transform_one(
 def transform_phenio(
     output_dir: str = OUTPUT_DIR,
     force: bool = False,
-    verbose: bool = False,
+    verbose: Optional[bool] = False,
     log: bool = False,
 ):
     # if log: fh = add_log_fh(logger, "logs/phenio.log")
@@ -254,7 +254,7 @@ def transform_all(
     row_limit: Optional[int] = None,
     rdf: bool = False,
     force: bool = False,
-    verbose: bool = None,
+    verbose: Optional[bool] = None,
     log: bool = False,
 ):
     # if log: fh = add_log_fh(logger, Path(f"logs/all_ingests.log"))
@@ -290,6 +290,7 @@ def transform_all(
 
 def get_relase_ver():
     import datetime
+
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
@@ -306,7 +307,7 @@ def get_data_versions(output_dir: str = OUTPUT_DIR):
             f.write(f"  {data_source}: {str(version)}\n")
 
 
-def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: str = None):
+def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: Optional[str] = None):
     from importlib.metadata import version
 
     packages = {}
@@ -332,7 +333,7 @@ def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
-    verbose: bool = None,
+    verbose: Optional[bool] = None,
 ):
     logger = get_logger(None, verbose)
     logger.info("Generating mappings...")
@@ -369,12 +370,12 @@ def apply_closure(
             "sex_qualifier",
             "stage_qualifier",
         ],
-        node_fields=['has_phenotype'],
+        node_fields=["has_phenotype"],
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
-    sh.mv(database, f'{output_dir}/')
+    sh.mv(database, f"{output_dir}/")
     sh.pigz(f"{output_dir}/{database}", force=True)
     sh.pigz(edges_output_file, force=True)
     sh.pigz(nodes_output_file, force=True)
@@ -452,10 +453,9 @@ def export_tsv():
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
-
     with open(f"{dir}/metadata.yaml", "r") as f:
         versions = yaml.load(f, Loader=yaml.FullLoader)
-        
+
     release_ver = versions["kg-version"]
 
     logger = get_logger()
@@ -463,8 +463,10 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
     try:
         logger.debug(f"Uploading release to Google bucket...")
-
         sh.touch(f"{dir}/{release_ver}")
+
+        # copy data to monarch-archive bucket
+        sh.gsutil(*f"-q -m cp -r data/* gs://monarch-archive/monarch-ingest-data-cache/{release_ver}".split(" "))
 
         # copy to monarch-archive bucket
         sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_ver}".split(" "))
