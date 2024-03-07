@@ -19,7 +19,7 @@ pipeline {
         stage('download') {
             steps {
                 sh '''
-                poetry run ingest download --all --write-versions
+                poetry run ingest download --all --write-metadata
                 '''
             }
         }
