@@ -42,7 +42,7 @@ pipeline {
         }
         stage('transform') {
             steps {
-                sh 'poetry run ingest transform --all --log --rdf --write-versions'
+                sh 'poetry run ingest transform --all --log --rdf --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
