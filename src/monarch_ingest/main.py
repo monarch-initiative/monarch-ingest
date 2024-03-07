@@ -36,7 +36,7 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
 def download(
     ingests: Optional[List[str]] = typer.Option(None, help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets"),
-    write_versions: bool = typer.Option(False, help="Write versions of ingests to versions.yaml"),
+    write_versions: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
     """Downloads data defined in download.yaml"""
     if ingests:
@@ -70,7 +70,7 @@ def transform(
     ),
     log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
     row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
-    write_versions: bool = typer.Option(False, help="Write data/package versions to output_dir/versions.yaml"),
+    write_versions: bool = typer.Option(False, help="Write data/package versions to output_dir/metadata.yaml"),
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""

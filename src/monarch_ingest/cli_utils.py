@@ -300,7 +300,7 @@ def get_data_versions(output_dir: str = OUTPUT_DIR):
     data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
     data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
     Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/versions.yaml", "w") as f:
+    with open(f"{output_dir}/metadata.yaml", "w") as f:
         f.write("data:\n")
         for data_source, version in data.items():
             f.write(f"  {data_source}: {str(version)}\n")
@@ -314,11 +314,11 @@ def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: str = None):
     packages["koza"] = version("koza")
     packages["monarch-ingest"] = version("monarch-ingest")
     kg_version = get_relase_ver() if release_version is None else release_version
-    with open("data/versions.yaml", "r") as f:
+    with open("data/metadata.yaml", "r") as f:
         data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
 
     Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/versions.yaml", "w") as f:
+    with open(f"{output_dir}/metadata.yaml", "w") as f:
         f.write(f"kg-version: {str(kg_version)}\n\n")
         f.write("packages:\n")
         for k, v in packages.items():
@@ -445,7 +445,7 @@ def export_tsv():
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
-    with open(f"{dir}/versions.yaml", "r") as f:
+    with open(f"{dir}/metadata.yaml", "r") as f:
         versions = yaml.load(f, Loader=yaml.FullLoader)
         
     release_ver = versions["kg-version"]
