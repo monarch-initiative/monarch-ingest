@@ -1,8 +1,8 @@
 import csv
 import gc
 import os
-import pathlib
 import tarfile
+import yaml
 from pathlib import Path
 from typing import Optional
 from biolink import model  # import the pythongen biolink model to get the version
@@ -10,7 +10,6 @@ from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
 # from loguru import logger
-
 import pandas
 import sh
 
@@ -24,8 +23,6 @@ from linkml_runtime.utils.formatutils import camelcase
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.export_utils import export
-
-# from koza.utils.log_utils import get_logger
 
 
 OUTPUT_DIR = "output"
@@ -134,7 +131,7 @@ def transform_phenio(
     nodes = f"{output_dir}/transform_output/phenio_nodes.tsv"
     edges = f"{output_dir}/transform_output/phenio_edges.tsv"
 
-    if (force == False) and file_exists(nodes) and file_exists(edges):
+    if (force is False) and file_exists(nodes) and file_exists(edges):
         logger.info(f"Transformed output exists - skipping ingest: Phenio - To run this ingest anyway, use --force")
         # if log: logger.removeHandler(fh)
         return
@@ -155,7 +152,7 @@ def transform_phenio(
     # associations that we'll also need
     exclude_prefixes = ["HGNC", "FlyBase", "http", "biolink"]
 
-    pathlib.Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
+    Path(f"{output_dir}/qc/").mkdir(parents=True, exist_ok=True)
     excluded_nodes = nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
@@ -291,6 +288,46 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
+def get_relase_ver():
+    import datetime
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
+def get_data_versions(output_dir: str = OUTPUT_DIR):
+    import requests as r
+
+    data = {}
+    data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
+    data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
+    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
+    with open(f"{output_dir}/metadata.yaml", "w") as f:
+        f.write("data:\n")
+        for data_source, version in data.items():
+            f.write(f"  {data_source}: {str(version)}\n")
+
+
+def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: str = None):
+    from importlib.metadata import version
+
+    packages = {}
+    packages["biolink"] = version("biolink-model")
+    packages["koza"] = version("koza")
+    packages["monarch-ingest"] = version("monarch-ingest")
+    kg_version = get_relase_ver() if release_version is None else release_version
+    with open("data/metadata.yaml", "r") as f:
+        data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
+
+    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
+    with open(f"{output_dir}/metadata.yaml", "w") as f:
+        f.write(f"kg-version: {str(kg_version)}\n\n")
+        f.write("packages:\n")
+        for k, v in packages.items():
+            f.write(f"  {k}: {str(v)}\n")
+        f.write("\ndata:\n")
+        for k, v in data_versions.items():
+            f.write(f"  {k}: {str(v)}\n")
+
+
 def merge_files(
     name: str = "monarch-kg",
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
@@ -415,53 +452,55 @@ def export_tsv():
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
-    import datetime
 
-    release_name = datetime.datetime.now().strftime("%Y-%m-%d")
+    with open(f"{dir}/metadata.yaml", "r") as f:
+        versions = yaml.load(f, Loader=yaml.FullLoader)
+        
+    release_ver = versions["kg-version"]
 
     logger = get_logger()
-    logger.info(f"Creating dated release: {release_name}...")
+    logger.info(f"Creating dated release: {release_ver}...")
 
     try:
         logger.debug(f"Uploading release to Google bucket...")
 
-        sh.touch(f"{dir}/{release_name}")
+        sh.touch(f"{dir}/{release_ver}")
 
         # copy to monarch-archive bucket
-        sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_name}".split(" "))
+        sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_ver}".split(" "))
 
         # copy to data-public bucket
         sh.gsutil(
             *"-q -m cp -r".split(" "),
-            f"gs://monarch-archive/monarch-kg-dev/{release_name}",
-            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",
+            f"gs://monarch-archive/monarch-kg-dev/{release_ver}",
+            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_ver}",
         )
 
         # update "latest"
         sh.gsutil(*"-q -m rm -rf gs://data-public-monarchinitiative/monarch-kg-dev/latest".split(" "))
         sh.gsutil(
             *"-q -m cp -r".split(" "),
-            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_name}",
+            f"gs://data-public-monarchinitiative/monarch-kg-dev/{release_ver}",
             "gs://data-public-monarchinitiative/monarch-kg-dev/latest",
         )
 
         # copy data to monarch-archive bucket only, so that we don't keep so many copies of the same huge files
-        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_name}/".split(" "))
+        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_ver}/".split(" "))
 
         # index and upload to kghub s3 bucket
         if kghub:
-            kghub_release_name = release_name.replace("-", "")
+            kghub_release_ver = release_ver.replace("-", "")
             sh.mkdir("-p", f"{dir}/stats")
             sh.mv(f"{dir}/merged_graph_stats.yaml", f"{dir}/stats")
             sh.multi_indexer(
-                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_name} -x -u".split(
+                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_ver} -x -u".split(
                     " "
                 )
             )
             sh.gsutil(
                 *"-q -m -cp -r -a public-read".split(" "),
                 f"{dir}/*",  # source files
-                f"s3://kg-hub-public-data/kg-monarch/{kghub_release_name}",  # destination
+                f"s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}",  # destination
             )
             sh.gsutil(
                 *"-q -m cp -r -a public-read".split(" "),  # make public
@@ -470,7 +509,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             )
 
         logger.debug("Cleaning up files...")
-        sh.rm(f"output/{release_name}")
+        sh.rm(f"output/{release_ver}")
 
         logger.info(f"Successfuly uploaded release!")
     except BaseException as e:

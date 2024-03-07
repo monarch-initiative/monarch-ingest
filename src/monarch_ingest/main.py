@@ -5,6 +5,8 @@ from monarch_ingest.cli_utils import (
     apply_closure,
     do_release,
     export_tsv,
+    get_data_versions,
+    get_pkg_versions,
     load_jsonl,
     load_sqlite,
     load_solr,
@@ -34,9 +36,9 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
 def download(
     ingests: Optional[List[str]] = typer.Option(None, help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets"),
+    write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
     """Downloads data defined in download.yaml"""
-
     if ingests:
         download_from_yaml(
             yaml_file="src/monarch_ingest/download.yaml",
@@ -45,6 +47,8 @@ def download(
         )
     elif all:
         download_from_yaml(yaml_file="src/monarch_ingest/download.yaml", output_dir=".")
+    if write_metadata:
+        get_data_versions(output_dir="data")
 
 
 @typer_app.command()
@@ -66,10 +70,10 @@ def transform(
     ),
     log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
     row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
+    write_metadata: bool = typer.Option(False, help="Write data/package versions to output_dir/metadata.yaml"),
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
-
     if phenio:
         transform_phenio(output_dir=output_dir, force=force, verbose=verbose)
     elif ingest:
@@ -91,6 +95,8 @@ def transform(
             verbose=verbose,
             log=log,
         )
+    if write_metadata:
+        get_pkg_versions(output_dir=output_dir)
 
 
 @typer_app.command()
