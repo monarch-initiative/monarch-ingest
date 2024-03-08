@@ -11,7 +11,7 @@ UPLOAD_FILES = [
     "merged_graph_stats.yaml",
     "monarch-kg-denormalized-edges.tsv.gz",
     "qc_report.yaml",
-    # "versioning metadata file eventually",
+    "metadata.yaml",
 ]
 
 
