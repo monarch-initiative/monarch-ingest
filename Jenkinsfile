@@ -102,7 +102,7 @@ pipeline {
         }
         stage('create github release') {
             steps {
-                sh 'python scripts/create_github_release.py --kg-version ${RELEASE}'
+                sh 'poetry run python scripts/create_github_release.py --kg-version ${RELEASE}'
             }
         }
         stage('update dev deployment') {
