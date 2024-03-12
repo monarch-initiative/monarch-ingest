@@ -2,7 +2,7 @@ import uuid
 import pandas as pd
 from typing import Dict, List, Union
 from koza.app import KozaApp
-from biolink.pydanticmodel_v2 import GeneToExpressionSiteAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
 
 
 def filter_group_by_rank(rows: List, col: str, largest_n: int = 0, smallest_n: int = 0) -> List[Dict]:

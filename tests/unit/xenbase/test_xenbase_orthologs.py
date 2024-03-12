@@ -2,7 +2,7 @@
 Unit tests for Xenbase Gene Orthology relationships ingest
 """
 import pytest
-from biolink.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
 
 
 @pytest.fixture

@@ -29,7 +29,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
 from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm, Frequency
 
 from loguru import logger

@@ -1,4 +1,4 @@
-from biolink.pydanticmodel_v2 import Pathway
+from biolink_model.datamodel.pydanticmodel_v2 import Pathway
 from koza.cli_runner import get_koza_app
 
 koza_app = get_koza_app('reactome_pathway')

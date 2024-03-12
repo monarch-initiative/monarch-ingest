@@ -1,6 +1,6 @@
 import pytest
-from biolink.pydanticmodel_v2 import ChemicalToDiseaseOrPhenotypicFeatureAssociation
-from monarch_ingest.constants import BIOLINK_AFFECTS
+from biolink_model.datamodel.pydanticmodel_v2 import ChemicalToDiseaseOrPhenotypicFeatureAssociation
+from monarch_ingest.constants import BIOLINK_TREATS_OR_APPLIED_OR_STUDIED_TO_TREAT
 
 @pytest.fixture
 def source_name():
@@ -94,7 +94,7 @@ def test_therapeutic_entities(therapeutic):
     assert len(entities) == 1
     association = [e for e in entities if isinstance(e, ChemicalToDiseaseOrPhenotypicFeatureAssociation)][0]
     assert association
-    assert association.predicate == BIOLINK_AFFECTS
+    assert association.predicate == BIOLINK_TREATS_OR_APPLIED_OR_STUDIED_TO_TREAT
     assert 'PMID:17516704' in association.publications
     assert 'PMID:123' in association.publications
     assert association.primary_knowledge_source == "infores:ctd"

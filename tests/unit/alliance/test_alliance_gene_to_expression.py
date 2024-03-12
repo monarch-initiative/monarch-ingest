@@ -1,5 +1,5 @@
 import pytest
-from biolink.pydanticmodel_v2 import GeneToExpressionSiteAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
 
 @pytest.fixture
 def source_name():

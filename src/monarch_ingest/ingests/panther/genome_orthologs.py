@@ -6,7 +6,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
 
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene, ncbitaxon_catalog
 

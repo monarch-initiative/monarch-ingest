@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from biolink.pydanticmodel_v2 import Gene
+from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
 
 @pytest.fixture

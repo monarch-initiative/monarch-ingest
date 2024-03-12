@@ -17,7 +17,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
 # Monarch & Related Dependencies
-biolink-model = "^3.6"
+biolink-model = "^4.1.6"
 #biolink-model = { git = "https://github.com/biolink/biolink-model", branch = "remove-rdflib-dependency" }
 bmt = "^1.0.15"
 cat-merge = ">=0.2.0"

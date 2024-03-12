@@ -5,7 +5,7 @@ Unit tests for GO Annotations ingest
 from typing import Tuple
 
 import pytest
-from biolink.pydanticmodel_v2 import Association
+from biolink_model.datamodel.pydanticmodel_v2 import Association
 from loguru import logger
 
 from monarch_ingest.ingests.go.annotation_utils import parse_identifiers
