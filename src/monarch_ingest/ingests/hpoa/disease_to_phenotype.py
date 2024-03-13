@@ -91,10 +91,8 @@ while (row := koza_app.get_row()) is not None:
         publications=publications,
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
-        onset_qualifier=onset,
-
-        # TODO: not totally sure if HPO term now ought to be assigned to
-        #       percentage and quotient frequency values anymore?
+#  TODO: re-enable once onset_qualifier is on d2p associations in the model
+#        onset_qualifier=onset,
         has_percentage=frequency.has_percentage,
         has_quotient=frequency.has_quotient,
         frequency_qualifier=frequency.frequency_qualifier if frequency.frequency_qualifier else None,
