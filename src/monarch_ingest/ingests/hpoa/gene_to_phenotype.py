@@ -8,7 +8,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
 
 koza_app = get_koza_app("hpoa_gene_to_phenotype")
 

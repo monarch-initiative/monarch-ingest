@@ -1,7 +1,7 @@
 import uuid
 from koza.cli_runner import get_koza_app
 
-from biolink.pydanticmodel_v2 import GeneToPathwayAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPathwayAssociation
 
 koza_app = get_koza_app("reactome_gene_to_pathway")
 

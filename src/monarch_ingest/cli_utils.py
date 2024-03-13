@@ -5,7 +5,7 @@ import tarfile
 import yaml
 from pathlib import Path
 from typing import Optional
-from biolink import model  # import the pythongen biolink model to get the version
+from biolink_model.datamodel import model # import the pythongen biolink model to get the version
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 

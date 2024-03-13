@@ -2,7 +2,7 @@
 Unit tests for STRING protein links ingest
 """
 import pytest
-from biolink.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
+from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
 
 
 @pytest.fixture

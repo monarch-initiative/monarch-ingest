@@ -1,7 +1,7 @@
 from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from biolink.pydanticmodel_v2 import Gene
+from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
 koza_app = get_koza_app("alliance_gene")
 taxon_labels = koza_app.get_map("taxon-labels")

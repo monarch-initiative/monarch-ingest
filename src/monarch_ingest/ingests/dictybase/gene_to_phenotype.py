@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
-from biolink.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
 
 koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
