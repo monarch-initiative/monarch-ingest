@@ -75,11 +75,9 @@ while (row := koza_app.get_row()) is not None:
     publications_field: str = row["reference"]
     publications: List[str] = publications_field.split(";")
 
-    # Filter out some weird NCBI web endpoints
-    publications = [p for p in publications if not p.startswith("http")]
-
-    # Replace ORPHA prefix with orphanet to match preferred biolink prefix
-    publications = [p.replace("ORPHA:", "orphanet:") for p in publications]
+    # don't populate the reference with the database_id / disease id
+    publications = [p for p in publications
+                    if not p == row["database_id"]]
 
     # Association/Edge
     association = DiseaseToPhenotypicFeatureAssociation(
@@ -91,8 +89,7 @@ while (row := koza_app.get_row()) is not None:
         publications=publications,
         has_evidence=[evidence_curie],
         sex_qualifier=sex_qualifier,
-#  TODO: re-enable once onset_qualifier is on d2p associations in the model
-#        onset_qualifier=onset,
+        onset_qualifier=onset,
         has_percentage=frequency.has_percentage,
         has_quotient=frequency.has_quotient,
         frequency_qualifier=frequency.frequency_qualifier if frequency.frequency_qualifier else None,

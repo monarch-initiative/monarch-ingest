@@ -39,10 +39,10 @@ def test_disease_to_phenotype_transform_1(d2pf_entities_1):
     assert association.predicate == "biolink:has_phenotype"
     assert association.negated
     assert association.object == "HP:0000343"
-    assert "OMIM:614856" in association.publications
+    assert len(association.publications) == 0
     assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
     assert association.sex_qualifier == "PATO:0000383"
-#    assert association.onset_qualifier == "HP:0003593"
+    assert association.onset_qualifier == "HP:0003593"
     assert association.has_count == 1
     assert association.has_total == 1
     assert association.has_quotient == 1.0  # '1/1' implies Always present, i.e. in 100% of the cases.
@@ -89,10 +89,10 @@ def test_disease_to_phenotype_transform_2(d2pf_entities_2):
     assert association.predicate == "biolink:has_phenotype"
     assert not association.negated
     assert association.object == "HP:0001249"
-    assert "OMIM:117650" in association.publications
+    assert len(association.publications) == 0
     assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
     assert not association.sex_qualifier
-#    assert not association.onset_qualifier
+    assert not association.onset_qualifier
     assert association.has_percentage == 50.0  # '50%' implies Present in 30% to 79% of the cases.
     assert association.has_quotient == 0.5
     assert association.frequency_qualifier is None # No implied frequency qualifier based on the '50%' ratio.
@@ -109,7 +109,7 @@ def d2pf_entities_3(mock_koza, global_table):
                 "disease_name": "Cerebrocostomandibular syndrome",
                 "qualifier": "",
                 "hpo_id": "HP:0001545",
-                "reference": "OMIM:117650",
+                "reference": "OMIM:117650;PMID:12345",
                 "evidence": "TAS",
                 "onset": "",
                 "frequency": "HP:0040283",
@@ -137,10 +137,11 @@ def test_disease_to_phenotype_transform_3(d2pf_entities_3):
     assert association.predicate == "biolink:has_phenotype"
     assert not association.negated
     assert association.object == "HP:0001545"
-    assert "OMIM:117650" in association.publications
+    assert len(association.publications) == 1
+    assert "PMID:12345" in association.publications
     assert "ECO:0000304" in association.has_evidence  # from local HPOA translation table
     assert not association.sex_qualifier
-#    assert not association.onset_qualifier
+    assert not association.onset_qualifier
     assert association.has_count is None
     assert association.has_total is None
     assert association.has_percentage is None
