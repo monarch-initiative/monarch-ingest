@@ -126,6 +126,7 @@ def generate_tsv(tsv_fh, solr, filters):
         'frequency_qualifier_label',
         'sex_qualifier',
         'sex_qualifier_label'])
+    gene_to_gene_extra_fields = ','.join(['object_taxon', 'object_taxon_label'])
 
     golr_params = {
         'q': '*:*',
@@ -140,6 +141,8 @@ def generate_tsv(tsv_fh, solr, filters):
     for filter in filters:
         if filter == 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"':
             golr_params['fl'] += ',' + disease_to_phenotype_extra_fields
+        elif 'GeneToGene' in filter:
+            golr_params['fl'] += ',' + gene_to_gene_extra_fields
 
     count_params = {
         'wt': 'json',
