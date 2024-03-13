@@ -129,8 +129,8 @@ docs = []
 [package.source]
 type = "git"
 url = "https://github.com/biolink/biolink-model"
-reference = "master"
-resolved_reference = "f1e21a533ec3504d11ad732a2f8b035545b28e78"
+reference = "dc87efc"
+resolved_reference = "dc87efcf374cd80a462d62a9087978bee1e73a4c"
 
 [[package]]
 name = "black"
@@ -3966,4 +3966,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "f15c1da24d5de2362b789b2680a2e30e8799179d546010a93f4997c2e33bcc92"
+content-hash = "78603fc5ad175e67cd88471191136ffd4a6f28e0fef8b9dd3d59d5c6b74d76e5"

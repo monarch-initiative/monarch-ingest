@@ -67,7 +67,15 @@ The 'Frequency' field of the aforementioned **phenotypes.hpoa** file has the fol
 
     8. Frequency: There are three allowed options for this field. (A) A term-id from the HPO-sub-ontology below the term “Frequency” (HP:0040279). (since December 2016 ; before was a mixture of values). The terms for frequency are in alignment with Orphanet. * (B) A count of patients affected within a cohort. For instance, 7/13 would indicate that 7 of the 13 patients with the specified disease were found to have the phenotypic abnormality referred to by the HPO term in question in the study referred to by the DB_Reference; (C) A percentage value such as 17%.
 
-The Disease to Phenotype ingest attempts to remap these raw frequency values onto a suitable HPO term.  A simplistic (perhaps erroneous?) assumption is that all such frequencies are conceptually comparable; however, researchers may wish to review the original publications to confirm fitness of purpose of the specific data points to their interpretation - specific values could designate phenotypic frequency at the population level; phenotypic frequency at the cohort level; or simply, be a measure of penetrance of a specific allele within carriers, etc..
+Previously this ingest attempted to map the quantitative frequency values to HPO frequency terms. The only frequency mapping that occurs is between numerical values now, if a fraction is given it will be split into has_count and has_total, and has_quotient will be calculated by division of has_count/has_total, and has_percentage will be calculated by multiplying has_quotient by 100.
+
+__**Reference**__
+
+The phenotype.hpoa format includes a `DB_reference` field described as:
+
+     5. DB_Reference: This required field indicates the source of the information used for the annotation. This may be the clinical experience of the annotator or may be taken from an article as indicated by a PubMed id. Each collaborating center of the Human Phenotype Ontology consortium is assigned a HPO:Ref id. In addition, if appropriate, a PubMed id for an article describing the clinical abnormality may be used.
+
+This ingest preserves values of DB_reference which are not duplicates of the database_id captured as the subject, and will ultimately be found in `original_subject` in the graph when the subject is mapped via SSSOM to a Mondo identifier.
 
 __**Biolink captured**__
 
