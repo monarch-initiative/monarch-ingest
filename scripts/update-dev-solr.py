@@ -21,7 +21,7 @@ sh.gcloud(
 ssh_command = "compute ssh --zone us-central1-a monarch-v3-dev-solr"
 vm_command = """
 cd /srv/monarch-v3
-wget https://data.monarchinitiative.org/monarch-kg-dev/latest/solr.tar.gz -O solr.tar.gz
+sudo wget https://data.monarchinitiative.org/monarch-kg-dev/latest/solr.tar.gz -O solr.tar.gz
 sudo rm -rf data
 sudo tar -xzf solr.tar.gz
 sudo chgrp -R 8983 data
