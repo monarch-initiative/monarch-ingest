@@ -495,16 +495,16 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             kghub_release_ver = str(release_ver).replace("-", "")
             logger.info(f"Uploading to kghub: {kghub_release_ver}...")
 
+            sh.multi_indexer(
+                *f"-v --directory {dir} --prefix https://kghub.io/kg-monarch/{kghub_release_ver} -x -u".split(
+                    " "
+                )
+            )
             kg_hub_files = f"{dir}/monarch-kg.tar.gz {dir}/rdf/ {dir}/merged_graph_stats.yaml"
             sh.gsutil(
                 *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}".split(" ")
             )
             sh.gsutil(*f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/current".split(" "))
-            sh.multi_indexer(
-                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_ver} -x -u".split(
-                    " "
-                )
-            )
 
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_ver}")
