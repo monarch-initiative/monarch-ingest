@@ -22,7 +22,6 @@ import time
 import re
 
 import requests
-from requests.adapters import HTTPAdapter
 from requests.exceptions import ChunkedEncodingError
 
 logging.basicConfig(level=logging.INFO)
