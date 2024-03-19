@@ -514,6 +514,11 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
                     " "
                 )
             )
+            sh.gsutil(
+                *f"-q -m cp -a public-read ./index.html s3://kg-hub-public-data/kg-monarch".split(
+                    " "
+                )
+            )
 
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_ver}")
