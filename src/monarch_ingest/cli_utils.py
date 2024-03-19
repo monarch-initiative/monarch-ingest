@@ -1,11 +1,12 @@
 import csv
 import gc
 import os
+import sys
 import tarfile
 import yaml
 from pathlib import Path
 from typing import Optional
-from biolink_model.datamodel import model # import the pythongen biolink model to get the version
+from biolink_model.datamodel import model  # import the pythongen biolink model to get the version
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
@@ -123,8 +124,8 @@ def transform_phenio(
     edgefile = "merged-kg_edges.tsv"
 
     tar = tarfile.open(phenio_tar)
-    tar.extract(nodefile, "data/monarch")
-    tar.extract(edgefile, "data/monarch")
+    tar.extract(nodefile, "data/monarch", filter="data")
+    tar.extract(edgefile, "data/monarch", filter="data")
 
     Path(f"{output_dir}/transform_output").mkdir(parents=True, exist_ok=True)
 
@@ -288,7 +289,7 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
-def get_relase_ver():
+def get_release_version():
     import datetime
 
     return datetime.datetime.now().strftime("%Y-%m-%d")
@@ -314,7 +315,7 @@ def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: Optional[str
     packages["biolink"] = version("biolink-model")
     packages["koza"] = version("koza")
     packages["monarch-ingest"] = version("monarch-ingest")
-    kg_version = get_relase_ver() if release_version is None else release_version
+    kg_version = get_release_version() if release_version is None else release_version
     with open("data/metadata.yaml", "r") as f:
         data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
 
@@ -487,27 +488,31 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
         )
 
         # copy data to monarch-archive bucket only, so that we don't keep so many copies of the same huge files
-        sh.gsutil(*f"-q -m cp data gs://monarch-archive/monarch-kg-dev/{release_ver}/".split(" "))
+        sh.gsutil(*f"-q -m cp -r data/* gs://monarch-archive/monarch-kg-dev/{release_ver}/data".split(" "))
 
         # index and upload to kghub s3 bucket
         if kghub:
-            kghub_release_ver = release_ver.replace("-", "")
-            sh.mkdir("-p", f"{dir}/stats")
-            sh.mv(f"{dir}/merged_graph_stats.yaml", f"{dir}/stats")
+            kghub_release_ver = str(release_ver).replace("-", "")
+            logger.info(f"Uploading to kghub: {kghub_release_ver}...")
+
+            # index files locally and upload to s3
             sh.multi_indexer(
-                *f"-v --directory {dir} --prefix https://kg-hub.berkeleybop.io/kg-monarch/{kghub_release_ver} -x -u".split(
+                *f"-v --directory {dir} --prefix https://kghub.io/kg-monarch/{kghub_release_ver} -x -u".split(" ")
+            )
+            kg_hub_files = f"{dir}/monarch-kg.tar.gz {dir}/rdf/ {dir}/merged_graph_stats.yaml"
+            sh.gsutil(
+                *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}".split(
                     " "
                 )
             )
             sh.gsutil(
-                *"-q -m -cp -r -a public-read".split(" "),
-                f"{dir}/*",  # source files
-                f"s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}",  # destination
+                *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/current".split(" ")
             )
-            sh.gsutil(
-                *"-q -m cp -r -a public-read".split(" "),  # make public
-                f"{dir}/*",  # source files
-                "s3://kg-hub-public-data/kg-monarch/current",  # destination
+            # index files on s3 after upload
+            sh.multi_indexer(
+                *f"-v --prefix https://kghub.io/kg-monarch/ -b kg-hub-public-data -r kg-monarch -x".split(
+                    " "
+                )
             )
 
         logger.debug("Cleaning up files...")
@@ -515,4 +520,7 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
         logger.info(f"Successfuly uploaded release!")
     except BaseException as e:
-        logger.error(f"Oh no! Something went wrong:\n\t{e}")
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        logger.error(f"Oh no! Something went wrong:\n{fname}:{exc_tb.tb_lineno} - {exc_type} - {exc_obj}")
+        logger.error(f"Traceback: \n{e.stderr}")
