@@ -495,16 +495,25 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             kghub_release_ver = str(release_ver).replace("-", "")
             logger.info(f"Uploading to kghub: {kghub_release_ver}...")
 
+            # index files locally and upload to s3
             sh.multi_indexer(
-                *f"-v --directory {dir} --prefix https://kghub.io/kg-monarch/{kghub_release_ver} -x -u".split(
-                    " "
-                )
+                *f"-v --directory {dir} --prefix https://kghub.io/kg-monarch/{kghub_release_ver} -x -u".split(" ")
             )
             kg_hub_files = f"{dir}/monarch-kg.tar.gz {dir}/rdf/ {dir}/merged_graph_stats.yaml"
             sh.gsutil(
-                *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}".split(" ")
+                *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/{kghub_release_ver}".split(
+                    " "
+                )
             )
-            sh.gsutil(*f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/current".split(" "))
+            sh.gsutil(
+                *f"-q -m cp -r -a public-read {kg_hub_files} s3://kg-hub-public-data/kg-monarch/current".split(" ")
+            )
+            # index files on s3 after upload
+            sh.multi_indexer(
+                *f"-v --prefix https://kghub.io/kg-monarch/ -b kg-hub-public-data -r kg-monarch -x".split(
+                    " "
+                )
+            )
 
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_ver}")
