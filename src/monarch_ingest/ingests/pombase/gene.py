@@ -12,7 +12,7 @@ while (row := koza_app.get_row()) is not None:
 
     gene = Gene(
         id=row["gene_systematic_id_with_prefix"],
-        symbol=row["gene_name"],
+        symbol=row["gene_name"] or row["gene_systematic_id"],
         name=row["gene_name"] or row["gene_systematic_id"],
         full_name=row["gene_name"] or row["gene_systematic_id"],
         # No place in the schema for gene type (SO term) right now
