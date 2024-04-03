@@ -124,8 +124,8 @@ def transform_phenio(
     edgefile = "merged-kg_edges.tsv"
 
     tar = tarfile.open(phenio_tar)
-    tar.extract(nodefile, "data/monarch", filter="data")
-    tar.extract(edgefile, "data/monarch", filter="data")
+    tar.extract(nodefile, "data/monarch")
+    tar.extract(edgefile, "data/monarch")
 
     Path(f"{output_dir}/transform_output").mkdir(parents=True, exist_ok=True)
 
