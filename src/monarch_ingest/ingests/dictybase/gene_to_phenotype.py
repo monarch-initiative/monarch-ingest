@@ -4,7 +4,8 @@ from typing import Optional, Tuple
 from koza.cli_runner import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
+    AgentTypeEnum
 
 koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
@@ -29,7 +30,9 @@ while (row := koza_app.get_row()) is not None:
                 predicate='biolink:has_phenotype',
                 object=phenotype_id,
                 aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source="infores:dictybase"
+                primary_knowledge_source="infores:dictybase",
+                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                agent_type=AgentTypeEnum.manual_agent
             )
 
             koza_app.write(association)

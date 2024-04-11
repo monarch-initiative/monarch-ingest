@@ -29,7 +29,8 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
+    AgentTypeEnum
 from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm, Frequency
 
 from loguru import logger
@@ -96,6 +97,9 @@ while (row := koza_app.get_row()) is not None:
         has_count=frequency.has_count,
         has_total=frequency.has_total,
         aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:hpo-annotations"
+        primary_knowledge_source="infores:hpo-annotations",
+        knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+        agent_type=AgentTypeEnum.manual_agent
+
     )
     koza_app.write(association)

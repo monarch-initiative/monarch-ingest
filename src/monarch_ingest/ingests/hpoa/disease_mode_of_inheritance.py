@@ -25,8 +25,8 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
-
+from biolink_model.datamodel.pydanticmodel_v2 import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation, \
+    KnowledgeLevelEnum, AgentTypeEnum
 
 from loguru import logger
 
@@ -71,7 +71,9 @@ while (row := koza_app.get_row()) is not None:
           publications=publications,
           has_evidence=[evidence_curie],
           aggregator_knowledge_source=["infores:monarchinitiative"],
-          primary_knowledge_source="infores:hpo-annotations"
+          primary_knowledge_source="infores:hpo-annotations",
+          knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+          agent_type=AgentTypeEnum.manual_agent
       )
       koza_app.write(association)
 

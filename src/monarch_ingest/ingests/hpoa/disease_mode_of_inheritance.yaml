@@ -56,3 +56,5 @@ edge_properties:
   - 'has_evidence'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
+  - 'knowledge_level'
+  - 'agent_type'

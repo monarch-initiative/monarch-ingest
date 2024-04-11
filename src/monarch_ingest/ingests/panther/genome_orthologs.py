@@ -6,7 +6,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation, KnowledgeLevelEnum, AgentTypeEnum
 
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene, ncbitaxon_catalog
 
@@ -52,7 +52,9 @@ while (row := koza_app.get_row()) is not None:
                 predicate=predicate,
                 has_evidence=[f"PANTHER.FAMILY:{panther_ortholog_id}"],
                 aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source="infores:panther"
+                primary_knowledge_source="infores:panther",
+                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                agent_type=AgentTypeEnum.not_provided
             )
 
             # Write the captured Association out

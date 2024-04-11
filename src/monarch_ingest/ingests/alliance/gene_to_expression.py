@@ -4,7 +4,7 @@ import uuid
 from koza.cli_runner import get_koza_app
 from source_translation import source_map
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation, KnowledgeLevelEnum, AgentTypeEnum
 
 from monarch_ingest.ingests.alliance.utils import get_data
 
@@ -54,7 +54,9 @@ while (row := koza_app.get_row()) is not None:
                     qualifiers=([get_data(row, "assay")] if get_data(row, "assay") else None),
                     publications=publication_ids,
                     aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
-                    primary_knowledge_source=source
+                    primary_knowledge_source=source,
+                    knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                    agent_type=AgentTypeEnum.manual_agent
                 )
             )
 
@@ -71,7 +73,9 @@ while (row := koza_app.get_row()) is not None:
                     qualifiers=([get_data(row, "assay")] if get_data(row, "assay") else None),
                     publications=publication_ids,
                     aggregator_knowledge_source=["infores:monarchinitiative", "infores:alliancegenome"],
-                    primary_knowledge_source=source
+                    primary_knowledge_source=source,
+                    knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                    agent_type=AgentTypeEnum.manual_agent
                 )
             )
         else:

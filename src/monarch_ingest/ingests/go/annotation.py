@@ -6,6 +6,7 @@ Gene to GO term Associations
 """
 import uuid
 
+from biolink_model.datamodel.pydanticmodel_v2 import KnowledgeLevelEnum, AgentTypeEnum
 from koza.cli_runner import get_koza_app
 
 from monarch_ingest.ingests.go.annotation_utils import (
@@ -119,7 +120,9 @@ while (row := koza_app.get_row()) is not None:
                 has_evidence=[eco_term],
                 # subject_context_qualifier=ncbitaxa,  # Biolink Pydantic model support missing for this slot
                 aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source=assigned_by
+                primary_knowledge_source=assigned_by,
+                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                agent_type=AgentTypeEnum.manual_agent
             )
 
             # Write the captured Association out

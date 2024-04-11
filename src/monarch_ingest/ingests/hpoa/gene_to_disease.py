@@ -1,7 +1,7 @@
 import uuid
 
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation, \
-    CorrelatedGeneToDiseaseAssociation
+    CorrelatedGeneToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum
 from koza.cli_runner import get_koza_app
 
 from monarch_ingest.constants import INFORES_MONARCHINITIATIVE, BIOLINK_CAUSES
@@ -29,7 +29,9 @@ while (row := koza_app.get_row()) is not None:
         predicate=predicate,
         object=disease_id,
         primary_knowledge_source=primary_knowledge_source,
-        aggregator_knowledge_source=aggregator_knowledge_source
+        aggregator_knowledge_source=aggregator_knowledge_source,
+        knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+        agent_type=AgentTypeEnum.manual_agent
     )
 
     koza_app.write(association)

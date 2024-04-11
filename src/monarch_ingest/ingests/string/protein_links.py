@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
+from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction, KnowledgeLevelEnum, AgentTypeEnum
 
 from loguru import logger
 
@@ -56,7 +56,9 @@ while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in see
                     has_evidence=has_evidence if has_evidence else None,
 
                     aggregator_knowledge_source=["infores:monarchinitiative"],
-                    primary_knowledge_source="infores:string"
+                    primary_knowledge_source="infores:string",
+                    knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                    agent_type=AgentTypeEnum.not_provided
                 )
                 seen_rows.add(sorted_id_pair(row))
                 entities.append(association)
