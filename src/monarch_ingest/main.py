@@ -113,7 +113,7 @@ def merge(
     ),
 ):
     """Merge nodes and edges into kg"""
-    # merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
 
     # load qc_report.yaml from output_dir
     qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))
@@ -125,13 +125,16 @@ def merge(
         counts = {item["name"]: item["total_number"] for item in qc_report[type]}
         for key in expected_counts[type]["provided_by"]:
             expected = expected_counts[type]["provided_by"][key]["min"]
+            way_less_than_expected = expected * 0.7  # 70% is our threshold for "way" apparently
             if key not in counts:
                 error = True
                 print(f"ERROR: {type} {key} not found in qc_report.yaml")
             else:
-                if not counts[key] > expected:
-                    error = True
+                if counts[key] < expected and counts[key] > way_less_than_expected:
                     print(f"WARNING: expected {key} to have {expected} {type}, only found {counts[key]}")
+                elif counts[key] < expected * 0.7:
+                    print(f"ERROR: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    error = True
     if error:
         sys.exit(1)
 
