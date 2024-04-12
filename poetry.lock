@@ -1553,13 +1553,13 @@ typer-cli = ">=0.0.13,<0.0.14"
 
 [[package]]
 name = "linkml"
-version = "1.6.11"
+version = "1.7.8"
 description = "Linked Open Data Modeling Language"
 optional = false
-python-versions = ">=3.8.1,<4.0.0"
+python-versions = "<4.0.0,>=3.8.1"
 files = [
-    {file = "linkml-1.6.11-py3-none-any.whl", hash = "sha256:a7f90f8cc5bd3d171812b23eebde04de3b4318ac4f48a5eae476ce890f09907c"},
-    {file = "linkml-1.6.11.tar.gz", hash = "sha256:963e88c1548c5462bc885e4cd96cabbda066866f8737bcc3bb92f4b0247419ae"},
+    {file = "linkml-1.7.8-py3-none-any.whl", hash = "sha256:4b8ebe33b422517b08ca01802dc2899ac133c502a71d811c58fa6f4263130709"},
+    {file = "linkml-1.7.8.tar.gz", hash = "sha256:af48ee1ad6751c8d20de2832dbeefe225da9be5f39a7f8ea7821a691cf7c0148"},
 ]
 
 [package.dependencies]
@@ -1572,11 +1572,11 @@ jinja2 = ">=3.1.0"
 jsonasobj2 = ">=1.0.3,<2.0.0"
 jsonschema = {version = ">=4.0.0", extras = ["format"]}
 linkml-dataops = "*"
-linkml-runtime = ">=1.6.0"
+linkml-runtime = ">=1.7.4"
 openpyxl = "*"
 parse = "*"
 prefixcommons = ">=0.1.7"
-prefixmaps = ">=0.1.3"
+prefixmaps = ">=0.2.2"
 pydantic = ">=1.0.0,<3.0.0"
 pyjsg = ">=0.11.6"
 pyshex = ">=0.7.20"
@@ -1587,6 +1587,11 @@ rdflib = ">=6.0.0"
 requests = ">=2.22"
 sqlalchemy = ">=1.4.31"
 watchdog = ">=0.9.0"
+
+[package.extras]
+black = ["black (>=24.0.0)"]
+shacl = ["pyshacl (>=0.25.0,<0.26.0)"]
+tests = ["black (>=24.0.0)", "pyshacl (>=0.25.0,<0.26.0)"]
 
 [[package]]
 name = "linkml-dataops"
@@ -1608,13 +1613,13 @@ linkml-runtime = ">=1.1.6"
 
 [[package]]
 name = "linkml-runtime"
-version = "1.6.2"
+version = "1.7.5"
 description = "Runtime environment for LinkML, the Linked open data modeling language"
 optional = false
-python-versions = ">=3.7.6,<4.0.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "linkml_runtime-1.6.2-py3-none-any.whl", hash = "sha256:d9a915faf0ee8c8749f42d38394a06d37f016e155e077ff9cb5c5a21f24e19d6"},
-    {file = "linkml_runtime-1.6.2.tar.gz", hash = "sha256:bcbeff96d24433276755db85375e3dff0c9af0fd04f8a05f7ccd8a669a9e9877"},
+    {file = "linkml_runtime-1.7.5-py3-none-any.whl", hash = "sha256:c58000c7c68fa97b7d76c50421a85a64e25f07eec5bcac464bc00c4cd79007a6"},
+    {file = "linkml_runtime-1.7.5.tar.gz", hash = "sha256:b31197a5398359441ae1ed43470c54377a1d08db961366dda670300dddcd71d7"},
 ]
 
 [package.dependencies]
@@ -3985,4 +3990,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "c754cc30291543a0780f66564df458a651a2a56b8615a26375e5efe9b8dc4fcd"
+content-hash = "2fcecdcba2df34fc83f7843b87da0d70c6f5be03bd9510d3ef7f2870ce6819d4"
