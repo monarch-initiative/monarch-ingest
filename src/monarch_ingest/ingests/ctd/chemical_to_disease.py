@@ -27,8 +27,8 @@ while (row := koza_app.get_row()) is not None:
             publications=["PMID:" + p for p in row['PubMedIDs'].split("|")],
             aggregator_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:ctd",
-            knowledge_level=KnowledgeLevelEnum.not_provided,
-            agent_type=AgentTypeEnum.not_provided
+            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+            agent_type=AgentTypeEnum.manual_agent
         )
 
         koza_app.write(association)
