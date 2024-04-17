@@ -48,7 +48,7 @@ while (row := koza_app.get_row()) is not None:
         id=gene_id,
         symbol=row["symbol"],
         name=row["symbol"],
-        full_name=row["name"],
+        full_name=row["name"].replace("\r",""), # Replacement to remove stray carriage returns in XenBase files
         # No place in the schema for gene type (SO term) right now
         # type=row["soTermId"],
         in_taxon=[in_taxon],
@@ -62,6 +62,7 @@ while (row := koza_app.get_row()) is not None:
             for xref in row["basicGeneticEntity"]["crossReferences"]
         ]
     if "synonyms" in row["basicGeneticEntity"].keys():
-        gene.synonym = row["basicGeneticEntity"]["synonyms"]
+        # more handling for errant carriage returns
+        gene.synonym = [synonym.replace("\r","") for synonym in row["basicGeneticEntity"]["synonyms"] ]
 
     koza_app.write(gene)

@@ -8,7 +8,8 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
+    AgentTypeEnum
 
 koza_app = get_koza_app("hpoa_gene_to_phenotype")
 
@@ -22,7 +23,9 @@ while (row := koza_app.get_row()) is not None:
         predicate="biolink:has_phenotype",
         object=phenotype_id,
         aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:hpo-annotations"
+        primary_knowledge_source="infores:hpo-annotations",
+        knowledge_level=KnowledgeLevelEnum.logical_entailment,
+        agent_type=AgentTypeEnum.automated_agent,
     )
 
     koza_app.write(association)

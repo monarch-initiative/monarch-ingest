@@ -1,5 +1,7 @@
+import sys
 from typing import List, Optional
 
+import yaml
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure,
@@ -113,6 +115,28 @@ def merge(
     """Merge nodes and edges into kg"""
     merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
 
+    # load qc_report.yaml from output_dir
+    qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))
+    edge_counts = {item["name"]: item["total_number"] for item in qc_report["edges"]}
+    # load expected count yaml
+    expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
+    error = False
+    for type in ['nodes', 'edges']:
+        counts = {item["name"]: item["total_number"] for item in qc_report[type]}
+        for key in expected_counts[type]["provided_by"]:
+            expected = expected_counts[type]["provided_by"][key]["min"]
+            way_less_than_expected = expected * 0.7  # 70% is our threshold for "way" apparently
+            if key not in counts:
+                error = True
+                print(f"ERROR: {type} {key} not found in qc_report.yaml")
+            else:
+                if counts[key] < expected and counts[key] > way_less_than_expected:
+                    print(f"WARNING: expected {key} to have {expected} {type}, only found {counts[key]}")
+                elif counts[key] < expected * 0.7:
+                    print(f"ERROR: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    error = True
+    if error:
+        sys.exit(1)
 
 @typer_app.command()
 def closure():

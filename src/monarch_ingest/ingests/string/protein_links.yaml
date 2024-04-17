@@ -59,5 +59,7 @@ edge_properties:
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
   - 'has_evidence'
+  - 'knowledge_level'
+  - 'agent_type'
 
 transform_mode: 'flat'

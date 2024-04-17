@@ -1,6 +1,7 @@
 import csv
 import gc
 import os
+import pkgutil
 import sys
 import tarfile
 import yaml
@@ -188,13 +189,26 @@ def transform_phenio(
                 "predicate",
                 "object",
                 "category",
-                "relation",
                 "primary_knowledge_source",
                 "aggregator_knowledge_source",
+                "knowledge_level",
+                "agent_type"
             ]
         ),
         axis=1,
         inplace=True,
+    )
+
+    # if knowledge level doesn't exist, add it and assign to knowledge_assertion
+    if "knowledge_level" not in edges_df.columns:
+        edges_df["knowledge_level"] = "knowledge_assertion"
+    # same for agent_type, setting it to manual_agent
+    if "agent_type" not in edges_df.columns:
+        edges_df["agent_type"] = "manual_agent"
+
+    # prepend infores:monarchinitiative to the aggregator_knowledge_source column for edges that don't have it
+    edges_df["aggregator_knowledge_source"] = edges_df["aggregator_knowledge_source"].apply(
+        lambda x: f"infores:monarchinitiative|{x}" if not x.startswith("infores:monarchinitiative") else x
     )
 
     edges_df = edges_df[edges_df["predicate"].str.contains(":")]

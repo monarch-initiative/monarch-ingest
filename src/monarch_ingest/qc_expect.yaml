@@ -1,0 +1,56 @@
+nodes:
+  provided_by:
+    alliance_gene_nodes:
+      min: 290000
+    dictybase_gene_nodes:
+      min: 14000
+    hgnc_gene_nodes:
+      min: 43000
+    ncbi_gene_nodes:
+      min: 196000
+    phenio_nodes:
+      min: 288000
+    pombase_gene_nodes:
+      min: 5000
+    reactome_pathway_nodes:
+      min: 21000
+edges:
+  provided_by:
+    alliance_gene_to_expression_edges:
+      min: 1870000
+    alliance_gene_to_phenotype_edges:
+      min: 300000
+    bgee_gene_to_expression_edges:
+      min: 430000
+    biogrid_edges:
+      min: 1400000
+    ctd_chemical_to_disease_edges:
+      min: 5000
+    dictybase_gene_to_phenotype_edges:
+      min: 1100
+    go_annotation_edges:
+      min: 2500000
+    hpoa_disease_mode_of_inheritance_edges:
+      min: 8400
+    hpoa_disease_to_phenotype_edges:
+      min: 240000
+    hpoa_gene_to_disease_edges:
+      min: 15000
+    hpoa_gene_to_phenotype_edges:
+      min: 300000
+    panther_genome_orthologs_edges:
+      min: 550000
+    phenio_edges:
+      min: 670000
+    pombase_gene_to_phenotype_edges:
+      min: 160000
+    reactome_chemical_to_pathway_edges:
+      min: 65000
+    reactome_gene_to_pathway_edges:
+      min: 200000
+    string_protein_links_edges:
+      min: 1490000
+    xenbase_gene_to_phenotype_edges:
+      min: 2000
+    zfin_gene_to_phenotype_edges:
+      min: 148000

@@ -6,7 +6,7 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation, AgentTypeEnum, KnowledgeLevelEnum
 
 from loguru import logger
 
@@ -30,7 +30,9 @@ while (row := koza_app.get_row()) is not None:
             predicate=predicate,
             object=f"NCBIGene:{ortholog_id}",
             aggregator_knowledge_source=["infores:monarchinitiative"],
-            primary_knowledge_source="infores:xenbase"
+            primary_knowledge_source="infores:xenbase",
+            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+            agent_type=AgentTypeEnum.manual_agent
         )
 
         # Write the captured Association out
