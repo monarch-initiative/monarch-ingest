@@ -2,7 +2,8 @@ import uuid
 
 from koza.cli_runner import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
+    AgentTypeEnum
 
 koza_app = get_koza_app("pombase_gene_to_phenotype")
 
@@ -19,7 +20,9 @@ while (row := koza_app.get_row()) is not None:
         object=phenotype_id,
         publications=[row["Reference"]],
         aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:pombase"
+        primary_knowledge_source="infores:pombase",
+        knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+        agent_type=AgentTypeEnum.manual_agent
     )
 
     if row["Condition"]:

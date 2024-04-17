@@ -75,5 +75,7 @@ edge_properties:
   - 'object'
   - 'primary_knowledge_source'
   - 'aggregator_knowledge_source'
+  - 'knowledge_level'
+  - 'agent_type'
 
 transform_mode: 'flat'

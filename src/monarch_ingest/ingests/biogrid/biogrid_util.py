@@ -55,7 +55,7 @@ def get_evidence(methods: str) -> Optional[List[str]]:
             method = method.rstrip(")").split('(')[-1]
             if method not in EVIDENCE_CODE_MAPPINGS.keys():
                 err_msg = f"Unknown interaction detection method '{method}'. " +\
-                          "Assigning default code ECO:0000006 == 'experimental evidence'."
+                          "Assigning default code ECO:0000006 == 'experimental evidence', the ECO root."
                 logger.warning(err_msg)
                 EVIDENCE_CODE_MAPPINGS[method] = "ECO:0000006"
                 
