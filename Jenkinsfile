@@ -27,7 +27,8 @@ pipeline {
                     poetry install --with dev
                     poetry run which ingest
 
-                    # edit ~/.boto to include AWS credentials
+                    # create & edit ~/.boto to include AWS credentials
+                    gcloud init
                     sed -i "s@<your aws access key ID>@$(AWS_ACCESS_KEY_ID)@g" ~/.boto
                     sed -i "s@<your aws secret access key>@$(AWS_SECRET_ACCESS_KEY)@g" ~/.boto
                 '''
