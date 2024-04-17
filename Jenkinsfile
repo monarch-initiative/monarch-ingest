@@ -28,8 +28,8 @@ pipeline {
                     poetry run which ingest
 
                     # edit ~/.boto to include AWS credentials
-                    sed -i "/#aws_access_key_id = <your aws access key ID>/c\aws_access_key_id = $AWS_ACCESS_KEY_ID" ~/.boto
-                    sed -i "/#aws_secret_access_key = <your aws secret access key>/c\aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" ~/.boto
+                    sed -i "s@<your aws access key ID>@$(AWS_ACCESS_KEY_ID)@g" ~/.boto
+                    sed -i "s@<your aws secret access key>@$(AWS_SECRET_ACCESS_KEY)@g" ~/.boto
                 '''
             }
         }
