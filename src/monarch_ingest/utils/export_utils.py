@@ -16,10 +16,13 @@ from json import decoder
 from enum import Enum
 from pathlib import Path
 import logging
+from typing import List
+
 import yaml
 import gzip
 import time
 import re
+import duckdb
 
 import requests
 from requests.exceptions import ChunkedEncodingError
@@ -35,6 +38,35 @@ class OutputType(str, Enum):
 
 OUTPUT_TYPES = set(OutputType._member_names_)
 
+DEFAULT_FIELDS = [
+            'subject',
+            'subject_label',
+            'subject_taxon',
+            'subject_taxon_label',
+            'negated',
+            'predicate',
+            'object',
+            'object_label',
+            'qualifiers',
+            'publications',
+            'has_evidence',
+            'primary_knowledge_source',
+            'aggregator_knowledge_source',
+        ]
+
+DISEASE_TO_PHENOTYPE_APPENDS = [
+            'onset_qualifier',
+            'onset_qualifier_label',
+            'frequency_qualifier',
+            'frequency_qualifier_label',
+            'sex_qualifier',
+            'sex_qualifier_label'
+    ]
+
+GENE_TO_GENE_APPENDS = [
+            'object_taxon',
+            'object_taxon_label'
+    ]
 
 def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
            output_dir: str = "./output/tsv/",
@@ -43,7 +75,7 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
 
     if output_format not in OUTPUT_TYPES:
         raise ValueError(f"output format not supported, supported formats are {OUTPUT_TYPES}")
-
+    database = duckdb.connect('output/monarch-kg.duckdb')
     dir_path = Path(output_dir)
 
     # Fetch all associations
@@ -65,21 +97,19 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
     response = solr_request.json()
     solr_request.close()
 
-    for facet in reversed(response['facet_counts']['facet_fields']['category']):
-        association = facet[0]
-        category_name = camel_to_snake(re.sub(r'biolink:', '', association))
+    for association_category in get_association_categories(database):
+        category_name = camel_to_snake(re.sub(r'biolink:', '', association_category))
         # quote the facet value because of the biolink: prefix
-        association = f'"{association}"'
-        print(association)
-        file = f"{category_name}.all.{output_format}.gz"
-        dump_file_fh = gzip.open(dump_dir / file, 'wt')
-        filters = ['category:{}'.format(association)]
-
-        if output_format == 'tsv':
-            generate_tsv(dump_file_fh, solr_url, filters)
-        elif output_format == 'jsonl':
-            generate_jsonl(dump_file_fh, solr_url, filters)
-
+        association_category = f'"{association_category}"'
+        print(association_category)
+        file = f"{category_name}.all.{output_format.value}.gz"
+        dump_file = str(dump_dir / file)
+        filters = ['category:{}'.format(association_category)]
+        export_annotations(database=database,
+                                          fields=get_fields(association_category),
+                                          category=association_category,
+                                          output_file=dump_file,
+                                          )
         logger.info(f"finished writing {file}")
 
     # Fetch associations configured in config_file
@@ -91,194 +121,82 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
         dump_dir.mkdir(parents=True, exist_ok=True)
 
         for file, filters in file_maps.items():
-            dump_file = dump_dir / file
-            dump_file_fh = gzip.open(dump_file, 'wt')
+            dump_file = str(dump_dir / file)
+            exploded = filters.get('exploded', False)
+            export_annotations(database=database,
+                               fields=get_fields(filters.get('category')),
+                               output_file=dump_file,
+                               category=filters.get('category'),
+                               subject_taxon=filters.get('taxon', None))
 
-            if output_format == 'tsv':
-                generate_tsv(dump_file_fh, solr_url, filters)
-            elif output_format == 'jsonl':
-                generate_jsonl(dump_file_fh, solr_url, filters)
-
-            dump_file_fh.close()
-
-
-def generate_tsv(tsv_fh, solr, filters):
-    default_fields = ','.join([
-            'subject',
-            'subject_label',
-            'subject_taxon',
-            'subject_taxon_label',
-            'negated',
-            'predicate',
-            'object',
-            'object_label',
-            'qualifier'
-            'publications',
-            'has_evidence',
-            'primary_knowledge_source',
-            'aggregator_knowledge_source',
-        ])
-    disease_to_phenotype_extra_fields = ','.join([
-        'onset_qualifier',
-        'onset_qualifier_label',
-        'frequency_qualifier',
-        'frequency_qualifier_label',
-        'sex_qualifier',
-        'sex_qualifier_label'])
-    gene_to_gene_extra_fields = ','.join(['object_taxon', 'object_taxon_label'])
-
-    golr_params = {
-        'q': '*:*',
-        'wt': 'csv',
-        'csv.encapsulator': '"',
-        'csv.separator': '\t',
-        'csv.header': 'true',
-        'csv.mv.separator': '|',
-        'fl': default_fields
-    }
-
-    for filter in filters:
-        if filter == 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"':
-            golr_params['fl'] += ',' + disease_to_phenotype_extra_fields
-        elif 'GeneToGene' in filter:
-            golr_params['fl'] += ',' + gene_to_gene_extra_fields
-
-    count_params = {
-        'wt': 'json',
-        'rows': 0,
-        'q': '*:*',
-        'fq': filters,
-    }
-
-    sesh = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(max_retries=10, pool_connections=100, pool_maxsize=100)
-    sesh.mount('https://', adapter)
-    sesh.mount('http://', adapter)
-    solr_request = sesh.get(solr, params=count_params)
-
-    facet_response = None
-    retries = 10
-    resultCount = 0
-    for ret in range(retries):
-        if facet_response:
-            break
-
-        try:
-            facet_response = solr_request.json()
-            resultCount = facet_response['response']['numFound']
-
-            if resultCount == 0:
-                logger.warning("No results found for {}"
-                               " with filters {}".format(tsv_fh.name, filters))
-        except decoder.JSONDecodeError:
-            logger.warning("JSONDecodeError for {}"
-                           " with filters {}".format(tsv_fh.name, filters))
-            logger.warning("solr content: {}".format(solr_request.text))
-            time.sleep(500)
-
-    if not facet_response:
-        logger.error("Could not fetch solr docs with for params %s", filters)
-        exit(1)
-
-    golr_params['rows'] = 5000
-    golr_params['start'] = 0
-    golr_params['fq'] = filters
-
-    first_res = True
-
-    while golr_params['start'] < resultCount:
-        if first_res:
-            golr_params['csv.header'] = 'true'
-            first_res = False
-        else:
-            golr_params['csv.header'] = 'false'
-
-        solr_response = fetch_solr_doc(sesh, solr, golr_params)
-
-        tsv_fh.write(solr_response)
-        golr_params['start'] += golr_params['rows']
-
-    sesh.close()
+            if exploded:
+                exploded_file = dump_file.replace(f'.{output_format.value}.gz',  f'.exploded.{output_format.value}.gz')
+                export_exploded_annotations(
+                    database=database,
+                    category=filters.get('category'),
+                    subject_taxon=filters.get('taxon', None),
+                    fields=get_fields(filters.get('category')),
+                    output_file=exploded_file
+                )
 
 
-def generate_jsonl(fh, solr, filters):
-
-    #jsonl_writer = jsonlines.open(fh)
-
-    golr_params = {
-        'q': '*:*',
-        'wt': 'json',
-        'fl': '*',
-        'fq': filters,
-        'start': 0,
-        'rows': 5000
-    }
-
-    count_params = {
-        'wt': 'json',
-        'rows': 0,
-        'q': '*:*',
-        'fq': filters,
-    }
-
-    sesh = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(max_retries=10, pool_connections=100, pool_maxsize=100)
-    sesh.mount('https://', adapter)
-    sesh.mount('http://', adapter)
-    solr_request = sesh.get(solr, params=count_params)
-
-    facet_response = None
-    retries = 10
-    resultCount = 0
-    for ret in range(retries):
-        if facet_response:
-            break
-
-        try:
-            facet_response = solr_request.json()
-            resultCount = facet_response['response']['numFound']
-
-            if resultCount == 0:
-                logger.warning("No results found for {}"
-                               " with filters {}".format(fh.name, filters))
-        except decoder.JSONDecodeError:
-            logger.warning("JSONDecodeError for {}"
-                           " with filters {}".format(fh.name, filters))
-            logger.warning("solr content: {}".format(solr_request.text))
-            time.sleep(500)
-
-    if not facet_response:
-        logger.error("Could not fetch solr docs with for params %s", filters)
-        exit(1)
-
-    while golr_params['start'] < resultCount:
-        solr_response = fetch_solr_doc(sesh, solr, golr_params)
-        docs = json.loads(solr_response)['response']['docs']
-        for doc in docs:
-            fh.write(f"{json.dumps(doc)}\n")
-        golr_params['start'] += golr_params['rows']
-
-    sesh.close()
 
 
-def fetch_solr_doc(session, solr, params, retries=10):
-    solr_response = None
+def get_fields(category: str) -> List[str]:
+    fields = DEFAULT_FIELDS
 
-    for ret in range(retries):
-        if solr_response:
-            break
-        try:
-            solr_request = session.get(solr, params=params, stream=False)
-            solr_response = solr_request.text
-        except ChunkedEncodingError:
-            logger.warning("ChunkedEncodingError for params %s", params)
-            time.sleep(300)
+    if 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"' in category:
+        fields += DISEASE_TO_PHENOTYPE_APPENDS
+    if 'GeneToGene' in category:
+        fields += GENE_TO_GENE_APPENDS
 
-    if not solr_response:
-        logger.error("Could not fetch solr docs with for params %s", params)
-        exit(1)
+    return fields
 
-    return solr_response
+def export_annotations(database, fields: List[str], output_file: str, category: str, subject_taxon=None ):
+    taxon_filter = "subject_taxon = '{subject_taxon}' " if subject_taxon else ""
+    sql = f""" 
+    COPY (
+        SELECT {','.join(fields)} 
+        FROM denormalized_edges 
+        WHERE category = '{category}' {taxon_filter}
+    ) to '{output_file}' (header, delimiter '\t')
+    """
+    # database.execute(sql)
+
+def export_exploded_annotations(database,
+                                                         fields: List[str],
+                                                         output_file: str,
+                                                         category :str,
+                                                         subject_taxon :str = None):
+
+    taxon_filter = f"AND subject_taxon = '{subject_taxon}'" if subject_taxon else ""
+
+    sql = f"""
+        WITH cte AS (
+          SELECT
+            {','.join(fields)},
+            unnest(string_split(object_closure,'|')) as object_ancestor,    
+            CASE WHEN object = object_ancestor THEN TRUE ELSE FALSE END as direct
+          FROM denormalized_edges
+          WHERE category = '{category}' {taxon_filter}
+        )
+        SELECT
+          cte.* REPLACE (cte.object_ancestor as object, nodes.name as object_label)  
+        FROM cte
+        LEFT OUTER JOIN nodes ON cte.object = nodes.id
+    """
+    print(sql)
+    print(output_file)
+    database.execute(f"copy ({sql}) to '{output_file}' (header, delimiter '\t')")
+
+def get_association_categories(database) -> List[str]:
+    sql = """
+    SELECT DISTINCT category
+    FROM denormalized_edges
+    """
+    # return as list of strings, extracting only column from tuple
+    return [row[0] for row in database.execute(sql).fetchall()]
+
 
 
 def camel_to_snake(name):

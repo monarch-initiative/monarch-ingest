@@ -1,34 +1,35 @@
 ---
 disease_associations:
   disease_phenotype.all.tsv.gz:
-  - 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"'
+    category: 'biolink:DiseaseToPhenotypicFeatureAssociation'
 gene_associations:
   gene_phenotype.all.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
+    exploded: true
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
   gene_phenotype.4896.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:4896"'
+      category: "biolink:GeneToPhenotypicFeatureAssociation"
+      subject_taxon: "NCBITaxon:4896"
   gene_phenotype.6239.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:6239"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:6239"
   gene_phenotype.7955.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:7955"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:7955"
   gene_phenotype.8355.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:8355"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:8355"
   gene_phenotype.8364.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:8364"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:8364"
   gene_phenotype.9606.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:9606"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:9606"
   gene_phenotype.10090.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:10090"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:10090"
   gene_phenotype.10116.tsv.gz:
-  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
-  - 'subject_taxon:"NCBITaxon:10116"'
+    category: "biolink:GeneToPhenotypicFeatureAssociation"
+    subject_taxon: "NCBITaxon:10116"
 # Leaving as a placeholder because we don't have fly g2p right now
 #  gene_phenotype.7227.tsv.gz:
 #  - 'category:"biolink:GeneToPhenotypicFeatureAssociation"'
@@ -46,7 +47,7 @@ gene_associations:
 #  - '-subject_taxon:"NCBITaxon:10090"'
 #  - '-subject_taxon:"NCBITaxon:10116"'
   gene_disease.9606.tsv.gz:
-  - 'category:"biolink:CausalGeneToDiseaseAssociation"'
-  - 'subject_taxon:"NCBITaxon:9606"'
+    category: "biolink:CausalGeneToDiseaseAssociation"
+    subject_taxon: "NCBITaxon:9606"
   gene_disease.noncausal.tsv.gz:
-  - 'category:"biolink:CorrelatedGeneToDiseaseAssociation"'
+    category: "biolink:CorrelatedGeneToDiseaseAssociation"
