@@ -8,17 +8,17 @@ from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssocia
 def filter_group_by_rank(rows: List, col: str, largest_n: int = 0, smallest_n: int = 0) -> List[Dict]:
     """Function to filter a group of Koza rows by values largest or smallest values in column:
 
-        Get the top and/or bottom n rows ranked based on column:
+    Get the top and/or bottom n rows ranked based on column:
 
-        Args:
-            rows (List): The Koza object to read rows from.
-            col (str): The column to perform ranking and filtering.
-            largest_n (int): The number of rows to return from the largest ranking.
-            smallest_n (int): The number of rows to return from the smallest ranking.
+    Args:
+        rows (List): The Koza object to read rows from.
+        col (str): The column to perform ranking and filtering.
+        largest_n (int): The number of rows to return from the largest ranking.
+        smallest_n (int): The number of rows to return from the smallest ranking.
 
 
-        Returns:
-            List[Dict]: Returns a list of n rows in Koza dict format sorted by rank in column.
+    Returns:
+        List[Dict]: Returns a list of n rows in Koza dict format sorted by rank in column.
     """
     df = pd.DataFrame(rows)
     largest_df = df.nlargest(largest_n, col, keep="first")
@@ -29,11 +29,11 @@ def filter_group_by_rank(rows: List, col: str, largest_n: int = 0, smallest_n: i
 def write_group(rows: List, koza_app: KozaApp):
     """Function to write a group of Koza rows to KozaApp object output:
 
-        Write list of rows in Koza format to KozaApp output:
+    Write list of rows in Koza format to KozaApp output:
 
-        Args:
-            rows (List): A list of rows to output to KozaApp.
-            koza_app (KozaApp): The KozaApp to use for output of rows.
+    Args:
+        rows (List): A list of rows to output to KozaApp.
+        koza_app (KozaApp): The KozaApp to use for output of rows.
     """
     for row in rows:
         association = GeneToExpressionSiteAssociation(
@@ -44,7 +44,8 @@ def write_group(rows: List, koza_app: KozaApp):
             primary_knowledge_source="infores:bgee",
             aggregator_knowledge_source=["infores:monarchinitiative"],
             knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-            agent_type=AgentTypeEnum.not_provided)
+            agent_type=AgentTypeEnum.not_provided,
+        )
 
         koza_app.write(association)
 
@@ -52,15 +53,15 @@ def write_group(rows: List, koza_app: KozaApp):
 def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
     """Function to read a group of Koza rows from a KozaApp:
 
-        Get a group of rows from KozaApp grouped on column:
+    Get a group of rows from KozaApp grouped on column:
 
-        Args:
-            koza_app (KozaApp): The Koza object to read rows from.
-            col (str): The column to group rows based on.
+    Args:
+        koza_app (KozaApp): The Koza object to read rows from.
+        col (str): The column to group rows based on.
 
 
-        Returns:
-            List/None: Returns a list of rows in Koza dict format grouped by column.
+    Returns:
+        List/None: Returns a list of rows in Koza dict format grouped by column.
     """
     if not hasattr(koza_app, 'previous_row'):
         koza_app.previous_row = koza_app.get_row()
@@ -81,11 +82,11 @@ def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
 def process_koza_source(koza_app: KozaApp):
     """Function to filter a group of Koza rows by values largest or smallest values in column:
 
-        Get the top and/or bottom n rows ranked based on column:
+    Get the top and/or bottom n rows ranked based on column:
 
-        Args:
-            koza_app (KozaApp): The Koza object to process for ingest.
+    Args:
+        koza_app (KozaApp): The Koza object to process for ingest.
     """
-    while(row_group := get_row_group(koza_app)) is not None:
+    while (row_group := get_row_group(koza_app)) is not None:
         rank_filtered_rows = filter_group_by_rank(row_group, col='Expression rank', smallest_n=10)
         write_group(rank_filtered_rows, koza_app)

@@ -1,5 +1,5 @@
 import pytest
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 # This name must match the ingest name in the transform code

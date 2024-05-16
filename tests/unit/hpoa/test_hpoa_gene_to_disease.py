@@ -1,8 +1,8 @@
 from typing import List
 
 import pytest
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation
-from koza.utils.testing_utils import mock_koza
+from biolink_model.datamodel.pydanticmodel_v2 import CausalGeneToDiseaseAssociation
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 from monarch_ingest.constants import (
     BIOLINK_CAUSES,

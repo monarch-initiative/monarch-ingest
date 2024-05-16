@@ -1,7 +1,7 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, InformationContentEntityToNamedThingAssociation, Publication
 from koza.cli_utils import get_translation_table
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 from loguru import logger
 
 

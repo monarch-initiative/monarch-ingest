@@ -1,8 +1,9 @@
 """
 Unit tests for Panther Gene Orthology relationships ingest
 """
+
 import pytest
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture

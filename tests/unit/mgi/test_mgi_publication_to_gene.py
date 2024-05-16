@@ -1,6 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import InformationContentEntityToNamedThingAssociation
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 pubmed_ids = "11217851|12466851|18163442|21267068|19213785|27357688|27914912|21873635|31504408"
 markers = "Cbe1|Smrp1"

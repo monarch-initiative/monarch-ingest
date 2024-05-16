@@ -23,17 +23,20 @@ poetry run koza transform \
   --source src/monarch_ingest/ingests/hpoa/disease_phenotype.yaml \
   --output-format tsv
 """
-from typing import Optional, List, Tuple
+
+from typing import Optional, List
 
 import uuid
 
 from koza.cli_utils import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
-    AgentTypeEnum
-from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, FrequencyHpoTerm, Frequency
+from biolink_model.datamodel.pydanticmodel_v2 import (
+    DiseaseToPhenotypicFeatureAssociation,
+    KnowledgeLevelEnum,
+    AgentTypeEnum,
+)
+from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, Frequency
 
-from loguru import logger
 
 koza_app = get_koza_app("hpoa_disease_to_phenotype")
 
@@ -63,9 +66,7 @@ while (row := koza_app.get_row()) is not None:
     # female -> PATO:0000383
     # male -> PATO:0000384
     sex: Optional[str] = row["sex"]  # may be translated by local table
-    sex_qualifier = (
-        koza_app.translation_table.resolve_term(sex) if sex else None
-    )
+    sex_qualifier = koza_app.translation_table.resolve_term(sex) if sex else None
 
     onset = row["onset"]
 
@@ -77,13 +78,12 @@ while (row := koza_app.get_row()) is not None:
     publications: List[str] = publications_field.split(";")
 
     # don't populate the reference with the database_id / disease id
-    publications = [p for p in publications
-                    if not p == row["database_id"]]
+    publications = [p for p in publications if not p == row["database_id"]]
 
     # Association/Edge
     association = DiseaseToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
-        subject=disease_id.replace("ORPHA:", "Orphanet:"), # match `Orphanet` as used in Mondo SSSOM
+        subject=disease_id.replace("ORPHA:", "Orphanet:"),  # match `Orphanet` as used in Mondo SSSOM
         predicate=predicate,
         negated=negated,
         object=hpo_id,
@@ -99,7 +99,6 @@ while (row := koza_app.get_row()) is not None:
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:hpo-annotations",
         knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-        agent_type=AgentTypeEnum.manual_agent
-
+        agent_type=AgentTypeEnum.manual_agent,
     )
     koza_app.write(association)

@@ -1,24 +1,24 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import DiseaseToPhenotypicFeatureAssociation
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
 def d2pf_entities_1(mock_koza, global_table):
     row = {
-                "database_id": "OMIM:614856",
-                "disease_name": "Osteogenesis imperfecta, type XIII",
-                "qualifier": "NOT",
-                "hpo_id": "HP:0000343",
-                "reference": "OMIM:614856",
-                "evidence": "TAS",
-                "onset": "HP:0003593",
-                "frequency": "1/1",
-                "sex": "FEMALE",
-                "modifier": "",
-                "aspect": "C",  # assert 'Clinical' test record
-                "biocuration": "HPO:skoehler[2012-11-16]",
-            }
+        "database_id": "OMIM:614856",
+        "disease_name": "Osteogenesis imperfecta, type XIII",
+        "qualifier": "NOT",
+        "hpo_id": "HP:0000343",
+        "reference": "OMIM:614856",
+        "evidence": "TAS",
+        "onset": "HP:0003593",
+        "frequency": "1/1",
+        "sex": "FEMALE",
+        "modifier": "",
+        "aspect": "C",  # assert 'Clinical' test record
+        "biocuration": "HPO:skoehler[2012-11-16]",
+    }
     return mock_koza(
         name="hpoa_disease_to_phenotype",
         data=row,
@@ -52,19 +52,19 @@ def test_disease_to_phenotype_transform_1(d2pf_entities_1):
 @pytest.fixture
 def d2pf_entities_2(mock_koza, global_table):
     row = {
-                "database_id": "OMIM:117650",
-                "disease_name": "Cerebrocostomandibular syndrome",
-                "qualifier": "",
-                "hpo_id": "HP:0001249",
-                "reference": "OMIM:117650",
-                "evidence": "TAS",
-                "onset": "",
-                "frequency": "50%",
-                "sex": "",
-                "modifier": "",
-                "aspect": "P",
-                "biocuration": "HPO:probinson[2009-02-17]",
-            }
+        "database_id": "OMIM:117650",
+        "disease_name": "Cerebrocostomandibular syndrome",
+        "qualifier": "",
+        "hpo_id": "HP:0001249",
+        "reference": "OMIM:117650",
+        "evidence": "TAS",
+        "onset": "",
+        "frequency": "50%",
+        "sex": "",
+        "modifier": "",
+        "aspect": "P",
+        "biocuration": "HPO:probinson[2009-02-17]",
+    }
     return mock_koza(
         name="hpoa_disease_to_phenotype",
         data=row,
@@ -96,19 +96,19 @@ def test_disease_to_phenotype_transform_2(d2pf_entities_2):
 @pytest.fixture
 def d2pf_entities_3(mock_koza, global_table):
     row = {
-                "database_id": "OMIM:117650",
-                "disease_name": "Cerebrocostomandibular syndrome",
-                "qualifier": "",
-                "hpo_id": "HP:0001545",
-                "reference": "OMIM:117650;PMID:12345",
-                "evidence": "TAS",
-                "onset": "",
-                "frequency": "HP:0040283",
-                "sex": "",
-                "modifier": "",
-                "aspect": "P",
-                "biocuration": "HPO:skoehler[2017-07-13]",
-            }
+        "database_id": "OMIM:117650",
+        "disease_name": "Cerebrocostomandibular syndrome",
+        "qualifier": "",
+        "hpo_id": "HP:0001545",
+        "reference": "OMIM:117650;PMID:12345",
+        "evidence": "TAS",
+        "onset": "",
+        "frequency": "HP:0040283",
+        "sex": "",
+        "modifier": "",
+        "aspect": "P",
+        "biocuration": "HPO:skoehler[2017-07-13]",
+    }
     return mock_koza(
         name="hpoa_disease_to_phenotype",
         data=row,
@@ -143,19 +143,19 @@ def test_disease_to_phenotype_transform_3(d2pf_entities_3):
 @pytest.fixture
 def d2pf_frequency_fraction_entities(mock_koza, global_table, d2pf_entities_1):
     row = {
-                "database_id": "OMIM:117650",
-                "disease_name": "Cerebrocostomandibular syndrome",
-                "qualifier": "",
-                "hpo_id": "HP:0001545",
-                "reference": "OMIM:117650",
-                "evidence": "TAS",
-                "onset": "",
-                "frequency": "3/20",
-                "sex": "",
-                "modifier": "",
-                "aspect": "P",
-                "biocuration": "HPO:skoehler[2017-07-13]",
-            }
+        "database_id": "OMIM:117650",
+        "disease_name": "Cerebrocostomandibular syndrome",
+        "qualifier": "",
+        "hpo_id": "HP:0001545",
+        "reference": "OMIM:117650",
+        "evidence": "TAS",
+        "onset": "",
+        "frequency": "3/20",
+        "sex": "",
+        "modifier": "",
+        "aspect": "P",
+        "biocuration": "HPO:skoehler[2017-07-13]",
+    }
     return mock_koza(
         name="hpoa_disease_to_phenotype",
         data=row,

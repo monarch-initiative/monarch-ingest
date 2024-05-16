@@ -63,4 +63,7 @@ skip-string-normalization = true
 line-length = 120
 ignore = [
     "F541", # f-strings with no placeholders
+
 ]
+[tool.ruff.lint.per-file-ignores]
+"tests/**.py" = ["F811"] # redefinition of unused imports (mock_koza)

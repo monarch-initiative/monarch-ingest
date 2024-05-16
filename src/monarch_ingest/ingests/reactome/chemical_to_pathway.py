@@ -31,7 +31,7 @@ while (row := koza_app.get_row()) is not None:
             aggregator_knowledge_source=["infores:monarchinitiative"],
             primary_knowledge_source="infores:reactome",
             knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-            agent_type=AgentTypeEnum.not_provided
+            agent_type=AgentTypeEnum.not_provided,
         )
 
     koza_app.write(association)

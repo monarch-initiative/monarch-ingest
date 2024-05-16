@@ -3,8 +3,7 @@ Unit tests for BioGRID protein links ingest
 """
 
 import pytest
-from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -8,20 +8,20 @@ def entities(
     mock_koza,
 ):
     row = {
-                "SUBJECT": "Xenbase:XB-GENE-1000632",
-                "SUBJECT_LABEL": "dctn2",
-                "SUBJECT_TAXON": "NCBITaxon:8364",
-                "SUBJECT_TAXON_LABEL": "Xla",
-                "OBJECT": "XPO:0102358",
-                "OBJECT_LABEL": "abnormal tail morphology",
-                "RELATION": "RO_0002200",
-                "RELATION_LABEL": "has_phenotype",
-                "EVIDENCE": "",
-                "EVIDENCE_LABEL": "",
-                "SOURCE": "PMID:17112317",
-                "IS_DEFINED_BY": "",
-                "QUALIFIER": "",
-            }
+        "SUBJECT": "Xenbase:XB-GENE-1000632",
+        "SUBJECT_LABEL": "dctn2",
+        "SUBJECT_TAXON": "NCBITaxon:8364",
+        "SUBJECT_TAXON_LABEL": "Xla",
+        "OBJECT": "XPO:0102358",
+        "OBJECT_LABEL": "abnormal tail morphology",
+        "RELATION": "RO_0002200",
+        "RELATION_LABEL": "has_phenotype",
+        "EVIDENCE": "",
+        "EVIDENCE_LABEL": "",
+        "SOURCE": "PMID:17112317",
+        "IS_DEFINED_BY": "",
+        "QUALIFIER": "",
+    }
     return mock_koza("xenbase_gene_to_phenotype", row, "./src/monarch_ingest/ingests/xenbase/gene_to_phenotype.py")
 
 

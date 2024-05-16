@@ -4,12 +4,16 @@ poetry run koza transform \
   --source src/monarch_ingest/ingests/hpoa/gene_to_phenotype.yaml \
   --output-format tsv
 """
+
 import uuid
 
 from koza.cli_utils import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \
-    AgentTypeEnum
+from biolink_model.datamodel.pydanticmodel_v2 import (
+    GeneToPhenotypicFeatureAssociation,
+    KnowledgeLevelEnum,
+    AgentTypeEnum,
+)
 
 koza_app = get_koza_app("hpoa_gene_to_phenotype")
 

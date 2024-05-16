@@ -120,10 +120,10 @@ def smallest_n() -> int:
 def test_filter_group_by_rank_short(row_group_1, filter_col, smallest_n):
     filtered_group = filter_group_by_rank(row_group_1, filter_col, smallest_n=smallest_n)
 
-    assert type(filtered_group) is list
+    assert isinstance(filtered_group, list)
     assert len(filtered_group) == 5
     for i in filtered_group:
-        assert type(i) is dict
+        assert isinstance(i, dict)
         assert i['Gene ID'] == 'ENSSSCG00000000002'
 
     filtered_group_df = pd.DataFrame(filtered_group)
@@ -134,10 +134,10 @@ def test_filter_group_by_rank_short(row_group_1, filter_col, smallest_n):
 def test_filter_group_by_rank_long(row_group_2, filter_col, smallest_n):
     filtered_group = filter_group_by_rank(row_group_2, filter_col, smallest_n=smallest_n)
 
-    assert type(filtered_group) is list
+    assert isinstance(filtered_group, list)
     assert len(filtered_group) == 10
     for i in filtered_group:
-        assert type(i) is dict
+        assert isinstance(i, dict)
         assert i['Gene ID'] == 'ENSSSCG00000000003'
 
     filtered_group_df = pd.DataFrame(filtered_group)
@@ -157,7 +157,7 @@ def test_write_group(row_group_1, bgee_mock_koza):
     prev_uuid = 0
     object_list = ['CL:0000023', 'CL:0000501', 'UBERON:0000948', 'UBERON:0005417', 'UBERON:0005418']
     for index, item in enumerate(write_result):
-        assert type(item) == GeneToExpressionSiteAssociation
+        assert isinstance(item, GeneToExpressionSiteAssociation)
         assert item.id != prev_uuid
         prev_uuid = item.id
         assert item.category == ['biolink:GeneToExpressionSiteAssociation']
@@ -169,10 +169,10 @@ def test_write_group(row_group_1, bgee_mock_koza):
 def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
     row_group = get_row_group(bgee_mock_koza)
 
-    assert type(row_group) is list
+    assert isinstance(row_group, list)
     assert len(row_group) == 5
     for i in row_group:
-        assert type(i) is dict
+        assert isinstance(i, dict)
 
     assert row_group == row_group_1
 

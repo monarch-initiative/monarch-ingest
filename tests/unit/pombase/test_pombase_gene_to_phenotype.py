@@ -1,32 +1,32 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
-from koza.utils.testing_utils import mock_koza
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
 def entities(mock_koza, global_table):
     row = {
-                "Database name": "PomBase",
-                "Gene systematic ID": "SPAC24B11.06c",
-                "FYPO ID": "FYPO:0004058",
-                "Allele description": "",
-                "Expression": "",
-                "Parental strain": "972 h-",
-                "Strain name (background)": "",
-                "Genotype description": "",
-                "Gene name": "sty1",
-                "Allele name": "sty1delta",
-                "Allele synonym": "",
-                "Allele type": "deletion",
-                "Evidence": "cell growth assay evidence",
-                "Condition": "",
-                "Penetrance": "",
-                "Severity": "FYPO_EXT:0000001",
-                "Extension": "",
-                "Reference": "PMID:19436749",
-                "Taxon": "4896",
-                "Date": "2014-11-21",
-            }
+        "Database name": "PomBase",
+        "Gene systematic ID": "SPAC24B11.06c",
+        "FYPO ID": "FYPO:0004058",
+        "Allele description": "",
+        "Expression": "",
+        "Parental strain": "972 h-",
+        "Strain name (background)": "",
+        "Genotype description": "",
+        "Gene name": "sty1",
+        "Allele name": "sty1delta",
+        "Allele synonym": "",
+        "Allele type": "deletion",
+        "Evidence": "cell growth assay evidence",
+        "Condition": "",
+        "Penetrance": "",
+        "Severity": "FYPO_EXT:0000001",
+        "Extension": "",
+        "Reference": "PMID:19436749",
+        "Taxon": "4896",
+        "Date": "2014-11-21",
+    }
 
     return mock_koza(
         name="pombase_gene_to_phenotype",

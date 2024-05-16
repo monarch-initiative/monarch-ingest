@@ -10,14 +10,12 @@ from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociati
 
 from monarch_ingest.ingests.panther.orthology_utils import parse_gene, ncbitaxon_catalog
 
-from loguru import logger
 
 koza_app = get_koza_app("panther_genome_orthologs")
 
 while (row := koza_app.get_row()) is not None:
 
-    if row['Gene'].split("|")[0] in ncbitaxon_catalog \
-            and row['Ortholog'].split("|")[0] in ncbitaxon_catalog:
+    if row['Gene'].split("|")[0] in ncbitaxon_catalog and row['Ortholog'].split("|")[0] in ncbitaxon_catalog:
         try:
             # TODO: we don't current capture the taxon of the subject gene
             #       nor the object ortholog. Maybe as a qualifier in Biolink 3.0?
@@ -54,13 +52,13 @@ while (row := koza_app.get_row()) is not None:
                 aggregator_knowledge_source=["infores:monarchinitiative"],
                 primary_knowledge_source="infores:panther",
                 knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.not_provided
+                agent_type=AgentTypeEnum.not_provided,
             )
 
             # Write the captured Association out
             koza_app.write(association)
-            
-        except RuntimeError as rte:
+
+        except RuntimeError:
             # Skip the row - not of interest or error
             # logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
             pass

@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, List
+from typing import List
 
 from koza.cli_utils import get_koza_app
 
@@ -13,11 +13,13 @@ koza_app = get_koza_app("string_protein_links")
 
 seen_rows = set([])
 
+
 def sorted_id_pair(row) -> str:
     sorted([row['protein1'], row['protein2']])
 
+
 while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in seen_rows:
-    
+
     entrez_2_string = koza_app.get_map('entrez_2_string')
 
     pid_a = row['protein1']
@@ -51,14 +53,12 @@ while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in see
                     subject=gene_id_a,
                     object=gene_id_b,
                     predicate="biolink:interacts_with",
-
                     # sanity check: set to 'None' if empty list
                     has_evidence=has_evidence if has_evidence else None,
-
                     aggregator_knowledge_source=["infores:monarchinitiative"],
                     primary_knowledge_source="infores:string",
                     knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                    agent_type=AgentTypeEnum.not_provided
+                    agent_type=AgentTypeEnum.not_provided,
                 )
                 seen_rows.add(sorted_id_pair(row))
                 entities.append(association)

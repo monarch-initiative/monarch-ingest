@@ -1,4 +1,3 @@
-
 """ Monarch Data Dump
 
 This script is used to dump tsv files from the
@@ -11,6 +10,7 @@ directory_name:
   - solr_filter_1
   - solr_filter_2
 """
+
 import json
 from json import decoder
 from enum import Enum
@@ -36,10 +36,12 @@ class OutputType(str, Enum):
 OUTPUT_TYPES = set(OutputType._member_names_)
 
 
-def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
-           output_dir: str = "./output/tsv/",
-           output_format: OutputType = OutputType.tsv,
-           solr_url: str = "http://localhost:8983/solr/association/select"):
+def export(
+    config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
+    output_dir: str = "./output/tsv/",
+    output_format: OutputType = OutputType.tsv,
+    solr_url: str = "http://localhost:8983/solr/association/select",
+):
 
     if output_format not in OUTPUT_TYPES:
         raise ValueError(f"output format not supported, supported formats are {OUTPUT_TYPES}")
@@ -58,7 +60,7 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
         'json.nl': 'arrarr',
         'rows': 0,
         'facet': 'true',
-        'facet.field': 'category'
+        'facet.field': 'category',
     }
 
     solr_request = requests.get(solr_url, params=assoc_params)
@@ -103,7 +105,8 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
 
 
 def generate_tsv(tsv_fh, solr, filters):
-    default_fields = ','.join([
+    default_fields = ','.join(
+        [
             'subject',
             'subject_label',
             'subject_taxon',
@@ -112,19 +115,22 @@ def generate_tsv(tsv_fh, solr, filters):
             'predicate',
             'object',
             'object_label',
-            'qualifier'
-            'publications',
+            'qualifier' 'publications',
             'has_evidence',
             'primary_knowledge_source',
             'aggregator_knowledge_source',
-        ])
-    disease_to_phenotype_extra_fields = ','.join([
-        'onset_qualifier',
-        'onset_qualifier_label',
-        'frequency_qualifier',
-        'frequency_qualifier_label',
-        'sex_qualifier',
-        'sex_qualifier_label'])
+        ]
+    )
+    disease_to_phenotype_extra_fields = ','.join(
+        [
+            'onset_qualifier',
+            'onset_qualifier_label',
+            'frequency_qualifier',
+            'frequency_qualifier_label',
+            'sex_qualifier',
+            'sex_qualifier_label',
+        ]
+    )
     gene_to_gene_extra_fields = ','.join(['object_taxon', 'object_taxon_label'])
 
     golr_params = {
@@ -134,7 +140,7 @@ def generate_tsv(tsv_fh, solr, filters):
         'csv.separator': '\t',
         'csv.header': 'true',
         'csv.mv.separator': '|',
-        'fl': default_fields
+        'fl': default_fields,
     }
 
     for filter in filters:
@@ -168,11 +174,9 @@ def generate_tsv(tsv_fh, solr, filters):
             resultCount = facet_response['response']['numFound']
 
             if resultCount == 0:
-                logger.warning("No results found for {}"
-                               " with filters {}".format(tsv_fh.name, filters))
+                logger.warning("No results found for {}" " with filters {}".format(tsv_fh.name, filters))
         except decoder.JSONDecodeError:
-            logger.warning("JSONDecodeError for {}"
-                           " with filters {}".format(tsv_fh.name, filters))
+            logger.warning("JSONDecodeError for {}" " with filters {}".format(tsv_fh.name, filters))
             logger.warning("solr content: {}".format(solr_request.text))
             time.sleep(500)
 
@@ -203,16 +207,9 @@ def generate_tsv(tsv_fh, solr, filters):
 
 def generate_jsonl(fh, solr, filters):
 
-    #jsonl_writer = jsonlines.open(fh)
+    # jsonl_writer = jsonlines.open(fh)
 
-    golr_params = {
-        'q': '*:*',
-        'wt': 'json',
-        'fl': '*',
-        'fq': filters,
-        'start': 0,
-        'rows': 5000
-    }
+    golr_params = {'q': '*:*', 'wt': 'json', 'fl': '*', 'fq': filters, 'start': 0, 'rows': 5000}
 
     count_params = {
         'wt': 'json',
@@ -239,11 +236,9 @@ def generate_jsonl(fh, solr, filters):
             resultCount = facet_response['response']['numFound']
 
             if resultCount == 0:
-                logger.warning("No results found for {}"
-                               " with filters {}".format(fh.name, filters))
+                logger.warning("No results found for {}" " with filters {}".format(fh.name, filters))
         except decoder.JSONDecodeError:
-            logger.warning("JSONDecodeError for {}"
-                           " with filters {}".format(fh.name, filters))
+            logger.warning("JSONDecodeError for {}" " with filters {}".format(fh.name, filters))
             logger.warning("solr content: {}".format(solr_request.text))
             time.sleep(500)
 
@@ -284,4 +279,3 @@ def fetch_solr_doc(session, solr, params, retries=10):
 def camel_to_snake(name):
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
-

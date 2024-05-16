@@ -9,9 +9,7 @@ koza_app = get_koza_app("alliance_publication")
 while (row := koza_app.get_row()) is not None:
 
     # TODO: remove DOI exclusion once curie regex can handle them
-    xrefs = [
-        xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")
-    ]
+    xrefs = [xref["id"] for xref in row["crossReferences"] if not xref["id"].startswith("DOI:")]
 
     # Parse creation date for different time formats
     creation_date = row["datePublished"]
@@ -21,10 +19,12 @@ while (row := koza_app.get_row()) is not None:
         creation_date = None
 
     source: str
-    if 'MODReferenceTypes' in row and \
-            len(row['MODReferenceTypes']) > 0 and \
-            'source' in row['MODReferenceTypes'][0] and \
-            row['MODReferenceTypes'][0]['source'] in source_map:
+    if (
+        'MODReferenceTypes' in row
+        and len(row['MODReferenceTypes']) > 0
+        and 'source' in row['MODReferenceTypes'][0]
+        and row['MODReferenceTypes'][0]['source'] in source_map
+    ):
         source = source_map[row['MODReferenceTypes'][0]['source']]
     else:  # default source
         source = "infores:alliancegenome"
@@ -36,7 +36,7 @@ while (row := koza_app.get_row()) is not None:
         xref=xrefs,
         type=[koza_app.translation_table.resolve_term("publication")],
         creation_date=creation_date,
-        provided_by=[source]
+        provided_by=[source],
     )
 
     if "authors" in row.keys():

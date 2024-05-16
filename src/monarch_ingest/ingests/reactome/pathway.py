@@ -21,10 +21,9 @@ while (row := koza_app.get_row()) is not None:
             name=row["Name"],
             in_taxon=[taxon_id],
             provided_by=["infores:reactome"],
-
             # the identifier is duplicated here as a xref to become visible as
             # an external link in the entity display page of the Monarch App
-            xref=[pathway_id]
+            xref=[pathway_id],
         )
 
         koza_app.write(pathway)

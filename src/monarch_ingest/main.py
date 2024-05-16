@@ -117,7 +117,7 @@ def merge(
 
     # load qc_report.yaml from output_dir
     qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))
-    edge_counts = {item["name"]: item["total_number"] for item in qc_report["edges"]}
+    # edge_counts = {item["name"]: item["total_number"] for item in qc_report["edges"]}
     # load expected count yaml
     expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
     error = False
@@ -137,6 +137,7 @@ def merge(
                     error = True
     if error:
         sys.exit(1)
+
 
 @typer_app.command()
 def closure():
