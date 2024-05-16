@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -16,11 +17,12 @@ def gene_information_entities(mock_koza, taxon_label_map_cache, global_table):
 
     return mock_koza(
         "pombase_gene",
-        iter([row]),
+        row,
         "./src/monarch_ingest/ingests/pombase/gene.py",
         map_cache=taxon_label_map_cache,
         global_table=global_table,
     )
+
 
 @pytest.fixture
 def gene_entity_no_name(mock_koza, taxon_label_map_cache, global_table):
@@ -37,7 +39,7 @@ def gene_entity_no_name(mock_koza, taxon_label_map_cache, global_table):
 
     return mock_koza(
         "pombase_gene",
-        iter([row]),
+        row,
         "./src/monarch_ingest/ingests/pombase/gene.py",
         map_cache=taxon_label_map_cache,
         global_table=global_table,
@@ -64,6 +66,7 @@ def test_gene_information_id(gene_information_entities):
 def test_gene_xref(gene_information_entities):
     gene = gene_information_entities[0]
     assert "UniProtKB:Q9US52" in gene.xref
+
 
 def test_gene_systematic_id_as_name(gene_entity_no_name):
     gene = gene_entity_no_name[0]

@@ -1,7 +1,6 @@
 import csv
 import gc
 import os
-import pkgutil
 import sys
 import tarfile
 import yaml
@@ -18,7 +17,7 @@ import sh
 from cat_merge.merge import merge
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
-from koza.cli_runner import transform_source
+from koza.cli_utils import transform_source
 from koza.model.config.source_config import OutputFormat
 from linkml_runtime.utils.formatutils import camelcase
 
@@ -192,7 +191,7 @@ def transform_phenio(
                 "primary_knowledge_source",
                 "aggregator_knowledge_source",
                 "knowledge_level",
-                "agent_type"
+                "agent_type",
             ]
         ),
         axis=1,
@@ -524,15 +523,9 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             )
             # index files on s3 after upload
             sh.multi_indexer(
-                *f"-v --prefix https://kghub.io/kg-monarch/ -b kg-hub-public-data -r kg-monarch -x".split(
-                    " "
-                )
+                *f"-v --prefix https://kghub.io/kg-monarch/ -b kg-hub-public-data -r kg-monarch -x".split(" ")
             )
-            sh.gsutil(
-                *f"-q -m cp -a public-read ./index.html s3://kg-hub-public-data/kg-monarch".split(
-                    " "
-                )
-            )
+            sh.gsutil(*f"-q -m cp -a public-read ./index.html s3://kg-hub-public-data/kg-monarch".split(" "))
 
         logger.debug("Cleaning up files...")
         sh.rm(f"output/{release_ver}")

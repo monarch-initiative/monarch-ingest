@@ -1,11 +1,13 @@
 import uuid
 
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 
 from biolink_model.datamodel.pydanticmodel_v2 import (
     Gene,
     GeneToPhenotypicFeatureAssociation,
-    PhenotypicFeature, KnowledgeLevelEnum, AgentTypeEnum
+    PhenotypicFeature,
+    KnowledgeLevelEnum,
+    AgentTypeEnum,
 )
 
 koza_app = get_koza_app("xenbase_gene_to_phenotype")
@@ -31,7 +33,7 @@ while (row := koza_app.get_row()) is not None:
         aggregator_knowledge_source=["infores:monarchinitiative"],
         primary_knowledge_source="infores:xenbase",
         knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-        agent_type=AgentTypeEnum.manual_agent
+        agent_type=AgentTypeEnum.manual_agent,
     )
 
     if row["SOURCE"]:

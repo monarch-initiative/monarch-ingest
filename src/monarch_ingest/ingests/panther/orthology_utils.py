@@ -1,12 +1,14 @@
 """
 Utility functions for Panther Orthology data processing
 """
+
 # from sys import stderr
 # from os import sep, remove
 # from tarfile import (open as tar_open, ReadError, CompressionError, TarInfo)
 # from datetime import datetime
 
-from typing import Optional, Tuple#, List
+from typing import Optional, Tuple  # , List
+
 # from io import TextIOWrapper
 
 # from loguru import logger
@@ -16,13 +18,13 @@ ncbitaxon_catalog = {
     #       of species - just starting with the STRING DB list + Dictyostelium
     "HUMAN": "9606",
     "MOUSE": "10090",
-    "CANLF": "9615",    # Canis lupus familiaris - domestic dog
+    "CANLF": "9615",  # Canis lupus familiaris - domestic dog
     # "FELCA": "9685",  # Felis catus - domestic cat
-    "BOVIN": "9913",    # Bos taurus - cow
-    "PIG": "9823",      # Sus scrofa - pig
+    "BOVIN": "9913",  # Bos taurus - cow
+    "PIG": "9823",  # Sus scrofa - pig
     "RAT": "10116",
     "CHICK": "9031",
-    "XENTR": "8364",   # Xenopus tropicalis - tropical clawed frog
+    "XENTR": "8364",  # Xenopus tropicalis - tropical clawed frog
     "DANRE": "7955",
     "DROME": "7227",
     "CAEEL": "6239",
@@ -31,6 +33,7 @@ ncbitaxon_catalog = {
     "SCHPO": "4896",
     "YEAST": "4932",
 }
+
 
 def ncbitaxon_by_name(species_tag: str) -> Optional[str]:
     """
@@ -52,10 +55,10 @@ _db_to_curie = {
     "EnsemblGenome": "ENSEMBL",  # TODO: review and fix this later?
     "PomBase": "PomBase",
     "WormBase": "WB",  # Wormbase supports 'WormBase:' but alliancegenome.org and identifiers.org supports 'WB:'
-    "GeneID": "NCBIGene",          # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
-    "Gene": None,                  # seems to be the gene symbol - we ignore it for now?
-    "Gene_ORFName": None,          # is the gene orf name from a transcript in Uniprot - we ignore it for now?
-    "Gene_OrderedLocusName": None  # is a gene ordered locus name - we ignore it for now?
+    "GeneID": "NCBIGene",  # seems to be Entrez Gene ID => map onto the NCBIGene: namespace
+    "Gene": None,  # seems to be the gene symbol - we ignore it for now?
+    "Gene_ORFName": None,  # is the gene orf name from a transcript in Uniprot - we ignore it for now?
+    "Gene_OrderedLocusName": None,  # is a gene ordered locus name - we ignore it for now?
 }
 
 
@@ -96,9 +99,7 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
         #  trapped by the RuntimeError below should answer this...)
         return f"{spec_part[1]}:{spec_part[2]}"
     else:
-        raise RuntimeError(
-            f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring..."
-        )
+        raise RuntimeError(f"parse_gene_id(): Error parsing '{str(gene_id_spec)}'? Ignoring...")
 
 
 def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
@@ -114,9 +115,7 @@ def parse_gene(gene_entry: str) -> Optional[Tuple[str, str]]:
     try:
         species, gene_spec, _ = gene_entry.split("|")
     except ValueError:
-        raise RuntimeError(
-            f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring..."
-        )
+        raise RuntimeError(f"parse_gene(): Gene entry field '{str(gene_entry)}' has incorrect format. Ignoring...")
 
     # get the NCBI Taxonomic identifier
     ncbitaxon_id = ncbitaxon_by_name(species)

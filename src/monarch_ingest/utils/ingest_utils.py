@@ -23,7 +23,7 @@ def ingest_output_exists(source, output_dir):
     ingests = get_ingests()
 
     ingest_config = yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
-    
+
     has_node_properties = "node_properties" in ingest_config
     has_edge_properties = "edge_properties" in ingest_config
 

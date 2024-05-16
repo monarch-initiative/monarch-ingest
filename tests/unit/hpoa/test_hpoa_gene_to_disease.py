@@ -1,7 +1,8 @@
 from typing import List
 
 import pytest
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation
+from biolink_model.datamodel.pydanticmodel_v2 import CausalGeneToDiseaseAssociation
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 from monarch_ingest.constants import (
     BIOLINK_CAUSES,
@@ -66,7 +67,7 @@ def row():
 def basic_g2d_entities(mock_koza, row):
     return mock_koza(
         name="hpoa_gene_to_disease",
-        data=iter([row]),
+        data=row,
         transform_code="./src/monarch_ingest/ingests/hpoa/gene_to_disease.py",
     )
 

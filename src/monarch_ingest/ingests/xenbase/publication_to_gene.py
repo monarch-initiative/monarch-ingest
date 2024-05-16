@@ -1,10 +1,12 @@
-
 import uuid
 
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 
-from biolink_model.datamodel.pydanticmodel_v2 import InformationContentEntityToNamedThingAssociation, AgentTypeEnum, \
-    KnowledgeLevelEnum
+from biolink_model.datamodel.pydanticmodel_v2 import (
+    InformationContentEntityToNamedThingAssociation,
+    AgentTypeEnum,
+    KnowledgeLevelEnum,
+)
 
 from loguru import logger
 
@@ -23,9 +25,7 @@ while (row := koza_app.get_row()) is not None:
 
         gene_page_id = gene_page.split(" ")[0]
         try:
-            gene_ids = map(
-                lambda id: f"Xenbase:{id}", list(genepage2gene[gene_page_id].values())
-            )
+            gene_ids = map(lambda id: f"Xenbase:{id}", list(genepage2gene[gene_page_id].values()))
         except KeyError:
             logger.debug(f"Could not locate genepage_id: {gene_page_id} in row {row}")
             continue
@@ -40,7 +40,7 @@ while (row := koza_app.get_row()) is not None:
                 aggregator_knowledge_source=["infores:monarchinitiative"],
                 primary_knowledge_source="infores:xenbase",
                 knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.manual_agent
+                agent_type=AgentTypeEnum.manual_agent,
             )
 
             entities.append(association)

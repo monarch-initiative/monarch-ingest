@@ -1,15 +1,13 @@
 """
 Tests of HPOA Utils methods
 """
-from typing import Optional, Tuple
 
 import pytest
 
 from monarch_ingest.ingests.hpoa.hpoa_utils import (
     FrequencyHpoTerm,
     get_hpo_term,
-    map_percentage_frequency_to_hpo_term,
-    phenotype_frequency_to_hpo_term, Frequency,
+    phenotype_frequency_to_hpo_term,
 )
 
 
@@ -44,7 +42,7 @@ def test_get_hpo_term():
         ("HP:0040282", "HP:0040282", None, None, None, None),
         ("HP:0040281", "HP:0040281", None, None, None, None),
         ("HP:0040280", "HP:0040280", None, None, None, None),
-    ]
+    ],
 )
 def test_frequency_result(raw_value, frequency_qualifier, percentage, quotient, count, total):
     frequency = phenotype_frequency_to_hpo_term(raw_value)

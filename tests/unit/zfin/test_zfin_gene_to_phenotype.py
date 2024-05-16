@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -56,7 +57,7 @@ def basic_row():
 def basic_g2p(mock_koza, source_name, basic_row, script, map_cache, global_table):
     return mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         map_cache=map_cache,
         global_table=global_table,
@@ -96,7 +97,7 @@ def test_association(basic_g2p):
 
 #     return mock_koza(
 #         source_name,
-#         iter([basic_row]),
+#         basic_row,
 #         script,
 #         map_cache=map_cache,
 #         global_table=global_table,
@@ -123,7 +124,7 @@ def test_association(basic_g2p):
 
 #     return mock_koza(
 #         source_name,
-#         iter([basic_row]),
+#         basic_row,
 #         script,
 #         map_cache=map_cache,
 #         global_table=global_table,
@@ -140,7 +141,7 @@ def test_excluded_tags(mock_koza, source_name, basic_row, script, map_cache, tag
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         map_cache=map_cache,
         global_table=global_table,
@@ -153,7 +154,7 @@ def test_included_tags(mock_koza, source_name, basic_row, script, map_cache, tag
     basic_row["Phenotype Tag"] = tag
     entities = mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         map_cache=map_cache,
         global_table=global_table,

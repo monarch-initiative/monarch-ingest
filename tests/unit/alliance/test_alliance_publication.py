@@ -1,6 +1,7 @@
 import datetime
 
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -47,7 +48,7 @@ def row():
 
 @pytest.mark.skip(reason="Will need to be updated for recent Biolink if used")
 def test_research_article(mock_koza, source_name, row, script, global_table):
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     assert pub
     assert pub.id == "PMID:27653487"
@@ -75,7 +76,7 @@ def test_mesh_terms(mock_koza, source_name, row, script, global_table, mesh_term
             "referenceId": "PMID:23576957",
         },
     ]
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     assert pub
     assert mesh_term in pub.mesh_terms
@@ -84,7 +85,7 @@ def test_mesh_terms(mock_koza, source_name, row, script, global_table, mesh_term
 @pytest.mark.skip(reason="Will need to be updated for recent Biolink if used")
 @pytest.mark.parametrize("author", ["Hong W", "Takshak A", "Osunbayo O", "Kunwar A", "Vershinin M"])
 def test_research_authors(mock_koza, source_name, row, script, global_table, author):
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     assert author in pub.authors
 
@@ -92,7 +93,7 @@ def test_research_authors(mock_koza, source_name, row, script, global_table, aut
 @pytest.mark.skip(reason="Will need to be updated for recent Biolink if used")
 def test_single_xref(mock_koza, source_name, row, script, global_table):
     row["crossReferences"] = [row["crossReferences"][0]]
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     assert pub.xref == ["SGD:S000185012"]
 
@@ -103,7 +104,7 @@ def test_single_xref(mock_koza, source_name, row, script, global_table):
 )
 def test_time_parser(mock_koza, source_name, row, script, global_table, creation_date):
     row["datePublished"] = creation_date
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     d = pub.creation_date
     assert isinstance(d, datetime.date) or isinstance(d, datetime.datetime)
@@ -113,7 +114,7 @@ def test_time_parser(mock_koza, source_name, row, script, global_table, creation
 @pytest.mark.parametrize("creation_date", ["Unknown", "2016 Jul-Aug", "2003 ?%p?\b\bhP\u0007 19", "2000 Dec 14-28"])
 def test_notatime_parser(mock_koza, source_name, row, script, global_table, creation_date):
     row["datePublished"] = creation_date
-    entities = mock_koza(source_name, iter([row]), script, global_table=global_table)
+    entities = mock_koza(source_name, row, script, global_table=global_table)
     pub = entities[0]
     # assert pub.creation_date == None or isinstance(pub.creation_date, datetime.datetime)
     d = pub.creation_date

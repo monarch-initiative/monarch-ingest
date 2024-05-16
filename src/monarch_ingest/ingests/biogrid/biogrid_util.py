@@ -1,7 +1,7 @@
 """
 Some functions to assist parsing of BioGRID fields.
 """
-from sys import stderr
+
 from typing import List, Optional
 
 from loguru import logger
@@ -14,9 +14,7 @@ def get_gene_id(raw_id: str) -> str:
     :param raw_id: str, raw BioGRID input string (a pseudo-CURIE)
     :return:
     """
-    gid = (raw_id
-           .replace("entrez gene/locuslink:", "NCBIGene:")
-           .replace("uniprot/swiss-prot:", "UniProtKB:"))
+    gid = raw_id.replace("entrez gene/locuslink:", "NCBIGene:").replace("uniprot/swiss-prot:", "UniProtKB:")
 
     return gid
 
@@ -27,14 +25,14 @@ EVIDENCE_CODE_MAPPINGS = {
     "two hybrid": "ECO:0000024",
     "affinity chromatography technology": "ECO:0000079",
     "genetic interference": "ECO:0000011",
-    "pull down": "ECO:0000025",   # not totally sure about this one
+    "pull down": "ECO:0000025",  # not totally sure about this one
     "enzymatic study": "ECO:0000005",
     "x-ray crystallography": "ECO:0001823",
     "far western blotting": "ECO:0000076",
     "fluorescent resonance energy transfer": "ECO:0001048",
-    "imaging technique": "ECO:0000324",   # not totally sure about this one
+    "imaging technique": "ECO:0000324",  # not totally sure about this one
     "protein complementation assay": "ECO:0006256",  # not totally sure about this one
-    "biochemical": "ECO:0000172"  # not totally sure about this one
+    "biochemical": "ECO:0000172",  # not totally sure about this one
 }
 
 
@@ -54,11 +52,13 @@ def get_evidence(methods: str) -> Optional[List[str]]:
             # databaseName:identifier(methodName)
             method = method.rstrip(")").split('(')[-1]
             if method not in EVIDENCE_CODE_MAPPINGS.keys():
-                err_msg = f"Unknown interaction detection method '{method}'. " +\
-                          "Assigning default code ECO:0000006 == 'experimental evidence', the ECO root."
+                err_msg = (
+                    f"Unknown interaction detection method '{method}'. "
+                    + "Assigning default code ECO:0000006 == 'experimental evidence', the ECO root."
+                )
                 logger.warning(err_msg)
                 EVIDENCE_CODE_MAPPINGS[method] = "ECO:0000006"
-                
+
             evidence_codes.append(EVIDENCE_CODE_MAPPINGS[method])
 
     return evidence_codes if evidence_codes else None

@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 # This name must match the ingest name in the transform code
@@ -29,7 +30,7 @@ def basic_row():
 def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
     return mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         global_table=global_table,
     )
@@ -46,10 +47,10 @@ def test_association(basic_g2p):
 
 @pytest.fixture
 def basic_g2p_without_pmid(mock_koza, source_name, basic_row, script, global_table):
-    basic_row['PubMed_id'] = None
+    basic_row["PubMed_id"] = None
     return mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         global_table=global_table,
     )

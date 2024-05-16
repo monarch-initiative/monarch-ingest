@@ -1,6 +1,4 @@
-
-
-from koza.cli_runner import koza_app
+from koza.cli_utils import koza_app
 
 from loguru import logger
 
