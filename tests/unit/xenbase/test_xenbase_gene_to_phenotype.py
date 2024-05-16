@@ -1,14 +1,13 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
 def entities(
     mock_koza,
 ):
-    row = iter(
-        [
-            {
+    row = {
                 "SUBJECT": "Xenbase:XB-GENE-1000632",
                 "SUBJECT_LABEL": "dctn2",
                 "SUBJECT_TAXON": "NCBITaxon:8364",
@@ -23,8 +22,6 @@ def entities(
                 "IS_DEFINED_BY": "",
                 "QUALIFIER": "",
             }
-        ]
-    )
     return mock_koza("xenbase_gene_to_phenotype", row, "./src/monarch_ingest/ingests/xenbase/gene_to_phenotype.py")
 
 

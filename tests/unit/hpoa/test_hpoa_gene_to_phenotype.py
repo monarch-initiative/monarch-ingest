@@ -1,5 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -43,7 +44,7 @@ def basic_hpoa(mock_koza, source_name, script, test_row):
 
     :return: mock_koza application
     """
-    return mock_koza(name=source_name, data=iter([test_row]), transform_code=script)
+    return mock_koza(name=source_name, data=test_row, transform_code=script)
 
 
 @pytest.mark.parametrize("cls", [GeneToPhenotypicFeatureAssociation])

@@ -1,5 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import InformationContentEntityToNamedThingAssociation
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -17,7 +18,7 @@ def basic_row():
 def basic_entities(mock_koza, basic_row, global_table):
     return mock_koza(
         "zfin_publication_to_gene",
-        iter([basic_row]),
+        basic_row,
         "./src/monarch_ingest/ingests/zfin/publication_to_gene.py",
         global_table=global_table,
     )

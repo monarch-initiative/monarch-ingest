@@ -1,8 +1,10 @@
 """
 Unit tests for Xenbase Gene Orthology relationships ingest
 """
+
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -24,12 +26,12 @@ def script():
 @pytest.fixture
 def ne_orthology_records(mock_koza, source_name, script):
     row = {
-        'Xenbase': "XB-GENE-6485390",
-        'OMIM': "614812",
-        'MGI': "1891834",
-        'ZFIN': "ZDB-GENE-070705-255",
+        "Xenbase": "XB-GENE-6485390",
+        "OMIM": "614812",
+        "MGI": "1891834",
+        "ZFIN": "ZDB-GENE-070705-255",
     }
-    return mock_koza(name=source_name, data=iter([row]), transform_code=script)
+    return mock_koza(name=source_name, data=row, transform_code=script)
 
 
 def test_ne_orthology_records(ne_orthology_records):

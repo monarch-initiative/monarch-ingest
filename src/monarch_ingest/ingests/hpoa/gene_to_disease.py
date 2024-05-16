@@ -2,7 +2,7 @@ import uuid
 
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToDiseaseAssociation, CausalGeneToDiseaseAssociation, \
     CorrelatedGeneToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 
 from monarch_ingest.constants import INFORES_MONARCHINITIATIVE, BIOLINK_CAUSES
 from monarch_ingest.ingests.hpoa.hpoa_utils import get_knowledge_sources, get_predicate

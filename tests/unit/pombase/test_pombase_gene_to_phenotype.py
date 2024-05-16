@@ -1,12 +1,11 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
 def entities(mock_koza, global_table):
-    row = iter(
-        [
-            {
+    row = {
                 "Database name": "PomBase",
                 "Gene systematic ID": "SPAC24B11.06c",
                 "FYPO ID": "FYPO:0004058",
@@ -28,8 +27,6 @@ def entities(mock_koza, global_table):
                 "Taxon": "4896",
                 "Date": "2014-11-21",
             }
-        ]
-    )
 
     return mock_koza(
         name="pombase_gene_to_phenotype",

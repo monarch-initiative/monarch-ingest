@@ -1,5 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
+from koza.utils.testing_utils import mock_koza
 
 @pytest.fixture
 def source_name():
@@ -42,10 +43,9 @@ def rat_row():
 
 @pytest.fixture
 def rattus(rat_row, mock_koza, source_name, script, global_table):
-    rows = iter([rat_row])
     return mock_koza(
         source_name,
-        rows,
+        rat_row,
         script,
         global_table=global_table,
     )
@@ -94,10 +94,9 @@ def mgi_row():
 
 @pytest.fixture
 def mouse(mgi_row, mock_koza, source_name, script, global_table):
-    rows = iter([mgi_row])
     return mock_koza(
         source_name,
-        rows,
+        mgi_row,
         script,
         global_table=global_table,
     )
@@ -148,10 +147,9 @@ def zfin_row():
 
 @pytest.fixture
 def zebrafish(zfin_row, mock_koza, source_name, script, global_table):
-    rows = iter([zfin_row])
     return mock_koza(
         source_name,
-        rows,
+        zfin_row,
         script,
         global_table=global_table,
     )
@@ -197,10 +195,9 @@ def fly_row():
 
 @pytest.fixture
 def drosophila(fly_row, mock_koza, source_name, script, global_table):
-    rows = iter([fly_row])
     return mock_koza(
         source_name,
-        rows,
+        fly_row,
         script,
         global_table=global_table,
     )
@@ -250,10 +247,9 @@ def worm_row():
 
 @pytest.fixture
 def worm(worm_row, mock_koza, source_name, script, global_table):
-    rows = iter([worm_row])
     return mock_koza(
         source_name,
-        rows,
+        worm_row,
         script,
         global_table=global_table,
     )
@@ -294,10 +290,9 @@ def sgd_row():
 
 @pytest.fixture
 def yeast(sgd_row, mock_koza, source_name, script, global_table):
-    rows = iter([sgd_row])
     return mock_koza(
         source_name,
-        rows,
+        sgd_row,
         script,
         global_table=global_table,
     )

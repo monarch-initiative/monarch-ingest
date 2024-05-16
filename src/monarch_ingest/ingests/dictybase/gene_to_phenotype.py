@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional, Tuple
 
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 from monarch_ingest.ingests.dictybase.utils import parse_gene_id, parse_phenotypes
 
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation, KnowledgeLevelEnum, \

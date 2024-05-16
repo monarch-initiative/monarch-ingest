@@ -1,27 +1,25 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import DiseaseOrPhenotypicFeatureToGeneticInheritanceAssociation
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
 def d2moi_entities(mock_koza, global_table):
-    row = iter(
-        [
-            {
-                "database_id": "OMIM:300425",
-                "disease_name": "Autism susceptibility, X-linked 1",
-                "qualifier": "",
-                "hpo_id": "HP:0001417",
-                "reference": "OMIM:300425",
-                "evidence": "IEA",
-                "onset": "",
-                "frequency": "",
-                "sex": "",
-                "modifier": "",
-                "aspect": "I",  # assert 'Inheritance' test record
-                "biocuration": "HPO:iea[2009-02-17]",
-            }
-        ]
-    )
+    row = {
+        "database_id": "OMIM:300425",
+        "disease_name": "Autism susceptibility, X-linked 1",
+        "qualifier": "",
+        "hpo_id": "HP:0001417",
+        "reference": "OMIM:300425",
+        "evidence": "IEA",
+        "onset": "",
+        "frequency": "",
+        "sex": "",
+        "modifier": "",
+        "aspect": "I",  # assert 'Inheritance' test record
+        "biocuration": "HPO:iea[2009-02-17]",
+    }
+
     return mock_koza(
         name="hpoa_disease_mode_of_inheritance",
         data=row,

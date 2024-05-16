@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza
 
 
 # This name must match the ingest name in the transform code
@@ -27,7 +28,7 @@ def basic_row():
 def basic_g2p(mock_koza, source_name, basic_row, script, global_table):
     return mock_koza(
         source_name,
-        iter([basic_row]),
+        basic_row,
         script,
         global_table=global_table,
     )

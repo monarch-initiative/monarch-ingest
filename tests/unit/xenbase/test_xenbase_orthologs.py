@@ -3,6 +3,7 @@ Unit tests for Xenbase Gene Orthology relationships ingest
 """
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -31,7 +32,7 @@ def orthology_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )

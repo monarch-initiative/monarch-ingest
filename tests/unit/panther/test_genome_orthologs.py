@@ -2,6 +2,7 @@
 Unit tests for Panther Gene Orthology relationships ingest
 """
 import pytest
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -140,7 +141,7 @@ def well_behaved_record_1(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -162,7 +163,7 @@ def well_behaved_record_2(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -185,7 +186,7 @@ def well_behaved_record_3(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -207,7 +208,7 @@ def well_behaved_flybase_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -230,7 +231,7 @@ def well_behaved_wormbase_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -253,7 +254,7 @@ def well_behaved_pombase_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -275,7 +276,7 @@ def odd_mgi_gene_id_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -297,7 +298,7 @@ def pig_gene_id_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -319,7 +320,7 @@ def aspergillus_gene_id_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -342,7 +343,7 @@ def aardvark_is_not_a_species_record(mock_koza, source_name, script, global_tabl
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -364,7 +365,7 @@ def empty_gene_record(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -386,7 +387,7 @@ def ill_formed_gene_spec_string(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -409,7 +410,7 @@ def gene_prefix_gene_spec_string(mock_koza, source_name, script, global_table):
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -431,7 +432,7 @@ def geneid_prefix_gene_spec_string(mock_koza, source_name, script, global_table)
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -455,7 +456,7 @@ def gene_orfname_prefix_gene_spec_string(mock_koza, source_name, script, global_
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -479,7 +480,7 @@ def gene_orderedlocusname_prefix_gene_spec_string(mock_koza, source_name, script
     }
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
     )
@@ -506,7 +507,7 @@ def test_gene_orderedlocusname_gene_spec_string(gene_orderedlocusname_prefix_gen
 #     }
 #     return mock_koza(
 #         name=source_name,
-#         data=iter([row]),
+#         data=row,
 #         transform_code=script,
 #         global_table=global_table,
 #     )

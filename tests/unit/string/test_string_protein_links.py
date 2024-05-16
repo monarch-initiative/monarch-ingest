@@ -1,8 +1,10 @@
 """
 Unit tests for STRING protein links ingest
 """
+
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -29,8 +31,8 @@ def map_cache():
     entrez_2_string = {
         "10090.ENSMUSP00000000001": {"entrez": "14679"},
         "10090.ENSMUSP00000020316": {"entrez": "56480"},
-        "9606.ENSP00000349467": {'entrez': '801|805|808'},
-        "9606.ENSP00000000233": {'entrez': '123|381'},
+        "9606.ENSP00000349467": {"entrez": "801|805|808"},
+        "9606.ENSP00000000233": {"entrez": "123|381"},
     }
     return {"entrez_2_string": entrez_2_string}
 
@@ -52,6 +54,7 @@ def basic_row():
         "textmining": "67",
         "combined_score": "183",
     }
+
 
 @pytest.fixture
 def inverse_duplicate_rows():
@@ -79,8 +82,9 @@ def inverse_duplicate_rows():
             "database": "0",
             "textmining": "67",
             "combined_score": "183",
-        }
+        },
     ]
+
 
 @pytest.fixture
 def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache):
@@ -97,11 +101,12 @@ def basic_pl(mock_koza, source_name, basic_row, script, global_table, map_cache)
     """
     return mock_koza(
         name=source_name,
-        data=iter([basic_row]),
+        data=basic_row,
         transform_code=script,
         global_table=global_table,
         map_cache=map_cache,
     )
+
 
 @pytest.fixture
 def duplicate_row_entities(mock_koza, source_name, inverse_duplicate_rows, script, global_table, map_cache):
@@ -118,11 +123,12 @@ def duplicate_row_entities(mock_koza, source_name, inverse_duplicate_rows, scrip
     """
     return mock_koza(
         name=source_name,
-        data=iter(inverse_duplicate_rows),
+        data=inverse_duplicate_rows,
         transform_code=script,
         global_table=global_table,
         map_cache=map_cache,
     )
+
 
 # def test_proteins(basic_pl):
 #     gene_a = basic_pl[0]
@@ -154,8 +160,8 @@ def duplicate_row_entities(mock_koza, source_name, inverse_duplicate_rows, scrip
 #     assert "NCBITaxon:10090" in gene_b.in_taxon
 
 #     assert gene_b.source == "infores:entrez"
-INCLUDED_ECO_CODES = ['ECO:0000075', 'ECO:0000006', 'ECO:0007833']
-EXCLUDED_ECO_CODES = ['ECO:0000044', 'ECO:0000124', 'ECO:0000080', 'ECO:0007636']
+INCLUDED_ECO_CODES = ["ECO:0000075", "ECO:0000006", "ECO:0007833"]
+EXCLUDED_ECO_CODES = ["ECO:0000044", "ECO:0000124", "ECO:0000080", "ECO:0007636"]
 
 
 def test_association(basic_pl):
@@ -174,16 +180,16 @@ def test_association(basic_pl):
 @pytest.fixture
 def multigene_row():
     return {
-        'protein1': '9606.ENSP00000000233',
-        'protein2': '9606.ENSP00000349467',
-        'neighborhood': '0',
-        'fusion': '0',
-        'cooccurence': '332',
-        'coexpression': '62',
-        'experimental': '77',
-        'database': '0',
-        'textmining': '101',
-        'combined_score': 410,
+        "protein1": "9606.ENSP00000000233",
+        "protein2": "9606.ENSP00000349467",
+        "neighborhood": "0",
+        "fusion": "0",
+        "cooccurence": "332",
+        "coexpression": "62",
+        "experimental": "77",
+        "database": "0",
+        "textmining": "101",
+        "combined_score": 410,
     }
 
 
@@ -191,7 +197,7 @@ def multigene_row():
 def multigene_entities(mock_koza, source_name, multigene_row, script, global_table, map_cache):
     return mock_koza(
         name=source_name,
-        data=iter([multigene_row]),
+        data=multigene_row,
         transform_code=script,
         map_cache=map_cache,
         global_table=global_table,
@@ -203,6 +209,7 @@ def test_multigene_associations(multigene_entities):
         association for association in multigene_entities if isinstance(association, PairwiseGeneToGeneInteraction)
     ]
     assert len(associations) == 6
+
 
 def test_duplicates_are_removed(duplicate_row_entities):
     associations = [

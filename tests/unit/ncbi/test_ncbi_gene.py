@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -24,7 +25,7 @@ def gene_row():
 
 @pytest.fixture
 def gene_entities(mock_koza, source_name, gene_row, script, taxon_label_map_cache, global_table):
-    row = iter([gene_row])
+    row = gene_row
     return mock_koza(
         source_name,
         row,

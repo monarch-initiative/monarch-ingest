@@ -2,6 +2,7 @@ from typing import Dict, List
 
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
+from koza.utils.testing_utils import mock_koza
 
 from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
 
@@ -108,7 +109,7 @@ def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, 
     :return: mock_koza application
     """
     return mock_koza(
-        name=source_name, data=iter([test_row_1]), transform_code=script, global_table=global_table, map_cache=map_cache
+        name=source_name, data=test_row_1, transform_code=script, global_table=global_table, map_cache=map_cache
     )
 
 
@@ -164,7 +165,7 @@ def basic_dictybase_2(mock_koza, source_name, script, test_row_2, global_table, 
     :return: mock_koza application
     """
     return mock_koza(
-        name=source_name, data=iter([test_row_2]), transform_code=script, global_table=global_table, map_cache=map_cache
+        name=source_name, data=test_row_2, transform_code=script, global_table=global_table, map_cache=map_cache
     )
 
 

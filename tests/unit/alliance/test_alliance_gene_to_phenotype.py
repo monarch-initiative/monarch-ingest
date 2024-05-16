@@ -1,5 +1,6 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -34,11 +35,9 @@ def rat_row():
 @pytest.fixture
 def rat(rat_row, mock_koza, source_name, script, map_cache, global_table):
     # First row is a gene, second is a feature and should get ignored
-    rows = iter([rat_row])
-
     return mock_koza(
         source_name,
-        rows,
+        rat_row,
         script,
         map_cache=map_cache,
         global_table=global_table,
@@ -70,11 +69,9 @@ def conditions_row(rat_row):
 
 @pytest.fixture
 def conditions_entities(conditions_row, mock_koza, source_name, script, map_cache, global_table):
-    rows = iter([conditions_row])
-
     return mock_koza(
         source_name,
-        rows,
+        conditions_row,
         script,
         map_cache=map_cache,
         global_table=global_table,

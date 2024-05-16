@@ -1,4 +1,4 @@
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 from dateutil.parser import parse, ParserError
 
 from biolink_model.datamodel.pydanticmodel_v2 import Publication

@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza
 
 
 @pytest.fixture
@@ -16,7 +17,7 @@ def gene_information_entities(mock_koza, taxon_label_map_cache, global_table):
 
     return mock_koza(
         "pombase_gene",
-        iter([row]),
+        row,
         "./src/monarch_ingest/ingests/pombase/gene.py",
         map_cache=taxon_label_map_cache,
         global_table=global_table,
@@ -37,7 +38,7 @@ def gene_entity_no_name(mock_koza, taxon_label_map_cache, global_table):
 
     return mock_koza(
         "pombase_gene",
-        iter([row]),
+        row,
         "./src/monarch_ingest/ingests/pombase/gene.py",
         map_cache=taxon_label_map_cache,
         global_table=global_table,

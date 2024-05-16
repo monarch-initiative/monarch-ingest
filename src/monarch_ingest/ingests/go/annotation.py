@@ -7,7 +7,7 @@ Gene to GO term Associations
 import uuid
 
 from biolink_model.datamodel.pydanticmodel_v2 import KnowledgeLevelEnum, AgentTypeEnum
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 
 from monarch_ingest.ingests.go.annotation_utils import (
     parse_identifiers,
