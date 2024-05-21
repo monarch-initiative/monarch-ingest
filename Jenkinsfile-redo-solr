@@ -98,6 +98,16 @@ pipeline {
                 sh 'poetry run ingest sqlite'
             }
         }
+        stage('make tsv exports') {
+            when {
+                expression {
+                   return params.EXPORT
+                }
+            }
+            steps {
+                sh 'poetry run ingest export'
+            }
+        }
         stage('upload files') {
             when {
                 expression {
