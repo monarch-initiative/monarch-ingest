@@ -29,6 +29,11 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
+                                description: 'Make TSV Exports',
+                                name: 'EXPORT'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
                                 description: 'Upload to bucket',
                                 name: 'UPLOAD'
                             ),
