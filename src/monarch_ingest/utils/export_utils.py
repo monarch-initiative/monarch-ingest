@@ -175,15 +175,17 @@ def export_exploded_annotations(database,
         WITH cte AS (
           SELECT
             {','.join(fields)},
-            unnest(string_split(object_closure,'|')) as object_ancestor,    
-            CASE WHEN object = object_ancestor THEN TRUE ELSE FALSE END as direct
+            unnest(string_split(subject_closure,'|')) as subject_ancestor,
+            unnest(string_split(object_closure,'|')) as object_ancestor,               
+            CASE WHEN subject = subject_ancestor and object = object_ancestor THEN TRUE ELSE FALSE END as direct
           FROM denormalized_edges
           WHERE category = '{category}' {taxon_filter}
         )
         SELECT
-          cte.* REPLACE (cte.object_ancestor as object, nodes.name as object_label)  
+          cte.* REPLACE (cte.subject_ancestor as subject, subject_nodes.name as subject_label, cte.object_ancestor as object, object_nodes.name as object_label)  
         FROM cte
-        LEFT OUTER JOIN nodes ON cte.object = nodes.id
+        LEFT OUTER JOIN nodes as subject_nodes ON cte.subject = subject_nodes.id
+        LEFT OUTER JOIN nodes as object_nodes ON cte.object = object_nodes.id
     """
     print(sql)
     print(output_file)
