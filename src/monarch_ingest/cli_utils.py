@@ -400,7 +400,7 @@ def load_sqlite():
 
 
 def load_solr():
-    sh.bash("scripts/load_solr.sh")
+    sh.bash("scripts/load_solr.sh",  _out=sys.stdout, _err=sys.stderr)
 
 
 def load_jsonl():

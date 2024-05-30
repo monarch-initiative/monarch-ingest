@@ -24,7 +24,9 @@ kghub-downloader = "^0.3.2"
 kgx = ">=2.4.0"
 koza = ">=0.6.0"
 linkml = "^1.7.8"
-linkml-solr = ">=0.1.5"
+#linkml-solr = ">=0.1.5"
+# depend on linkml-1.7-upgrade branch of linkml-solr from github
+linkml-solr = {git = "http://github.com/linkml/linkml-solr", rev = "linkml-1.7-upgrade"}
 multi-indexer = "0.0.5"
 # Other Dependencies
 botocore = "^1.31"

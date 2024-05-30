@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+
+
 docker stop my_solr || true
 docker rm my_solr || true
 
@@ -43,6 +46,7 @@ sleep 5
 echo "Adding sssom schema"
 poetry run lsolr create-schema -C sssom -s model.yaml -t Mapping
 sleep 5
+
 
 # todo: this also should live in linkml-solr, and copy-fields should be based on the schema
 echo "Add dynamic fields and copy fields declarations"
