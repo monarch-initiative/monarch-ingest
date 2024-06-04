@@ -29,6 +29,11 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
+                                description: 'Make TSV Exports',
+                                name: 'EXPORT'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
                                 description: 'Upload to bucket',
                                 name: 'UPLOAD'
                             ),
@@ -96,6 +101,16 @@ pipeline {
             }
             steps {
                 sh 'poetry run ingest sqlite'
+            }
+        }
+        stage('make tsv exports') {
+            when {
+                expression {
+                   return params.EXPORT
+                }
+            }
+            steps {
+                sh 'poetry run ingest export'
             }
         }
         stage('upload files') {

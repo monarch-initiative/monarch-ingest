@@ -1,6 +1,7 @@
 """
 A few Dictybase parse utility functions
 """
+
 from typing import Optional, Tuple, Dict, List
 
 

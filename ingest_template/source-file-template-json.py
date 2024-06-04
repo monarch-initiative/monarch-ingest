@@ -7,7 +7,7 @@ from biolink.pydanticmodel_v2 import (
     GeneToPhenotypicFeatureAssociation,
     PhenotypicFeature,
 )
-from koza.cli_runner import koza_app
+from koza.cli_utils import koza_app
 
 # include logging if necessary
 from loguru import logger

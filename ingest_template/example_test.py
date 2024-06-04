@@ -1,5 +1,5 @@
 import pytest
-from koza.cli_runner import get_translation_table
+from koza.cli_utils import get_translation_table
 
 
 @pytest.fixture

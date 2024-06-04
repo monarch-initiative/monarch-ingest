@@ -46,7 +46,7 @@ EVIDENCE_CODE_MAPPINGS = {
     "coexpression": "ECO:0000075",
     "experimental": "ECO:0000006",
     "database": "ECO:0007636",
-    "textmining": "ECO:0007833"
+    "textmining": "ECO:0007833",
 }
 
 
@@ -57,4 +57,3 @@ def map_evidence_codes(row: Dict) -> List[str]:
             eco_mappings.append(EVIDENCE_CODE_MAPPINGS[evidence_type])
 
     return eco_mappings
-

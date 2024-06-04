@@ -1,20 +1,18 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, InformationContentEntityToNamedThingAssociation, Publication
-from koza.cli_runner import get_translation_table
+from koza.cli_utils import get_translation_table
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 from loguru import logger
 
 
 @pytest.fixture
 def gene_literature_entities(mock_koza, global_table):
-    row = iter(
-        [
-            {
-                "xb_article": "XB-ART-1",
-                "pmid": "16938438",
-                "gene_pages": "XB-GENEPAGE-487723 nog,XB-GENEPAGE-490377 msx1,XB-GENEPAGE-481828 bmp2,XB-GENEPAGE-483057 bmp4,XB-GENEPAGE-480982 fgf8,XB-GENEPAGE-6045068 hspa1l,XB-GENEPAGE-485625 hsp70",
-            }
-        ]
-    )
+    row = {
+        "xb_article": "XB-ART-1",
+        "pmid": "16938438",
+        "gene_pages": "XB-GENEPAGE-487723 nog,XB-GENEPAGE-490377 msx1,XB-GENEPAGE-481828 bmp2,XB-GENEPAGE-483057 bmp4,XB-GENEPAGE-480982 fgf8,XB-GENEPAGE-6045068 hspa1l,XB-GENEPAGE-485625 hsp70",
+    }
+
     map_cache = {
         "genepage-2-gene": {
             "XB-GENEPAGE-487723": {
@@ -54,7 +52,7 @@ def gene_literature_entities(mock_koza, global_table):
             },
         }
     }
-    get_translation_table("src/monarch_ingest/translation_table.yaml", None, logger),
+    (get_translation_table("src/monarch_ingest/translation_table.yaml", None, logger),)
 
     return mock_koza(
         name="xenbase_publication_to_gene",

@@ -1,6 +1,7 @@
 """
 Some Gene Ontology Annotation ingest utility functions.
 """
+
 from re import sub, IGNORECASE, compile, Pattern
 from typing import Optional, Tuple, List, Dict
 
@@ -143,6 +144,7 @@ def get_biolink_classes(go_aspect: str) -> Tuple:
     :return: (category, association) tuple of Biolink Model Pydantic classes associated with the given GO aspect
     """
     return _biolink_class_by_go_aspect[go_aspect.upper()]
+
 
 #
 # See comment below

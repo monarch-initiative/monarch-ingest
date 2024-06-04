@@ -2,6 +2,7 @@ from typing import List
 
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -25,7 +26,7 @@ def test_row_1():
     """
     :return: Test Dictybase Gene input data row.
     """
-    return {'GENE ID': 'DDB_G0269222', 'Gene Name': 'gefB', 'Synonyms': 'RasGEFB, RasGEF'}
+    return {"GENE ID": "DDB_G0269222", "Gene Name": "gefB", "Synonyms": "RasGEFB, RasGEF"}
 
 
 @pytest.fixture
@@ -44,7 +45,7 @@ def basic_dictybase_1(mock_koza, source_name, script, taxon_label_map_cache, tes
     """
     return mock_koza(
         name=source_name,
-        data=iter([test_row_1]),
+        data=test_row_1,
         transform_code=script,
         map_cache=taxon_label_map_cache,
         global_table=global_table,
@@ -59,7 +60,7 @@ def test_dictybase_ncbi_mapped_gene_ingest(basic_dictybase_1):
     assert entity[0].id == "dictyBase:DDB_G0269222"
     assert entity[0].symbol == "gefB"
     assert entity[0].name == "gefB"
-    assert 'RasGEFB' in entity[0].synonym
-    assert 'RasGEF' in entity[0].synonym
+    assert "RasGEFB" in entity[0].synonym
+    assert "RasGEF" in entity[0].synonym
     assert "NCBITaxon:44689" in entity[0].in_taxon
     assert "infores:dictybase" in entity[0].provided_by

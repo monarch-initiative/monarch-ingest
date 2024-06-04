@@ -11,6 +11,7 @@ directory_name:
   - solr_filter_1
   - solr_filter_2
 """
+
 import json
 from json import decoder
 from enum import Enum
@@ -70,10 +71,12 @@ GENE_TO_GENE_APPENDS = [
             'object_taxon_label'
     ]
 
-def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
-           output_dir: str = "./output/tsv/",
-           output_format: OutputType = OutputType.tsv,
-           solr_url: str = "http://localhost:8983/solr/association/select"):
+def export(
+    config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
+    output_dir: str = "./output/tsv/",
+    output_format: OutputType = OutputType.tsv,
+    solr_url: str = "http://localhost:8983/solr/association/select",
+):
 
     if output_format not in OUTPUT_TYPES:
         raise ValueError(f"output format not supported, supported formats are {OUTPUT_TYPES}")
@@ -92,7 +95,7 @@ def export(config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
         'json.nl': 'arrarr',
         'rows': 0,
         'facet': 'true',
-        'facet.field': 'category'
+        'facet.field': 'category',
     }
 
     solr_request = requests.get(solr_url, params=assoc_params)

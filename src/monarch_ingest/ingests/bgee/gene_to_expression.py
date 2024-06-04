@@ -1,4 +1,4 @@
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 from monarch_ingest.ingests.bgee.gene_to_expression_utils import process_koza_source
 
 

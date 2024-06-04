@@ -1,4 +1,4 @@
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
@@ -6,7 +6,7 @@ koza_app = get_koza_app("hgnc_gene")
 taxon_labels = koza_app.get_map("taxon-labels")
 
 while (row := koza_app.get_row()) is not None:
-    
+
     xref_list = []
     if row['ensembl_gene_id']:
         xref_list.append('ENSEMBL:' + row['ensembl_gene_id'])
@@ -16,7 +16,6 @@ while (row := koza_app.get_row()) is not None:
                 xref_list.append('OMIM:' + each)
         else:
             xref_list.append('OMIM:' + row['omim_id'])
-
 
     synonyms_list = (
         row["alias_symbol"].split("|")
@@ -37,7 +36,7 @@ while (row := koza_app.get_row()) is not None:
         synonym=synonyms_list,
         in_taxon=[in_taxon],
         in_taxon_label=in_taxon_label,
-        provided_by=["infores:hgnc"]
+        provided_by=["infores:hgnc"],
     )
 
     # Excluding pub to gene associations for now

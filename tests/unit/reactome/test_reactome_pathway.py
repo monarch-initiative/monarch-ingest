@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -26,7 +27,7 @@ def basic_row():
 
 @pytest.fixture
 def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
-    return mock_koza(source_name, iter([basic_row]), script, global_table=global_table, local_table=local_table)
+    return mock_koza(source_name, basic_row, script, global_table=global_table, local_table=local_table)
 
 
 def test_pathway_id(basic_g2p):

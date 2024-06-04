@@ -1,7 +1,7 @@
 from typing import List
 
 from biolink.pydanticmodel_v2 import Gene
-from koza.cli_runner import koza_app
+from koza.cli_utils import koza_app
 
 # You've got 'NCBI_Gene:' and you want 'NCBIGene:'? clean it up.
 curie_cleaner = koza_app.curie_cleaner

@@ -1,4 +1,5 @@
 import pytest
+from koza.utils.testing_utils import mock_koza  # noqa: F401
 
 
 @pytest.fixture
@@ -29,7 +30,7 @@ def gene_row():
 
 @pytest.fixture
 def pax2a(mock_koza, source_name, gene_row, script, taxon_label_map_cache, global_table):
-    row = iter([gene_row])
+    row = gene_row
     return mock_koza(
         source_name,
         row,
@@ -48,13 +49,13 @@ def test_gene(pax2a):
 def test_gene_information_synonym(pax2a):
     gene = pax2a[0]
     assert gene.synonym
-    assert gene.synonym == ['ACF', 'ASP', 'ACF64', 'ACF65', 'APOBEC1CF', '', '', '']
+    assert gene.synonym == ["ACF", "ASP", "ACF64", "ACF65", "APOBEC1CF", "", "", ""]
 
 
 def test_gene_information_xref(pax2a):
     gene = pax2a[0]
     assert gene.xref
-    assert gene.xref == ['ENSEMBL:ENSG00000148584', 'OMIM:618199']
+    assert gene.xref == ["ENSEMBL:ENSG00000148584", "OMIM:618199"]
 
 
 # Commenting out publication ingests at least temporarily

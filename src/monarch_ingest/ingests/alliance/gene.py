@@ -1,4 +1,4 @@
-from koza.cli_runner import get_koza_app
+from koza.cli_utils import get_koza_app
 from source_translation import source_map
 
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
@@ -48,21 +48,18 @@ while (row := koza_app.get_row()) is not None:
         id=gene_id,
         symbol=row["symbol"],
         name=row["symbol"],
-        full_name=row["name"].replace("\r",""), # Replacement to remove stray carriage returns in XenBase files
+        full_name=row["name"].replace("\r", ""),  # Replacement to remove stray carriage returns in XenBase files
         # No place in the schema for gene type (SO term) right now
         # type=row["soTermId"],
         in_taxon=[in_taxon],
         in_taxon_label=in_taxon_label,
-        provided_by=[source]
+        provided_by=[source],
     )
 
     if row["basicGeneticEntity"]["crossReferences"]:
-        gene.xref = [
-            koza_app.curie_cleaner.clean(xref["id"])
-            for xref in row["basicGeneticEntity"]["crossReferences"]
-        ]
+        gene.xref = [koza_app.curie_cleaner.clean(xref["id"]) for xref in row["basicGeneticEntity"]["crossReferences"]]
     if "synonyms" in row["basicGeneticEntity"].keys():
         # more handling for errant carriage returns
-        gene.synonym = [synonym.replace("\r","") for synonym in row["basicGeneticEntity"]["synonyms"] ]
+        gene.synonym = [synonym.replace("\r", "") for synonym in row["basicGeneticEntity"]["synonyms"]]
 
     koza_app.write(gene)

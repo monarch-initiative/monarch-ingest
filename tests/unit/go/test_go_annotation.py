@@ -6,6 +6,7 @@ from typing import Tuple
 
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Association
+from koza.utils.testing_utils import mock_koza  # noqa: F401  # noqa: F401
 from loguru import logger
 
 from monarch_ingest.ingests.go.annotation_utils import parse_identifiers
@@ -97,23 +98,23 @@ def test_rows():
         },
         # Multiple taxa
         {
-            'DB': 'WB',
-            'DB_Object_ID': 'WBGene00000013',
-            'DB_Object_Symbol': 'abf-2',
-            'Qualifier': 'involved_in',
-            'GO_ID': 'GO:0050830',
-            'DB_Reference': 'WB_REF:WBPaper00045314|PMID:24882217',
-            'Evidence_Code': 'IEP',
-            'With_or_From': '',
-            'Aspect': 'P',
-            'DB_Object_Name': '',
-            'DB_Object_Synonym': 'C50F2.10|C50F2.e',
-            'DB_Object_Type': 'gene',
-            'Taxon': 'taxon:6239|taxon:46170',
-            'Date': '20140827',
-            'Assigned_By': 'WB',
-            'Annotation_Extension': '',
-            'Gene_Product_Form_ID': '',
+            "DB": "WB",
+            "DB_Object_ID": "WBGene00000013",
+            "DB_Object_Symbol": "abf-2",
+            "Qualifier": "involved_in",
+            "GO_ID": "GO:0050830",
+            "DB_Reference": "WB_REF:WBPaper00045314|PMID:24882217",
+            "Evidence_Code": "IEP",
+            "With_or_From": "",
+            "Aspect": "P",
+            "DB_Object_Name": "",
+            "DB_Object_Synonym": "C50F2.10|C50F2.e",
+            "DB_Object_Type": "gene",
+            "Taxon": "taxon:6239|taxon:46170",
+            "Date": "20140827",
+            "Assigned_By": "WB",
+            "Annotation_Extension": "",
+            "Gene_Product_Form_ID": "",
         },
         # Test default qualifier override for molecular function
         {
@@ -316,7 +317,7 @@ def basic_go(mock_koza, source_name, test_rows, script, global_table, local_tabl
     """
     return mock_koza(
         name=source_name,
-        data=iter(test_rows),
+        data=test_rows,
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
@@ -470,28 +471,28 @@ def test_association(basic_go):
 @pytest.fixture
 def mgi_entities(mock_koza, source_name, script, global_table, local_table):
     row = {
-        'DB': 'MGI',
-        'DB_Object_ID': 'MGI:1918911',
-        'DB_Object_Symbol': '0610005C13Rik',
-        'Qualifier': 'enables',
-        'GO_ID': 'GO:0003674',
-        'DB_Reference': 'MGI:MGI:2156816|GO_REF:0000015',
-        'Evidence_Code': 'ND',
-        'With_or_From': '',
-        'Aspect': 'F',
-        'DB_Object_Name': 'RIKEN cDNA 0610005C13 gene',
-        'DB_Object_Synonym': '',
-        'DB_Object_Type': 'gene',
-        'Taxon': 'taxon:10090',
-        'Date': '20200917',
-        'Assigned_By': 'MGI',
-        'Annotation_Extension': '',
-        'Gene_Product_Form_ID': '',
+        "DB": "MGI",
+        "DB_Object_ID": "MGI:1918911",
+        "DB_Object_Symbol": "0610005C13Rik",
+        "Qualifier": "enables",
+        "GO_ID": "GO:0003674",
+        "DB_Reference": "MGI:MGI:2156816|GO_REF:0000015",
+        "Evidence_Code": "ND",
+        "With_or_From": "",
+        "Aspect": "F",
+        "DB_Object_Name": "RIKEN cDNA 0610005C13 gene",
+        "DB_Object_Synonym": "",
+        "DB_Object_Type": "gene",
+        "Taxon": "taxon:10090",
+        "Date": "20200917",
+        "Assigned_By": "MGI",
+        "Annotation_Extension": "",
+        "Gene_Product_Form_ID": "",
     }
 
     return mock_koza(
         name=source_name,
-        data=iter([row]),
+        data=row,
         transform_code=script,
         global_table=global_table,
         local_table=local_table,
