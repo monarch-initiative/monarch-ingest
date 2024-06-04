@@ -1617,25 +1617,21 @@ requests = "*"
 
 [[package]]
 name = "linkml-solr"
-version = "0.1.5"
+version = "0.1.6"
 description = ""
 optional = false
-python-versions = "^3.8.1"
-files = []
-develop = false
+python-versions = "<4.0.0,>=3.8.1"
+files = [
+    {file = "linkml_solr-0.1.6-py3-none-any.whl", hash = "sha256:23ae65774ac8b67fe7e3ffc65eb9889328726de72b1a2293bc7972ea42fa83f0"},
+    {file = "linkml_solr-0.1.6.tar.gz", hash = "sha256:f8d9f9cfdaace461e367d1a7711db2f417011bde30e16f740443c9b98ce096f9"},
+]
 
 [package.dependencies]
-jsonasobj = "^1.3.1"
-linkml = "^1.7.0"
-linkml-dataops = "^0.1.0"
+jsonasobj = ">=1.3.1,<2.0.0"
+linkml = ">=1.7.0,<2.0.0"
+linkml-dataops = ">=0.1.0,<0.2.0"
 linkml-runtime = ">=1.7.4"
-pysolr = "^3.9.0"
-
-[package.source]
-type = "git"
-url = "http://github.com/linkml/linkml-solr"
-reference = "linkml-1.7-upgrade"
-resolved_reference = "df314be202d9dab9b1c9ec26825105cc1092d356"
+pysolr = ">=3.9.0,<4.0.0"
 
 [[package]]
 name = "loguru"
@@ -4152,4 +4148,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "7b441b9d27bb713c1a9881a9d75ac2c327e186b61abecfe82cf2ce6bff089d88"
+content-hash = "c4b15d97b11ee0aa71e86dacf9f70f72ca07684c63f27ea93f4f02756ab94f7b"
