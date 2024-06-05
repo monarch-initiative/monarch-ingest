@@ -390,11 +390,6 @@ def apply_closure(
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
     sh.mv(database, f"{output_dir}/")
-    # TODO: need to move this compress step to being after the export
-    # sh.pigz(f"{output_dir}/{database}", force=True)
-    sh.pigz(edges_output_file, force=True)
-    sh.pigz(nodes_output_file, force=True)
-
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
@@ -471,9 +466,22 @@ def load_jsonl():
 def export_tsv():
     export()
 
+def do_prepare_release(dir: str = OUTPUT_DIR):
 
+    compressed_artifacts = [
+        'output/monarch-kg.duckdb',
+        'output/monarch-kg-denormalized-edges.tsv',
+        'output/monarch-kg-denormalized-nodes.tsv',
+    ]
+
+    for artifact in compressed_artifacts:
+        if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
+            sh.pigz(artifact, force=True)
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
+
+    # ensure that files that should be compressed are
+
     with open(f"{dir}/metadata.yaml", "r") as f:
         versions = yaml.load(f, Loader=yaml.FullLoader)
 

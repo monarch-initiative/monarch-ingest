@@ -5,6 +5,7 @@ import yaml
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure,
+    do_prepare_release,
     do_release,
     export_tsv,
     get_data_versions,
@@ -163,6 +164,9 @@ def solr():
 def export():
     export_tsv()
 
+@typer_app.command()
+def prepare_release():
+    do_prepare_release();
 
 @typer_app.command()
 def release(

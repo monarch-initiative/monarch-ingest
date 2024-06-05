@@ -75,11 +75,17 @@ def export(
     config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
     output_dir: str = "./output/tsv/",
     output_format: OutputType = OutputType.tsv,
-    solr_url: str = "http://localhost:8983/solr/association/select",
+    database_file = 'output/monarch-kg.duckdb'
 ):
 
     if output_format not in OUTPUT_TYPES:
         raise ValueError(f"output format not supported, supported formats are {OUTPUT_TYPES}")
+
+    if Path(f'{database_file}.gz').exists():
+        with gzip.open(f'{database_file}.gz', 'rb') as f_in:
+            with open(database_file, 'wb') as f_out:
+                f_out.write(f_in.read())
+
     database = duckdb.connect('output/monarch-kg.duckdb')
     dir_path = Path(output_dir)
 
@@ -88,28 +94,10 @@ def export(
     dump_dir = dir_path / association_dir
     dump_dir.mkdir(parents=True, exist_ok=True)
 
-    # wt=json&facet=true&json.nl=arrarr&rows=0&q=*:*&facet.field=association_type
-    assoc_params = {
-        'q': '*:*',
-        'wt': 'json',
-        'json.nl': 'arrarr',
-        'rows': 0,
-        'facet': 'true',
-        'facet.field': 'category',
-    }
-
-    solr_request = requests.get(solr_url, params=assoc_params)
-    response = solr_request.json()
-    solr_request.close()
-
     for association_category in get_association_categories(database):
         category_name = camel_to_snake(re.sub(r'biolink:', '', association_category))
-        # quote the facet value because of the biolink: prefix
-        association_category = f'"{association_category}"'
-        print(association_category)
         file = f"{category_name}.all.{output_format.value}.gz"
         dump_file = str(dump_dir / file)
-        filters = ['category:{}'.format(association_category)]
         export_annotations(database=database,
                                           fields=get_fields(association_category),
                                           category=association_category,
@@ -166,7 +154,7 @@ def export_annotations(database, fields: List[str], output_file: str, category: 
         WHERE category = '{category}' {taxon_filter}
     ) to '{output_file}' (header, delimiter '\t')
     """
-    # database.execute(sql)
+    database.execute(sql)
 
 def export_exploded_annotations(database,
                                                          fields: List[str],
