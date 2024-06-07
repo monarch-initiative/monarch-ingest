@@ -390,10 +390,6 @@ def apply_closure(
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
     sh.mv(database, f"{output_dir}/")
-    sh.pigz(f"{output_dir}/{database}", force=True)
-    sh.pigz(edges_output_file, force=True)
-    sh.pigz(nodes_output_file, force=True)
-
 
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
@@ -420,7 +416,11 @@ def load_jsonl():
         edge_path = tar.getmember("monarch-kg_edges.tsv")
 
         with tar.extractfile(node_path) as node_file:  # type: ignore
-            nodes_df = pandas.read_csv(node_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE)
+            nodes_df = pandas.read_csv(node_file, sep="\t",
+                                       dtype="string",
+                                       lineterminator="\n",
+                                       quoting=csv.QUOTE_NONE,
+                                       comment=None)
             nodes_df["category"] = nodes_df["category"].map(class_ancestor_dict)
             # for each column in nodes_df, if schemaview says it's multivalued, convert the contents to a list splitting on |
             for col in nodes_df.columns:
@@ -434,7 +434,12 @@ def load_jsonl():
 
         with tar.extractfile(edge_path) as edge_file:  # type: ignore
             edges_df = pandas.read_csv(
-                edge_file, sep="\t", dtype="string", lineterminator="\n", quoting=csv.QUOTE_NONE, comment="#"
+                edge_file,
+                sep="\t",
+                dtype="string",
+                lineterminator="\n",
+                quoting=csv.QUOTE_NONE,
+                comment=None
             )
             edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
 
@@ -445,10 +450,6 @@ def load_jsonl():
                     if slot and slot.multivalued and col != "category":
                         edges_df[col] = edges_df[col].str.split("|")
 
-            # Prefixing only these two fields is an odd thing that Translator needs, so
-            # they're being duplicated with the prefixes here
-            edges_df["biolink:primary_knowledge_source"] = edges_df["primary_knowledge_source"]
-            edges_df["biolink:aggregator_knowledge_source"] = edges_df["aggregator_knowledge_source"]
             edges_df.to_json("output/monarch-kg_edges.jsonl", orient="records", lines=True)
             del edges_df
             gc.collect()
@@ -465,8 +466,22 @@ def load_jsonl():
 def export_tsv():
     export()
 
+def do_prepare_release(dir: str = OUTPUT_DIR):
+
+    compressed_artifacts = [
+        'output/monarch-kg.duckdb',
+        'output/monarch-kg-denormalized-edges.tsv',
+        'output/monarch-kg-denormalized-nodes.tsv',
+    ]
+
+    for artifact in compressed_artifacts:
+        if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
+            sh.pigz(artifact, force=True)
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
+
+    # ensure that files that should be compressed are
+
     with open(f"{dir}/metadata.yaml", "r") as f:
         versions = yaml.load(f, Loader=yaml.FullLoader)
 
