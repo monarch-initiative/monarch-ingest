@@ -18,4 +18,4 @@ tar xfO data/monarch/kg-phenio.tar.gz merged-kg_nodes.tsv | grep ^NCBITaxon | cu
 sed -i 's/\torphanet.ordo\:/\tOrphanet\:/g' data/monarch/mondo.sssom.tsv
 
 # Repair mesh: prefixes in MONDO sssom rows as necessary
-sed -i 's/\tmesh\:/\tMESH\:/g' data/monarch/mondo.sssom.tsv
+sed -i 's@mesh:@MESH:@g' data/monarch/mondo.sssom.tsv

@@ -9,6 +9,7 @@ from typing import Optional
 from biolink_model.datamodel import model  # import the pythongen biolink model to get the version
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
+import requests
 
 # from loguru import logger
 import pandas
@@ -45,6 +46,19 @@ def transform_one(
     if ingest not in ingests:
         # if log: logger.removeHandler(fh)
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
+
+    # if a url is provided instead of a config, just download the file and copy it to the output dir
+    if "url" in ingests[ingest]:
+        for url in ingests[ingest]["url"]:
+            filename = url.split("/")[-1]
+
+            if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
+                continue
+
+            response = requests.get(url, allow_redirects=True)
+            with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
+                f.write(response.content)
+        return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
 

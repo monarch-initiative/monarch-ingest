@@ -2,8 +2,6 @@ alliance_gene:
   config: 'ingests/alliance/gene.yaml'
 alliance_gene_to_expression:
   config: 'ingests/alliance/gene_to_expression.yaml'
-alliance_gene_to_phenotype:
-  config: 'ingests/alliance/gene_to_phenotype.yaml'
 # alliance_publication:
 #  config: 'ingests/alliance/publication.yaml'
 bgee_gene_to_expression:
@@ -64,3 +62,21 @@ zfin_gene_to_phenotype:
   config: 'ingests/zfin/gene_to_phenotype.yaml'
 # zfin_publication_to_gene:
 #   config: 'ingests/zfin/publication_to_gene.yaml'
+
+## Pass-through modular ingests
+alliance_genotype:
+  url:
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_genotype_nodes.tsv'
+alliance_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/alliance-phenotype-association-ingest/releases/latest/download/alliance_phenotype_edges.tsv'
+alliance_disease_association:
+  url:
+    - 'https://github.com/monarch-initiative/alliance-disease-association-ingest/releases/latest/download/alliance_disease_edges.tsv'
+zfin_genotype_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
+clingen-variant:
+  url:
+    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
+    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_edges.tsv'
