@@ -76,7 +76,11 @@ alliance_disease_association:
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
-clingen-variant:
+clingen_variant:
   url:
     - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
     - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_edges.tsv'
+clinvar_variant:
+  url:
+    - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_nodes.tsv'
+    - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_edges.tsv'
