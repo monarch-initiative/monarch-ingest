@@ -1,11 +1,9 @@
 ---
 disease_associations:
   disease_phenotype.all.tsv.gz:
-    exploded: true
     category: 'biolink:DiseaseToPhenotypicFeatureAssociation'
 gene_associations:
   gene_phenotype.all.tsv.gz:
-    exploded: true
     category: "biolink:GeneToPhenotypicFeatureAssociation"
   gene_phenotype.4896.tsv.gz:
       category: "biolink:GeneToPhenotypicFeatureAssociation"
