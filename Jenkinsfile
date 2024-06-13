@@ -45,18 +45,19 @@ pipeline {
             }
         }
         stage('transform') {
+            //TODO: add --rdf flag back to produce individual rdf files
             steps {
                 sh 'poetry run ingest transform --all --log --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
                 '''
-               sh '''
-                  gunzip output/rdf/*.gz
-                  sed -i.bak 's@\\r@@g' output/rdf/*.nt
-                  rm output/rdf/*.bak
-                  gzip output/rdf/*.nt
-                '''
+//                sh '''
+//                   gunzip output/rdf/*.gz
+//                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
+//                   rm output/rdf/*.bak
+//                   gzip output/rdf/*.nt
+//                 '''
             }
         }
         stage('merge') {
