@@ -45,19 +45,17 @@ pipeline {
             }
         }
         stage('transform') {
-            // TODO: turn --rdf back on as an argument to ingest transform 
             steps {
                 sh 'poetry run ingest transform --all --log --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
                 '''
-// TODO: turn this back on
-//                sh '''
-//                   gunzip output/rdf/*.gz
-//                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
-//                   rm output/rdf/*.bak
-//                   gzip output/rdf/*.nt
+               sh '''
+                  gunzip output/rdf/*.gz
+                  sed -i.bak 's@\\r@@g' output/rdf/*.nt
+                  rm output/rdf/*.bak
+                  gzip output/rdf/*.nt
                 '''
             }
         }
@@ -71,17 +69,16 @@ pipeline {
                 sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
             }
         }
-// TODO: this needs to be rewritten to use less memory
-//         stage('jsonl-conversion'){
-//             steps {
-//                 sh 'poetry run ingest jsonl'
-//             }
-//         }
-//        stage('kgx-transforms'){
-//            steps {
-//                sh './scripts/kgx_transforms.sh'
-//            }
-//        }
+        stage('jsonl-conversion'){
+            steps {
+                sh 'poetry run ingest jsonl'
+            }
+        }
+       stage('kgx-transforms'){
+           steps {
+               sh './scripts/kgx_transforms.sh'
+           }
+       }
         stage('denormalize') {
             steps {
                 sh 'poetry run ingest closure'
