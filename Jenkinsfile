@@ -69,11 +69,12 @@ pipeline {
                 sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
             }
         }
-        stage('jsonl-conversion'){
-            steps {
-                sh 'poetry run ingest jsonl'
-            }
-        }
+// TODO: this needs to be rewritten to use less memory
+//         stage('jsonl-conversion'){
+//             steps {
+//                 sh 'poetry run ingest jsonl'
+//             }
+//         }
         stage('kgx-transforms'){
             steps {
                 sh './scripts/kgx_transforms.sh'
