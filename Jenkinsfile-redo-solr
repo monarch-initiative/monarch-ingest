@@ -148,9 +148,10 @@ pipeline {
                 expression {
                    return params.JSONL
                }
-               steps {
-                   sh 'poetry run ingest jsonl'
-               }
+            }
+           steps {
+               sh 'poetry run ingest jsonl'
+           }
         }
         stage('kgx-transforms'){
             when {
