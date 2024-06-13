@@ -45,8 +45,9 @@ pipeline {
             }
         }
         stage('transform') {
+            // TODO: turn --rdf back on as an argument to ingest transform 
             steps {
-                sh 'poetry run ingest transform --all --log --rdf --write-metadata'
+                sh 'poetry run ingest transform --all --log --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
@@ -75,11 +76,11 @@ pipeline {
 //                 sh 'poetry run ingest jsonl'
 //             }
 //         }
-        stage('kgx-transforms'){
-            steps {
-                sh './scripts/kgx_transforms.sh'
-            }
-        }
+//        stage('kgx-transforms'){
+//            steps {
+//                sh './scripts/kgx_transforms.sh'
+//            }
+//        }
         stage('denormalize') {
             steps {
                 sh 'poetry run ingest closure'
