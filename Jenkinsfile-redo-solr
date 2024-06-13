@@ -12,6 +12,16 @@ pipeline {
                 script {
                     properties([
                         parameters([
+                            stringParam(
+                                defaultValue: 'latest',
+                                description: 'monarch-kg-dev release',
+                                name: 'RELEASE'
+                            ),
+                            booleanParam(
+                                defaultValue: true,
+                                description: 'Run KGX Graph Summary',
+                                name: 'KGX_GRAPH_SUMMARY'
+                            ),
                             booleanParam(
                                 defaultValue: true,
                                 description: 'Re-run denormalization step',
@@ -31,6 +41,16 @@ pipeline {
                                 defaultValue: false,
                                 description: 'Make TSV Exports',
                                 name: 'EXPORT'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Make JSONL Export',
+                                name: 'JSONL'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Run KGX Transforms',
+                                name: 'KGX_TRANSFORMS'
                             ),
                             booleanParam(
                                 defaultValue: false,
@@ -73,6 +93,16 @@ pipeline {
                 '''
             }
         }
+        stage('kgx-graph-summary') {
+            when {
+                expression {
+                   return params.KGX_GRAPH_SUMMARY
+                }
+            }
+            steps {
+                sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
+            }
+        }
         stage('denormalize') {
             when {
                 expression {
@@ -111,6 +141,25 @@ pipeline {
             }
             steps {
                 sh 'poetry run ingest export'
+            }
+        }
+        stage("jsonl") {
+            when {
+                expression {
+                   return params.JSONL
+               }
+               steps {
+                   sh 'poetry run ingest jsonl'
+               }
+        }
+        stage('kgx-transforms'){
+            when {
+               expression {
+                   return params.KGX_TRANSFORMS
+                   }
+            }
+            steps {
+                sh './scripts/kgx_transforms.sh'
             }
         }
         stage('upload files') {
