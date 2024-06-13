@@ -52,11 +52,12 @@ pipeline {
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
                 '''
-                sh '''
-                   gunzip output/rdf/*.gz
-                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
-                   rm output/rdf/*.bak
-                   gzip output/rdf/*.nt
+// TODO: turn this back on
+//                sh '''
+//                   gunzip output/rdf/*.gz
+//                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
+//                   rm output/rdf/*.bak
+//                   gzip output/rdf/*.nt
                 '''
             }
         }
