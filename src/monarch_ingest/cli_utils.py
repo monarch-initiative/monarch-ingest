@@ -462,14 +462,6 @@ def load_jsonl():
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
     """)
 
-    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
-    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
-    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
-    jsonl_tar.close()
-
-    os.remove("output/monarch-kg_nodes.jsonl")
-    os.remove("output/monarch-kg_edges.jsonl")
-
 
 def export_tsv():
     export()
@@ -485,6 +477,15 @@ def do_prepare_release(dir: str = OUTPUT_DIR):
     for artifact in compressed_artifacts:
         if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
             sh.pigz(artifact, force=True)
+
+    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
+    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
+    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
+    jsonl_tar.close()
+
+    os.remove("output/monarch-kg_nodes.jsonl")
+    os.remove("output/monarch-kg_edges.jsonl")
+
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 
