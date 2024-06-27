@@ -373,7 +373,7 @@ def merge_files(
 
     logger.info("Merging knowledge graph...")
 
-    merge(name=name, source=input_dir, output_dir=output_dir, mappings=None)
+    merge(name=name, source=input_dir, output_dir=output_dir, mappings=mappings)
 
 
 def apply_closure(
