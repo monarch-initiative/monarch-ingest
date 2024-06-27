@@ -10,8 +10,8 @@ OUTDIR = Path(__file__).parent.parent / "output" / "transform_output"
 
 # Modular ingests to download output from GitHub releases
 ingests = {
-    # 'alliance-variant-allele-ingest'
-    # 'ncbi-gene',
+    # "alliance-variant-allele-ingest": ["alliance_variant_allele_nodes", "alliance_variant_allele_edges"],
+    # "ncbi-gene": ["ncbi_gene_nodes"],
     "alliance-disease-association-ingest": ["alliance_disease_edges"],
     "clingen-ingest": ["clingen_variant_nodes", "clingen_variant_edges"],
     "clinvar-ingest": ["clinvar_variant_nodes", "clinvar_variant_edges"],
