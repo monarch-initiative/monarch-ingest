@@ -34,6 +34,7 @@ pipeline {
                 '''
             }
         }
+        // Download source data to be transformed
         stage('download') {
             steps {
                 sh '''
@@ -56,6 +57,14 @@ pipeline {
                    sed -i.bak 's@\\r@@g' output/rdf/*.nt
                    rm output/rdf/*.bak
                    gzip output/rdf/*.nt
+                '''
+            }
+        }
+        // Download output of modular ingests separately
+        stage('download-modular') {
+            steps {
+                sh '''
+                    poetry run python scripts/download_modular.py
                 '''
             }
         }
