@@ -2,6 +2,8 @@ nodes:
   provided_by:
     alliance_gene_nodes:
       min: 290000
+    alliance_genotype_nodes:
+      min: 130000
     dictybase_gene_nodes:
       min: 14000
     hgnc_gene_nodes:
@@ -14,12 +16,14 @@ nodes:
       min: 5000
     reactome_pathway_nodes:
       min: 21000
+    clinvar_variant_nodes:
+      min: 1280000
+    clingen_variant_nodes:
+      min: 7000
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
       min: 1870000
-    alliance_gene_to_phenotype_edges:
-      min: 300000
     bgee_gene_to_expression_edges:
       min: 430000
     biogrid_edges:
@@ -49,8 +53,16 @@ edges:
     reactome_gene_to_pathway_edges:
       min: 200000
     string_protein_links_edges:
-      min: 1490000
+      min: 1470000
     xenbase_gene_to_phenotype_edges:
       min: 2000
-    zfin_gene_to_phenotype_edges:
-      min: 148000
+    alliance_phenotype_edges:
+      min: 650000
+    alliance_disease_edges:
+      min: 10000
+    zfin_genotype_to_phenotype_edges:
+      min: 125000
+    clinvar_variant_edges:
+      min: 1400000
+    clingen_variant_edges:
+      min: 5000

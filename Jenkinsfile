@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'monarch-agent-large' }
+    agent { label 'monarch-agent-xlarge' }
     environment {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
@@ -46,18 +46,19 @@ pipeline {
             }
         }
         stage('transform') {
+            //TODO: add --rdf flag back to produce individual rdf files
             steps {
-                sh 'poetry run ingest transform --all --log --rdf --write-metadata'
+                sh 'poetry run ingest transform --all --log --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
                 '''
-                sh '''
-                   gunzip output/rdf/*.gz
-                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
-                   rm output/rdf/*.bak
-                   gzip output/rdf/*.nt
-                '''
+//                sh '''
+//                   gunzip output/rdf/*.gz
+//                   sed -i.bak 's@\\r@@g' output/rdf/*.nt
+//                   rm output/rdf/*.bak
+//                   gzip output/rdf/*.nt
+//                 '''
             }
         }
         // Download output of modular ingests separately
@@ -83,11 +84,11 @@ pipeline {
                 sh 'poetry run ingest jsonl'
             }
         }
-        stage('kgx-transforms'){
-            steps {
-                sh './scripts/kgx_transforms.sh'
-            }
-        }
+       stage('kgx-transforms'){
+           steps {
+               sh './scripts/kgx_transforms.sh'
+           }
+       }
         stage('denormalize') {
             steps {
                 sh 'poetry run ingest closure'
@@ -106,6 +107,11 @@ pipeline {
         stage('make exports') {
             steps {
                 sh 'poetry run ingest export'
+            }
+        }
+        stage('prepare release') {
+            steps {
+                sh 'poetry run ingest prepare-release'
             }
         }
         stage('upload files') {
