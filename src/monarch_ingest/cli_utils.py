@@ -3,6 +3,8 @@ import gc
 import os
 import sys
 import tarfile
+
+import duckdb
 import yaml
 from pathlib import Path
 from typing import Optional
@@ -414,6 +416,8 @@ def load_solr():
 
 
 def load_jsonl():
+    db = duckdb.connect('output/monarch-kg.duckdb')
+
     biolink_model = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
     )
@@ -425,56 +429,38 @@ def load_jsonl():
         ]
     all_slot_names = biolink_model.all_slots().keys()
 
-    with tarfile.open("output/monarch-kg.tar.gz", "r:*") as tar:
-        node_path = tar.getmember("monarch-kg_nodes.tsv")
-        edge_path = tar.getmember("monarch-kg_edges.tsv")
+    # this may appear to be unused, but it's accessed in the duckdb sql queries below
+    class_ancestor_df = pandas.DataFrame(list(class_ancestor_dict.items()), columns=['classname', 'ancestors'])
 
-        with tar.extractfile(node_path) as node_file:  # type: ignore
-            nodes_df = pandas.read_csv(node_file, sep="\t",
-                                       dtype="string",
-                                       lineterminator="\n",
-                                       quoting=csv.QUOTE_NONE,
-                                       comment=None)
-            nodes_df["category"] = nodes_df["category"].map(class_ancestor_dict)
-            # for each column in nodes_df, if schemaview says it's multivalued, convert the contents to a list splitting on |
-            for col in nodes_df.columns:
-                if col.replace("_", " ") in all_slot_names:
-                    slot = biolink_model.induced_slot(col.replace("_", " "))
-                    if slot and slot.multivalued and col != "category":
-                        nodes_df[col] = nodes_df[col].str.split("|")
-            nodes_df.to_json("output/monarch-kg_nodes.jsonl", orient="records", lines=True)
-            del nodes_df
-            gc.collect()
+    node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
+    edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
 
-        with tar.extractfile(edge_path) as edge_file:  # type: ignore
-            edges_df = pandas.read_csv(
-                edge_file,
-                sep="\t",
-                dtype="string",
-                lineterminator="\n",
-                quoting=csv.QUOTE_NONE,
-                comment=None
-            )
-            edges_df["category"] = edges_df["category"].map(class_ancestor_dict)
+    def slot_is_multi_valued(slot_name: str) -> bool:
+        slot_name = slot_name.lower().replace("_", " ")
+        if slot_name not in all_slot_names:
+            return False
+        return biolink_model.get_slot(slot_name).multivalued
 
-            for col in edges_df.columns:
-                if col.replace("_", " ") in all_slot_names:
-                    # lookup using spaces rather than underscores
-                    slot = biolink_model.induced_slot(col.replace("_", " "))
-                    if slot and slot.multivalued and col != "category":
-                        edges_df[col] = edges_df[col].str.split("|")
+    mv_node_columns = [col for col in node_columns if slot_is_multi_valued(col) and col != "category"]
+    mv_edge_columns = [col for col in edge_columns if slot_is_multi_valued(col) and col != "category"]
+    mv_node_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_node_columns])
+    mv_edge_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_edge_columns])
 
-            edges_df.to_json("output/monarch-kg_edges.jsonl", orient="records", lines=True)
-            del edges_df
-            gc.collect()
+    db.sql(f"""
+    copy (
+      select nodes.* replace (ancestors as category, {mv_node_replacement}) 
+      from nodes
+        join class_ancestor_df on category = classname  
+    ) to 'output/monarch-kg_nodes.jsonl' (FORMAT JSON);
+    """)
 
-    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
-    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
-    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
-    jsonl_tar.close()
-
-    os.remove("output/monarch-kg_nodes.jsonl")
-    os.remove("output/monarch-kg_edges.jsonl")
+    db.sql(f"""
+    copy (
+      select edges.* replace (ancestors as category, {mv_edge_replacement}),  
+      from edges
+        join class_ancestor_df on category = classname  
+    ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
+    """)
 
 
 def export_tsv():
@@ -491,6 +477,15 @@ def do_prepare_release(dir: str = OUTPUT_DIR):
     for artifact in compressed_artifacts:
         if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
             sh.pigz(artifact, force=True)
+
+    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
+    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
+    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
+    jsonl_tar.close()
+
+    os.remove("output/monarch-kg_nodes.jsonl")
+    os.remove("output/monarch-kg_edges.jsonl")
+
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
 

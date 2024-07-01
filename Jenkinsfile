@@ -13,7 +13,7 @@ pipeline {
         stage('setup') {
             steps {
                 sh '''
-                    echo "Current directory: $(pwd)"
+                    echo "Current directory: \\$(pwd)"
                     # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
                     
@@ -65,6 +65,11 @@ pipeline {
                 sh 'poetry run ingest merge'
             }
         }
+        stage('denormalize') {
+            steps {
+                sh 'poetry run ingest closure'
+            }
+        }
         stage('kgx-graph-summary') {
             steps {
                 sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
@@ -75,19 +80,14 @@ pipeline {
                 sh 'poetry run ingest jsonl'
             }
         }
-       stage('kgx-transforms'){
-           steps {
-               sh './scripts/kgx_transforms.sh'
-           }
-       }
-        stage('denormalize') {
-            steps {
-                sh 'poetry run ingest closure'
-            }
-        }
         stage('solr') {
             steps {
                 sh 'poetry run ingest solr'
+            }
+        }
+        stage('kgx-transforms'){
+            steps {
+                sh './scripts/kgx_transforms.sh'
             }
         }
         stage('sqlite') {
