@@ -17,7 +17,7 @@ nodes:
     reactome_pathway_nodes:
       min: 21000
     clinvar_variant_nodes:
-      min: 1280000
+      min: 7000
     clingen_variant_nodes:
       min: 7000
 edges:
@@ -63,6 +63,6 @@ edges:
     zfin_genotype_to_phenotype_edges:
       min: 125000
     clinvar_variant_edges:
-      min: 1400000
+      min: 19000
     clingen_variant_edges:
       min: 5000
