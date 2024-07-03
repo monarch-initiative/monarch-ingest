@@ -92,7 +92,7 @@ pipeline {
                 sh '''
                     mkdir output || true
                     mkdir data || true
-                    gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/${env.RELEASE}/* output/
+                    gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/$RELEASE/* output/
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
                     ls -lasdf
                 '''
