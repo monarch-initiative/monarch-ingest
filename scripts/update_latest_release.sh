@@ -5,11 +5,10 @@
 
 echo "Updating Solr, SQLite and denormalized edge files for $RELEASE"
 
-gsutil -m cp -r output/* gs://monarch-archive/monarch-kg-dev/$RELEASE/
+gsutil -q -m cp -r output/* gs://monarch-archive/monarch-kg-dev/$RELEASE/
 
 # if RELEASE == LATEST_RELEASE, copy all of this release to latest
 export LATEST_RELEASE=$(gsutil ls gs://data-public-monarchinitiative/monarch-kg-dev/latest/ | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}')
 if [ "$RELEASE" == "$LATEST_RELEASE" ]; then
-    gsutil -m
-    gsutil -m cp -r "gs://monarch-archive/monarch-kg-dev/$RELEASE/*" gs://data-public-monarchinitiative/monarch-kg-dev/latest/
+    gsutil -q -m cp -r "gs://monarch-archive/monarch-kg-dev/$RELEASE/*" gs://data-public-monarchinitiative/monarch-kg-dev/latest/
 fi
