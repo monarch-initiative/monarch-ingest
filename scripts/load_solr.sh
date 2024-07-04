@@ -76,7 +76,7 @@ curl "http://localhost:8983/solr/association/select?q=*:*"
 
 mkdir solr-data || true
 
-docker cp my_solr:/var/solr/data solr-data/
+docker cp -q my_solr:/var/solr/data solr-data/
 
 # make sure it's readable by all in the tar file
 chmod -R a+rX solr-data
