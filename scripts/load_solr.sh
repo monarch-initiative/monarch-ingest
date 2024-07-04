@@ -60,10 +60,12 @@ scripts/add_update_processor.sh
 # todo: this should probably happen after associations, but putting it first for testing
 echo "Loading SSSOM mappings"
 grep -v "^#" data/monarch/mondo.sssom.tsv > headless.mondo.sssom.tsv
+grep -v "^#" data/monarch/gene_mappings.sssom.tsv > headless.gene_mappings.sssom.tsv
+grep -v "^#" data/monarch/mesh_chebi_biomappings.sssom.tsv > headless.mesh_chebi_biomappings.sssom.tsv
 # todo: copy the mappings to output/mappings as part of an earlier step
 poetry run lsolr bulkload -C sssom -s model.yaml headless.mondo.sssom.tsv
-poetry run lsolr bulkload -C sssom -s model.yaml data/monarch/gene_mappings.tsv
-poetry run lsolr bulkload -C sssom -s model.yaml data/monarch/chebi-mesh.biomappings.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.gene_mappings.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings.sssom.tsv
 
 echo "Loading entities"
 poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
