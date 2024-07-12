@@ -24,11 +24,11 @@ curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/ba
 
 echo "Starting the server"
 poetry run lsolr start-server
-sleep 30
+sleep 60
 
 echo "Adding cores"
 poetry run lsolr add-cores entity association sssom
-sleep 10
+sleep 30
 
 # todo: ideally, this will live in linkml-solr
 echo "Adding additional fieldtypes"
