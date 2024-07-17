@@ -1,5 +1,9 @@
 # `ingest`
 
+!!! tip "Tip"
+    Reminder; if you installed monarch-ingest using the instructions in the [Welcome](index.md) tab you will need to run the command
+    ```poetry shell```. Or subsititue all usages of ```ingest``` with ```poetry run ingest```.
+    
 **Usage**:
 
 ```console
