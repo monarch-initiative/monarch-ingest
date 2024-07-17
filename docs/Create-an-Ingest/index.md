@@ -30,7 +30,7 @@
 
     - Transform the data, for example:
         ```bash
-        ingest transform --tag ncbi_gene --row-limit 20 --log
+        ingest transform --ingest ncbi_gene --row-limit 20 --log
         ```
 
         or 
