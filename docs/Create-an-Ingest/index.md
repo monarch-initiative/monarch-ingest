@@ -18,7 +18,7 @@
 
     - Download the dataset for your ingest, for example:
         ```bash
-        ingest download --tags ncbi_gene
+        ingest download --ingests ncbi_gene
         ```
 
         or to download all source data:
