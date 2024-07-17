@@ -25,7 +25,7 @@ poetry config virtualenvs.in-project true
 
 1. Clone the repo and build the code:
 ```bash
-git clone git@github.com/monarch-initiative/monarch-ingest
+git clone https://github.com/monarch-initiative/monarch-ingest.git
 ```
 
 1. Install monarch-ingest:
