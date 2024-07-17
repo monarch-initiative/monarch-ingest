@@ -52,7 +52,7 @@ $ ingest download [OPTIONS]
 
 **Options**:
 
-* `--ingests TEXT`: Which ingests to download data for
+* `--ingests TEXT/LIST`: Which ingests to download data for (see [ingests.yaml](../src/monarch_ingest/ingests.yaml) for a list) (how to format multiple inputs [link](https://typer.tiangolo.com/tutorial/multiple-values/multiple-options/) )
 * `--all / --no-all`: Download all ingest datasets  [default: no-all]
 * `--help`: Show this message and exit.
 
@@ -138,7 +138,7 @@ $ ingest transform [OPTIONS]
 **Options**:
 
 * `-o, --output-dir TEXT`: Directory to output data  [default: output]
-* `-i, --ingest TEXT`: Run a single ingest (see ingests.yaml for a list)
+* `-i, --ingest TEXT`: Run a single ingest (see [ingests.yaml](../src/monarch_ingest/ingests.yaml) for a list)
 * `--phenio / --no-phenio`: Run the phenio transform  [default: no-phenio]
 * `-a, --all`: Ingest all sources
 * `-f, --force`: Force ingest, even if output exists (on by default for single ingests)
