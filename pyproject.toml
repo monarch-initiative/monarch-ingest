@@ -18,7 +18,7 @@ packages = [
 python = "^3.10"
 biolink-model = "^4.2.0"
 bmt = "^1.0.15"
-cat-merge = "0.2.1"
+cat-merge = ">=0.2.1"
 closurizer = "0.5.1"
 kghub-downloader = "^0.3.2"
 kgx = ">=2.4.0"
