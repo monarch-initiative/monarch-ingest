@@ -5,7 +5,7 @@ delimiter: '\t'
 header: none
 
 # We expand the ingest to extract orthology data from target species extracted out of "All Orthologs"
-file_archive: 'data/panther/AllOrthologs.tar.gz' # http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
+file_archive: './data/panther/AllOrthologs.tar.gz' # http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
 
 files:
   - 'AllOrthologs'
