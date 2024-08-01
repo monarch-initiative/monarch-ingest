@@ -9,9 +9,9 @@ header: none
 #    Xenbase gene symbol
 #    Xenbase gene name
 files:
- - 'data/xenbase/XenbaseGeneHumanOrthologMapping.txt'
- - 'data/xenbase/XenbaseGeneMouseOrthologMapping.txt'
- - 'data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt'
+ - './data/xenbase/XenbaseGeneHumanOrthologMapping.txt'
+ - './data/xenbase/XenbaseGeneMouseOrthologMapping.txt'
+ - './data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt'
 
 metadata:
   ingest_title: 'Xenbase'
