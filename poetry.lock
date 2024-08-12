@@ -1509,13 +1509,13 @@ validators = ">=0.20.0,<0.21.0"
 
 [[package]]
 name = "koza"
-version = "0.6.0"
+version = "0.6.1"
 description = "Data transformation framework for LinkML data models"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "koza-0.6.0-py3-none-any.whl", hash = "sha256:21be1eb8d8d6dd24901fe913bd3430aac472a3bc1460d84bf4e1936133a5f8a1"},
-    {file = "koza-0.6.0.tar.gz", hash = "sha256:6fbc2e693c9956df0c3fb8b8b4304baeec6bc9eb4377e85f7ec5e15228e47376"},
+    {file = "koza-0.6.1-py3-none-any.whl", hash = "sha256:f76fd3d34d4dcf7219e4fbed964eed5ecb59f85addb041d87d68818412743e48"},
+    {file = "koza-0.6.1.tar.gz", hash = "sha256:9cb789c474caab953122a562525fc19b6fdc50402190e771651ac0122069fde5"},
 ]
 
 [package.dependencies]
@@ -4148,4 +4148,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c4b15d97b11ee0aa71e86dacf9f70f72ca07684c63f27ea93f4f02756ab94f7b"
+content-hash = "a0802d48e64561b5f978cad6f38f8a6f822308f73c2bc3aadf6536937ab709d1"

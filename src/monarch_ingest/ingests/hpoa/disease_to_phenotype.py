@@ -37,6 +37,16 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
 )
 from monarch_ingest.ingests.hpoa.hpoa_utils import phenotype_frequency_to_hpo_term, Frequency
 
+def get_primary_knowledge_source(disease_id: str) -> str:
+    if disease_id.startswith("OMIM"):
+        return "infores:omim"
+    elif disease_id.startswith("ORPHA") or "orpha" in disease_id.lower():
+        return "infores:orphanet"
+    elif disease_id.startswith("DECIPHER"):
+        return "infores:decipher"
+    else:
+        raise ValueError(f"Unknown disease ID prefix for {disease_id}, can't set primary_knowledge_source")
+
 
 koza_app = get_koza_app("hpoa_disease_to_phenotype")
 
@@ -80,6 +90,8 @@ while (row := koza_app.get_row()) is not None:
     # don't populate the reference with the database_id / disease id
     publications = [p for p in publications if not p == row["database_id"]]
 
+    primary_knowledge_source = get_primary_knowledge_source(disease_id )
+
     # Association/Edge
     association = DiseaseToPhenotypicFeatureAssociation(
         id="uuid:" + str(uuid.uuid1()),
@@ -96,8 +108,8 @@ while (row := koza_app.get_row()) is not None:
         frequency_qualifier=frequency.frequency_qualifier if frequency.frequency_qualifier else None,
         has_count=frequency.has_count,
         has_total=frequency.has_total,
-        aggregator_knowledge_source=["infores:monarchinitiative"],
-        primary_knowledge_source="infores:hpo-annotations",
+        aggregator_knowledge_source=["infores:monarchinitiative","infores:hpo-annotations"],
+        primary_knowledge_source=primary_knowledge_source,
         knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
         agent_type=AgentTypeEnum.manual_agent,
     )
