@@ -65,8 +65,8 @@ columns:
   - mane_select
   - gencc
 
-depends_on:
-  - './src/monarch_ingest/maps/taxon-labels.yaml'
+#depends_on:
+#  - './src/monarch_ingest/maps/taxon-labels.yaml'
 
 node_properties:
   - 'id'
