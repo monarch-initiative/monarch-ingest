@@ -3,7 +3,6 @@ from koza.cli_utils import get_koza_app
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
 koza_app = get_koza_app("hgnc_gene")
-taxon_labels = koza_app.get_map("taxon-labels")
 
 while (row := koza_app.get_row()) is not None:
 
@@ -25,7 +24,7 @@ while (row := koza_app.get_row()) is not None:
     )
 
     in_taxon = "NCBITaxon:9606"
-    in_taxon_label = taxon_labels[in_taxon]["label"]
+    in_taxon_label = "Homo sapiens"
 
     gene = Gene(
         id=row["hgnc_id"],
