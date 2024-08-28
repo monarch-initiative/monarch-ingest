@@ -1,0 +1,22 @@
+name: 'hgnc-so-terms'
+
+metadata:
+  description: 'Mapping file to look up SO terms (aka type) for HGNC genes, generated from Alliance BGI files and provided by RGD'
+
+delimiter: '\t'
+
+files:
+  - './data/hgnc/hgnc_so_terms.tsv'
+
+header: 'none'
+
+columns:
+  - 'gene_id'
+  - 'so_term_id'
+
+key: 'gene_id'
+
+values:
+  - 'gene_id'
+  - 'so_term_id'
+

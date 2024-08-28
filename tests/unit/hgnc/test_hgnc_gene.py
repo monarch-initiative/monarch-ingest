@@ -27,15 +27,22 @@ def gene_row():
         "prev_name": "",
     }
 
+@pytest.fixture
+def so_term_map_cache():
+    return {
+        "hgnc-so-terms": {
+            "HGNC:24086": {"so_term_id": "SO:0001217"}
+        }
+    }
 
 @pytest.fixture
-def pax2a(mock_koza, source_name, gene_row, script, taxon_label_map_cache, global_table):
+def pax2a(mock_koza, source_name, gene_row, script, taxon_label_map_cache, so_term_map_cache, global_table):
     row = gene_row
     return mock_koza(
         source_name,
         row,
         script,
-        map_cache=taxon_label_map_cache,
+        map_cache=taxon_label_map_cache | so_term_map_cache,
         global_table=global_table,
     )
 
@@ -57,6 +64,10 @@ def test_gene_information_xref(pax2a):
     assert gene.xref
     assert gene.xref == ["ENSEMBL:ENSG00000148584", "OMIM:618199"]
 
+def test_gene_information_so_term(pax2a):
+    gene = pax2a[0]
+    assert gene.type
+    assert gene.type == ["SO:0001217"]
 
 # Commenting out publication ingests at least temporarily
 # def test_publication(pax2a):

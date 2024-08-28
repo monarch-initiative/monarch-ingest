@@ -9,6 +9,9 @@ delimiter: '\t'
 
 global_table: './src/monarch_ingest/translation_table.yaml'
 
+depends_on:
+  - './src/monarch_ingest/maps/hgnc-so-terms.yaml'
+
 columns:
   - hgnc_id
   - symbol
@@ -73,6 +76,7 @@ node_properties:
   - 'full_name'
   - 'in_taxon'
   - 'in_taxon_label'
+  - 'type'
   - 'xref'
   - 'synonym'
   - 'provided_by'

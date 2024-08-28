@@ -16,9 +16,9 @@ from loguru import logger
 
 koza_app = get_koza_app("alliance_gene_to_phenotype")
 
-while (row := koza_app.get_row()) is not None:
+gene_ids = koza_app.get_map("alliance-gene")
 
-    gene_ids = koza_app.get_map("alliance-gene")
+while (row := koza_app.get_row()) is not None:
 
     if len(row["phenotypeTermIdentifiers"]) == 0:
         logger.debug("Phenotype ingest record has 0 phenotype terms: " + str(row))
