@@ -1,4 +1,3 @@
-
 """ Monarch Data Dump
 
 This script is used to dump tsv files from the
@@ -12,8 +11,6 @@ directory_name:
   - solr_filter_2
 """
 
-import json
-from json import decoder
 from enum import Enum
 from pathlib import Path
 import logging
@@ -21,12 +18,9 @@ from typing import List
 
 import yaml
 import gzip
-import time
 import re
 import duckdb
 
-import requests
-from requests.exceptions import ChunkedEncodingError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,42 +34,40 @@ class OutputType(str, Enum):
 OUTPUT_TYPES = set(OutputType._member_names_)
 
 DEFAULT_FIELDS = [
-            'subject',
-            'subject_label',
-            'subject_category',
-            'subject_taxon',
-            'subject_taxon_label',
-            'negated',
-            'predicate',
-            'object',
-            'object_label',
-            'object_category',
-            'qualifiers',
-            'publications',
-            'has_evidence',
-            'primary_knowledge_source',
-            'aggregator_knowledge_source',
-        ]
+    'subject',
+    'subject_label',
+    'subject_category',
+    'subject_taxon',
+    'subject_taxon_label',
+    'negated',
+    'predicate',
+    'object',
+    'object_label',
+    'object_category',
+    'qualifiers',
+    'publications',
+    'has_evidence',
+    'primary_knowledge_source',
+    'aggregator_knowledge_source',
+]
 
 DISEASE_TO_PHENOTYPE_APPENDS = [
-            'onset_qualifier',
-            'onset_qualifier_label',
-            'frequency_qualifier',
-            'frequency_qualifier_label',
-            'sex_qualifier',
-            'sex_qualifier_label'
-    ]
+    'onset_qualifier',
+    'onset_qualifier_label',
+    'frequency_qualifier',
+    'frequency_qualifier_label',
+    'sex_qualifier',
+    'sex_qualifier_label',
+]
 
-GENE_TO_GENE_APPENDS = [
-            'object_taxon',
-            'object_taxon_label'
-    ]
+GENE_TO_GENE_APPENDS = ['object_taxon', 'object_taxon_label']
+
 
 def export(
     config_file: str = "./src/monarch_ingest/data-dump-config.yaml",
     output_dir: str = "./output/tsv/",
     output_format: OutputType = OutputType.tsv,
-    database_file = 'output/monarch-kg.duckdb'
+    database_file='output/monarch-kg.duckdb',
 ):
 
     if output_format not in OUTPUT_TYPES:
@@ -98,11 +90,12 @@ def export(
         category_name = camel_to_snake(re.sub(r'biolink:', '', association_category))
         file = f"{category_name}.all.{output_format.value}.gz"
         dump_file = str(dump_dir / file)
-        export_annotations(database=database,
-                                          fields=get_fields(association_category),
-                                          category=association_category,
-                                          output_file=dump_file,
-                                          )
+        export_annotations(
+            database=database,
+            fields=get_fields(association_category),
+            category=association_category,
+            output_file=dump_file,
+        )
         logger.info(f"finished writing {file}")
 
     # Fetch associations configured in config_file
@@ -116,23 +109,23 @@ def export(
         for file, filters in file_maps.items():
             dump_file = str(dump_dir / file)
             exploded = filters.get('exploded', False)
-            export_annotations(database=database,
-                               fields=get_fields(filters.get('category')),
-                               output_file=dump_file,
-                               category=filters.get('category'),
-                               subject_taxon=filters.get('taxon', None))
+            export_annotations(
+                database=database,
+                fields=get_fields(filters.get('category')),
+                output_file=dump_file,
+                category=filters.get('category'),
+                subject_taxon=filters.get('taxon', None),
+            )
 
             if exploded:
-                exploded_file = dump_file.replace(f'.{output_format.value}.gz',  f'.exploded.{output_format.value}.gz')
+                exploded_file = dump_file.replace(f'.{output_format.value}.gz', f'.exploded.{output_format.value}.gz')
                 export_exploded_annotations(
                     database=database,
                     category=filters.get('category'),
                     subject_taxon=filters.get('taxon', None),
                     fields=get_fields(filters.get('category')),
-                    output_file=exploded_file
+                    output_file=exploded_file,
                 )
-
-
 
 
 def get_fields(category: str) -> List[str]:
@@ -145,7 +138,8 @@ def get_fields(category: str) -> List[str]:
 
     return fields
 
-def export_annotations(database, fields: List[str], output_file: str, category: str, subject_taxon=None ):
+
+def export_annotations(database, fields: List[str], output_file: str, category: str, subject_taxon=None):
     taxon_filter = "subject_taxon = '{subject_taxon}' " if subject_taxon else ""
     sql = f""" 
     COPY (
@@ -156,11 +150,10 @@ def export_annotations(database, fields: List[str], output_file: str, category: 
     """
     database.execute(sql)
 
-def export_exploded_annotations(database,
-                                                         fields: List[str],
-                                                         output_file: str,
-                                                         category :str,
-                                                         subject_taxon :str = None):
+
+def export_exploded_annotations(
+    database, fields: List[str], output_file: str, category: str, subject_taxon: str = None
+):
 
     taxon_filter = f"AND subject_taxon = '{subject_taxon}'" if subject_taxon else ""
 
@@ -184,6 +177,7 @@ def export_exploded_annotations(database,
     print(output_file)
     database.execute(f"copy ({sql}) to '{output_file}' (header, delimiter '\t')")
 
+
 def get_association_categories(database) -> List[str]:
     sql = """
     SELECT DISTINCT category
@@ -193,8 +187,6 @@ def get_association_categories(database) -> List[str]:
     return [row[0] for row in database.execute(sql).fetchall()]
 
 
-
 def camel_to_snake(name):
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
-
