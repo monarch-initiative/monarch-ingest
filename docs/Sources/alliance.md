@@ -19,6 +19,8 @@ __**Biolink captured**__
     * source
     * synonyms
     * xref
+    * type (["SO:0001217"])
+
 
 ## [Gene to Phenotype](#gene_to_phenotype)
 

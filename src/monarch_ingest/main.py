@@ -164,9 +164,11 @@ def solr():
 def export():
     export_tsv()
 
+
 @typer_app.command()
 def prepare_release():
-    do_prepare_release();
+    do_prepare_release()
+
 
 @typer_app.command()
 def release(

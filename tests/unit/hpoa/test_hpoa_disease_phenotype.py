@@ -46,7 +46,7 @@ def test_disease_to_phenotype_transform_1(d2pf_entities_1):
     assert association.has_percentage == 100.0
     assert association.frequency_qualifier is None  # No implied frequency qualifier based on the '1/1' ratio.
     assert association.primary_knowledge_source == "infores:omim"
-    assert association.aggregator_knowledge_source == ["infores:monarchinitiative","infores:hpo-annotations"]
+    assert association.aggregator_knowledge_source == ["infores:monarchinitiative", "infores:hpo-annotations"]
 
 
 @pytest.fixture
@@ -90,7 +90,7 @@ def test_disease_to_phenotype_transform_2(d2pf_entities_2):
     assert association.has_quotient == 0.5
     assert association.frequency_qualifier is None  # No implied frequency qualifier based on the '50%' ratio.
     assert association.primary_knowledge_source == "infores:omim"
-    assert association.aggregator_knowledge_source == ["infores:monarchinitiative","infores:hpo-annotations"]
+    assert association.aggregator_knowledge_source == ["infores:monarchinitiative", "infores:hpo-annotations"]
 
 
 @pytest.fixture
@@ -137,8 +137,7 @@ def test_disease_to_phenotype_transform_3(d2pf_entities_3):
     assert association.has_quotient is None
     assert association.frequency_qualifier == "HP:0040283"  # "HP:0040283" implies Present in 5% to 29% of the cases.
     assert association.primary_knowledge_source == "infores:omim"
-    assert association.aggregator_knowledge_source == ["infores:monarchinitiative","infores:hpo-annotations"]
-
+    assert association.aggregator_knowledge_source == ["infores:monarchinitiative", "infores:hpo-annotations"]
 
 
 @pytest.fixture
@@ -182,7 +181,20 @@ def test_disease_to_phenotype_transform_frequency_fraction(d2pf_frequency_fracti
 
 @pytest.fixture
 def count_zero_entities(mock_koza, global_table):
-    row = {'database_id': 'OMIM:615654', 'disease_name': 'Deafness, autosomal dominant 58', 'qualifier': '', 'hpo_id': 'HP:0007663', 'reference': 'PMID:32337552', 'evidence': 'PCS', 'onset': '', 'frequency': '0/20', 'sex': '', 'modifier': '', 'aspect': 'P', 'biocuration': 'HPO:probinson[2024-03-15];HPO:probinson[2024-03-15]'}
+    row = {
+        'database_id': 'OMIM:615654',
+        'disease_name': 'Deafness, autosomal dominant 58',
+        'qualifier': '',
+        'hpo_id': 'HP:0007663',
+        'reference': 'PMID:32337552',
+        'evidence': 'PCS',
+        'onset': '',
+        'frequency': '0/20',
+        'sex': '',
+        'modifier': '',
+        'aspect': 'P',
+        'biocuration': 'HPO:probinson[2024-03-15];HPO:probinson[2024-03-15]',
+    }
 
     return mock_koza(
         name="hpoa_disease_to_phenotype",
@@ -203,7 +215,20 @@ def test_zero_fraction(count_zero_entities):
 
 @pytest.fixture
 def orphanet_entities(mock_koza, global_table):
-    row = {'database_id': 'ORPHA:79474', 'disease_name': 'Atypical Werner syndrome', 'qualifier': '', 'hpo_id': 'HP:0000347', 'reference': 'ORPHA:79474', 'evidence': 'TAS', 'onset': '', 'frequency': 'HP:0040281', 'sex': '', 'modifier': '', 'aspect': 'P', 'biocuration': 'ORPHA:orphadata[2024-06-25]'}
+    row = {
+        'database_id': 'ORPHA:79474',
+        'disease_name': 'Atypical Werner syndrome',
+        'qualifier': '',
+        'hpo_id': 'HP:0000347',
+        'reference': 'ORPHA:79474',
+        'evidence': 'TAS',
+        'onset': '',
+        'frequency': 'HP:0040281',
+        'sex': '',
+        'modifier': '',
+        'aspect': 'P',
+        'biocuration': 'ORPHA:orphadata[2024-06-25]',
+    }
     return mock_koza(
         name="hpoa_disease_to_phenotype",
         data=[row],
@@ -211,6 +236,7 @@ def orphanet_entities(mock_koza, global_table):
         global_table=global_table,
         local_table="./src/monarch_ingest/ingests/hpoa/hpoa-translation.yaml",
     )
+
 
 def test_orphanet_entities(orphanet_entities):
     entities = orphanet_entities

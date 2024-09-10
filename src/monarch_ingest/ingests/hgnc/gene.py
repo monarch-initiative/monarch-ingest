@@ -4,6 +4,8 @@ from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
 koza_app = get_koza_app("hgnc_gene")
 
+so_term_map = koza_app.get_map("hgnc-so-terms")
+
 while (row := koza_app.get_row()) is not None:
 
     xref_list = []
@@ -31,6 +33,7 @@ while (row := koza_app.get_row()) is not None:
         symbol=row["symbol"],
         name=row["symbol"],
         full_name=row["name"],
+        type=[so_term_map[row['hgnc_id']]['so_term_id']] if row['hgnc_id'] in so_term_map else None,
         xref=xref_list,
         synonym=synonyms_list,
         in_taxon=[in_taxon],

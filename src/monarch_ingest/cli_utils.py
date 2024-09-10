@@ -1,5 +1,4 @@
 import csv
-import gc
 import os
 import sys
 import tarfile
@@ -407,12 +406,13 @@ def apply_closure(
     )
     sh.mv(database, f"{output_dir}/")
 
+
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
 
 
 def load_solr():
-    sh.bash("scripts/load_solr.sh",  _out=sys.stdout, _err=sys.stderr)
+    sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
 
 
 def load_jsonl():
@@ -446,25 +446,30 @@ def load_jsonl():
     mv_node_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_node_columns])
     mv_edge_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_edge_columns])
 
-    db.sql(f"""
+    db.sql(
+        f"""
     copy (
       select nodes.* replace (ancestors as category, {mv_node_replacement}) 
       from nodes
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_nodes.jsonl' (FORMAT JSON);
-    """)
+    """
+    )
 
-    db.sql(f"""
+    db.sql(
+        f"""
     copy (
       select edges.* replace (ancestors as category, {mv_edge_replacement}),  
       from edges
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
-    """)
+    """
+    )
 
 
 def export_tsv():
     export()
+
 
 def do_prepare_release(dir: str = OUTPUT_DIR):
 

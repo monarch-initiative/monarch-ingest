@@ -49,6 +49,10 @@
   local_name: data/alliance/GENECROSSREFERENCE_COMBINED.tsv.gz
   tag: alliance_gene
 -
+  url: https://fms.alliancegenome.org/download/BGI_HUMAN.json.gz
+  local_name: data/alliance/BGI_HUMAN.json.gz
+  tag: hgnc_gene
+-
   url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
   local_name: data/alliance/BGI_MGI.json.gz
   tag: alliance_gene

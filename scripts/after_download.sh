@@ -1,7 +1,18 @@
 #!/bin/sh
 
+# set zcat to gzcat if gzcat is available
+if command -v gzcat &> /dev/null
+then
+    ZCAT=gzcat
+else
+    ZCAT=zcat
+fi
+
 # Make a simple text file of all the gene IDs in Alliance
-zcat data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | pigz > data/alliance/alliance_gene_ids.txt.gz
+${ZCAT} data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | pigz > data/alliance/alliance_gene_ids.txt.gz
+
+# Make a two column tsv of human gene IDs and SO terms
+${ZCAT} data/alliance/BGI_HUMAN.json.gz |  jq -r '.data[] | "\(.basicGeneticEntity.primaryId)\t\(.soTermId)"' > data/hgnc/hgnc_so_terms.tsv
 
 # Make an id, name map of DDPHENO terms
 sqlite3 -cmd ".mode tabs" -cmd ".headers on" data/dictybase/ddpheno.db "select subject as id, value as name from rdfs_label_statement where predicate = 'rdfs:label' and subject like 'DDPHENO:%'" > data/dictybase/ddpheno.tsv

@@ -49,8 +49,7 @@ while (row := koza_app.get_row()) is not None:
         symbol=row["symbol"],
         name=row["symbol"],
         full_name=row["name"].replace("\r", ""),  # Replacement to remove stray carriage returns in XenBase files
-        # No place in the schema for gene type (SO term) right now
-        # type=row["soTermId"],
+        type=[row["soTermId"]],
         in_taxon=[in_taxon],
         in_taxon_label=in_taxon_label,
         provided_by=[source],

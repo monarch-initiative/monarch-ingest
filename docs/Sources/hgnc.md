@@ -8,6 +8,8 @@ The HGNC is responsible for approving unique symbols and names for human loci, i
 
 This ingest uses HGNC's "complete set" download file, which only contains associations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. 
 
+SO terms to populate the type are taken from the Alliance genome HGNC BGI files, provided by RGD.
+
 __**Biolink Captured**__
 
 * biolink:Gene
@@ -24,6 +26,7 @@ __**Biolink Captured**__
       * omim id
     * in_taxon (["NCBITaxon:9606"])
     * provided_by  (["infores:hgnc"])
+    * type (["SO:0001217"])
 
 ## Citation
 
