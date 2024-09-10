@@ -1106,6 +1106,7 @@
 </ul>
 <h2 id="gene-information"><a href="#gene">Gene Information</a></h2>
 <p>This ingest uses HGNC's "complete set" download file, which only contains associations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. </p>
+<p>SO terms to populate the type are taken from the Alliance genome HGNC BGI files, provided by RGD.</p>
 <p><strong><strong>Biolink Captured</strong></strong></p>
 <ul>
 <li>biolink:Gene<ul>
@@ -1122,6 +1123,7 @@
 <li>omim id</li>
 <li>in_taxon (["NCBITaxon:9606"])</li>
 <li>provided_by  (["infores:hgnc"])</li>
+<li>type (["SO:0001217"])</li>
 </ul>
 </li>
 </ul>
