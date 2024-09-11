@@ -1,11 +1,19 @@
 #!/bin/sh
 
 # set zcat to gzcat if gzcat is available
-if command -v gzcat &> /dev/null
+if command -v gzcat
 then
     ZCAT=gzcat
 else
     ZCAT=zcat
+fi
+
+# set sed command to gsed if gsed is available (a crutch for OSX)
+if command -v gsed
+then
+    SED=gsed
+else
+    SED=sed
 fi
 
 # Make a simple text file of all the gene IDs in Alliance
@@ -26,7 +34,7 @@ awk '{ if ($2 == "rdfs:subClassOf" || $2 == "BFO:0000050" || $2 == "UPHENO:00000
 tar xfO data/monarch/kg-phenio.tar.gz merged-kg_nodes.tsv | grep ^NCBITaxon | cut -f 1,3 > data/monarch/taxon_labels.tsv
 
 # Repair Orphanet prefixes in MONDO sssom rows as necessary
-sed -i 's/\torphanet.ordo\:/\tOrphanet\:/g' data/monarch/mondo.sssom.tsv
+$SED -i 's/\torphanet.ordo\:/\tOrphanet\:/g' data/monarch/mondo.sssom.tsv
 
 # Repair mesh: prefixes in MONDO sssom rows as necessary
-sed -i 's@mesh:@MESH:@g' data/monarch/mondo.sssom.tsv
+$SED -i 's@mesh:@MESH:@g' data/monarch/mondo.sssom.tsv
