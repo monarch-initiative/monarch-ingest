@@ -11,7 +11,7 @@ def get_ingests():
 
 
 def get_ingest(source: str):
-    ingests = get_ingests
+    ingests = get_ingests()
     return yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
 
 
