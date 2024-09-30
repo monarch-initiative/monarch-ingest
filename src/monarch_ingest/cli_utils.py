@@ -430,7 +430,12 @@ def load_jsonl():
     all_slot_names = biolink_model.all_slots().keys()
 
     # this may appear to be unused, but it's accessed in the duckdb sql queries below
-    class_ancestor_df = pandas.DataFrame(list(class_ancestor_dict.items()), columns=['classname', 'ancestors'])
+    class_ancestor_df = pandas.DataFrame(
+        [(classname, ancestors, '|'.join(ancestors)) for classname, ancestors in class_ancestor_dict.items()],
+        columns=['classname', 'ancestors', 'ancestors_str']
+    )
+
+    db.sql("create or replace table class_ancestors as select * from class_ancestor_df")
 
     node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
     edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
@@ -459,13 +464,22 @@ def load_jsonl():
     db.sql(
         f"""
     copy (
-      select edges.* replace (ancestors as category, {mv_edge_replacement}),  
+      select  subject as "subject:START_ID", predicate as "predicate:TYPE", object as "object:END_ID", edges.* exclude (subject, predicate, object)
       from edges
         join class_ancestor_df on category = classname  
-    ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
+    ) to 'output/monarch-kg_edges.neo4j.csv' (FORMAT CSV);
     """
     )
-
+    db.sql(
+        f"""
+    copy (
+      select id as "id:ID", ancestors_str as "category:LABEL", nodes.* exclude (category,id) 
+      from nodes
+        join class_ancestor_df on category = classname  
+     group by all  
+    ) to 'output/monarch-kg_nodes.neo4j.csv' (FORMAT CSV);
+        """
+    )
 
 def export_tsv():
     export()
