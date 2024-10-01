@@ -12,8 +12,7 @@
 #docker run -v $(pwd)/output:/backup -v neo4j-v4-data:/data --entrypoint neo4j-admin neo4j:4.4 dump --to /backup/monarch-kg.neo4j.dump
 
 echo "Building Neo4j 5 Artifact"
-docker rm -f neo5 || True
-docker volume rm neo4j-v5-data || True
-mkdir neo4j-v5-data || True
-rm -rf neo4j-v5-data || True
-docker run --rm --name neo5  -v $(pwd)/scripts:/scripts -v $(pwd)/neo4j-v5-data:/data -v $(pwd)/output:/import -v $(pwd)/output:/backup neo4j:5.2 /scripts/neo4j_load_and_dump.sh
+
+chmod -R +w output # make the output directory writeable by all so that the neo4j docker container can write to it
+docker run --rm -v $(pwd)/scripts:/scripts -v $(pwd)/output:/import neo4j:5.2 /scripts/neo4j_load_and_dump.sh
+
