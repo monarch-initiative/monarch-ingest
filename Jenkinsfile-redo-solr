@@ -49,8 +49,13 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
-                                description: 'Run KGX Transforms',
-                                name: 'KGX_TRANSFORMS'
+                                description: 'Run RDF Export',
+                                name: 'RDF'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
+                                description: 'Create neo4j dump',
+                                name: 'NEO4J'
                             ),
                             booleanParam(
                                 defaultValue: false,
@@ -158,14 +163,24 @@ pipeline {
                sh 'poetry run ingest jsonl'
            }
         }
-        stage('kgx-transforms'){
+        stage('rdf'){
             when {
                expression {
-                   return params.KGX_TRANSFORMS
+                   return params.RDF
                    }
             }
             steps {
-                sh './scripts/kgx_transforms.sh'
+                sh 'poetry run ingest rdf'
+            }
+        }
+        stage('neo4j') {
+            when {
+                expression {
+                   return params.NEO4J
+                }
+            }
+            steps {
+                sh 'poetry run ingest neo4j'
             }
         }
         stage('upload files') {

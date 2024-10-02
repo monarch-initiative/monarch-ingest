@@ -13,6 +13,8 @@ from monarch_ingest.cli_utils import (
     load_jsonl,
     load_sqlite,
     load_solr,
+    load_rdf,
+    load_neo4j,
     merge_files,
     transform_one,
     transform_phenio,
@@ -149,6 +151,13 @@ def closure():
 def jsonl():
     load_jsonl()
 
+@typer_app.command()
+def rdf():
+    load_rdf()
+
+@typer_app.command()
+def neo4j():
+    load_neo4j()
 
 @typer_app.command()
 def sqlite():

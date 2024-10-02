@@ -84,9 +84,14 @@ pipeline {
                 sh 'poetry run ingest solr'
             }
         }
-        stage('kgx-transforms'){
+        stage('rdf') {
             steps {
-                sh './scripts/kgx_transforms.sh'
+                sh 'poetry run ingest rdf'
+            }
+        }
+        stage('neo4j') {
+            steps {
+                sh 'poetry run ingest neo4j'
             }
         }
         stage('sqlite') {

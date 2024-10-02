@@ -410,10 +410,32 @@ def apply_closure(
 def load_sqlite():
     sh.bash("scripts/load_sqlite.sh")
 
+def load_rdf():
+    sh.poetry("run kgx transform -i tsv -c tar.gz -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.tar.gz".split(), _out=sys.stdout, _err=sys.stderr)
 
 def load_solr():
     sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
 
+def load_neo4j():
+    #sh.docker("run --rm -v $(pwd)/scripts:/scripts -v $(pwd)/output:/import neo4j:5.2 /scripts/neo4j_load_and_dump.sh".split(), _out=sys.stdout, _err=sys.stderr)
+    import docker
+    os.makedirs(f"{os.getcwd()}/neo4j-dump", mode=0o777, exist_ok=True)
+    client = docker.from_env()
+    client.containers.run(
+        "neo4j:5.2",
+        "/scripts/neo4j_load_and_dump.sh",
+        remove=True,
+        volumes={
+            f"{os.getcwd()}/neo4j-dump": {'bind': '/dump', 'mode': 'rw'},
+            f"{os.getcwd()}/scripts": {'bind': '/scripts', 'mode': 'rw'},
+            f"{os.getcwd()}/output": {'bind': '/import', 'mode': 'rw'}
+        },
+        stream=True,
+        stdout=True,
+        stderr=True
+    )
+    sh.mv(f"{os.getcwd()}/neo4j-dump/monarch-kg.neo4j.dump", f"{os.getcwd()}/output/monarch-kg.neo4j.dump")
+    os.rmdir(f"{os.getcwd()}/neo4j-dump")
 
 def load_jsonl():
     # if output/monarch-kg.duckdb.gz exists, decompress it
