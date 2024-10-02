@@ -416,6 +416,10 @@ def load_solr():
 
 
 def load_jsonl():
+    # if output/monarch-kg.duckdb.gz exists, decompress it
+    if Path("output/monarch-kg.duckdb.gz").exists():
+        sh.pigz("-d", "output/monarch-kg.duckdb.gz")
+
     db = duckdb.connect('output/monarch-kg.duckdb')
 
     biolink_model = SchemaView(
