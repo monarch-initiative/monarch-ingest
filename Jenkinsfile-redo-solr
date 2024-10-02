@@ -94,7 +94,6 @@ pipeline {
                     mkdir data || true
                     gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/$RELEASE/* output/
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    gunzip -c output/monarch-kg.duckdb.gz > data/monarch-kg.duckdb
                     ls -lasdf
                 '''
             }

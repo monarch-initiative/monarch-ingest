@@ -13,6 +13,13 @@
 
 echo "Building Neo4j 5 Artifact"
 
-chmod -R +w output # make the output directory writeable by all so that the neo4j docker container can write to it
+# if monarch-kg.duckdb.gz is present, unzip it
+if [ -f output/monarch-kg.duckdb.gz ]; then
+    echo "Unzipping monarch-kg.duckdb.gz"
+    gunzip output/monarch-kg.duckdb.gz
+fi
+
+chmod -R 777 output # make the output directory writeable by all so that the neo4j docker container can write to it
+ls -la output
 docker run --rm -v $(pwd)/scripts:/scripts -v $(pwd)/output:/import neo4j:5.2 /scripts/neo4j_load_and_dump.sh
 
