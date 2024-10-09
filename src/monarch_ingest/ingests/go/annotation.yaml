@@ -83,6 +83,7 @@ edge_properties:
   - 'negated'
   - 'has_evidence'
   - 'object'
+  - 'publications'
   - 'aggregator_knowledge_source'
   - 'primary_knowledge_source'
   - 'knowledge_level'

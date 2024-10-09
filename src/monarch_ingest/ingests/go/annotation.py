@@ -18,7 +18,6 @@ from monarch_ingest.ingests.go.annotation_utils import (
 )
 from loguru import logger
 
-
 koza_app = get_koza_app("go_annotation")
 
 # for row in koza_app.source: # doesn't play nice with tests
@@ -101,6 +100,8 @@ while (row := koza_app.get_row()) is not None:
             # actual primary knowledge source of the GOA knowledge statement
             assigned_by = get_infores(row['Assigned_By'])
 
+            publications = [p.replace('MGI:MGI:','MGI:') for p in row['DB_Reference'].split("|")] if row['DB_Reference'] else []
+
             # Instantiate the appropriate Gene-to-GO Term instance
             association = gene_go_term_association_class(
                 id="uuid:" + str(uuid.uuid1()),
@@ -109,6 +110,7 @@ while (row := koza_app.get_row()) is not None:
                 predicate=predicate,
                 negated=negated,
                 has_evidence=[eco_term],
+                publications=publications,
                 # subject_context_qualifier=ncbitaxa,  # Biolink Pydantic model support missing for this slot
                 aggregator_knowledge_source=["infores:monarchinitiative"],
                 primary_knowledge_source=assigned_by,
