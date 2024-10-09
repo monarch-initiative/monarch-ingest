@@ -1440,13 +1440,13 @@ test = ["tox"]
 
 [[package]]
 name = "kghub-downloader"
-version = "0.3.8"
+version = "0.3.10"
 description = "Downloads and caches files for knowledge graph ETL"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "kghub_downloader-0.3.8-py3-none-any.whl", hash = "sha256:d8a2b6f9502d84caf700e8736f06cb82f0dfd0e06ab7ee1ee63f9e37acf90ed6"},
-    {file = "kghub_downloader-0.3.8.tar.gz", hash = "sha256:a77dd62b1a00ca0d5d6ea81dbe983c4293bb71e6a9c73c6174cb309a771fc9ce"},
+    {file = "kghub_downloader-0.3.10-py3-none-any.whl", hash = "sha256:8e41bac81cf9915df8f68ea23802f8d48bec77efa65973d86f76595e0cd021b4"},
+    {file = "kghub_downloader-0.3.10.tar.gz", hash = "sha256:e28a585c48b15552e4d908dae50672110729a65e9775ebc752d0cb953bff1069"},
 ]
 
 [package.dependencies]
@@ -4148,4 +4148,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a0802d48e64561b5f978cad6f38f8a6f822308f73c2bc3aadf6536937ab709d1"
+content-hash = "320604e7b58dc6876adfb41a80c3cdec437db8b722b001e68915d48fb091e70a"
