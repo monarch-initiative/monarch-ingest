@@ -504,5 +504,6 @@ def test_mgi_curie(mgi_entities):
     association = [association for association in mgi_entities if isinstance(association, Association)][0]
     assert association
     assert association.subject == "MGI:1918911"
+    assert association.publications == ["MGI:2156816", "GO_REF:0000015"]
     assert association.primary_knowledge_source == "infores:mgi"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source
