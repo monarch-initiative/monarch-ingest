@@ -272,7 +272,7 @@
 
 # HGNC
 -
-  url: http://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/tsv/hgnc_complete_set.txt
+  url: http://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
   local_name: data/hgnc/hgnc_complete_set.txt
   tag: hgnc_gene
 
