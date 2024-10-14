@@ -8,8 +8,17 @@ nodes:
       min: 14000
     hgnc_gene_nodes:
       min: 43000
-    ncbi_gene_nodes:
-      min: 196000
+    ncbi_gene_9823_nodes:
+      min: 45000
+    ncbi_gene_9031_nodes:
+      min: 32000
+    ncbi_gene_227321_nodes:
+      min: 10000
+    ncbi_gene_9615_nodes:
+      min: 50000
+    ncbi_gene_9913_nodes:
+      min: 57000
+
     phenio_nodes:
       min: 288000
     pombase_gene_nodes:
@@ -19,7 +28,7 @@ nodes:
     clinvar_variant_nodes:
       min: 7000
     clingen_variant_nodes:
-      min: 7000
+      min: 5600
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
