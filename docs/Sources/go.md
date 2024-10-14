@@ -43,6 +43,7 @@ __**Associations**__
     * object (go_term.id)
     * negated
     * has_evidence
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source
 
@@ -55,6 +56,7 @@ OR
     * object (go_term.id)
     * negated
     * has_evidence
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source
     
@@ -65,6 +67,7 @@ OR
     * object (go_term.id)
     * negated
     * has_evidence
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source
 
@@ -75,6 +78,7 @@ OR
     * object (go_term.id)
     * negated
     * has_evidence
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source
 
@@ -87,6 +91,7 @@ __**Possible Additional Gene to Gene Ontology Term Association?**__
     * object (go_term.id)
     * negated
     * has_evidence
+    * publications
     * aggregating_knowledge_source (["infores:monarchinitiative"])
     * primary_knowledge_source
 
