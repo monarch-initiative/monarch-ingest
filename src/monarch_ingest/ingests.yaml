@@ -19,6 +19,14 @@ clinvar_variant:
   url:
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_nodes.tsv'
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_edges.tsv'
+ncbi_gene:
+  url:
+      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
+      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9913_nodes.tsv'
+      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
+      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
+      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
+
 
 ## Ingests within this repository
 
@@ -54,8 +62,6 @@ hpoa_gene_to_phenotype:
   config: 'ingests/hpoa/gene_to_phenotype.yaml'
 # mgi_publication_to_gene:
 #   config: 'ingests/mgi/publication_to_gene.yaml'
-ncbi_gene:
-  config: 'ingests/ncbi/gene.yaml'
 panther_genome_orthologs:
   config: 'ingests/panther/genome_orthologs.yaml'
 pombase_gene:
