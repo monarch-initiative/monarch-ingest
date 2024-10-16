@@ -398,6 +398,7 @@ def apply_closure(
             "onset_qualifier",
             "sex_qualifier",
             "stage_qualifier",
+            "disease_context_qualifier"
         ],
         node_fields=["has_phenotype"],
         evidence_fields=["has_evidence", "publications"],

@@ -61,7 +61,7 @@ columns:
   - lncrnadb
   - enzyme_id
   - intermediate_filament_db
-  - rna_central_ids
+  - rna_central_id
   - lncipedia
   - gtrnadb
   - agr
