@@ -16,14 +16,11 @@ clinvar_variant:
   url:
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_nodes.tsv'
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_edges.tsv'
-hpoa_disease_mode_of_inheritance:
+hpoa:
   url:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_mode_of_inheritance_edges.tsv'
-hpoa_disease_to_phenotype:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_to_phenotype_edges.tsv'
-hpoa_gene_to_disease:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_disease_edges.tsv'
-hpoa_gene_to_phenotype:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_phenotype_edges.tsv'
 ncbi_gene:
   url:
