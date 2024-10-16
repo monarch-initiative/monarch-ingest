@@ -40,21 +40,4 @@ while (row := koza_app.get_row()) is not None:
         in_taxon_label=in_taxon_label,
         provided_by=["infores:hgnc"],
     )
-
-    # Excluding pub to gene associations for now
-    # pubmed_id_list = row["pubmed_id"].split('|')
-    # for each_id in pubmed_id_list:
-    #     publication_id = "PMID:" + each_id
-    #     publication = Publication(
-    #         id=publication_id,
-    #         type=koza_app.translation_table.resolve_term("publication"),
-    #     )
-    #     relation = koza_app.translation_table.resolve_term("mentions"),
-    #     association = InformationContentEntityToNamedThingAssociation(
-    #         id="uuid:" + str(uuid.uuid1()),
-    #         subject=gene.id,
-    #         predicate=Predicate.mentions,
-    #         object=publication.id,
-    #     )
-
     koza_app.write(gene)
