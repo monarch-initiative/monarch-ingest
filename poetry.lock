@@ -1464,13 +1464,13 @@ typer = ">=0.12.3,<0.13.0"
 
 [[package]]
 name = "kgx"
-version = "2.4.0"
+version = "2.4.2"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "kgx-2.4.0-py3-none-any.whl", hash = "sha256:51f612cb25aa47ce9a702db3902bb689f5346e27af602ba556033ded99f4e543"},
-    {file = "kgx-2.4.0.tar.gz", hash = "sha256:6b15d59d4a3057fed39b3450e5ea02611099688fc9e355682c498ea97c5413e2"},
+    {file = "kgx-2.4.2-py3-none-any.whl", hash = "sha256:87875d9a6f5d595ed84c99516abd6a6edf5b8d1f9a2dee493ed4e2d7d2a1e3fd"},
+    {file = "kgx-2.4.2.tar.gz", hash = "sha256:16279cc8a772655a60ad0e98a2c6ee4b9670f30271fd492c1a508f735d8d02b4"},
 ]
 
 [package.dependencies]
@@ -1479,7 +1479,7 @@ cachetools = ">=5.0.0,<6.0.0"
 Click = "*"
 deprecation = ">=2.1.0,<3.0.0"
 docker = ">=6.0.0,<7.0.0"
-docutils = ">=0.18.1,<0.19.0"
+docutils = ">=0.18.1"
 ijson = ">=3.1.3,<4.0.0"
 inflection = ">=0.5.1,<0.6.0"
 jsonlines = ">=4.0.0,<5.0.0"
@@ -1487,7 +1487,7 @@ jsonstreams = ">=0.6.0,<0.7.0"
 linkml = ">=1.7.7,<2.0.0"
 linkml-runtime = ">=1.7.5,<2.0.0"
 mypy = "*"
-neo4j = ">=4.4.10,<5.0.0"
+neo4j = ">=4.4.10"
 networkx = "*"
 ordered-set = ">=4.0.2,<5.0.0"
 pandas = ">1.0.3"
@@ -4148,4 +4148,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "320604e7b58dc6876adfb41a80c3cdec437db8b722b001e68915d48fb091e70a"
+content-hash = "85cd70b33e9d0dfd578d00abd9062923cdca3df58a854f7d86112932f0eee103"

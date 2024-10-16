@@ -8,9 +8,6 @@ alliance_phenotype:
 alliance_disease_association:
   url:
     - 'https://github.com/monarch-initiative/alliance-disease-association-ingest/releases/latest/download/alliance_disease_edges.tsv'
-zfin_genotype_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
 clingen_variant:
   url:
     - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
@@ -19,6 +16,15 @@ clinvar_variant:
   url:
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_nodes.tsv'
     - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_edges.tsv'
+hpoa_disease_mode_of_inheritance:
+  url:
+    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_mode_of_inheritance_edges.tsv'
+hpoa_disease_to_phenotype:
+    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_to_phenotype_edges.tsv'
+hpoa_gene_to_disease:
+    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_disease_edges.tsv'
+hpoa_gene_to_phenotype:
+    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_phenotype_edges.tsv'
 ncbi_gene:
   url:
       - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
@@ -26,7 +32,9 @@ ncbi_gene:
       - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
       - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
       - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
-
+zfin_genotype_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
 
 ## Ingests within this repository
 
