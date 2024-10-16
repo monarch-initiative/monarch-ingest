@@ -50,8 +50,6 @@ biogrid:
   config: 'ingests/biogrid/biogrid.yaml'
 ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
-# flybase_publication_to_gene::
-#   config: 'ingests/flybase/publication_to_gene.yaml'
 dictybase_gene:
   config: 'ingests/dictybase/gene.yaml'
 dictybase_gene_to_phenotype:
@@ -60,16 +58,6 @@ go_annotation:
   config: 'ingests/go/annotation.yaml'
 hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
-hpoa_disease_to_phenotype:
-  config: 'ingests/hpoa/disease_to_phenotype.yaml'
-hpoa_gene_to_disease:
-  config: 'ingests/hpoa/gene_to_disease.yaml'
-hpoa_disease_mode_of_inheritance:
-  config: 'ingests/hpoa/disease_mode_of_inheritance.yaml'
-hpoa_gene_to_phenotype:
-  config: 'ingests/hpoa/gene_to_phenotype.yaml'
-# mgi_publication_to_gene:
-#   config: 'ingests/mgi/publication_to_gene.yaml'
 panther_genome_orthologs:
   config: 'ingests/panther/genome_orthologs.yaml'
 pombase_gene:
@@ -82,10 +70,6 @@ reactome_gene_to_pathway:
   config: 'ingests/reactome/gene_to_pathway.yaml'
 reactome_pathway:
   config: 'ingests/reactome/pathway.yaml'
-# rgd_publication_to_gene:
-#   config: 'ingests/rgd/publication_to_gene.yaml'
-# sgd_publication_to_gene:
-#   config: 'ingests/sgd/publication_to_gene.yaml'
 string_protein_links:
   config: 'ingests/string/protein_links.yaml'
 xenbase_gene_to_phenotype:
@@ -94,10 +78,6 @@ xenbase_orthologs:
   config: 'ingests/xenbase/orthologs.yaml'
 xenbase_non_entrez_orthologs:
   config: 'ingests/xenbase/non_entrez_orthologs.yaml'
-# xenbase_publication_to_gene:
-#   config: 'ingests/xenbase/publication_to_gene.yaml'
 zfin_gene_to_phenotype:
   config: 'ingests/zfin/gene_to_phenotype.yaml'
-# zfin_publication_to_gene:
-#   config: 'ingests/zfin/publication_to_gene.yaml'
 
