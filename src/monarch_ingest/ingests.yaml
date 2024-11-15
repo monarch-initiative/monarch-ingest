@@ -32,6 +32,11 @@ ncbi_gene:
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
+go_annotation:
+  url:
+    - 'https://github.com/monarch-initiative/go-ingest/releases/latest/download/go_annotation_edges.tsv'
+
+
 
 ## Ingests within this repository
 
@@ -51,8 +56,6 @@ dictybase_gene:
   config: 'ingests/dictybase/gene.yaml'
 dictybase_gene_to_phenotype:
   config: 'ingests/dictybase/gene_to_phenotype.yaml'
-go_annotation:
-  config: 'ingests/go/annotation.yaml'
 hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
 panther_genome_orthologs:
