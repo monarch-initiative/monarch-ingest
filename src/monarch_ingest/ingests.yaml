@@ -22,6 +22,8 @@ hpoa:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_to_phenotype_edges.tsv'
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_disease_edges.tsv'
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_phenotype_edges.tsv'
+maxo_annotation:
+  url: 'https://github.com/monarch-initiative/maxo-annotation-ingest/releases/latest/download/maxo_annotation_edges.tsv'
 ncbi_gene:
   url:
       - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
