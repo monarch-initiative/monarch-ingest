@@ -390,15 +390,20 @@ def apply_closure(
         closure_file=closure_file,
         edges_output_file=edges_output_file,
         nodes_output_file=nodes_output_file,
+        # full closure expansion for these fields
         edge_fields=[
             "subject",
             "object",
+            "disease_context_qualifier",
+        ],
+        #  just populate _label, _category, _namespace properties for these fields
+        edge_fields_to_label=[
             "qualifiers",
-            "frequency_qualifier",
-            "onset_qualifier",
-            "sex_qualifier",
+            "species_context_qualifier",
             "stage_qualifier",
-            "disease_context_qualifier"
+            "sex_qualifier",
+            "onset_qualifier",
+            "frequency_qualifier",
         ],
         node_fields=["has_phenotype"],
         evidence_fields=["has_evidence", "publications"],

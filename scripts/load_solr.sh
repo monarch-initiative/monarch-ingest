@@ -19,8 +19,8 @@ echo "Download the schema from monarch-py"
 
 # retrieve the schema from the main branch on monarch-app
 
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-disease-context-qualifier/backend/src/monarch_py/datamodels/model.yaml
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-disease-context-qualifier/backend/src/monarch_py/datamodels/similarity.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-species-context-qualifier/backend/src/monarch_py/datamodels/model.yaml
+curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-species-context-qualifier/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
 poetry run lsolr start-server
