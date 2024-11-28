@@ -246,8 +246,8 @@
   local_name: data/monarch/kg-phenio.tar.gz
   tag: phenio
 -
-  url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.tar.gz
-  local_name: data/monarch/phenio-relation-graph.tar.gz
+  url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.tsv.gz
+  local_name: data/monarch/phenio-relation-graph.tsv.gz
   tag: phenio
 -
   url: https://s3.amazonaws.com/bbop-sqlite/phenio.db.gz
@@ -446,11 +446,11 @@
 
 ### Xenbase
 -
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
   local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
   tag: xenbase_publication_to_gene
 -
-  url: http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/LiteratureMatchedGenesByPaper.txt
   local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
   tag: xenbase_publication_to_gene
 -
@@ -461,17 +461,17 @@
 #### Xenopus orthologs
 
 - # Homo sapiens (human)
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneHumanOrthologMapping.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneHumanOrthologMapping.txt
   local_name: data/xenbase/XenbaseGeneHumanOrthologMapping.txt
   tag: xenbase_orthologs
 
 - # Mus musculus (house mouse)
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneMouseOrthologMapping.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneMouseOrthologMapping.txt
   local_name: data/xenbase/XenbaseGeneMouseOrthologMapping.txt
   tag: xenbase_orthologs
 
 - # Danio rerio (Zebrafish)
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneZebrafishOrthologMapping.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneZebrafishOrthologMapping.txt
   local_name: data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt
   tag: xenbase_orthologs
 
@@ -479,7 +479,7 @@
 # TODO: parse this oddball non-Entrez ortholog file separately?
 #
 - # Non-Entrez OMIM, MGI, and ZFIN genes
-  url: http://ftp.xenbase.org/pub/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
+  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
   local_name: data/xenbase/XenbaseGeneNonEntrezOrthologMapping.txt
   tag: xenbase_non_entrez_orthologs
 

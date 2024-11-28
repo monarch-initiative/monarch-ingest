@@ -8,6 +8,9 @@ alliance_phenotype:
 alliance_disease_association:
   url:
     - 'https://github.com/monarch-initiative/alliance-disease-association-ingest/releases/latest/download/alliance_disease_edges.tsv'
+biogrid:
+  url:
+    - 'https://github.com/monarch-initiative/biogrid-ingest/releases/latest/download/biogrid_gene_to_gene_edges.tsv'
 clingen_variant:
   url:
     - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
@@ -23,14 +26,15 @@ hpoa:
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_disease_edges.tsv'
     - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_phenotype_edges.tsv'
 maxo_annotation:
-  url: 'https://github.com/monarch-initiative/maxo-annotation-ingest/releases/latest/download/maxo_annotation_edges.tsv'
+  url: 
+    - 'https://github.com/monarch-initiative/maxo-annotation-ingest/releases/latest/download/maxo_annotation_edges.tsv'
 ncbi_gene:
   url:
-      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
-      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9913_nodes.tsv'
-      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
-      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
-      - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
+    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
+    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9913_nodes.tsv'
+    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
+    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
+    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
@@ -46,12 +50,8 @@ alliance_gene:
   config: 'ingests/alliance/gene.yaml'
 alliance_gene_to_expression:
   config: 'ingests/alliance/gene_to_expression.yaml'
-# alliance_publication:
-#  config: 'ingests/alliance/publication.yaml'
 bgee_gene_to_expression:
   config: 'ingests/bgee/gene_to_expression.yaml'
-biogrid:
-  config: 'ingests/biogrid/biogrid.yaml'
 ctd_chemical_to_disease:
   config: 'ingests/ctd/chemical_to_disease.yaml'
 dictybase_gene:

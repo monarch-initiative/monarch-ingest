@@ -26,7 +26,7 @@ ${ZCAT} data/alliance/BGI_HUMAN.json.gz |  jq -r '.data[] | "\(.basicGeneticEnti
 sqlite3 -cmd ".mode tabs" -cmd ".headers on" data/dictybase/ddpheno.db "select subject as id, value as name from rdfs_label_statement where predicate = 'rdfs:label' and subject like 'DDPHENO:%'" > data/dictybase/ddpheno.tsv
 
 # Unpack the phenio relation graph file
-tar -xzf data/monarch/phenio-relation-graph.tar.gz -C data/monarch/
+gunzip data/monarch/phenio-relation-graph.tsv.gz 
 
 awk '{ if ($2 == "rdfs:subClassOf" || $2 == "BFO:0000050" || $2 == "UPHENO:0000001") { print } }' data/monarch/phenio-relation-graph.tsv > data/monarch/phenio-relation-filtered.tsv
 
