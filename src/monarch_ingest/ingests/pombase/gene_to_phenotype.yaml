@@ -21,7 +21,7 @@ columns:
     - 'Parental strain'
     - 'Strain name (background)'
     - 'Genotype description'
-    - 'Gene name'
+    - 'Gene symbol'
     - 'Allele name'
     - 'Allele synonym'
     - 'Allele type'

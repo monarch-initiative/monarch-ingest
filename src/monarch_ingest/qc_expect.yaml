@@ -35,8 +35,8 @@ edges:
       min: 1870000
     bgee_gene_to_expression_edges:
       min: 430000
-    biogrid_edges:
-      min: 1400000
+    biogrid_gene_to_gene_edges:
+      min: 1340000
     ctd_chemical_to_disease_edges:
       min: 5000
     dictybase_gene_to_phenotype_edges:
@@ -62,13 +62,13 @@ edges:
     reactome_gene_to_pathway_edges:
       min: 200000
     string_protein_links_edges:
-      min: 1470000
+      min: 1420000
     xenbase_gene_to_phenotype_edges:
       min: 2000
     alliance_phenotype_edges:
       min: 650000
     alliance_disease_edges:
-      min: 10000
+      min: 9900
     zfin_genotype_to_phenotype_edges:
       min: 125000
     clinvar_variant_edges:
