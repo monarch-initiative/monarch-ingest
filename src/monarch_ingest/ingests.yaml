@@ -41,7 +41,9 @@ zfin_genotype_to_phenotype:
 go_annotation:
   url:
     - 'https://github.com/monarch-initiative/go-ingest/releases/latest/download/go_annotation_edges.tsv'
-
+zfin_orthology:
+  url:
+    - 'https://github.com/monarch-initiative/zfin-orthology-ingest/releases/latest/download/zfin_orthology_edges.tsv'
 
 
 ## Ingests within this repository

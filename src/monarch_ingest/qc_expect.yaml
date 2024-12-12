@@ -71,6 +71,8 @@ edges:
       min: 9900
     zfin_genotype_to_phenotype_edges:
       min: 125000
+    zfin_orthology_edges:
+      min: 62186
     clinvar_variant_edges:
       min: 19000
     clingen_variant_edges:
