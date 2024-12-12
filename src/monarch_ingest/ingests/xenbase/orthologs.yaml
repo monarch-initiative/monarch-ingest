@@ -25,6 +25,9 @@ columns:
  - 'xb_gene_symbol'
  - 'xb_gene_name'
 
+depends_on:
+  - './src/monarch_ingest/maps/genepage-2-gene.yaml'
+  
 edge_properties:
   - 'id'
   - 'category'
