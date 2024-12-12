@@ -65,6 +65,8 @@ edges:
       min: 1420000
     xenbase_gene_to_phenotype_edges:
       min: 2000
+    xenbase_orthologs_edges:
+      min: 136746
     alliance_phenotype_edges:
       min: 650000
     alliance_disease_edges:
