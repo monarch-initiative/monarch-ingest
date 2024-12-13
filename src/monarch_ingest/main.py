@@ -8,6 +8,7 @@ from monarch_ingest.cli_utils import (
     do_prepare_release,
     do_release,
     export_tsv,
+    create_qc_reports,
     get_data_versions,
     get_pkg_versions,
     load_jsonl,
@@ -164,6 +165,10 @@ def solr():
 def export():
     export_tsv()
 
+@typer_app.command()
+def report():
+    """Run Koza QC on specified Monarch ingests"""
+    create_qc_reports()
 
 @typer_app.command()
 def prepare_release():
