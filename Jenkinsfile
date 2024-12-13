@@ -69,6 +69,11 @@ pipeline {
                 sh 'poetry run ingest closure'
             }
         }
+        stage('report') {
+            steps {
+                sh 'poetry run ingest report'
+            }
+        }
         stage('kgx-graph-summary') {
             steps {
                 sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'

@@ -473,6 +473,23 @@ def load_jsonl():
     )
 
 
+def create_qc_reports():
+    database_file = "output/monarch-kg.duckdb"
+    # error if the database exists but needs to be gunzipped
+    if Path(database_file + ".gz").is_file():
+        raise FileExistsError(database_file + ".gz", "Database exists but needs to be decompressed")
+    # error if the database doesn't exist
+    if not Path(database_file).is_file():
+        raise FileNotFoundError(database_file, "Database not found")
+    
+    qc_sql = Path("scripts/generate_reports.sql")
+    if not qc_sql.is_file():
+        raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
+    sql = qc_sql.read_text()
+
+    con = duckdb.connect('output/monarch-kg.duckdb')
+    con.execute(sql)
+
 def export_tsv():
     export()
 
