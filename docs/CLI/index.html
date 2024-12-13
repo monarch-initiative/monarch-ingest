@@ -497,6 +497,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      ingest report
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-solr" class="md-nav__link">
     <span class="md-ellipsis">
       ingest solr
@@ -1196,6 +1205,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      ingest report
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-solr" class="md-nav__link">
     <span class="md-ellipsis">
       ingest solr
@@ -1260,6 +1278,7 @@
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>prepare-release</code></li>
 <li><code>release</code>: Copy data to Monarch GCP data buckets</li>
+<li><code>report</code>: Run Koza QC on specified Monarch ingests</li>
 <li><code>solr</code></li>
 <li><code>sqlite</code></li>
 <li><code>transform</code>: Run Koza transformation on specified...</li>
@@ -1329,6 +1348,15 @@
 <ul>
 <li><code>--dir TEXT</code>: Directory with kg to be released  [default: output]</li>
 <li><code>--kghub / --no-kghub</code>: Also release to kghub S3 bucket  [default: no-kghub]</li>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-report"><code>ingest report</code></h2>
+<p>Run Koza QC on specified Monarch ingests</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-solr"><code>ingest solr</code></h2>
