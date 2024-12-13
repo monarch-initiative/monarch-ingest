@@ -182,8 +182,3 @@ copy (
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
 
-
--- panther stuff 
--- select * from 'qc/missing_nodes_report.parquet' where edge_primary_knowledge_source = 'infores:panther';
--- select * from 'qc/normalized_node_report.parquet' where edge_primary_knowledge_source = 'infores:panther';
--- create or replace panther as select * from read_csv('AllOrthologs', names=['gene','ortholog', 'type', 'ancestor', 'panther_id'])
