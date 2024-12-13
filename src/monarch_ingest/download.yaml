@@ -246,7 +246,7 @@
   local_name: data/monarch/kg-phenio.tar.gz
   tag: phenio
 -
-  url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.tsv.gz
+  url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.gz
   local_name: data/monarch/phenio-relation-graph.tsv.gz
   tag: phenio
 -
