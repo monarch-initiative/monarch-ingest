@@ -65,6 +65,13 @@ copy (
 ) to 'output/qc/missing_nodes.parquet';
 
 copy (
+    select distinct missing_node
+    from 'output/qc/missing_nodes.parquet' 
+    where split_part(missing_node, ':', 1) in (select distinct split_part(id,':',1) from nodes where provided_by = 'phenio_nodes')
+    order by missing_node
+) to 'output/qc/missing_phenio_nodes.tsv' (format 'csv', delimiter E'\t', header false);
+
+copy (
     select edge_ingest,
         edge_primary_knowledge_source,
         split_part(missing_node, ':', 1) as namespace,       
