@@ -607,7 +607,7 @@ def clone_release(release_ver: str,
 
     if light:        
         sh.gsutil(*f"-q -m cp -r gs://data-public-monarchinitiative/{kg_path}/{release_ver}/monarch-kg.tar.gz output/".split(" "))
-        sh.gsutil(*f"-q -m cp -r gs://data-public-monarchinitiative/{kg_path}/{release_ver}/qc/dangling_edges.tsv output/".split(" "))
+        sh.gsutil(*f"-q -m cp -r gs://data-public-monarchinitiative/{kg_path}/{release_ver}/qc/monarch-kg-dangling-edges.tsv.gz output/".split(" "))
 
     else:
         sh.gsutil(*f"-q -m cp -r gs://data-public-monarchinitiative/{kg_path}/{release_ver}/* output/".split(" "))
