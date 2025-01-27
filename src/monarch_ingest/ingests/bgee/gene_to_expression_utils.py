@@ -36,18 +36,20 @@ def write_group(rows: List, koza_app: KozaApp):
         koza_app (KozaApp): The KozaApp to use for output of rows.
     """
     for row in rows:
-        association = GeneToExpressionSiteAssociation(
-            id="uuid:" + str(uuid.uuid1()),
-            subject="ENSEMBL:" + row['Gene ID'],
-            predicate='biolink:expressed_in',
-            object=row['Anatomical entity ID'],
-            primary_knowledge_source="infores:bgee",
-            aggregator_knowledge_source=["infores:monarchinitiative"],
-            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-            agent_type=AgentTypeEnum.not_provided,
-        )
+        anatomical_entities = row['Anatomical entity ID'].split(' ∩ ')
+        for anatomical_entity in anatomical_entities:
+            association = GeneToExpressionSiteAssociation(
+                id="uuid:" + str(uuid.uuid1()),
+                subject="ENSEMBL:" + row['Gene ID'],
+                predicate='biolink:expressed_in',
+                object=anatomical_entity.strip(),
+                primary_knowledge_source="infores:bgee",
+                aggregator_knowledge_source=["infores:monarchinitiative"],
+                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                agent_type=AgentTypeEnum.not_provided,
+            )
 
-        koza_app.write(association)
+            koza_app.write(association)
 
 
 def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
@@ -68,12 +70,25 @@ def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
     elif koza_app.previous_row is None:
         return None
 
-    rows = [koza_app.previous_row]
-    current_row = koza_app.get_row()
+    rows = []
+    current_row = koza_app.previous_row
 
-    while rows[0][col] == current_row[col]:
-        rows.append(current_row)
-        current_row = koza_app.get_row()
+    while current_row[col] == koza_app.previous_row[col]:
+        if " ∩ " in current_row['Anatomical entity ID']:
+            multiple_entities = [
+                entity.strip().replace('"','') for entity in current_row['Anatomical entity ID'].split(' ∩ ')
+            ]
+            for entity in multiple_entities:
+                split_row = current_row.copy()
+                split_row['Anatomical entity ID'] = entity.strip()
+                rows.append(split_row)
+        else:
+            rows.append(current_row)
+
+        try:
+            current_row = koza_app.get_row()
+        except StopIteration:
+            break
 
     koza_app.previous_row = current_row
     return rows

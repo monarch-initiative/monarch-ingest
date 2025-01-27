@@ -67,7 +67,15 @@ def get_koza_rows(mock_koza: KozaApp, n_rows: int) -> List[Dict]:
     """
     rows = []
     for i in range(0, n_rows):
-        rows.append(mock_koza.get_row())
+        row = mock_koza.get_row()
+        if " ∩ " in row['Anatomical entity ID']:
+            entities = [entity.strip().replace('"','') for entity in row['Anatomical entity ID'].split(" ∩ ")]
+            for entity in entities:
+                split_row = row.copy()
+                split_row['Anatomical entity ID'] = entity.strip()
+                rows.append(split_row)
+        else:
+            rows.append(row)
     return rows
 
 
@@ -87,14 +95,20 @@ def bgee_test_output_format() -> str:
 
 
 @pytest.fixture
-def bgee_test_files() -> List[str]:
+def bgee_test_file() -> List[str]:
     return ["tests/unit/bgee/test_bgee.tsv.gz"]
 
+@pytest.fixture
+def bgee_test_file_2() -> List[str]:
+    return ["tests/unit/bgee/test_bgee_2.tsv.gz"]
 
 @pytest.fixture
-def bgee_mock_koza_rows(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files) -> KozaApp:
-    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files)
+def bgee_mock_koza_rows(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file)
 
+@pytest.fixture
+def bgee_mock_koza_rows_2(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file_2) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file_2)
 
 @pytest.fixture
 def row_group_1(bgee_mock_koza_rows) -> List[Dict]:
@@ -105,6 +119,10 @@ def row_group_1(bgee_mock_koza_rows) -> List[Dict]:
 def row_group_2(bgee_mock_koza_rows) -> List[Dict]:
     _ = get_koza_rows(bgee_mock_koza_rows, 5)
     return get_koza_rows(bgee_mock_koza_rows, 22)
+
+@pytest.fixture
+def row_group_3(bgee_mock_koza_rows_2) -> List[Dict]:
+    return get_koza_rows(bgee_mock_koza_rows_2, 3)
 
 
 @pytest.fixture
@@ -146,8 +164,12 @@ def test_filter_group_by_rank_long(row_group_2, filter_col, smallest_n):
 
 
 @pytest.fixture
-def bgee_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files) -> KozaApp:
-    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_files)
+def bgee_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file)
+
+@pytest.fixture
+def bgee_mock_koza_2(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file_2) -> KozaApp:
+    return get_mock_koza(bgee_yaml, global_table, bgee_test_output, bgee_test_output_format, bgee_test_file_2)
 
 
 def test_write_group(row_group_1, bgee_mock_koza):
@@ -165,10 +187,24 @@ def test_write_group(row_group_1, bgee_mock_koza):
         assert item.subject == 'ENSEMBL:ENSSSCG00000000002'
         assert item.object == object_list[index]
 
+def test_write_group_2(row_group_3, bgee_mock_koza_2):
+    write_group(row_group_3, bgee_mock_koza_2)
+    write_result: list[GeneToExpressionSiteAssociation] = bgee_mock_koza_2._entities
+    assert len(write_result) == 5
+    object_list = ['UBERON:0000473', 'CL:0000089', 'UBERON:0000123', 'UBERON:0000473', 'CL:0000089']
+    predicate_ist = ['ENSEMBL:ENSSSCG00000000419', 'ENSEMBL:ENSSSCG00000000419', 'ENSEMBL:ENSSSCG00000000419', 'ENSEMBL:ENSSSCG00000000457', 'ENSEMBL:ENSSSCG00000000457']
+    prev_uuid = 0
+    for index, item in enumerate(write_result):
+        assert isinstance(item, GeneToExpressionSiteAssociation)
+        assert item.id != prev_uuid
+        prev_uuid = item.id
+        assert item.category == ['biolink:GeneToExpressionSiteAssociation']
+        assert item.predicate == 'biolink:expressed_in'
+        assert item.subject == predicate_ist[index]
+        assert item.object == object_list[index]
 
-def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
+def test_get_row_group(bgee_mock_koza, row_group_1, filter_col):
     row_group = get_row_group(bgee_mock_koza)
-
     assert isinstance(row_group, list)
     assert len(row_group) == 5
     for i in row_group:
@@ -176,6 +212,13 @@ def test_get_row_group(bgee_mock_koza, row_group_1, filter_col) -> List:
 
     assert row_group == row_group_1
 
+def test_get_row_group_inter_split(bgee_mock_koza_2, row_group_3, filter_col) -> List:
+    row_group = get_row_group(bgee_mock_koza_2)
+    assert isinstance(row_group, list)
+    assert len(row_group) == 3
+    assert len(row_group_3) == 5
+    for i in row_group:
+        assert isinstance(i, dict)
 
 # Ignoring process_koza_sources for now as it depends completely on above tested functions but goes deeper into Koza.
 # def test_process_koza_source(bgee_mock_koza):
