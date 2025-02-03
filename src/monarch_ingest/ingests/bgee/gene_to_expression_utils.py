@@ -36,20 +36,28 @@ def write_group(rows: List, koza_app: KozaApp):
         koza_app (KozaApp): The KozaApp to use for output of rows.
     """
     for row in rows:
+        obj = row['Anatomical entity ID']
         anatomical_entities = row['Anatomical entity ID'].split(' ∩ ')
-        for anatomical_entity in anatomical_entities:
-            association = GeneToExpressionSiteAssociation(
-                id="uuid:" + str(uuid.uuid1()),
-                subject="ENSEMBL:" + row['Gene ID'],
-                predicate='biolink:expressed_in',
-                object=anatomical_entity.strip(),
-                primary_knowledge_source="infores:bgee",
-                aggregator_knowledge_source=["infores:monarchinitiative"],
-                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.not_provided,
-            )
+        object_specialization_qualifier = None
+        if len(anatomical_entities) == 2:
+            if ':' not in anatomical_entities[0] or ':' not in anatomical_entities[1]:
+                raise CurieParsingError([anatomical_entities[0], anatomical_entities[1]], row)
+            obj = anatomical_entities[0]
+            object_specialization_qualifier = anatomical_entities[1]
 
-            koza_app.write(association)
+        association = GeneToExpressionSiteAssociation(
+            id="uuid:" + str(uuid.uuid1()),
+            subject="ENSEMBL:" + row['Gene ID'],
+            predicate='biolink:expressed_in',
+            object=obj,
+            primary_knowledge_source="infores:bgee",
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+            agent_type=AgentTypeEnum.not_provided,
+            object_specialization_qualifier=object_specialization_qualifier,
+        )
+
+        koza_app.write(association)
 
 
 def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
@@ -70,25 +78,12 @@ def get_row_group(koza_app: KozaApp, col: str = 'Gene ID') -> Union[List, None]:
     elif koza_app.previous_row is None:
         return None
 
-    rows = []
-    current_row = koza_app.previous_row
+    rows = [koza_app.previous_row]
+    current_row = koza_app.get_row()
 
-    while current_row[col] == koza_app.previous_row[col]:
-        if " ∩ " in current_row['Anatomical entity ID']:
-            multiple_entities = [
-                entity.strip().replace('"','') for entity in current_row['Anatomical entity ID'].split(' ∩ ')
-            ]
-            for entity in multiple_entities:
-                split_row = current_row.copy()
-                split_row['Anatomical entity ID'] = entity.strip()
-                rows.append(split_row)
-        else:
-            rows.append(current_row)
-
-        try:
-            current_row = koza_app.get_row()
-        except StopIteration:
-            break
+    while rows[0][col] == current_row[col]:
+        rows.append(current_row)
+        current_row = koza_app.get_row()
 
     koza_app.previous_row = current_row
     return rows
@@ -105,3 +100,14 @@ def process_koza_source(koza_app: KozaApp):
     while (row_group := get_row_group(koza_app)) is not None:
         rank_filtered_rows = filter_group_by_rank(row_group, col='Expression rank', smallest_n=10)
         write_group(rank_filtered_rows, koza_app)
+
+
+class CurieParsingError(Exception):
+    """
+    Exception raised for errors in parsing the Anatomical Entity ID.
+    """
+    def __init__(self, invalid_values: List[str], row, message: str = "Invalid CURIE format"):
+        self.invalid_values = invalid_values
+        full_msg = f"{message}: {', '.join(invalid_values)} in row: {row}" if isinstance(invalid_values, list) else f"{message}: {invalid_values}"
+        super().__init__(full_msg)
+        self.message = full_msg
