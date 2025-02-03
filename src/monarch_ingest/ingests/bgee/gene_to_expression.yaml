@@ -77,5 +77,6 @@ edge_properties:
   - 'aggregator_knowledge_source'
   - 'knowledge_level'
   - 'agent_type'
+  - 'object_specialization_qualififier'
 
 transform_mode: 'flat'
