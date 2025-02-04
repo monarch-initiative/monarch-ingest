@@ -36,7 +36,7 @@ yamllint = "^1.35.1"
 linkml-runtime = "^1.7.5"
 # Remove this once cat-merge fixes its pandas dependency
 pandas = "2.0.3"
-closurizer = "0.7.2"
+closurizer = "0.7.3"
 notebook = "^7.3.2"
 
 [tool.poetry.group.dev]
