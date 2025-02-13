@@ -4,7 +4,7 @@ Unit tests for Panther Gene Orthology relationships ingest
 
 import pytest
 from koza.utils.testing_utils import mock_koza  # noqa: F401
-
+from src.monarch_ingest.ingests.panther.orthology_utils import parse_gene
 
 @pytest.fixture
 def source_name():
@@ -490,6 +490,23 @@ def gene_orderedlocusname_prefix_gene_spec_string(mock_koza, source_name, script
 def test_gene_orderedlocusname_gene_spec_string(gene_orderedlocusname_prefix_gene_spec_string):
     assert len(gene_orderedlocusname_prefix_gene_spec_string) == 0
 
+
+@pytest.mark.parametrize(
+    "gene_entry, expected_gene",
+    [
+        ("HUMAN|HGNC=11477|UniProtKB=Q6GZX4", "HGNC:11477"),
+        ("DANRE|ZFIN=ZDB-GENE-040625-156|UniProtKB=Q6GZX1", "ZFIN:ZDB-GENE-040625-156"),
+        ("DANRE|Ensembl=ENSDARG00000116066.1|UniProtKB=A0A2R8PYX8", "ENSEMBL:ENSDARG00000116066"),
+        ("CAEEL|WormBase=WBGene00007022|UniProtKB=Q197F5", "WB:WBGene00007022"),
+        ("SCHPO|PomBase=SPAC20G8.06|UniProtKB=P87112", "PomBase:SPAC20G8.06"),
+        ("MOUSE|MGI=MGI=2442402|UniProtKB=Q6ZQ08", "MGI:2442402"),
+        ("CHICK|GeneID=395772|UniProtKB=O93532", "NCBIGene:395772"),
+    ])
+def test_parse_gene(gene_entry, expected_gene):    
+    (parsed_species, parsed_gene) = parse_gene(gene_entry)
+    assert parsed_species
+    assert parsed_gene
+    assert parsed_gene == expected_gene
 
 # RMB: 12-Oct-2022: we needed to recognize EnsemblGenome prefix entries for Aspergillus, so this unit test now fails
 # TODO: The scientific value of EnsemblGenome entries requires closer review.
