@@ -7,6 +7,7 @@ Utility functions for Panther Orthology data processing
 # from tarfile import (open as tar_open, ReadError, CompressionError, TarInfo)
 # from datetime import datetime
 
+import re
 from typing import Optional, Tuple  # , List
 
 # from io import TextIOWrapper
@@ -91,7 +92,16 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
             raise RuntimeError(
                 f"parse_gene_id(): Namespace '{spec_part[0]}' is not mappable to a canonical namespace? Ignoring..."
             )
+        if prefix == "ENSEMBL" and re.match(r"^ENS", spec_part[1]):
+            # if spec_part[1] ends with .1, .2, etc. we should strip that off, but only to strip versions from ENSEMBL IDs,
+            # (e.g. ENSG00000123456.1 => ENSG00000123456), PomBase IDs use the same syntax but are not version numbers to throw away
+            # Aspergillus ENSEMBL IDs also possibly have a version number, but we don't yet have a mapping for those IDs with or without
+            # the version, so it's staying in for now and this is limiting to only ensembl IDs that use the standard ENSEMBL:ENS* format
+            if re.match(r".*\.\d{1,2}$", spec_part[1]):
+                spec_part[1] = re.sub(r"\.\d{1,2}$", "", spec_part[1])
+        print(f"{prefix}:{spec_part[1]}")
         return f"{prefix}:{spec_part[1]}"
+
 
     elif len(spec_part) == 3 and spec_part[1] == "MGI":
         # Odd special case of MGI
