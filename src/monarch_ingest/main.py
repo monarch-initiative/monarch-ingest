@@ -2,7 +2,6 @@ import sys
 from typing import List, Optional
 
 import yaml
-from cat_merge.merge import merge
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure,
@@ -39,7 +38,6 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
 
 @typer_app.command()
 def download(
-    #XKCD
     ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see download.yaml for a list)"),
     ingests: Optional[List[str]] = typer.Option(None, "--ingests", help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets"),
@@ -88,7 +86,7 @@ def transform(
 ):
     """Run Koza transformation on specified Monarch ingests"""
     if(ingest!=None and ingests!=None):
-            raise ValueError(f'Bad "ingest download" cli config. Flags have been provided for both for "--ingest/-i" and "--ingests". Only provide one of these flags.Provided "--ingest/-i" is {ingest}, provided "--ingests" is {ingests}.')
+            raise ValueError(f'Bad "ingest transform" cli config. Flags have been provided for both for "--ingest/-i" and "--ingests". Only provide one of these flags.Provided "--ingest/-i" is {ingest}, provided "--ingests" is {ingests}.')
 
 
     if phenio:
