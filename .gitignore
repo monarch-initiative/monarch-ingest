@@ -143,3 +143,6 @@ test-output/
 
 # Transform logs
 logs/
+
+#Poetry lock file
+poetry.lock
