@@ -35,6 +35,12 @@ ncbi_gene:
     - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
     - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
     - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
+upheno_phenotype_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/upheno-cross-species-ingest/releases/download/latest/upheno_phenotype_to_phenotype_edges.tsv'
+upheno_filtered_phenotype_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/upheno-cross-species-ingest/releases/download/latest/upheno_phenotype_to_phenotype_filtered_edges.tsv'
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
