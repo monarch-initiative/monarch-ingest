@@ -19,8 +19,10 @@ from monarch_ingest.cli_utils import (
     transform_phenio,
     transform_all,
 )
+from monarch_ingest.utils.log_utils import get_logger
 
 import typer
+
 
 typer_app = typer.Typer()
 
@@ -146,9 +148,10 @@ def merge(
     verbose: Optional[bool] = typer.Option(
         None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose"
     ),
+    kg_name: str = typer.Option("monarch-kg", "--kg-name", "--kg_name", help="The name of the kg being produced. Merge artificat will be ultimately be stored in output/$KG_NAME.tar.gz"),
 ):
     """Merge nodes and edges into kg"""
-    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
 
     # load qc_report.yaml from output_dir
     qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))

@@ -48,17 +48,21 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
 
+    logger.info(f"Running ingest: {ingest}")
     # if a url is provided instead of a config, just download the file and copy it to the output dir
     if "url" in ingests[ingest]:
+        logger.info(f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output")
         for url in ingests[ingest]["url"]:
             filename = url.split("/")[-1]
 
             if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
+                logger.info(f"{ingest}: {url} already found at {output_dir}/transform_output/{filename}")
                 continue
 
             response = requests.get(url, allow_redirects=True)
             with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
                 f.write(response.content)
+                logger.info(f"{ingest}: {url} downloaded to {output_dir}/transform_output/{filename}")
         return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
@@ -72,7 +76,7 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         return
 
-    logger.info(f"Running ingest: {ingest}")
+
     try:
         transform_source(
             source=source_file.as_posix(),
