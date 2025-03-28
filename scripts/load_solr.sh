@@ -70,9 +70,17 @@ poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings
 echo "Loading entities"
 poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
 
-echo "Loading associations"
-poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor output/monarch-kg-denormalized-edges.tsv
-curl "http://localhost:8983/solr/association/select?q=*:*"
+# echo "Split the associations file using gnu parallel"
+file_size=$(ls -l output/monarch-kg-denormalized-edges.tsv | awk '{print $5}')
+num_cores=$(nproc)
+block_size=$((file_size / num_cores))
+cat output/monarch-kg-denormalized-edges.tsv | parallel --header : --pipe --block "$block_size" --jobs "$num_cores" 'cat > denormalized-edges-part-{#}.csv'
+
+# echo "Loading associations"
+parallel 'poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor {}' ::: denormalized-edges-part-*.csv
+
+# poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor output/monarch-kg-denormalized-edges.tsv
+# curl "http://localhost:8983/solr/association/select?q=*:*"
 
 mkdir solr-data || true
 

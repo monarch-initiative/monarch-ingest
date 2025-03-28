@@ -16,7 +16,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
         "name": "*_t",
         "type": "text",
         "indexed": true,
-        "stored": false,
+        "stored": true,
         "multiValued": true
     }
 }' http://localhost:8983/solr/entity/schema
@@ -28,7 +28,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
         "name": "*_ac",
         "type": "autocomplete",
         "indexed": true,
-        "stored": false,
+        "stored": true,
         "multiValued": true
     }
 }' http://localhost:8983/solr/entity/schema
@@ -40,7 +40,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
         "name": "*_grounding",
         "type": "grounding",
         "indexed": true,
-        "stored": false,
+        "stored": true,
         "multiValued": true,
     }
 }' http://localhost:8983/solr/entity/schema
