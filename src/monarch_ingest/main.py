@@ -38,11 +38,17 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
 
 @typer_app.command()
 def download(
-    ingests: Optional[List[str]] = typer.Option(None, help="Which ingests to download data for"),
+    ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see download.yaml for a list)"),
+    ingests: Optional[List[str]] = typer.Option(None, "--ingests", help="Which ingests to download data for"),
     all: bool = typer.Option(False, help="Download all ingest datasets"),
     write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
     """Downloads data defined in download.yaml"""
+    if(ingest!=None and ingests!=None):
+            raise ValueError(f'Bad "ingest download" cli config. Flags have been provided for both for "--ingest/-i" and "--ingests". Only provide one of these flags.Provided "--ingest/-i" is {ingest}, provided "--ingests" is {ingests}.')
+    if(ingest!=None):
+        ingests=[ingest]
+    
     if ingests:
         download_from_yaml(
             yaml_file="src/monarch_ingest/download.yaml",
@@ -60,6 +66,7 @@ def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
     output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
     ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see ingests.yaml for a list)"),
+    ingests: Optional[List[str]] = typer.Option(None, "--ingests", help="Which ingests to download data for"),
     phenio: bool = typer.Option(False, help="Run the phenio transform"),
     all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
     force: bool = typer.Option(
@@ -78,6 +85,10 @@ def transform(
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
+    if(ingest!=None and ingests!=None):
+            raise ValueError(f'Bad "ingest transform" cli config. Flags have been provided for both for "--ingest/-i" and "--ingests". Only provide one of these flags.Provided "--ingest/-i" is {ingest}, provided "--ingests" is {ingests}.')
+
+
     if phenio:
         transform_phenio(output_dir=output_dir, force=force, verbose=verbose)
     elif ingest:
@@ -90,6 +101,17 @@ def transform(
             verbose=verbose,
             log=log,
         )
+    elif ingests:
+        for ingest in ingests:
+            transform_one(
+                ingest=ingest,
+                output_dir=output_dir,
+                row_limit=row_limit,
+                rdf=rdf,
+                force=True if force is None else force,
+                verbose=verbose,
+                log=log,
+            )
     elif all:
         transform_all(
             output_dir=output_dir,
