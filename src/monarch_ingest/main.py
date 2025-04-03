@@ -101,13 +101,13 @@ def transform(
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
-    if(ingest==None and ingests==None and ingest_file==None and all==False):
-        raise ValueError('Bad "ingest transform" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all. None of these flags are provided.')
-    #The following checks that *exactly* one of ingest, ingests, and ingest_file is set (i.e. has a value other than None).
+    if(ingest==None and ingests==None and ingest_file==None and all==False and phenio==False):
+        raise ValueError('Bad "ingest transform" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all, or --phenio. None of these flags are provided.')
+    #The following checks that *exactly* one of ingest, ingests, ingest_file, all, or phenio is set (i.e. has a value other than None).
     # If this isn't the case, we need to fail. 
-    if(((ingest!=None) + (ingests!=None) + (ingest_file!=None) + (all!=False)) != 1):
+    if(((ingest!=None) + (ingests!=None) + (ingest_file!=None) + (all!=False) + (phenio!=False)) != 1):
         raise ValueError(f'Bad "ingest transform" cli config. Exactly one flag can to be provided for the following options"--ingest/-i"'+\
-                          f'"--ingests", "--ingest_file", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all}.')
+                          f'"--ingests", "--ingest_file", "--phenio", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all},"--phenio"={phenio}.')
 
     if(ingest): ingests=[ingest]
     if(ingest_file): ingests=getIngestFromFile(ingest_file)
@@ -157,7 +157,8 @@ def merge(
     qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))
     # edge_counts = {item["name"]: item["total_number"] for item in qc_report["edges"]}
     # load expected count yaml
-    expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
+    if(kg_name=="monarch-kg"):expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
+    else: expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
     error = False
     for type in ['nodes', 'edges']:
         counts = {item["name"]: item["total_number"] for item in qc_report[type]}
