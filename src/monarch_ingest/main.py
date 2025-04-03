@@ -159,6 +159,7 @@ def merge(
     # load expected count yaml
     if(kg_name=="monarch-kg"):expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
     else: expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
+    
     error = False
     for type in ['nodes', 'edges']:
         counts = {item["name"]: item["total_number"] for item in qc_report[type]}

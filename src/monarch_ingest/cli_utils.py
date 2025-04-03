@@ -54,7 +54,8 @@ def transform_one(
         logger.info(f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output")
         for url in ingests[ingest]["url"]:
             filename = url.split("/")[-1]
-
+            #Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/ 
+            os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
             if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
                 logger.info(f"{ingest}: {url} already found at {output_dir}/transform_output/{filename}")
                 continue
