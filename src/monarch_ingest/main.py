@@ -37,18 +37,12 @@ def callback(version: Optional[bool] = typer.Option(None, "--version", is_eager=
         typer.echo(f"monarch_ingest version: {__version__}")
         raise typer.Exit()
 
-def getIngestFromFile(ingest_file_path : Path):
-    ingests = []
-    with open(ingest_file_path) as f: 
-        for ingest in f: ingests.append(ingest.strip())
-    return ingests
-
 
 @typer_app.command()
 def download(
     ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see download.yaml for a list)"),
     ingests: Optional[List[str]] = typer.Option(None, "--ingests", help="Which ingests to download data for"),
-    ingest_file: Path = typer.Option(None, "--ingest_file", help="A flat file which has a newline seperated list of ingests to perform."),
+    ingest_file: Path = typer.Option(None, "--ingest_file", help="A yaml file which has a newline seperated list of ingests to perform."),
     all: bool = typer.Option(False, help="Download all ingest datasets"),
     write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
@@ -62,7 +56,7 @@ def download(
                           f'"--ingests", "--ingest_file", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all}.')
 
     if(ingest): ingests=[ingest]
-    if(ingest_file): ingests=getIngestFromFile(ingest_file)
+    if(ingest_file): ingests=yaml.safe_load(open(ingest_file))
 
     if ingests:
         download_from_yaml(
@@ -82,7 +76,7 @@ def transform(
     output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
     ingest: str = typer.Option(None, "--ingest", "-i", help="Run a single ingest (see ingests.yaml for a list)"),
     ingests: Optional[List[str]] = typer.Option(None, "--ingests", help="Which ingests to download data for"),
-    ingest_file: Path = typer.Option(None, "--ingest_file", help="A flat file which has a newline seperated list of ingests to perform."),
+    ingest_file: Path = typer.Option(None, "--ingest_file", help="A yaml file which has a newline seperated list of ingests to perform."),
     phenio: bool = typer.Option(False, help="Run the phenio transform"),
     all: bool = typer.Option(False, "--all", "-a", help="Ingest all sources"),
     force: bool = typer.Option(
@@ -110,7 +104,7 @@ def transform(
                           f'"--ingests", "--ingest_file", "--phenio", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all},"--phenio"={phenio}.')
 
     if(ingest): ingests=[ingest]
-    if(ingest_file): ingests=getIngestFromFile(ingest_file)
+    if(ingest_file): ingests=yaml.safe_load(open(ingest_file))
 
     if phenio:
         transform_phenio(output_dir=output_dir, force=force, verbose=verbose)

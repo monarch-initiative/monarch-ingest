@@ -1,3 +1,0 @@
-hgnc_gene
-mapping
-phenio

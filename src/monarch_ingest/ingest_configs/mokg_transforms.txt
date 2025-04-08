@@ -1,3 +1,0 @@
-upheno_phenotype_to_phenotype
-hpoa
-hgnc_gene
