@@ -240,6 +240,33 @@
   local_name: data/monarch/mesh_chebi_biomappings.sssom.tsv
   tag: mapping
 
+# Mapping files below are loaded into Solr for lookup & display, but not used in in the KG merge
+-
+  url: https://data.monarchinitiative.org/mappings/latest/hp_mesh.sssom.tsv
+  local_name: data/monarch/hp_mesh.sssom.tsv
+  tag: mapping
+-
+  url: https://data.monarchinitiative.org/mappings/latest/nbo-go.sssom.tsv
+  local_name: data/monarch/nbo-go.sssom.tsv
+  tag: mapping
+-
+  url: https://data.monarchinitiative.org/mappings/latest/uberon.sssom.tsv
+  local_name: data/monarch/uberon.sssom.tsv
+  tag: mapping
+-
+  url: https://data.monarchinitiative.org/mappings/latest/umls_hp.sssom.tsv
+  local_name: data/monarch/umls_hp.sssom.tsv
+  tag: mapping
+-
+  url: https://data.monarchinitiative.org/mappings/latest/upheno-cross-species.sssom.tsv
+  local_name: data/monarch/upheno-cross-species.sssom.tsv
+  tag: mapping
+-
+  url: https://data.monarchinitiative.org/mappings/latest/upheno-species-independent.sssom.tsv
+  local_name: data/monarch/upheno-species-independent.sssom.tsv
+  tag: mapping
+
+
 ### Monarch
 -
   url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
