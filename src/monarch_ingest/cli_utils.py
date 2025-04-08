@@ -130,15 +130,17 @@ def transform_phenio(
     # if log: fh = add_log_fh(logger, "logs/phenio.log")
     logger = get_logger(name="phenio" if log else None, verbose=verbose)
 
+    phenio_tar = "data/monarch/kg-phenio.tar.gz"
+    if not Path(phenio_tar).is_file():
+        # if log: logger.removeHandler(fh)
+        raise FileNotFoundError("data/monarch/kg-phenio.tar.gz")
+    
     # TODO: can this be fetched from a purl?
     biolink_model_schema = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
     )
 
-    phenio_tar = "data/monarch/kg-phenio.tar.gz"
-    if not Path(phenio_tar).is_file():
-        # if log: logger.removeHandler(fh)
-        raise FileNotFoundError("data/monarch/kg-phenio.tar.gz")
+
 
     nodefile = "merged-kg_nodes.tsv"
     edgefile = "merged-kg_edges.tsv"
