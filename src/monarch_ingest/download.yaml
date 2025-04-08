@@ -265,10 +265,10 @@
   tag: ncbi_gene
 
 ### Panther Gene Orthology (from www.pantherdb.org)
-
-- url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
+- 
+  url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
   local_name: data/panther/AllOrthologs.tar.gz
-
+  tag: panther_genome_orthologs 
 
 ## The following Panther orthology data ingest is not yet implemented
 ##

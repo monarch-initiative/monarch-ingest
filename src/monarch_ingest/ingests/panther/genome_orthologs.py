@@ -27,7 +27,6 @@ while (row := koza_app.get_row()) is not None:
 
             # unpack the species and gene id
             gene_ncbitaxon, gene_id = species_and_gene_id
-
             species_and_ortholog_id = parse_gene(row['Ortholog'])
 
             # unpack the orthogous gene id and its species
