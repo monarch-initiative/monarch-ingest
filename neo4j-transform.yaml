@@ -8,10 +8,10 @@ transform:
         name: "Monarch KG"
         format: jsonl
         filename:
-          - output/monarch-kg_edges.jsonl
-          - output/monarch-kg_nodes.jsonl
+          - output/mokg_edges.jsonl
+          - output/mokg_nodes.jsonl
       output:
         format: neo4j
-        uri: neo4j://localhost:7687
-        username: neo4j
-        password: admin
+        uri: neo4j://mokg.monarchinitiative.org:7687
+        username: 
+        password: 
