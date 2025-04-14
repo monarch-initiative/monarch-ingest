@@ -152,28 +152,26 @@ copy (
     ortholog_counts as (
     select 
         non_human_taxon,
-        sum(ortholog_count) as ortholog_count
+        count(*) as ortholog_count
     from (
         select 
-            object_taxon as non_human_taxon,
-            count(distinct object) as ortholog_count
+            object as ortholog,
+            object_taxon as non_human_taxon
         from denormalized_edges 
-        where subject_taxon = 'NCBITaxon:9606' 
+        where subject_taxon = 'NCBITaxon:9606'
         and subject_category = 'biolink:Gene'
         and object_category = 'biolink:Gene'
         and predicate = 'biolink:orthologous_to'
-        group by object_taxon        
-        union all
-        select 
-            subject_taxon as non_human_taxon,
-            count(distinct subject) as ortholog_count
+        union
+        select             
+            subject as ortholog,
+            subject_taxon as non_human_taxon
         from denormalized_edges 
         where subject_category = 'biolink:Gene'
         and object_category = 'biolink:Gene'
-        and object_taxon = 'NCBITaxon:9606' 
+        and object_taxon = 'NCBITaxon:9606'
         and predicate = 'biolink:orthologous_to'
-        group by subject_taxon
-    ) as combined_ortholog_counts
+    ) 
     group by non_human_taxon
     )
     select 
@@ -188,4 +186,74 @@ copy (
         non_human_taxon
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
+
+create or replace temporary table phenotype_to_phenotype as (
+  select upheno_left.subject as phenotype_left, upheno_left.object as upheno_term, upheno_right.subject as phenotype_right
+    from denormalized_edges upheno_left, denormalized_edges upheno_right
+    where upheno_left.predicate = 'biolink:subclass_of' 
+    and upheno_right.predicate = 'biolink:subclass_of'
+    and upheno_left.object_namespace = 'UPHENO'  
+    and upheno_right.object_namespace = 'UPHENO'
+    and upheno_left.subject_namespace <> 'UPHENO'
+    and upheno_right.subject_namespace <> 'UPHENO'
+    and upheno_left.object = upheno_right.object
+    and upheno_left.subject <> upheno_right.subject
+);
+
+copy (
+    with human_orthology as (
+            select 
+                subject as human_gene,
+                object as ortholog
+            from denormalized_edges 
+            where subject_taxon = 'NCBITaxon:9606' 
+            and subject_category = 'biolink:Gene'
+            and object_category = 'biolink:Gene'
+            and predicate = 'biolink:orthologous_to'
+            union all
+            select 
+                object as human_gene,
+                subject as ortholog            
+            from denormalized_edges 
+            where subject_category = 'biolink:Gene'
+            and object_category = 'biolink:Gene'
+            and object_taxon = 'NCBITaxon:9606' 
+            and predicate = 'biolink:orthologous_to'
+    ),
+    human_g2p as (
+        select subject as gene, object as phenotype
+        from denormalized_edges
+        where subject_namespace = 'HGNC' 
+        and object_namespace = 'HP' 
+        and predicate = 'biolink:has_phenotype'
+    ),
+    ortholog_g2p as (
+        select subject as gene, object as phenotype
+        from denormalized_edges
+        where predicate = 'biolink:has_phenotype'
+        and subject_namespace <> 'HGNC'
+        and object_namespace <> 'HP'
+    )
+    select 
+        ortholog_g2p.phenotype as non_human_phenotype,
+        human_orthology.ortholog as non_human_gene, 
+        human_g2p.gene as human_gene, 
+        human_g2p.phenotype as human_phenotype
+    from human_orthology 
+        join human_g2p on human_orthology.human_gene = human_g2p.gene
+        join ortholog_g2p on human_orthology.ortholog = ortholog_g2p.gene
+        join phenotype_to_phenotype 
+            on human_g2p.phenotype = phenotype_to_phenotype.phenotype_left 
+            and ortholog_g2p.phenotype = phenotype_to_phenotype.phenotype_right
+) to 'output/qc/phenocubes.parquet';
+
+copy (
+    select 
+    split_part(human_gene, ':', 1) as human_gene,
+    split_part(human_phenotype, ':', 1) as human_phenotype,
+    split_part(non_human_phenotype, ':', 1) as non_human_phenotype,
+    split_part(non_human_gene, ':', 1) as non_human_gene,
+    count(*) as count
+    from 'output/qc/phenocubes.parquet' group by all
+) to 'output/qc/phenocubes_report.parquet';
 
