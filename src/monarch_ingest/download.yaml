@@ -192,12 +192,6 @@
   local_name: data/dictybase/all-mutants-ddb_g.txt
   tag: dictybase_gene_to_phenotype
 
-### Flybase
--
-  url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
-  local_name: data/flybase/entity_publication_fb.tsv.gz
-  tag: flybase_publication_to_gene
-
 # HGNC
 -
   url: http://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
