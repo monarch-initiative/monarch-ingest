@@ -627,16 +627,20 @@ name = "closurizer"
 version = "0.7.3"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 optional = false
-python-versions = "<4.0,>=3.8"
-files = [
-    {file = "closurizer-0.7.3-py3-none-any.whl", hash = "sha256:72a7a1a02d7056951ed36db72c23fb3c64aeedc1f221f4bc8b063e245d0affe0"},
-    {file = "closurizer-0.7.3.tar.gz", hash = "sha256:0ed8d7bed0631dfd8f32945b9c559de5d39776422ecc6dd2aa2e2d989c8ba3e7"},
-]
+python-versions = "^3.8"
+files = []
+develop = false
 
 [package.dependencies]
-click = ">=8,<9"
+click = "^8"
 duckdb = "*"
-SQLAlchemy = ">=1.4.37,<2.0.0"
+SQLAlchemy = "^1.4.37"
+
+[package.source]
+type = "git"
+url = "https://github.com/monarch-initiative/closurizer.git"
+reference = "fix_node_joins"
+resolved_reference = "9d3f674b740aa6ba461d94d6b4f349628d6afc9f"
 
 [[package]]
 name = "colorama"
@@ -5572,4 +5576,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "206dc49beff77e1a7cacffe978f055a009c1f89cb6a325bdb7fd892b5d83e71f"
+content-hash = "15a955170a6758dcd478c901780e7bbc2d3cf7b9a9eae5174355e73085d9b0a5"
