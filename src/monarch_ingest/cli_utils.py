@@ -60,6 +60,16 @@ def transform_one(
             with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
                 f.write(response.content)
         return
+    
+    if "path" in ingests[ingest]:
+        # if a path is provided instead of a config, just copy the file to the output dir
+        source_file = ingests[ingest]["path"]
+        if not Path(source_file).is_file():
+            # if log: logger.removeHandler(fh)
+            raise ValueError(f"Source file {source_file} does not exist")
+        Path(f"{output_dir}/transform_output").mkdir(parents=True, exist_ok=True)
+        sh.cp(source_file, f"{output_dir}/transform_output/{source_file.split('/')[-1]}")
+        return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
 
