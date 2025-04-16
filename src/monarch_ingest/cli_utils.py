@@ -415,7 +415,7 @@ def apply_closure(
             "onset_qualifier",
             "frequency_qualifier",
         ],
-        node_fields=["has_phenotype"],
+        node_fields=["has_phenotype", "in_clinical_trials_for", "treats", "applied_to_treat"],
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
