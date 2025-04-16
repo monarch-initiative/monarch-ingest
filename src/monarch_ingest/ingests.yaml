@@ -46,8 +46,12 @@ zfin_orthology:
     - 'https://github.com/monarch-initiative/zfin-orthology-ingest/releases/latest/download/zfin_orthology_edges.tsv'
 multiomics_clincal_trials_edges:
   path: 'data/multiomics-kp/clinical_trials_kg_v2.7.2_edges.tsv'  
+multiomics_clincal_trials_nodes:
+  path: 'data/multiomics-kp/clinical_trials_kg_v2.7.2_chemical_nodes.tsv'  
 multiomics_drug_approvals_edges:
   path: 'data/multiomics-kp/drug_approvals_kg_v0.3.7_edges.tsv'
+multiomics_drug_approvals_nodes:
+  path: 'data/multiomics-kp/drug_approvals_kg_v0.3.7_chemical_nodes.tsv'
 
 
 ## Ingests within this repository
