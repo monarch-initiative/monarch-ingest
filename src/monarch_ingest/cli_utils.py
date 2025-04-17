@@ -415,12 +415,14 @@ def apply_closure(
             "onset_qualifier",
             "frequency_qualifier",
         ],
-        node_fields=["has_phenotype", "in_clinical_trials_for", "treats", "applied_to_treat"],
+        outgoing_node_expansion_predicates=["has_phenotype"],
+#         incoming_node_expansion_predicates=["in_clinical_trials_for", "treats", "applied_to_treat"],
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
     sh.mv(database, f"{output_dir}/")
+    _extend_denormalized_nodes()
 
 
 def load_sqlite():
@@ -483,7 +485,7 @@ def load_jsonl():
     )
 
 
-def create_qc_reports():
+def _run_sql(database_file, sql_script):
     database_file = "output/monarch-kg.duckdb"
     # error if the database exists but needs to be gunzipped
     if Path(database_file + ".gz").is_file():
@@ -497,8 +499,17 @@ def create_qc_reports():
         raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
     sql = qc_sql.read_text()
 
-    con = duckdb.connect('output/monarch-kg.duckdb')
+    con = duckdb.connect(database_file)
     con.execute(sql)
+
+def create_qc_reports():
+    _run_sql("output/monarch-kg.duckdb", "scripts/generate_reports.sql")
+
+def _extend_denormalized_nodes():
+    _run_sql("output/monarch-kg.duckdb", "scripts/extend_denormalized_nodes.sql")
+
+def mondo_reports():
+    _run_sql("output/monarch-kg.duckdb", "scripts/mondo_reports.sql")
 
 def export_tsv():
     export()

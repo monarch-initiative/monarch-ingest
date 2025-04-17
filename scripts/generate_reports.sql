@@ -193,6 +193,6 @@ copy (
 
 
 
-select id, name, has_phenotype_count, treats_count, applied_to_treat_count, in_clinical_trials_for_count 
-from denormalized_nodes 
-where 'rare' in string_split(subsets,'|') and id like 'MONDO:%';
+-- select id, name, has_phenotype_count, treats_count, applied_to_treat_count, in_clinical_trials_for_count 
+-- from denormalized_nodes 
+-- where 'rare' in string_split(subsets,'|') and id like 'MONDO:%';

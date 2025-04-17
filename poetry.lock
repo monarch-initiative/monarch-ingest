@@ -640,7 +640,7 @@ SQLAlchemy = "^1.4.37"
 type = "git"
 url = "https://github.com/monarch-initiative/closurizer.git"
 reference = "fix_node_joins"
-resolved_reference = "9d3f674b740aa6ba461d94d6b4f349628d6afc9f"
+resolved_reference = "d0c3685b49c9949ef2d1e5bc48ec4e651aca2e2b"
 
 [[package]]
 name = "colorama"
