@@ -112,13 +112,15 @@ copy (select * from disease_phenotype_with_descendants) to 'output/qc/disease_ph
 create or replace table mondo_rare_report as 
 select denormalized_nodes.id as id, 
        denormalized_nodes.name as name,
-       disease_phenotypes_and_treatments.direct_phenotype_count as direct_phenotype_count,
-       disease_phenotype_with_descendants.descendant_phenotype_count as descendant_phenotype_count,
-       disease_phenotype_with_descendants.descendant_phenotype_max_ic as descendant_phenotype_max_ic,
-       disease_phenotype_with_descendants.descendant_phenotype_mean_ic as descendant_phenotype_mean_ic,       
        disease_phenotypes_and_treatments.any_treatment_count as drug_any_treatment_count,
        disease_histopheno_breadth.histopheno_sum_of_mean_ic_across_systems as histopheno_sum_of_mean_ic_across_systems,
        disease_histopheno_breadth.histopheno_sum_of_max_ic_across_systems as histopheno_sum_of_max_ic_across_systems,
+       disease_phenotype_with_descendants.descendant_phenotype_count as descendant_phenotype_count,
+       disease_phenotype_with_descendants.descendant_phenotype_max_ic as descendant_phenotype_max_ic,
+       disease_phenotype_with_descendants.descendant_phenotype_mean_ic as descendant_phenotype_mean_ic,       
+       disease_phenotypes_and_treatments.treats_count as drug_treats_count,
+       disease_phenotypes_and_treatments.applied_to_treat_count as drug_applied_to_treat_count,
+       disease_phenotypes_and_treatments.in_clinical_trials_for_count as drug_in_clinical_trials_for_count,
        disease_histopheno.* EXCLUDE (disease_histopheno.disease, 
                                      disease_histopheno.disease_label)                                              
 from denormalized_nodes
@@ -134,4 +136,9 @@ where category = 'biolink:Disease'
   and 'rare' in denormalized_nodes.subsets;  
 copy (select * from mondo_rare_report) to 'output/qc/mondo_rare_report.tsv';
 
-describe table mondo_rare_report;
+create or replace table mondo_rare_report_treatment_plus_breadth_score as
+select id, name, (sign(coalesce(drug_any_treatment_count,0)) * 100) + histopheno_sum_of_mean_ic_across_systems as treatment_plus_breadth_score, 
+from mondo_rare_report 
+where treatment_plus_breadth_score is not null
+order by treatment_plus_breadth_score desc;
+copy (select * from mondo_rare_report_treatment_plus_breadth_score) to 'output/qc/mondo_rare_report_treatment_plus_breadth_score.tsv';
