@@ -422,7 +422,7 @@ def apply_closure(
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
     sh.mv(database, f"{output_dir}/")
-    _extend_denormalized_nodes()
+    extend_denormalized_nodes()
 
 
 def load_sqlite():
@@ -485,8 +485,7 @@ def load_jsonl():
     )
 
 
-def _run_sql(database_file, sql_script):
-    database_file = "output/monarch-kg.duckdb"
+def _run_sql(database_file, sql_script):    
     # error if the database exists but needs to be gunzipped
     if Path(database_file + ".gz").is_file():
         raise FileExistsError(database_file + ".gz", "Database exists but needs to be decompressed")
@@ -494,10 +493,13 @@ def _run_sql(database_file, sql_script):
     if not Path(database_file).is_file():
         raise FileNotFoundError(database_file, "Database not found")
     
-    qc_sql = Path("scripts/generate_reports.sql")
-    if not qc_sql.is_file():
-        raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
-    sql = qc_sql.read_text()
+    sql_script_file = Path(sql_script)
+    if not sql_script_file.is_file():
+        raise FileNotFoundError(sql_script_file, f"{sql_script} not found")
+    sql = sql_script_file.read_text()
+
+    print(f"Running SQL: {sql_script}")
+    print(sql)
 
     con = duckdb.connect(database_file)
     con.execute(sql)
@@ -505,11 +507,11 @@ def _run_sql(database_file, sql_script):
 def create_qc_reports():
     _run_sql("output/monarch-kg.duckdb", "scripts/generate_reports.sql")
 
-def _extend_denormalized_nodes():
+def extend_denormalized_nodes():
     _run_sql("output/monarch-kg.duckdb", "scripts/extend_denormalized_nodes.sql")
 
-def mondo_reports():
-    _run_sql("output/monarch-kg.duckdb", "scripts/mondo_reports.sql")
+def create_mondo_reports():
+    _run_sql("output/monarch-kg.duckdb", "scripts/generate_mondo_reports.sql")
 
 def export_tsv():
     export()

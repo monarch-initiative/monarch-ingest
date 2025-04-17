@@ -14,10 +14,13 @@ select
     applied_to_treat_count, 
     applied_to_treat, 
     applied_to_treat_label,
+    any_treatment_count,
+    any_treatment,
+    any_treatment_label,
     case when applied_to_treat_count > 0 
          or treats_count > 0 
          or in_clinical_trials_for_count > 0 
-         then 'yes' else 'no' end as has_any_treatment,
+         then 1 else 0 end as has_any_treatment,
     from denormalized_nodes 
     where 
         (applied_to_treat_count > 0 
@@ -71,6 +74,14 @@ where subject_category = 'biolink:Disease'
 group by all;
 copy (select * from disease_histopheno_tall) to 'output/qc/disease_histopheno_tall.tsv';
 
+create or replace table disease_histopheno_breadth as
+select disease, 
+       disease_label, 
+       sum(mean_ic) as histopheno_sum_of_mean_ic_across_systems,
+       sum(max_ic) as histopheno_sum_of_max_ic_across_systems,     
+from disease_histopheno_tall
+group by all;
+copy (select * from disease_histopheno_breadth) to 'output/qc/disease_histopheno_breadth_report.tsv';
 
 create or replace table disease_histopheno as
 PIVOT (select * EXCLUDE (grouping_phenotype) from disease_histopheno_tall)
@@ -101,12 +112,15 @@ copy (select * from disease_phenotype_with_descendants) to 'output/qc/disease_ph
 create or replace table mondo_rare_report as 
 select denormalized_nodes.id as id, 
        denormalized_nodes.name as name,
-       disease_phenotype_with_descendants.* EXCLUDE (disease_phenotype_with_descendants.id, 
-                                                     disease_phenotype_with_descendants.name), 
-       disease_phenotypes_and_treatments.* EXCLUDE (disease_phenotypes_and_treatments.id, 
-                                                     disease_phenotypes_and_treatments.name),
+       disease_phenotypes_and_treatments.direct_phenotype_count as direct_phenotype_count,
+       disease_phenotype_with_descendants.descendant_phenotype_count as descendant_phenotype_count,
+       disease_phenotype_with_descendants.descendant_phenotype_max_ic as descendant_phenotype_max_ic,
+       disease_phenotype_with_descendants.descendant_phenotype_mean_ic as descendant_phenotype_mean_ic,       
+       disease_phenotypes_and_treatments.any_treatment_count as drug_any_treatment_count,
+       disease_histopheno_breadth.histopheno_sum_of_mean_ic_across_systems as histopheno_sum_of_mean_ic_across_systems,
+       disease_histopheno_breadth.histopheno_sum_of_max_ic_across_systems as histopheno_sum_of_max_ic_across_systems,
        disease_histopheno.* EXCLUDE (disease_histopheno.disease, 
-                                                     disease_histopheno.disease_label)                                              
+                                     disease_histopheno.disease_label)                                              
 from denormalized_nodes
      left outer join disease_phenotype_with_descendants
        on denormalized_nodes.id = disease_phenotype_with_descendants.id
@@ -114,6 +128,10 @@ from denormalized_nodes
        on disease_phenotypes_and_treatments.id = denormalized_nodes.id
      left outer join disease_histopheno
        on disease_histopheno.disease = denormalized_nodes.id
+     left outer join disease_histopheno_breadth
+       on disease_histopheno_breadth.disease = denormalized_nodes.id
 where category = 'biolink:Disease'
   and 'rare' in denormalized_nodes.subsets;  
 copy (select * from mondo_rare_report) to 'output/qc/mondo_rare_report.tsv';
+
+describe table mondo_rare_report;
