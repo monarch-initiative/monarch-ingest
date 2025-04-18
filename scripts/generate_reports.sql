@@ -109,32 +109,33 @@ copy (
 ) to 'output/qc/node_normalization_report.parquet';
 
 
-copy (
-    select *, sum(count) as count from
-    (
-        select 
-        provided_by as edge_ingest, 
-        primary_knowledge_source as edge_primary_knowledge_source, 
-        subject_namespace as namespace,
-        subject_category as category,
-        subject_taxon as in_taxon,
-        count(*) as count 
-        from 'output/qc/edge_report.parquet'
-        group by all
-        union all
-        select 
-        provided_by as edge_ingest, 
-        primary_knowledge_source as edge_primary_knowledge_source, 
-        object_namespace as namespace,
-        object_category as category,
-        object_taxon as in_taxon,
-        count(*) as count
-        from 'output/qc/edge_report.parquet'
-        group by all
-    ) 
-    group by all
-    order by all
-) to 'output/qc/node_report.parquet';
+-- Not sure why this is writing a to node_report.parquet when we have a query from the nodes table doing that already 
+-- copy (
+--     select *, sum(count) as count from
+--     (
+--         select 
+--         provided_by as edge_ingest, 
+--         primary_knowledge_source as edge_primary_knowledge_source, 
+--         subject_namespace as namespace,
+--         subject_category as category,
+--         subject_taxon as in_taxon,
+--         count(*) as count 
+--         from 'output/qc/edge_report.parquet'
+--         group by all
+--         union all
+--         select 
+--         provided_by as edge_ingest, 
+--         primary_knowledge_source as edge_primary_knowledge_source, 
+--         object_namespace as namespace,
+--         object_category as category,
+--         object_taxon as in_taxon,
+--         count(*) as count
+--         from 'output/qc/edge_report.parquet'
+--         group by all
+--     ) 
+--     group by all
+--     order by all
+-- ) to 'output/qc/node_report.parquet';
  
 
 
@@ -189,3 +190,9 @@ copy (
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
 
+
+
+
+-- select id, name, has_phenotype_count, treats_count, applied_to_treat_count, in_clinical_trials_for_count 
+-- from denormalized_nodes 
+-- where 'rare' in string_split(subsets,'|') and id like 'MONDO:%';

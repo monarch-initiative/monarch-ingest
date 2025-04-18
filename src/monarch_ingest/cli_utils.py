@@ -60,6 +60,16 @@ def transform_one(
             with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
                 f.write(response.content)
         return
+    
+    if "path" in ingests[ingest]:
+        # if a path is provided instead of a config, just copy the file to the output dir
+        source_file = ingests[ingest]["path"]
+        if not Path(source_file).is_file():
+            # if log: logger.removeHandler(fh)
+            raise ValueError(f"Source file {source_file} does not exist")
+        Path(f"{output_dir}/transform_output").mkdir(parents=True, exist_ok=True)
+        sh.cp(source_file, f"{output_dir}/transform_output/{source_file.split('/')[-1]}")
+        return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
 
@@ -405,12 +415,14 @@ def apply_closure(
             "onset_qualifier",
             "frequency_qualifier",
         ],
-        node_fields=["has_phenotype"],
+        outgoing_node_expansion_predicates=["has_phenotype"],
+#         incoming_node_expansion_predicates=["in_clinical_trials_for", "treats", "applied_to_treat"],
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
     )
     sh.mv(database, f"{output_dir}/")
+    extend_denormalized_nodes()
 
 
 def load_sqlite():
@@ -473,8 +485,7 @@ def load_jsonl():
     )
 
 
-def create_qc_reports():
-    database_file = "output/monarch-kg.duckdb"
+def _run_sql(database_file, sql_script):    
     # error if the database exists but needs to be gunzipped
     if Path(database_file + ".gz").is_file():
         raise FileExistsError(database_file + ".gz", "Database exists but needs to be decompressed")
@@ -482,13 +493,25 @@ def create_qc_reports():
     if not Path(database_file).is_file():
         raise FileNotFoundError(database_file, "Database not found")
     
-    qc_sql = Path("scripts/generate_reports.sql")
-    if not qc_sql.is_file():
-        raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
-    sql = qc_sql.read_text()
+    sql_script_file = Path(sql_script)
+    if not sql_script_file.is_file():
+        raise FileNotFoundError(sql_script_file, f"{sql_script} not found")
+    sql = sql_script_file.read_text()
 
-    con = duckdb.connect('output/monarch-kg.duckdb')
+    print(f"Running SQL: {sql_script}")
+    print(sql)
+
+    con = duckdb.connect(database_file)
     con.execute(sql)
+
+def create_qc_reports():
+    _run_sql("output/monarch-kg.duckdb", "scripts/generate_reports.sql")
+
+def extend_denormalized_nodes():
+    _run_sql("output/monarch-kg.duckdb", "scripts/extend_denormalized_nodes.sql")
+
+def create_mondo_reports():
+    _run_sql("output/monarch-kg.duckdb", "scripts/generate_mondo_reports.sql")
 
 def export_tsv():
     export()

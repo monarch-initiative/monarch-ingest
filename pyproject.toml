@@ -36,8 +36,9 @@ yamllint = "^1.35.1"
 linkml-runtime = "^1.7.5"
 # Remove this once cat-merge fixes its pandas dependency
 pandas = "2.0.3"
-closurizer = "0.7.3"
+closurizer = {git = "https://github.com/monarch-initiative/closurizer.git", branch="fix_node_joins"}
 notebook = "^7.3.2"
+duckdb = "^1.2.2"
 
 [tool.poetry.group.dev]
 optional = true
