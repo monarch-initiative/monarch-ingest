@@ -99,7 +99,6 @@ def parse_gene_id(gene_id_spec: str) -> Optional[str]:
             # the version, so it's staying in for now and this is limiting to only ensembl IDs that use the standard ENSEMBL:ENS* format
             if re.match(r".*\.\d{1,2}$", spec_part[1]):
                 spec_part[1] = re.sub(r"\.\d{1,2}$", "", spec_part[1])
-        print(f"{prefix}:{spec_part[1]}")
         return f"{prefix}:{spec_part[1]}"
 
 
