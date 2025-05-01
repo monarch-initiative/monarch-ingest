@@ -1,0 +1,25 @@
+name: 'multiomics_drug_approvals'
+
+files:
+  - './data/multiomics-kp/drug_approvals_kg_v0.3.7_nodes.tsv'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+transform_code: './src/monarch_ingest/ingests/multiomics/drug_approvals_nodes.py'
+
+# For a csv/tsv file, list expected columns
+columns:
+  - id
+  - name
+  - category
+
+node_properties:
+  - 'id'
+  - 'name'
+  - 'category'
