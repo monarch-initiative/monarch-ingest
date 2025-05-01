@@ -9,6 +9,7 @@ from monarch_ingest.cli_utils import (
     do_release,
     export_tsv,
     create_qc_reports,
+    create_mondo_reports,
     get_data_versions,
     get_pkg_versions,
     load_jsonl,
@@ -191,6 +192,7 @@ def export():
 def report():
     """Run Koza QC on specified Monarch ingests"""
     create_qc_reports()
+    create_mondo_reports()
 
 @typer_app.command()
 def prepare_release():

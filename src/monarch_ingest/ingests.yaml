@@ -44,6 +44,14 @@ go_annotation:
 zfin_orthology:
   url:
     - 'https://github.com/monarch-initiative/zfin-orthology-ingest/releases/latest/download/zfin_orthology_edges.tsv'
+multiomics_clinical_trials_edges:
+  config: 'ingests/multiomics/clinical_trials_edges.yaml'  
+multiomics_clinical_trials_nodes:
+  config: 'ingests/multiomics/clinical_trials_nodes.yaml'  
+multiomics_drug_approvals_edges:
+  config: 'ingests/multiomics/drug_approvals_edges.yaml'
+multiomics_drug_approvals_nodes:
+  config: 'ingests/multiomics/drug_approvals_nodes.yaml'
 
 
 ## Ingests within this repository

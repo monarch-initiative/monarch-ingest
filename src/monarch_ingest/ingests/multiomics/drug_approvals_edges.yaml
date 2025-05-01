@@ -1,0 +1,41 @@
+name: 'multiomics_drug_approvals'
+
+files:
+  - './data/multiomics-kp/drug_approvals_kg_v0.3.7_edges.tsv'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+transform_code: './src/monarch_ingest/ingests/multiomics/drug_approvals_edges.py'
+
+# For a csv/tsv file, list expected columns - include only columns actually in the file
+columns:
+  - id
+  - subject
+  - predicate
+  - object
+  - subject_name
+  - object_name
+  - object_modifier
+  - knowledge_level
+  - agent_type
+  - approval
+  - N_cases
+  - supporting_spls
+  - unii
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'publications'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+  - 'knowledge_level'
+  - 'agent_type'

@@ -1,0 +1,57 @@
+name: 'multiomics_clinical_trials'
+
+files:
+  - './data/multiomics-kp/clinical_trials_kg_v2.7.2_edges.tsv'
+
+# Format options csv, json
+format: 'csv'
+
+# Specify a delimiter for csv formats
+delimiter: '\t'
+
+global_table: './src/monarch_ingest/translation_table.yaml'
+
+transform_code: './src/monarch_ingest/ingests/multiomics/clinical_trials_edges.py'
+
+# For a csv/tsv file, list expected columns - include only the columns actually in the file
+columns:
+  - id
+  - subject
+  - predicate
+  - object
+  - subject_name
+  - object_name
+  - category
+  - knowledge_level
+  - agent_type
+  - nctid
+  - phase
+  - tested
+  - primary_purpose
+  - intervention_model
+  - time_perspective
+  - overall_status
+  - start_date
+  - enrollment
+  - enrollment_type
+  - age_range
+  - child
+  - adult
+  - older_adult
+  - intervention_boxed_warning
+  - brief_title
+  - unii
+  - tested_intervention
+  - elevate_to_prediction
+  - max_research_phase
+
+edge_properties:
+  - 'id'
+  - 'subject'
+  - 'predicate'
+  - 'object'
+  - 'publications'
+  - 'aggregator_knowledge_source'
+  - 'primary_knowledge_source'
+  - 'knowledge_level'
+  - 'agent_type'

@@ -38,3 +38,11 @@ $SED -i 's/\torphanet.ordo\:/\tOrphanet\:/g' data/monarch/mondo.sssom.tsv
 
 # Repair mesh: prefixes in MONDO sssom rows as necessary
 $SED -i 's@mesh:@MESH:@g' data/monarch/mondo.sssom.tsv
+
+# ugly filtering of multiomics nodes (with many appologies) - keep biolink:ChemicalEntity biolinkSmallMolecule biolink:MolecularMixture in column 3 
+# of data/multiomics-kp/clinical_trials_kg_v2.7.2_nodes.tsv and data/multiomics-kp/drug_approvals_kg_v0.3.7_nodes.tsv
+grep -e "^" -e $'\t'"biolink:ChemicalEntity"$'\t' -e $'\t'"biolink:SmallMolecule"$'\t' -e $'\t'"biolink:MolecularMixture"$'\t' data/multiomics-kp/clinical_trials_kg_v2.7.2_nodes.tsv > data/multiomics-kp/clinical_trials_kg_v2.7.2_chemical_nodes.tsv
+grep -e "^" -e $'\t'"biolink:ChemicalEntity"$'\t' -e $'\t'"biolink:SmallMolecule"$'\t' -e $'\t'"biolink:MolecularMixture"$'\t' data/multiomics-kp/drug_approvals_kg_v0.3.7_nodes.tsv > data/multiomics-kp/drug_approvals_kg_v0.3.7_chemical_nodes.tsv
+
+# compute HPO ic scores for disease/treatment ranking (TODO: uvx will probably fail on Jenkins, so we'll need to update the instance templates in the monarch-jenkins-packer repo)
+uvx --from oaklib runoak  -g data/hpoa/phenotype.hpoa -G hpoa -i sqlite:obo:hp information-content -p i --use-associations i^HP: -o output/qc/hp.ics.tsv
