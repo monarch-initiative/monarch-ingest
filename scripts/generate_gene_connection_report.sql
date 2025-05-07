@@ -43,6 +43,9 @@ create or replace view gene_connection_flags as (
             when id in (select gene from disease) then true 
             else false 
         end as has_disease,
+        case when id in (select gene from phenotype union select gene from disease) then true 
+            else false 
+        end as has_phenotype_or_disease,
         case 
             when id in (select gene from ortholog_phenotype) then true 
             else false 
@@ -57,15 +60,18 @@ create or replace view gene_connection_flags as (
 select 
     count(*) as count,
     is_protein_coding,
+    has_phenotype_or_disease,
     has_ortholog,
-    has_phenotype,
-    has_disease,
     has_ortholog_phenotype    
 from gene_connection_flags
+where is_protein_coding = true
 group by 
-    is_protein_coding,
+    is_protein_coding,    
+    has_phenotype_or_disease,
     has_ortholog,
-    has_phenotype,
-    has_disease,
     has_ortholog_phenotype
+order by is_protein_coding desc,      
+    has_phenotype_or_disease desc,
+    has_ortholog desc,
+    has_ortholog_phenotype desc
 ;
