@@ -29,7 +29,7 @@ select
       and 'rare' in subsets
       and category = 'biolink:Disease' 
 ;
-copy (select * from disease_phenotypes_and_treatments) to 'output/qc/disease_phenotypes_and_treatments_report.tsv';
+copy (select * from disease_phenotypes_and_treatments) to 'output/qc/disease_phenotypes_and_treatments_report.tsv' (header true, delimiter '\t');
 
 -- relies on hpo ic score generation from scripts/after_download.sh
 create or replace table disease_ic_score as select * from 'output/qc/hp.ics.tsv' ;
@@ -72,7 +72,7 @@ where subject_category = 'biolink:Disease'
     'HP:0000769'  -- breast = "UPHENO:0003013"  # "HP:0000769"
   )
 group by all;
-copy (select * from disease_histopheno_tall) to 'output/qc/disease_histopheno_tall.tsv';
+copy (select * from disease_histopheno_tall) to 'output/qc/disease_histopheno_tall.tsv' (header true, delim '\t');
 
 create or replace table disease_histopheno_breadth as
 select disease, 
@@ -81,7 +81,7 @@ select disease,
        sum(max_ic) as histopheno_sum_of_max_ic_across_systems,     
 from disease_histopheno_tall
 group by all;
-copy (select * from disease_histopheno_breadth) to 'output/qc/disease_histopheno_breadth_report.tsv';
+copy (select * from disease_histopheno_breadth) to 'output/qc/disease_histopheno_breadth_report.tsv' (header true, delim '\t');
 
 create or replace table disease_histopheno as
 PIVOT (select * EXCLUDE (grouping_phenotype) from disease_histopheno_tall)
@@ -89,7 +89,7 @@ ON grouping_phenotype_label
 USING sum(phenotype_count) as phenotype_count, 
       mean(mean_ic) as mean_ic, -- not totally sure about this 
       max(max_ic) as max_ic; -- not totally sure about this
-copy (select * from disease_histopheno) to 'output/qc/disease_histopheno.tsv';
+copy (select * from disease_histopheno) to 'output/qc/disease_histopheno.tsv' (header true, delim '\t');
 
 
 create or replace table disease_phenotype_with_descendants as
@@ -106,8 +106,13 @@ from denormalized_nodes
     join disease_ic_score on disease_ic_score.id = object
 where denormalized_nodes.category = 'biolink:Disease'  
 group by all;
-copy (select * from disease_phenotype_with_descendants) to 'output/qc/disease_phenotype_with_descendants.tsv'
-;
+copy (select * from disease_phenotype_with_descendants) to 'output/qc/disease_phenotype_with_descendants.tsv' (header true, delim '\t');
+
+-- this is temporary 
+
+create or replace table mondo_rapid as select * from read_csv('ada rescue - mondo.tsv', header=true, delim='\t');
+
+--- end temporary 
 
 create or replace table mondo_rare_report as 
 select denormalized_nodes.id as id, 
@@ -133,12 +138,25 @@ from denormalized_nodes
      left outer join disease_histopheno_breadth
        on disease_histopheno_breadth.disease = denormalized_nodes.id
 where category = 'biolink:Disease'
-  and 'rare' in denormalized_nodes.subsets;  
-copy (select * from mondo_rare_report) to 'output/qc/mondo_rare_report.tsv';
+  and ('rare' in denormalized_nodes.subsets or denormalized_nodes.id in (select mondoCURIE from mondo_rapid)) ;  
+copy (select * from mondo_rare_report) to 'output/qc/mondo_rare_report.tsv' (header true, delim '\t');
 
 create or replace table mondo_rare_report_treatment_plus_breadth_score as
-select id, name, (sign(coalesce(drug_any_treatment_count,0)) * 100) + histopheno_sum_of_mean_ic_across_systems as treatment_plus_breadth_score, 
+with score_value as (
+    select 
+        id, 
+        (sign(coalesce(drug_any_treatment_count,0)) * 100) + coalesce(histopheno_sum_of_mean_ic_across_systems,0) as treatment_plus_breadth_score
+    from mondo_rare_report
+)
+select 
+    mondo_rare_report.id, 
+    name, 
+    treatment_plus_breadth_score,
+    rank() over (order by score_value.treatment_plus_breadth_score desc) as rank,
+    percent_rank() over (order by score_value.treatment_plus_breadth_score asc) as percent_rank,
 from mondo_rare_report 
-where treatment_plus_breadth_score is not null
+    left outer join score_value
+      on mondo_rare_report.id = score_value.id
 order by treatment_plus_breadth_score desc;
-copy (select * from mondo_rare_report_treatment_plus_breadth_score) to 'output/qc/mondo_rare_report_treatment_plus_breadth_score.tsv';
+copy (select * from mondo_rare_report_treatment_plus_breadth_score) to 'output/qc/mondo_rare_report_treatment_plus_breadth_score.tsv' (header true, delim '\t');
+
