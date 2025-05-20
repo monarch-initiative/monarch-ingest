@@ -2,6 +2,9 @@
 alliance_genotype:
   url:
     - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_genotype_nodes.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_genotype_edges.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_allele_nodes.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_allele_edges.tsv'
 alliance_phenotype:
   url:
     - 'https://github.com/monarch-initiative/alliance-phenotype-association-ingest/releases/latest/download/alliance_phenotype_edges.tsv'
