@@ -38,3 +38,7 @@ $SED -i 's/\torphanet.ordo\:/\tOrphanet\:/g' data/monarch/mondo.sssom.tsv
 
 # Repair mesh: prefixes in MONDO sssom rows as necessary
 $SED -i 's@mesh:@MESH:@g' data/monarch/mondo.sssom.tsv
+
+yq '.information_resources[].id' data/infores/infores_catalog.yaml > data/infores/infores_ids.txt
+
+
