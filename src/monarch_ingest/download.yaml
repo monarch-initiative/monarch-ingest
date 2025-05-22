@@ -496,3 +496,7 @@
   url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/infores_catalog.yaml
   local_name: data/infores/infores_catalog.yaml
   tag: infores_catalog
+- 
+  url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/src/information_resource_registry/schema/information_resource_registry.yaml
+  local_name: data/infores/information_resource_registry.yaml
+  tag: infores_catalog

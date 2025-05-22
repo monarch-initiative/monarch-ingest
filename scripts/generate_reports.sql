@@ -189,3 +189,5 @@ copy (
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
 
+create or replace table information_resource 
+as select * from read_json('data/infores/information_resource.json'); 
