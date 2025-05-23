@@ -190,4 +190,28 @@ copy (
 ) to 'output/qc/human_orthology_coverage.parquet';
 
 create or replace table information_resource 
-as select * from read_json('data/infores/information_resource.json'); 
+as select * from read_json('data/infores/infores_catalog.jsonl'); 
+
+copy (
+with knowledge_source_usage as (
+    select primary_knowledge_source as knowledge_source, 
+            'primary' as usage, 
+            provided_by from edges            
+    union all
+    select unnest(string_split(aggregator_knowledge_source,'|')) as knowledge_source, 
+        'aggregator' as usage, provided_by
+    from edges
+)
+select knowledge_source_usage.*, 
+  case when information_resource.id is not null then true else false end as infores_exists,
+  count(*) as count
+from knowledge_source_usage 
+left outer join information_resource 
+             on knowledge_source_usage.knowledge_source = information_resource.id
+group by all
+) to 'output/qc/knowledge_source_usage_report.parquet';
+
+copy (
+select knowledge_source 
+from 'output/qc/knowledge_source_usage_report.parquet' 
+where infores_exists = false) to 'output/qc/invalid_infores.tsv' (format 'csv', delimiter E'\t', header false);
