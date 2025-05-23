@@ -490,3 +490,13 @@
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: data/zfin/id_map_zfin.tsv
   tag: zfin_gene_to_phenotype
+
+### Information Resource Registry
+-
+  url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/infores_catalog.yaml
+  local_name: data/infores/infores_catalog.yaml
+  tag: infores_catalog
+- 
+  url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/src/information_resource_registry/schema/information_resource_registry.yaml
+  local_name: data/infores/information_resource_registry.yaml
+  tag: infores_catalog
