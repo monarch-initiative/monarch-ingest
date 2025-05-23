@@ -56,7 +56,7 @@ create or replace view gene_connection_flags as (
 );
 
 -- count the number of genes with each flag
-
+copy(
 select 
     count(*) as count,
     is_protein_coding,
@@ -74,4 +74,4 @@ order by is_protein_coding desc,
     has_phenotype_or_disease desc,
     has_ortholog desc,
     has_ortholog_phenotype desc
-;
+) to 'output/qc/gene_connection_report.tsv';
