@@ -258,10 +258,12 @@
   local_name: data/ncbi/gene_info.gz
   tag: ncbi_gene
 
+
+### Now modularized, but here for posterity...
 ### Panther Gene Orthology (from www.pantherdb.org)
 
-- url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
-  local_name: data/panther/AllOrthologs.tar.gz
+##- url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
+##  local_name: data/panther/AllOrthologs.tar.gz
 
 
 ## The following Panther orthology data ingest is not yet implemented
