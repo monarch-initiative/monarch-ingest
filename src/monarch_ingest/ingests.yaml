@@ -41,7 +41,7 @@ ncbi_gene:
 
 pantherdb_ortholog:
   url:
-    - https://github.com/monarch-initiative/pantherdb-orthologs-ingest/releases/latest/download/pantherdb_orthologs_edges.tsv
+    - https://github.com/monarch-initiative/pantherdb-orthologs-ingest/releases/latest/download/panther_genome_orthologs_edges.tsv
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
