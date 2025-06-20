@@ -465,7 +465,7 @@ def load_jsonl():
     db.sql(
         f"""
     copy (
-      select edges.* replace (ancestors as category, {mv_edge_replacement}),  
+      select edges.* replace (ancestors as category, cast(negated as boolean) as negated, {mv_edge_replacement}),  
       from edges
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
