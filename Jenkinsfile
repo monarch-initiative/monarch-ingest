@@ -84,6 +84,11 @@ pipeline {
                 sh 'poetry run ingest jsonl'
             }
         }
+        stage('neo4j-csv') {
+            steps {
+                sh 'poetry run ingest neo4j-csv'
+            }
+        }
         stage('solr') {
             steps {
                 sh 'poetry run ingest solr'
