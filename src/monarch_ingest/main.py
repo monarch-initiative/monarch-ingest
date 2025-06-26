@@ -12,6 +12,7 @@ from monarch_ingest.cli_utils import (
     get_data_versions,
     get_pkg_versions,
     load_jsonl,
+    load_neo4j_csv,
     load_sqlite,
     load_solr,
     merge_files,
@@ -171,6 +172,10 @@ def closure():
 @typer_app.command()
 def jsonl():
     load_jsonl()
+
+@typer_app.command()
+def neo4j_csv():
+    load_neo4j_csv()    
 
 
 @typer_app.command()
