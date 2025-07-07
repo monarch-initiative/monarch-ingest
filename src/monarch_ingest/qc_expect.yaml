@@ -1,5 +1,7 @@
 nodes:
   provided_by:
+    alliance_allele_nodes:
+      min: 180000
     alliance_gene_nodes:
       min: 290000
     alliance_genotype_nodes:
@@ -33,6 +35,10 @@ edges:
   provided_by:
     alliance_gene_to_expression_edges:
       min: 1870000
+    alliance_genotype_edges:
+      min: 260000
+    alliance_allele_edges:
+      min: 150000
     bgee_gene_to_expression_edges:
       min: 430000
     biogrid_gene_to_gene_edges:

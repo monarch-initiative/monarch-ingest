@@ -18,6 +18,14 @@ else
     SED=sed
 fi
 
+if command -v python
+then
+    PYTHON=python
+else
+    PYTHON=python3
+fi
+
+
 #If the number of files which match the pattern data/alliance/BGI_*.gz is greater than 0.
 if [ $(ls data/alliance/BGI_*.gz | wc -l) -gt 0 ]; then
   # Make a simple text file of all the gene IDs in Alliance
@@ -67,3 +75,11 @@ if [ -f data/monarch/mondo.sssom.tsv ]; then
 else
   echo "\"data/monarch/mondo.sssom.tsv\" does not exist. Skipping it's repair."
 fi
+
+# python one-liner to covnert yaml to json for infores catalog, then extract ids 
+$PYTHON -c "import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))" < data/infores/infores_catalog.yaml > data/infores/infores_catalog.json 
+jq -c '.information_resources[]' data/infores/infores_catalog.json > data/infores/infores_catalog.jsonl
+jq -r '.information_resources[].id' data/infores/infores_catalog.json > data/infores/infores_ids.txt
+
+
+

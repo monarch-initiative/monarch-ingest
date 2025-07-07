@@ -189,3 +189,109 @@ copy (
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
 
+create or replace table information_resource 
+as select * from read_json('data/infores/infores_catalog.jsonl'); 
+
+copy (
+with knowledge_source_usage as (
+    select primary_knowledge_source as knowledge_source, 
+            'primary' as usage, 
+            provided_by from edges            
+    union all
+    select unnest(string_split(aggregator_knowledge_source,'|')) as knowledge_source, 
+        'aggregator' as usage, provided_by
+    from edges
+)
+select knowledge_source_usage.*, 
+  case when information_resource.id is not null then true else false end as infores_exists,
+  count(*) as count
+from knowledge_source_usage 
+left outer join information_resource 
+             on knowledge_source_usage.knowledge_source = information_resource.id
+group by all
+) to 'output/qc/knowledge_source_usage_report.parquet';
+
+copy (
+select knowledge_source 
+from 'output/qc/knowledge_source_usage_report.parquet' 
+where infores_exists = false) to 'output/qc/invalid_infores.tsv' (format 'csv', delimiter E'\t', header false);
+
+-- This is meant to generate the classic 3 circle venn diagram of human genes, orthologs and phenotypes
+
+create or replace view gene_connection_flags as (
+    
+    with orthology as (
+        select subject as gene, object as ortholog 
+        from edges 
+        where predicate = 'biolink:orthologous_to'
+        union 
+        select object as gene, subject as ortholog 
+        from edges 
+        where predicate = 'biolink:orthologous_to'
+    ),
+    phenotype as (
+        select subject as gene, object as phenotype 
+        from edges 
+        where predicate = 'biolink:has_phenotype'
+    ),
+    disease as (
+        select subject as gene, object as disease 
+        from denormalized_edges
+        where subject_category = 'biolink:Gene' and object_category = 'biolink:Disease' 
+    ),
+    ortholog_phenotype as (
+        select orthology.gene, phenotype.phenotype 
+        from orthology
+            join phenotype on orthology.ortholog = phenotype.gene
+        
+    )
+    select 
+        id, 
+        case 
+            when type = 'SO:0001217' then true 
+            else false 
+        end as is_protein_coding,
+        case 
+            when id in (select gene from orthology) then true 
+            else false 
+        end as has_ortholog,
+        case 
+            when id in (select gene from phenotype) then true 
+            else false 
+        end as has_phenotype,
+        case 
+            when id in (select gene from disease) then true 
+            else false 
+        end as has_disease,
+        case when id in (select gene from phenotype union select gene from disease) then true 
+            else false 
+        end as has_phenotype_or_disease,
+        case 
+            when id in (select gene from ortholog_phenotype) then true 
+            else false 
+        end as has_ortholog_phenotype
+    from nodes 
+    where category = 'biolink:Gene' 
+    and in_taxon = 'NCBITaxon:9606'
+);
+
+-- count the number of genes with each flag
+copy(
+select 
+    count(*) as count,
+    is_protein_coding,
+    has_phenotype_or_disease,
+    has_ortholog,
+    has_ortholog_phenotype    
+from gene_connection_flags
+where is_protein_coding = true
+group by 
+    is_protein_coding,    
+    has_phenotype_or_disease,
+    has_ortholog,
+    has_ortholog_phenotype
+order by is_protein_coding desc,      
+    has_phenotype_or_disease desc,
+    has_ortholog desc,
+    has_ortholog_phenotype desc
+) to 'output/qc/gene_connection_report.tsv';

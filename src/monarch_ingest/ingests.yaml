@@ -2,6 +2,9 @@
 alliance_genotype:
   url:
     - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_genotype_nodes.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_genotype_edges.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_allele_nodes.tsv'
+    - 'https://github.com/monarch-initiative/alliance-genotype-ingest/releases/latest/download/alliance_allele_edges.tsv'
 alliance_phenotype:
   url:
     - 'https://github.com/monarch-initiative/alliance-phenotype-association-ingest/releases/latest/download/alliance_phenotype_edges.tsv'
@@ -41,6 +44,10 @@ upheno_phenotype_to_phenotype:
 upheno_filtered_phenotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/upheno-cross-species-ingest/releases/download/latest/upheno_phenotype_to_phenotype_filtered_edges.tsv'
+
+pantherdb_ortholog:
+  url:
+    - https://github.com/monarch-initiative/pantherdb-orthologs-ingest/releases/latest/download/panther_genome_orthologs_edges.tsv
 zfin_genotype_to_phenotype:
   url:
     - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
@@ -68,8 +75,6 @@ dictybase_gene_to_phenotype:
   config: 'ingests/dictybase/gene_to_phenotype.yaml'
 hgnc_gene:
   config: 'ingests/hgnc/gene.yaml'
-panther_genome_orthologs:
-  config: 'ingests/panther/genome_orthologs.yaml'
 pombase_gene:
   config: 'ingests/pombase/gene.yaml'
 pombase_gene_to_phenotype:

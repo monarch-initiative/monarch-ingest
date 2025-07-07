@@ -27,7 +27,7 @@ poetry run lsolr start-server
 sleep 60
 
 echo "Adding cores"
-poetry run lsolr add-cores entity association sssom
+poetry run lsolr add-cores entity association sssom infores
 sleep 30
 
 # todo: ideally, this will live in linkml-solr
@@ -47,6 +47,8 @@ echo "Adding sssom schema"
 poetry run lsolr create-schema -C sssom -s model.yaml -t Mapping
 sleep 5
 
+echo "Adding infores schema"
+poetry run lsolr create-schema -C infores -s data/infores/information_resource_registry.yaml -t InformationResource
 
 # todo: this also should live in linkml-solr, and copy-fields should be based on the schema
 echo "Add dynamic fields and copy fields declarations"
@@ -56,6 +58,13 @@ sleep 5
 
 echo "Adding update processor for phenotype frequency to association core"
 scripts/add_update_processor.sh
+
+echo "Load infores"
+
+# load directly to avoid linkml-solr's unhappiness with jsonl loading
+curl -X POST -H 'Content-Type: application/json' \
+  'http://localhost:8983/solr/infores/update/json/docs?commit=true' \
+  --data-binary @data/infores/infores_catalog.jsonl
 
 # todo: this should probably happen after associations, but putting it first for testing
 echo "Loading SSSOM mappings"
@@ -70,7 +79,6 @@ poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings
 echo "Loading entities"
 poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
 
-echo "Loading associations"
 poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor output/monarch-kg-denormalized-edges.tsv
 curl "http://localhost:8983/solr/association/select?q=*:*"
 

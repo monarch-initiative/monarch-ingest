@@ -94,6 +94,7 @@ pipeline {
                     mkdir data || true
                     gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/$RELEASE/* output/
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
+                    gunzip output/monarch-kg.duckdb.gz || true
                     ls -lasdf
                 '''
             }
@@ -165,6 +166,7 @@ pipeline {
                    }
             }
             steps {
+                sh 'rm -rf output/monarch-kg.neo4j.dump || true'
                 sh './scripts/kgx_transforms.sh'
             }
         }
