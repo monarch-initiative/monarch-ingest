@@ -114,7 +114,7 @@ def export(
                 fields=get_fields(filters.get('category')),
                 output_file=dump_file,
                 category=filters.get('category'),
-                subject_taxon=filters.get('taxon', None),
+                subject_taxon=filters.get('subject_taxon', None),
             )
 
             if exploded:
@@ -122,25 +122,34 @@ def export(
                 export_exploded_annotations(
                     database=database,
                     category=filters.get('category'),
-                    subject_taxon=filters.get('taxon', None),
+                    subject_taxon=filters.get('subject_taxon', None),
                     fields=get_fields(filters.get('category')),
                     output_file=exploded_file,
                 )
 
 
 def get_fields(category: str) -> List[str]:
-    fields = DEFAULT_FIELDS
+    # Create a copy of DEFAULT_FIELDS to avoid modifying the original list
+    fields = DEFAULT_FIELDS.copy()
 
     if 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"' in category:
         fields += DISEASE_TO_PHENOTYPE_APPENDS
-    if 'GeneToGene' in category:
+    
+    # Check for specific gene-to-gene association types
+    gene_to_gene_types = [
+        'biolink:PairwiseGeneToGeneInteraction',
+        'biolink:GeneToGeneHomologyAssociation'
+    ]
+    
+    # Check if category exactly matches one of the gene-to-gene types
+    if category in gene_to_gene_types:
         fields += GENE_TO_GENE_APPENDS
-
+    
     return fields
 
 
 def export_annotations(database, fields: List[str], output_file: str, category: str, subject_taxon=None):
-    taxon_filter = "subject_taxon = '{subject_taxon}' " if subject_taxon else ""
+    taxon_filter = f" and subject_taxon = '{subject_taxon}' " if subject_taxon else ""
     sql = f""" 
     COPY (
         SELECT {','.join(fields)} 
