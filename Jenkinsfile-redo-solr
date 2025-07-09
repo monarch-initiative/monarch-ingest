@@ -54,6 +54,11 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
+                                description: 'Create Neo4j dump',
+                                name: 'NEO4J_DUMP'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
                                 description: 'Upload to bucket',
                                 name: 'UPLOAD'
                             ),
@@ -166,8 +171,18 @@ pipeline {
                    }
             }
             steps {
-                sh 'rm -rf output/monarch-kg.neo4j.dump || true'
                 sh './scripts/kgx_transforms.sh'
+            }
+        }
+        stage('neo4j-dump') {
+            when {
+                expression {
+                    return params.NEO4J_DUMP
+                }
+            }
+            steps {
+                sh 'rm -rf output/monarch-kg.neo4j.dump || true'
+                sh './scripts/load_neo4j.sh'
             }
         }
         stage('upload files') {
