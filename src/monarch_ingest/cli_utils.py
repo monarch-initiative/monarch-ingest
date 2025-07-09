@@ -11,6 +11,7 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 import requests
+from functools import lru_cache
 
 # from loguru import logger
 import pandas
@@ -421,6 +422,7 @@ def load_solr():
     sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
 
 
+@lru_cache(maxsize=1)
 def get_biolink_ancestor_df():
     biolink_model = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
@@ -478,6 +480,93 @@ def load_jsonl():
     )
 
 
+def slot_is_multi_valued(slot_name: str) -> bool:
+
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    if slot_name not in all_slot_names:
+        return False
+
+    slot_name = slot_name.lower().replace("_", " ")
+    if slot_name not in all_slot_names:
+        return False
+    return biolink_model.get_slot(slot_name).multivalued
+
+def slot_is_boolean(slot_name: str) -> bool:
+
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    if slot_name not in all_slot_names:
+        return False
+
+    slot_name = slot_name.lower().replace("_", " ")
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how boolean shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "boolean":
+        return True
+    else:
+        return False
+    
+def slot_is_integer(slot_name: str) -> bool:
+    
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+
+    slot_name = slot_name.lower().replace("_", " ")
+
+    if slot_name not in all_slot_names:
+        return False
+
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how integer shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "integer":
+        return True
+    else:
+        return False
+    
+def slot_is_float(slot_name: str) -> bool:
+    
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+
+    if slot_name not in all_slot_names:
+        return False
+    slot_name = slot_name.lower().replace("_", " ")
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how float shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "double":
+        return True
+    else:
+        return False
+
+def get_neo4j_header_column(field: str, is_edge: bool = False) -> str:
+    """
+    Convert a field name to a header column name for Neo4j CSV export.
+    Sets :ID and :LABEL for nodes, :START_ID, :TYPE, :END_ID for edges.
+    Handles multi-valued fields as string[].
+    """
+    if field == "id" and not is_edge:
+        return 'id as "id:ID"'
+    elif field == "category" and not is_edge:
+        return 'category as "category:LABEL"'
+    elif field == "subject":
+        return 'subject as "subject:START_ID"'
+    elif field == "predicate":
+        return 'predicate as "predicate:TYPE"'
+    elif field == "object":
+        return 'object as "object:END_ID"'
+    if slot_is_integer(field):
+        return f'{field} as "{field}:long"'
+    if slot_is_float(field):
+        return f'{field} as "{field}:float"'
+    if slot_is_boolean(field):
+        return f'{field} as "{field}:boolean"'
+    if slot_is_multi_valued(field):
+        return f'replace({field}, \'|\', \';\') as "{field}:string[]"'
+    return field
+
 def load_neo4j_csv():
     """
     Create CSV files for Neo4j import from the DuckDB database.
@@ -488,33 +577,16 @@ def load_neo4j_csv():
     node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
     edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
 
-    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()        
 
-    def slot_is_multi_valued(slot_name: str) -> bool:
-        slot_name = slot_name.lower().replace("_", " ")
-        if slot_name not in all_slot_names:
-            return False
-        return biolink_model.get_slot(slot_name).multivalued
-        
-    mv_node_columns = [col for col in node_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_edge_columns = [col for col in edge_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_node_replacement = ", ".join([f"replace({col}, '|', ';') as {col}" for col in mv_node_columns])
-    mv_edge_replacement = ", ".join([f"replace({col}, '|', ';') as {col}" for col in mv_edge_columns])
+    node_select = ",\n".join([f"{get_neo4j_header_column(col, is_edge=False)}" for col in node_columns if col])
+    edge_select = ",\n".join([f"{get_neo4j_header_column(col, is_edge=True)}" for col in edge_columns if col])
 
         # also write to neo4j csv format 
     edges_query = f"""
     copy (
         select
-            id,
-            array_to_string(ancestors,';') as category,
-            subject as "subject:START_ID", 
-            predicate as "predicate:TYPE",
-            object as "object:END_ID",
-            edges.*
-              EXCLUDE (id, category, subject, predicate, object) 
-              REPLACE(                                
-                {mv_edge_replacement}
-              )                        
+            {edge_select}
         from edges 
           join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.neo4j.csv'
@@ -524,13 +596,7 @@ def load_neo4j_csv():
     nodes_query = f"""
     copy (
         select
-            id as "id:ID",            
-            array_to_string(ancestors,';') as "category:LABEL",
-            nodes.*
-              EXCLUDE(id, category)
-              REPLACE(
-                {mv_node_replacement}
-              )
+            {node_select}
         from nodes
           join class_ancestor_df on category = classname
     ) to 'output/monarch-kg_nodes.neo4j.csv'

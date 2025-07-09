@@ -99,6 +99,11 @@ pipeline {
                 sh './scripts/kgx_transforms.sh'
             }
         }
+        stage('neo4j-dump') {
+            steps {
+                sh './scripts/load_neo4j.sh'
+            }
+        }
         stage('sqlite') {
             steps {
                 sh 'poetry run ingest sqlite'
