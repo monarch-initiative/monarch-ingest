@@ -17,4 +17,4 @@ docker run --rm \
   --nodes=/import/monarch-kg_nodes.neo4j.csv \
   --relationships=/import/monarch-kg_edges.neo4j.csv
 
-docker run -v $(pwd)/output:/backup -v neo4j_data:/data --entrypoint neo4j-admin neo4j:4.4 dump --to /backup/monarch-kg.neo4j.dump
+docker run -v $(pwd)/output:/backup -v $(pwd)/neo4j_data:/data --entrypoint neo4j-admin neo4j:4.4 dump --to /backup/monarch-kg.neo4j.dump
