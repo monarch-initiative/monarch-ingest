@@ -16,7 +16,7 @@ def script():
 def aggregator_knowledge_sources(association) -> bool:
     return all(
         [
-            ks in ["infores:monarchinitiative", "infores:alliancegenome"]
+            ks in ["infores:monarchinitiative", "infores:agrkb"]
             for ks in association.aggregator_knowledge_source
         ]
     )
