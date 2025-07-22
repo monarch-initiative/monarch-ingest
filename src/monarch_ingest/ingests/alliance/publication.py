@@ -27,7 +27,7 @@ while (row := koza_app.get_row()) is not None:
     ):
         source = source_map[row['MODReferenceTypes'][0]['source']]
     else:  # default source
-        source = "infores:alliancegenome"
+        source = "infores:agrkb"
 
     pub = Publication(
         id=row["primaryId"],
