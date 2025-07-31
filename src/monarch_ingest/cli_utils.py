@@ -541,22 +541,12 @@ def slot_is_float(slot_name: str) -> bool:
     else:
         return False
 
-def get_neo4j_header_column(field: str, is_edge: bool = False) -> str:
+def get_neo4j_column(field: str) -> str:
     """
-    Convert a field name to a header column name for Neo4j CSV export.
-    Sets :ID and :LABEL for nodes, :START_ID, :TYPE, :END_ID for edges.
-    Handles multi-valued fields as string[].
+    Convert a field name to a column specification with Neo4j type annotations.
+    Handles multi-valued fields as string[] and applies appropriate type annotations.
+    Does not handle special Neo4j import columns (:ID, :LABEL, :START_ID, :TYPE, :END_ID).
     """
-    if field == "id" and not is_edge:
-        return 'id as "id:ID"'
-    elif field == "category" and not is_edge:
-        return 'category as "category:LABEL"'
-    elif field == "subject":
-        return 'subject as "subject:START_ID"'
-    elif field == "predicate":
-        return 'predicate as "predicate:TYPE"'
-    elif field == "object":
-        return 'object as "object:END_ID"'
     if slot_is_integer(field):
         return f'{field} as "{field}:long"'
     if slot_is_float(field):
@@ -579,8 +569,41 @@ def load_neo4j_csv():
 
     class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()        
 
-    node_select = ",\n".join([f"{get_neo4j_header_column(col, is_edge=False)}" for col in node_columns if col])
-    edge_select = ",\n".join([f"{get_neo4j_header_column(col, is_edge=True)}" for col in edge_columns if col])
+    # Build node column selection with special handling for id and category
+    node_select_parts = []
+    for col in node_columns:
+        if not col:
+            continue
+        if col == "id":
+            node_select_parts.append('id as ":ID"')
+        elif col == "category":
+            # Duplicate category: one for Neo4j :LABEL, one as regular property
+            node_select_parts.append('category as ":LABEL"')
+            node_select_parts.append(get_neo4j_column(col))
+        else:
+            node_select_parts.append(get_neo4j_column(col))
+    node_select = ",\n".join(node_select_parts)
+
+    # Build edge column selection with special handling for subject, predicate, object
+    edge_select_parts = []
+    for col in edge_columns:
+        if not col:
+            continue
+        if col == "subject":
+            # Duplicate subject: one for Neo4j :START_ID, one as regular property
+            edge_select_parts.append('subject as ":START_ID"')
+            edge_select_parts.append(col)
+        elif col == "predicate":
+            # Duplicate predicate: one for Neo4j :TYPE, one as regular property
+            edge_select_parts.append('predicate as ":TYPE"')
+            edge_select_parts.append(col)
+        elif col == "object":
+            # Duplicate object: one for Neo4j :END_ID, one as regular property
+            edge_select_parts.append('object as ":END_ID"')
+            edge_select_parts.append(col)
+        else:
+            edge_select_parts.append(get_neo4j_column(col))
+    edge_select = ",\n".join(edge_select_parts)
 
         # also write to neo4j csv format 
     edges_query = f"""
