@@ -134,7 +134,7 @@ copy (
     ) 
     group by all
     order by all
-) to 'output/qc/node_report.parquet';
+) to 'output/qc/node_usage_report.parquet';
  
 
 
