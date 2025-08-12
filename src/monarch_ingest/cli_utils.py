@@ -576,10 +576,11 @@ def load_neo4j_csv():
             continue
         if col == "id":
             node_select_parts.append('id as ":ID"')
+            node_select_parts.append(get_neo4j_column(col))            
         elif col == "category":
             # Duplicate category: one for Neo4j :LABEL, one as regular property
-            node_select_parts.append('category as ":LABEL"')
-            node_select_parts.append(get_neo4j_column(col))
+            node_select_parts.append("array_to_string(ancestors, ';') as ':LABEL'")
+            node_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
         else:
             node_select_parts.append(get_neo4j_column(col))
     node_select = ",\n".join(node_select_parts)
@@ -589,7 +590,10 @@ def load_neo4j_csv():
     for col in edge_columns:
         if not col:
             continue
-        if col == "subject":
+        if col == "category":
+            # Duplicate category: one for Neo4j :LABEL, one as regular property            
+            edge_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
+        elif col == "subject":
             # Duplicate subject: one for Neo4j :START_ID, one as regular property
             edge_select_parts.append('subject as ":START_ID"')
             edge_select_parts.append(col)
@@ -610,7 +614,7 @@ def load_neo4j_csv():
     copy (
         select
             {edge_select}
-        from edges 
+        from edges
           join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.neo4j.csv'
     """

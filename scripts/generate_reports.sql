@@ -110,7 +110,7 @@ copy (
 
 
 copy (
-    select *, sum(count) as count from
+    select * exclude count, sum(count) as count from
     (
         select 
         provided_by as edge_ingest, 
@@ -118,7 +118,7 @@ copy (
         subject_namespace as namespace,
         subject_category as category,
         subject_taxon as in_taxon,
-        count(*) as count 
+        sum(count) as count 
         from 'output/qc/edge_report.parquet'
         group by all
         union all
@@ -128,7 +128,7 @@ copy (
         object_namespace as namespace,
         object_category as category,
         object_taxon as in_taxon,
-        count(*) as count
+        sum(count) as count
         from 'output/qc/edge_report.parquet'
         group by all
     ) 
@@ -294,4 +294,4 @@ order by is_protein_coding desc,
     has_phenotype_or_disease desc,
     has_ortholog desc,
     has_ortholog_phenotype desc
-) to 'output/qc/gene_connection_report.tsv';
+) to 'output/qc/gene_connection_report.tsv' (format 'csv', delimiter E'\t', header true);
