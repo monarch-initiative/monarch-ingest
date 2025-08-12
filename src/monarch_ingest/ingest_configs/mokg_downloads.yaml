@@ -1,0 +1,9 @@
+---
+- hgnc_gene
+- mapping
+- phenio
+- panther_genome_orthologs
+- pombase_gene
+- dictybase_gene
+- alliance_gene
+- ncbi_gene
