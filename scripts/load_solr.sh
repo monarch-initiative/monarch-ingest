@@ -24,7 +24,21 @@ curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/ba
 
 echo "Starting the server"
 poetry run lsolr start-server
-sleep 60
+
+echo "Waiting for Solr to be ready..."
+for i in {1..30}; do
+  if curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
+    echo "Solr is ready!"
+    break
+  fi
+  echo "Waiting for Solr... ($((i*5))/150 seconds)"
+  sleep 5
+done
+
+if ! curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
+  echo "Solr failed to start within 150 seconds"
+  exit 1
+fi
 
 echo "Adding cores"
 poetry run lsolr add-cores entity association sssom infores
