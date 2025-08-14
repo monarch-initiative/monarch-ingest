@@ -23,8 +23,7 @@ curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/ba
 curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml
 
 echo "Starting the server"
-poetry run lsolr start-server
-
+poetry run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
 echo "Waiting for Solr to be ready..."
 for i in {1..30}; do
   if curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
@@ -91,9 +90,9 @@ poetry run lsolr bulkload -C sssom -s model.yaml headless.gene_mappings.sssom.ts
 poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings.sssom.tsv
 
 echo "Loading entities"
-poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
+poetry run lsolr bulkload -C entity -s model.yaml --chunked --chunk-size 100000  output/monarch-kg-denormalized-nodes.tsv
 
-poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor output/monarch-kg-denormalized-edges.tsv
+poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor --chunked --chunk-size 500000 output/monarch-kg-denormalized-edges.tsv
 curl "http://localhost:8983/solr/association/select?q=*:*"
 
 mkdir solr-data || true

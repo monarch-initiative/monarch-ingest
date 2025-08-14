@@ -2282,18 +2282,24 @@ name = "linkml-solr"
 version = "0.1.6"
 description = ""
 optional = false
-python-versions = "<4.0.0,>=3.8.1"
-files = [
-    {file = "linkml_solr-0.1.6-py3-none-any.whl", hash = "sha256:23ae65774ac8b67fe7e3ffc65eb9889328726de72b1a2293bc7972ea42fa83f0"},
-    {file = "linkml_solr-0.1.6.tar.gz", hash = "sha256:f8d9f9cfdaace461e367d1a7711db2f417011bde30e16f740443c9b98ce096f9"},
-]
+python-versions = "^3.8.1"
+files = []
+develop = false
 
 [package.dependencies]
-jsonasobj = ">=1.3.1,<2.0.0"
-linkml = ">=1.7.0,<2.0.0"
-linkml-dataops = ">=0.1.0,<0.2.0"
+duckdb = "*"
+jsonasobj = "^1.3.1"
+linkml = "^1.7.0"
+linkml-dataops = "^0.1.0"
 linkml-runtime = ">=1.7.4"
-pysolr = ">=3.9.0,<4.0.0"
+pysolr = "^3.9.0"
+requests = "^2.25.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/linkml/linkml-solr.git"
+reference = "performance-optimizations"
+resolved_reference = "fcddaab638a31725ed81c64210088a330f3ec0a4"
 
 [[package]]
 name = "loguru"
@@ -5556,4 +5562,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "72cf4d2f13a0d7abce61f5fc727086636b5d14105b8220446e5423559c7f67c8"
+content-hash = "f4ccfc7d57c437b5c28a2b27a00090c6bc1bb7061a6bf5747747ffb9303e49ff"
