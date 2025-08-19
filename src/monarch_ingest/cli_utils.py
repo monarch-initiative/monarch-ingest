@@ -17,7 +17,7 @@ from functools import lru_cache
 import pandas
 import sh
 
-from cat_merge.merge import merge
+from cat_merge.duckdb_merge import merge_duckdb as merge
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_utils import transform_source
@@ -375,7 +375,10 @@ def merge_files(
 
     logger.info("Merging knowledge graph...")
 
-    merge(name=name, source=input_dir, output_dir=output_dir, mappings=mappings)
+    merge(name=name, 
+          source=input_dir, 
+          output_dir=output_dir, 
+          mappings=mappings)
 
 
 def apply_closure(
