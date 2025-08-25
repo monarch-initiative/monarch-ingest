@@ -388,15 +388,17 @@ develop = false
 [package.dependencies]
 click = "^8"
 duckdb = ">=1.0.0"
+linkml-runtime = "^1.7.0"
 mkdocs = "^1.3.0"
 pandas = ">=2.0.0,<3.0.0"
+pyyaml = "^6.0"
 scipy = ">=1.9,<2.0.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/monarch-initiative/cat-merge"
 reference = "duck-it"
-resolved_reference = "c4c88b575cf2125aa370c9f9a4c59d1d28cc0c8d"
+resolved_reference = "1aebf157ba0f1130c18bc63b7a1fc25a41a86904"
 
 [[package]]
 name = "certifi"
@@ -632,16 +634,20 @@ name = "closurizer"
 version = "0.7.3"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 optional = false
-python-versions = "<4.0,>=3.8"
-files = [
-    {file = "closurizer-0.7.3-py3-none-any.whl", hash = "sha256:72a7a1a02d7056951ed36db72c23fb3c64aeedc1f221f4bc8b063e245d0affe0"},
-    {file = "closurizer-0.7.3.tar.gz", hash = "sha256:0ed8d7bed0631dfd8f32945b9c559de5d39776422ecc6dd2aa2e2d989c8ba3e7"},
-]
+python-versions = "^3.8"
+files = []
+develop = false
 
 [package.dependencies]
-click = ">=8,<9"
+click = "^8"
 duckdb = "*"
-SQLAlchemy = ">=1.4.37,<2.0.0"
+SQLAlchemy = "^1.4.37"
+
+[package.source]
+type = "git"
+url = "https://github.com/monarch-initiative/closurizer"
+reference = "respect-multivalued"
+resolved_reference = "ded35fb02bb69e0bf8d32e88e00c8bea31ad0ed2"
 
 [[package]]
 name = "colorama"
@@ -2304,7 +2310,7 @@ requests = "^2.25.0"
 type = "git"
 url = "https://github.com/linkml/linkml-solr.git"
 reference = "performance-optimizations"
-resolved_reference = "b344da5e989a0eb762d5a8a92546a05fdde07f7c"
+resolved_reference = "01985b28a4c114d18aee3037c411fbb852274d8c"
 
 [[package]]
 name = "loguru"
@@ -5567,4 +5573,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "368f2e6294f7d675b0a689b757b5001764ba07ff76ec293573b5c2e6acf2b21b"
+content-hash = "cfe8f977afc496021ce0a746c77fb14cfe372ff521db4adf1830fcf175806234"

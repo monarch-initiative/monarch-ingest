@@ -2,6 +2,7 @@ import csv
 import os
 import sys
 import tarfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import duckdb
 import yaml
@@ -15,6 +16,7 @@ from functools import lru_cache
 
 # from loguru import logger
 import pandas
+import pystow
 import sh
 
 from cat_merge.duckdb_merge import merge_duckdb as merge
@@ -30,6 +32,34 @@ from monarch_ingest.utils.export_utils import export
 
 
 OUTPUT_DIR = "output"
+
+# URLs for model files from monarch-app
+MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml"
+SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml"
+
+def ensure_model_files() -> tuple[Path, Path]:
+    """
+    Download model.yaml and similarity.yaml files to current directory using pystow.
+    Returns tuple of (model_yaml_path, similarity_yaml_path)
+    """
+    import shutil
+    
+    # Use pystow to download and cache files
+    module = pystow.module("monarch-ingest")
+    cached_model_path = module.ensure("model.yaml", url=MODEL_YAML_URL)
+    cached_similarity_path = module.ensure("similarity.yaml", url=SIMILARITY_YAML_URL)
+    
+    # Copy to current directory for backward compatibility
+    local_model_path = Path("model.yaml")
+    local_similarity_path = Path("similarity.yaml")
+    
+    if not local_model_path.exists() or local_model_path.stat().st_mtime < cached_model_path.stat().st_mtime:
+        shutil.copy2(cached_model_path, local_model_path)
+    
+    if not local_similarity_path.exists() or local_similarity_path.stat().st_mtime < cached_similarity_path.stat().st_mtime:
+        shutil.copy2(cached_similarity_path, local_similarity_path)
+    
+    return local_model_path, local_similarity_path
 
 
 def transform_one(
@@ -300,20 +330,35 @@ def transform_all(
         logger.error(f"Error running Phenio ingest: {e}")
 
     ingests = get_ingests()
-    for ingest in ingests:
-        try:
-            transform_one(
-                ingest=ingest,
-                output_dir=output_dir,
-                row_limit=row_limit,
-                rdf=rdf,
-                force=force,
-                verbose=verbose,
-                log=log,
-            )
-        except Exception as e:
-            logger.error(f"Error running ingest {ingest}: {e}")
-            pass
+    
+    # Determine optimal number of workers based on CPU cores
+    # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
+    max_workers = min(os.cpu_count() or 4, len(ingests), 8)
+    logger.info(f"Running {len(ingests)} ingests with {max_workers} parallel workers")
+    
+    # Run ingests in parallel using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(
+                transform_one,
+                ingest,
+                output_dir,
+                row_limit,
+                rdf,
+                force,
+                verbose,
+                log,
+            ): ingest
+            for ingest in ingests
+        }
+        
+        for future in as_completed(futures):
+            ingest = futures[future]
+            try:
+                future.result()
+                logger.info(f"Completed ingest: {ingest}")
+            except Exception as e:
+                logger.error(f"Error running ingest {ingest}: {e}")
 
     # if log: logger.removeHandler(fh)
 
@@ -369,16 +414,22 @@ def merge_files(
     logger.info("Generating mappings...")
 
     mappings = []
-    mappings.append("data/monarch/mondo.sssom.tsv")
-    mappings.append("data/monarch/gene_mappings.sssom.tsv")
-    mappings.append("data/monarch/mesh_chebi_biomappings.sssom.tsv")
+    mappings.append("data/monarch/*.sssom.tsv")
 
     logger.info("Merging knowledge graph...")
 
+    model_yaml_path, _ = ensure_model_files()
     merge(name=name, 
           source=input_dir, 
-          output_dir=output_dir, 
+          output_dir=output_dir,
+          schema_path=str(model_yaml_path),
           mappings=mappings)
+    
+    # Create information_resource table from infores catalog
+    logger.info("Creating information_resource table...")
+    db = duckdb.connect(f'{output_dir}/{name}.duckdb')
+    db.execute("create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')")
+    db.close()
 
 
 def apply_closure(
@@ -389,8 +440,16 @@ def apply_closure(
     edges_output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     nodes_output_file = f"{output_dir}/{name}-denormalized-nodes.tsv"
     database = f"{name}.duckdb"
+
+    model_yaml_path, _ = ensure_model_files()
+    sv = SchemaView(str(model_yaml_path))
+    multivalued_slots = []
+    for classname in ["Entity", "Association"]:
+        multivalued_slots.extend([slot.name for slot in sv.class_induced_slots(classname) if slot.multivalued])
+
+
     add_closure(
-        kg_archive=f"{output_dir}/{name}.tar.gz",
+        database_path=os.path.join(output_dir, database),
         closure_file=closure_file,
         edges_output_file=edges_output_file,
         nodes_output_file=nodes_output_file,
@@ -401,8 +460,7 @@ def apply_closure(
             "disease_context_qualifier",
         ],
         #  just populate _label, _category, _namespace properties for these fields
-        edge_fields_to_label=[
-            "qualifiers",
+        edge_fields_to_label=[            
             "species_context_qualifier",
             "stage_qualifier",
             "sex_qualifier",
@@ -413,8 +471,10 @@ def apply_closure(
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
+        # TODO get a complete list of multivalued fields from the monarch-app schema entity and association classes
+        multivalued_fields=[]
     )
-    sh.mv(database, f"{output_dir}/")
+#     sh.mv(database, f"{output_dir}/")
 
 
 def load_sqlite():
@@ -442,14 +502,15 @@ def get_biolink_ancestor_df():
 
     return class_ancestor_df, all_slot_names, biolink_model
 
+@lru_cache(maxsize=1)
+def get_monarch_schema() -> SchemaView:
+    model_yaml_path, _ = ensure_model_files()
+    return SchemaView(str(model_yaml_path))
 
 def load_jsonl():
     db = duckdb.connect('output/monarch-kg.duckdb')
 
     class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
-
-    node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
-    edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
 
     def slot_is_multi_valued(slot_name: str) -> bool:
         slot_name = slot_name.lower().replace("_", " ")
@@ -457,15 +518,10 @@ def load_jsonl():
             return False
         return biolink_model.get_slot(slot_name).multivalued
 
-    mv_node_columns = [col for col in node_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_edge_columns = [col for col in edge_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_node_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_node_columns])
-    mv_edge_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_edge_columns])
-
     db.sql(
         f"""
     copy (
-      select nodes.* replace (ancestors as category, {mv_node_replacement}) 
+      select nodes.* replace (ancestors as category) 
       from nodes
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_nodes.jsonl' (FORMAT JSON);
@@ -475,7 +531,7 @@ def load_jsonl():
     db.sql(
         f"""
     copy (
-      select edges.* replace (ancestors as category, cast(negated as boolean) as negated, {mv_edge_replacement}),  
+      select edges.* replace (ancestors as category, cast(negated as boolean) as negated),  
       from edges
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
@@ -485,23 +541,23 @@ def load_jsonl():
 
 def slot_is_multi_valued(slot_name: str) -> bool:
 
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+    if slot_name not in sv.all_slots():
         return False
 
-    slot_name = slot_name.lower().replace("_", " ")
-    if slot_name not in all_slot_names:
+    
+    if slot_name not in sv.all_slots():
         return False
-    return biolink_model.get_slot(slot_name).multivalued
+    return sv.get_slot(slot_name).multivalued
 
 def slot_is_boolean(slot_name: str) -> bool:
 
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+    if slot_name not in sv.all_slots():
         return False
 
-    slot_name = slot_name.lower().replace("_", " ")
-    induced_slot = biolink_model.induced_slot(slot_name)
+    
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how boolean shows up in biolink model
@@ -512,14 +568,13 @@ def slot_is_boolean(slot_name: str) -> bool:
     
 def slot_is_integer(slot_name: str) -> bool:
     
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    sv = get_monarch_schema()
+    
 
-    slot_name = slot_name.lower().replace("_", " ")
-
-    if slot_name not in all_slot_names:
+    if slot_name not in sv.all_slots():
         return False
 
-    induced_slot = biolink_model.induced_slot(slot_name)
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how integer shows up in biolink model
@@ -529,13 +584,13 @@ def slot_is_integer(slot_name: str) -> bool:
         return False
     
 def slot_is_float(slot_name: str) -> bool:
-    
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+
+    if slot_name not in sv.all_slots():
         return False
-    slot_name = slot_name.lower().replace("_", " ")
-    induced_slot = biolink_model.induced_slot(slot_name)
+
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how float shows up in biolink model
@@ -557,7 +612,7 @@ def get_neo4j_column(field: str) -> str:
     if slot_is_boolean(field):
         return f'{field} as "{field}:boolean"'
     if slot_is_multi_valued(field):
-        return f'replace({field}, \'|\', \';\') as "{field}:string[]"'
+        return f"""array_to_string({field}, ';') as "{field}:string[]" """
     return field
 
 def load_neo4j_csv():
@@ -652,7 +707,7 @@ def create_qc_reports():
         raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
     sql = qc_sql.read_text()
 
-    con = duckdb.connect('output/monarch-kg.duckdb')
+    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
     con.execute(sql)
 
 def export_tsv():

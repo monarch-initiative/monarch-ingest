@@ -14,13 +14,8 @@ if test -f "output/monarch-kg-denormalized-nodes.tsv.gz"; then
     gunzip --force output/monarch-kg-denormalized-nodes.tsv.gz
 fi
 
-echo "Download the schema from monarch-py"
-# This replaces poetry run monarch schema > model.yaml and just awkwardly pulls from a github raw link
-
-# retrieve the schema from the main branch on monarch-app
-
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml
-curl -O https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml
+echo "Download the schema files using pystow"
+python -c "from monarch_ingest.cli_utils import ensure_model_files; ensure_model_files()"
 
 echo "Starting the server"
 poetry run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
@@ -56,6 +51,19 @@ echo "Adding association schema"
 poetry run lsolr create-schema -C association -s model.yaml -t Association
 sleep 5
 
+# turn off transaction logging for the big indexes
+core_names=(entity association)
+for core_name in "${core_names[@]}"; do
+  curl -X POST "http://localhost:8983/solr/$core_name/config" \
+    -H "Content-type: application/json" \
+    -d '{
+      "set-property": {
+        "updateLog.numRecordsToKeep": 0
+      }
+    }'
+  curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=$core_name"
+done
+
 echo "Adding sssom schema"
 poetry run lsolr create-schema -C sssom -s model.yaml -t Mapping
 sleep 5
@@ -79,34 +87,22 @@ curl -X POST -H 'Content-Type: application/json' \
   'http://localhost:8983/solr/infores/update/json/docs?commit=true' \
   --data-binary @data/infores/infores_catalog.jsonl
 
-# todo: this should probably happen after associations, but putting it first for testing
-echo "Loading SSSOM mappings"
-grep -v "^#" data/monarch/mondo.sssom.tsv > headless.mondo.sssom.tsv
-grep -v "^#" data/monarch/gene_mappings.sssom.tsv > headless.gene_mappings.sssom.tsv
-grep -v "^#" data/monarch/mesh_chebi_biomappings.sssom.tsv > headless.mesh_chebi_biomappings.sssom.tsv
-# todo: copy the mappings to output/mappings as part of an earlier step
-poetry run lsolr bulkload -C sssom -s model.yaml headless.mondo.sssom.tsv
-poetry run lsolr bulkload -C sssom -s model.yaml headless.gene_mappings.sssom.tsv
-poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings.sssom.tsv
+
+poetry run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
 
 echo "Loading entities"
-poetry run lsolr bulkload -C entity -s model.yaml --chunked --chunk-size 100000  output/monarch-kg-denormalized-nodes.tsv
 
-poetry run lsolr bulkload -C association -s model.yaml --processor frequency_update_processor --chunked --chunk-size 500000 output/monarch-kg-denormalized-edges.tsv
-curl "http://localhost:8983/solr/association/select?q=*:*"
+poetry run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
 
-mkdir solr-data || true
+poetry run lsolr bulkload-db -C association -s model.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
+# curl "http://localhost:8983/solr/association/select?q=*:*"
 
-docker cp -q my_solr:/var/solr/data solr-data/
 
-# make sure it's readable by all in the tar file
-chmod -R a+rX solr-data
 
 # For now, just leaving solr running. It will go away on it's own in the jenkins builder
 # and otherwise that makes this script a nice way to just run solr locally
 # docker stop my_solr
 # docker rm my_solr
 
-tar czf solr.tar.gz -C solr-data data
-mv solr.tar.gz output/
+docker exec my_solr tar czf - -C /var/solr data > output/solr.tar.gz
 

@@ -74,11 +74,6 @@ pipeline {
                 sh 'poetry run ingest report'
             }
         }
-        stage('kgx-graph-summary') {
-            steps {
-                sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
-            }
-        }
         stage('jsonl-conversion'){
             steps {
                 sh 'poetry run ingest jsonl'
@@ -89,29 +84,38 @@ pipeline {
                 sh 'poetry run ingest neo4j-csv'
             }
         }
-        stage('solr') {
-            steps {
-                sh 'poetry run ingest solr'
-            }
-        }
-        stage('kgx-transforms'){
-            steps {
-                sh './scripts/kgx_transforms.sh'
-            }
-        }
-        stage('neo4j-dump') {
-            steps {
-                sh './scripts/load_neo4j.sh'
-            }
-        }
-        stage('sqlite') {
-            steps {
-                sh 'poetry run ingest sqlite'
-            }
-        }
-        stage('make exports') {
-            steps {
-                sh 'poetry run ingest export'
+        stage('parallel-processing') {
+            parallel {
+                stage('kgx-graph-summary') {
+                    steps {
+                        sh 'poetry run kgx graph-summary -i tsv --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg_nodes.tsv output/monarch-kg_edges.tsv -o output/merged_graph_stats.yaml'
+                    }
+                }
+                stage('solr') {
+                    steps {
+                        sh 'poetry run ingest solr'
+                    }
+                }
+                stage('kgx-transforms'){
+                    steps {
+                        sh './scripts/kgx_transforms.sh'
+                    }
+                }
+                stage('neo4j-dump') {
+                    steps {
+                        sh './scripts/load_neo4j.sh'
+                    }
+                }
+                stage('sqlite') {
+                    steps {
+                        sh 'poetry run ingest sqlite'
+                    }
+                }
+                stage('make exports') {
+                    steps {
+                        sh 'poetry run ingest export'
+                    }
+                }
             }
         }
         stage('prepare release') {
