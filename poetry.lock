@@ -3712,6 +3712,30 @@ doc = ["recommonmark", "sphinx", "sphinx_git", "sphinx_rtd_theme", "sphinxcontri
 test = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "pystow"
+version = "0.5.6"
+description = "Easily pick a place to store data for your python package."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pystow-0.5.6-py3-none-any.whl", hash = "sha256:3a44349dccc1260238e8f4c8f2dec5d72e2952a126fb897df663e94e6a910c86"},
+    {file = "pystow-0.5.6.tar.gz", hash = "sha256:db567e82a5b7aea34cdcf4ae00ba822cd64a51ae2f465b1995599676e4cdbff2"},
+]
+
+[package.dependencies]
+click = "*"
+requests = "*"
+tqdm = "*"
+
+[package.extras]
+aws = ["boto3"]
+docs = ["sphinx (<8.0)", "sphinx-autodoc-typehints", "sphinx-automodapi", "sphinx-click", "sphinx-rtd-theme"]
+pandas = ["pandas"]
+rdf = ["rdflib"]
+tests = ["coverage", "pytest", "requests-file"]
+xml = ["lxml"]
+
+[[package]]
 name = "pytest"
 version = "8.3.4"
 description = "pytest: simple powerful testing with Python"
@@ -5573,4 +5597,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cfe8f977afc496021ce0a746c77fb14cfe372ff521db4adf1830fcf175806234"
+content-hash = "ccb1fc4e59e2d73310d0a4ac52c39e7b91473780b1ce42c27a6ea0bd7061d287"
