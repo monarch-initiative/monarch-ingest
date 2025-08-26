@@ -123,7 +123,7 @@ pipeline {
                 sh 'poetry run ingest prepare-release'
             }
         }
-    } //remove
+
 } //remove
     //     stage('upload files') {
     //         steps {
@@ -159,15 +159,16 @@ pipeline {
     //             '''
     //         }
     //     }
-    // }
-    // post {
-    //     always {
-    //         sh 'docker rm -f neo || true'
-    //     //    sh 'docker rm my_solr || true'
-    //     }
-    //     // upload data and output on failure
-    //     failure {
-    //         sh 'gsutil cp -r . gs://monarch-archive/monarch-kg-failed/${RELEASE}-${BUILD_TIMESTAMP}'
-    //     }
-//     }
-// }
+    }
+    post {
+        always {
+            sh 'docker rm -f neo || true'
+        //    sh 'docker rm my_solr || true'
+        }
+        // upload data and output on failure
+        failure {
+            //             sh 'gsutil cp -r . gs://monarch-archive/monarch-kg-failed/${RELEASE}-${BUILD_TIMESTAMP}'
+            sh 'gsutil cp -r output/* gs://monarch-archive/monarch-kg-experiment/${RELEASE}-${BUILD_TIMESTAMP}'
+        }
+    }
+}

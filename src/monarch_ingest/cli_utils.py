@@ -2,7 +2,8 @@ import csv
 import os
 import sys
 import tarfile
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import duckdb
 import yaml
@@ -336,8 +337,11 @@ def transform_all(
     max_workers = min(os.cpu_count() or 4, len(ingests), 8)
     logger.info(f"Running {len(ingests)} ingests with {max_workers} parallel workers")
     
-    # Run ingests in parallel using ThreadPoolExecutor
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    start_time = time.time()
+    completed_count = 0
+    
+    # Run ingests in parallel using ProcessPoolExecutor for true CPU parallelism
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = {
             executor.submit(
                 transform_one,
@@ -356,9 +360,16 @@ def transform_all(
             ingest = futures[future]
             try:
                 future.result()
-                logger.info(f"Completed ingest: {ingest}")
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.info(f"Completed ingest: {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed")
             except Exception as e:
-                logger.error(f"Error running ingest {ingest}: {e}")
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.error(f"Error running ingest {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed: {e}")
+    
+    total_time = time.time() - start_time
+    logger.info(f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds using {max_workers} parallel workers")
 
     # if log: logger.removeHandler(fh)
 
