@@ -44,7 +44,7 @@ copy (
     primary_knowledge_source,
     dangling_edges.provided_by,
     count(*) as count
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz' as dangling_edges
+    from dangling_edges
         left outer join nodes as subject_nodes 
         on subject = subject_nodes.id
         left outer join nodes as object_nodes
@@ -56,11 +56,11 @@ copy (
 
 copy (
     select subject as missing_node, provided_by as edge_ingest, primary_knowledge_source as edge_primary_knowledge_source      
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz'
+    from dangling_edges
     where subject not in (select id from nodes)
     union all
     select object as missing_node, provided_by as edge_ingest, primary_knowledge_source as edge_primary_knowledge_source
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz'
+    from dangling_edges
     where object not in (select id from nodes)
 ) to 'output/qc/missing_nodes.parquet';
 
