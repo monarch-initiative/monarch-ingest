@@ -124,7 +124,6 @@ pipeline {
             }
         }
 
-} //remove
     //     stage('upload files') {
     //         steps {
     //             sh 'poetry run ingest release --kghub'
