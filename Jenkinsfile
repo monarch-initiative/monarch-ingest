@@ -98,7 +98,7 @@ pipeline {
                 }
                 stage('kgx-transforms'){
                     steps {
-                        sh './scripts/kgx_transforms.sh'
+                        sh 'poetry run kgx transform -i tsv -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg_nodes.tsv output/monarch-kg_edges.tsv'
                     }
                 }
                 stage('neo4j-dump') {
