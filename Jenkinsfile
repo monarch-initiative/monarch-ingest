@@ -98,7 +98,7 @@ pipeline {
                 }
                 stage('kgx-transforms'){
                     steps {
-                        sh 'poetry run kgx transform -i duckdb-f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
+                        sh 'poetry run kgx transform -i duckdb -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
                     }
                 }
                 stage('neo4j-dump') {
