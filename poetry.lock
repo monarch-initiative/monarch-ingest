@@ -2,13 +2,13 @@
 
 [[package]]
 name = "alabaster"
-version = "1.0.0"
+version = "0.7.16"
 description = "A light, configurable Sphinx theme"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 files = [
-    {file = "alabaster-1.0.0-py3-none-any.whl", hash = "sha256:fc6786402dc3fcb2de3cabd5fe455a2db534b371124f1f21de8731783dec828b"},
-    {file = "alabaster-1.0.0.tar.gz", hash = "sha256:c00dca57bca26fa62a6d7d0a9fcce65f3e026e9bfe33e9c538fd3fbb2144fd9e"},
+    {file = "alabaster-0.7.16-py3-none-any.whl", hash = "sha256:b46733c07dce03ae4e150330b975c75737fa60f0a7c591b6c8bf4928a28e2c92"},
+    {file = "alabaster-0.7.16.tar.gz", hash = "sha256:75a8b99c28a5dad50dd7f8ccdd447a121ddb3892da9e53d1ca5cca3106d58d65"},
 ]
 
 [[package]]
@@ -140,6 +140,23 @@ types-python-dateutil = ">=2.8.10"
 [package.extras]
 doc = ["doc8", "sphinx (>=7.0.0)", "sphinx-autobuild", "sphinx-autodoc-typehints", "sphinx_rtd_theme (>=1.3.0)"]
 test = ["dateparser (==1.*)", "pre-commit", "pytest", "pytest-cov", "pytest-mock", "pytz (==2021.1)", "simplejson (==3.*)"]
+
+[[package]]
+name = "asteval"
+version = "0.9.33"
+description = "Safe, minimalistic evaluator of python expression using ast module"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "asteval-0.9.33-py3-none-any.whl", hash = "sha256:aae3a0308575a545c8cecc43a6632219e6a90963a56380c74632cf54311e43bf"},
+    {file = "asteval-0.9.33.tar.gz", hash = "sha256:94981701f4d252c88aa5e821121b1aabef73a003da138fc6405169c9e675d24d"},
+]
+
+[package.extras]
+all = ["Sphinx", "build", "coverage", "pytest", "pytest-cov", "twine"]
+dev = ["build", "twine"]
+doc = ["Sphinx"]
+test = ["coverage", "pytest", "pytest-cov"]
 
 [[package]]
 name = "asttokens"
@@ -398,7 +415,7 @@ scipy = ">=1.9,<2.0.0"
 type = "git"
 url = "https://github.com/monarch-initiative/cat-merge"
 reference = "duck-it"
-resolved_reference = "1aebf157ba0f1130c18bc63b7a1fc25a41a86904"
+resolved_reference = "8aea3a929e05d2dade0a0e1c9a28e39c0764e756"
 
 [[package]]
 name = "certifi"
@@ -775,6 +792,24 @@ files = [
 ]
 
 [[package]]
+name = "deepdiff"
+version = "6.7.1"
+description = "Deep Difference and Search of any Python object/data. Recreate objects by adding adding deltas to each other."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "deepdiff-6.7.1-py3-none-any.whl", hash = "sha256:58396bb7a863cbb4ed5193f548c56f18218060362311aa1dc36397b2f25108bd"},
+    {file = "deepdiff-6.7.1.tar.gz", hash = "sha256:b367e6fa6caac1c9f500adc79ada1b5b1242c50d5f716a1a4362030197847d30"},
+]
+
+[package.dependencies]
+ordered-set = ">=4.0.2,<4.2.0"
+
+[package.extras]
+cli = ["click (==8.1.3)", "pyyaml (==6.0.1)"]
+optimize = ["orjson"]
+
+[[package]]
 name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
@@ -850,13 +885,13 @@ ssh = ["paramiko (>=2.4.3)"]
 
 [[package]]
 name = "docutils"
-version = "0.21.2"
+version = "0.19"
 description = "Docutils -- Python Documentation Utilities"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.7"
 files = [
-    {file = "docutils-0.21.2-py3-none-any.whl", hash = "sha256:dafca5b9e384f0e419294eb4d2ff9fa826435bf15f15b7bd45723e8ad76811b2"},
-    {file = "docutils-0.21.2.tar.gz", hash = "sha256:3a6b18732edf182daa3cd12775bbb338cf5691468f91eeeb109deff6ebfa986f"},
+    {file = "docutils-0.19-py3-none-any.whl", hash = "sha256:5e1de4d849fee02c63b040a4a3fd567f4ab104defd8a5511fbbc24a8a017efbc"},
+    {file = "docutils-0.19.tar.gz", hash = "sha256:33995a6753c30b7f577febfc2c50411fec6aac7f7ffeb7c4cfe5991072dcf9e6"},
 ]
 
 [[package]]
@@ -1013,6 +1048,40 @@ files = [
 docs = ["furo (>=2024.8.6)", "sphinx (>=8.1.3)", "sphinx-autodoc-typehints (>=3)"]
 testing = ["covdefaults (>=2.3)", "coverage (>=7.6.10)", "diff-cover (>=9.2.1)", "pytest (>=8.3.4)", "pytest-asyncio (>=0.25.2)", "pytest-cov (>=6)", "pytest-mock (>=3.14)", "pytest-timeout (>=2.3.1)", "virtualenv (>=20.28.1)"]
 typing = ["typing-extensions (>=4.12.2)"]
+
+[[package]]
+name = "flexcache"
+version = "0.3"
+description = "Saves and loads to the cache a transformed versions of a source object."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "flexcache-0.3-py3-none-any.whl", hash = "sha256:d43c9fea82336af6e0115e308d9d33a185390b8346a017564611f1466dcd2e32"},
+    {file = "flexcache-0.3.tar.gz", hash = "sha256:18743bd5a0621bfe2cf8d519e4c3bfdf57a269c15d1ced3fb4b64e0ff4600656"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "pytest-mpl", "pytest-subtests"]
+
+[[package]]
+name = "flexparser"
+version = "0.4"
+description = "Parsing made fun ... using typing."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "flexparser-0.4-py3-none-any.whl", hash = "sha256:3738b456192dcb3e15620f324c447721023c0293f6af9955b481e91d00179846"},
+    {file = "flexparser-0.4.tar.gz", hash = "sha256:266d98905595be2ccc5da964fe0a2c3526fbbffdc45b65b3146d75db992ef6b2"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "pytest-mpl", "pytest-subtests"]
 
 [[package]]
 name = "fqdn"
@@ -2135,48 +2204,54 @@ typer = ">=0.12.3,<0.13.0"
 
 [[package]]
 name = "kgx"
-version = "2.4.2"
+version = "0.0.0"
 description = "A Python library and set of command line utilities for exchanging Knowledge Graphs (KGs) that conform to or are aligned to the Biolink Model."
 optional = false
-python-versions = "<4.0,>=3.9"
-files = [
-    {file = "kgx-2.4.2-py3-none-any.whl", hash = "sha256:87875d9a6f5d595ed84c99516abd6a6edf5b8d1f9a2dee493ed4e2d7d2a1e3fd"},
-    {file = "kgx-2.4.2.tar.gz", hash = "sha256:16279cc8a772655a60ad0e98a2c6ee4b9670f30271fd492c1a508f735d8d02b4"},
-]
+python-versions = "^3.9"
+files = []
+develop = false
 
 [package.dependencies]
-bmt = ">=1.4.0,<2.0.0"
-cachetools = ">=5.0.0,<6.0.0"
+bmt = "^1.4.0"
+cachetools = "^5.0.0"
 Click = "*"
-deprecation = ">=2.1.0,<3.0.0"
-docker = ">=6.0.0,<7.0.0"
+deprecation = "^2.1.0"
+docker = "^6.0.0"
 docutils = ">=0.18.1"
-ijson = ">=3.1.3,<4.0.0"
-inflection = ">=0.5.1,<0.6.0"
-jsonlines = ">=4.0.0,<5.0.0"
-jsonstreams = ">=0.6.0,<0.7.0"
-linkml = ">=1.7.7,<2.0.0"
-linkml-runtime = ">=1.7.5,<2.0.0"
+duckdb = "^1.0.0"
+ijson = "^3.1.3"
+inflection = "^0.5.1"
+jsonlines = "^4.0.0"
+jsonstreams = "^0.6.0"
+linkml = "^1.9.1"
+linkml-map = "^0.3.8"
+linkml-runtime = "^1.9.1"
 mypy = "*"
 neo4j = ">=4.4.10"
 networkx = "*"
-ordered-set = ">=4.0.2,<5.0.0"
+ordered-set = "^4.0.2"
 pandas = ">1.0.3"
-prefixcommons = ">=0.1.4,<0.2.0"
-prologterms = ">=0.0.6,<0.0.7"
-pyarrow = ">=15.0.2,<16.0.0"
+prefixcommons = "^0.1.4"
+prologterms = "^0.0.6"
+pyarrow = "^15.0.2"
 pytest = "*"
-python-dateutil = ">=2.8.1,<3.0.0"
+python-dateutil = "^2.8.1"
 pyyaml = "*"
 rdflib = ">=6.0.0"
-recommonmark = "*"
+recommonmark = "0.5.0"
 shexjsg = "*"
 SPARQLWrapper = ">=1.8.2"
-Sphinx = "*"
-stringcase = ">=1.2.0,<2.0.0"
-terminaltables = ">=3.1.0,<4.0.0"
-tox = ">=4.13.0,<5.0.0"
-validators = ">=0.20.0,<0.21.0"
+sphinx = "5.3.0"
+stringcase = "^1.2.0"
+terminaltables = "^3.1.0"
+tox = "^4.13.0"
+validators = "^0.20.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/biolink/kgx.git"
+reference = "duckdb-source"
+resolved_reference = "85c43824ffd8eed2e7ca157e41be506826ac2095"
 
 [[package]]
 name = "koza"
@@ -2201,27 +2276,43 @@ sssom = ">=0.4"
 typer = ">=0.12.3"
 
 [[package]]
+name = "lark"
+version = "1.2.2"
+description = "a modern parsing library"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "lark-1.2.2-py3-none-any.whl", hash = "sha256:c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c"},
+    {file = "lark-1.2.2.tar.gz", hash = "sha256:ca807d0162cd16cef15a8feecb862d7319e7a09bdb13aef927968e45040fed80"},
+]
+
+[package.extras]
+atomic-cache = ["atomicwrites"]
+interegular = ["interegular (>=0.3.1,<0.4.0)"]
+nearley = ["js2py"]
+regex = ["regex"]
+
+[[package]]
 name = "linkml"
-version = "1.8.6"
+version = "1.9.4"
 description = "Linked Open Data Modeling Language"
 optional = false
-python-versions = "<4.0.0,>=3.8.1"
+python-versions = ">=3.9"
 files = [
-    {file = "linkml-1.8.6-py3-none-any.whl", hash = "sha256:17e222cbbf8873508fbcc6c39d1ce06b6b14a372adc73bbaffe3d328d1af59ea"},
-    {file = "linkml-1.8.6.tar.gz", hash = "sha256:81da9eb75a1cdbe050eaa421fbe4c1e035be9f5f05c154ec667a2ec711839bc5"},
+    {file = "linkml-1.9.4-py3-none-any.whl", hash = "sha256:ecc5cb73669da7d48340f689ae6ed8076b6b15099aef472668345fc9b5931b11"},
+    {file = "linkml-1.9.4.tar.gz", hash = "sha256:b5075a697bfdb6ef829e19e15046f6efc11a946352eb7f5024e89f710ebd96ca"},
 ]
 
 [package.dependencies]
 antlr4-python3-runtime = ">=4.9.0,<4.10"
-click = ">=7.0"
+click = ">=8.0,<8.2"
 graphviz = ">=0.10.1"
 hbreader = "*"
 isodate = ">=0.6.0"
 jinja2 = ">=3.1.0"
 jsonasobj2 = ">=1.0.3,<2.0.0"
 jsonschema = {version = ">=4.0.0", extras = ["format"]}
-linkml-dataops = "*"
-linkml-runtime = ">=1.8.1,<2.0.0"
+linkml-runtime = ">=1.9.5,<2.0.0"
 openpyxl = "*"
 parse = "*"
 prefixcommons = ">=0.1.7"
@@ -2234,15 +2325,10 @@ python-dateutil = "*"
 pyyaml = "*"
 rdflib = ">=6.0.0"
 requests = ">=2.22"
+sphinx-click = ">=6.0.0"
 sqlalchemy = ">=1.4.31"
 typing-extensions = {version = ">=4.6.0", markers = "python_version < \"3.12\""}
 watchdog = ">=0.9.0"
-
-[package.extras]
-black = ["black (>=24.0.0)"]
-numpydantic = ["numpydantic (>=1.6.1)"]
-shacl = ["pyshacl (>=0.25.0,<0.26.0)"]
-tests = ["black (>=24.0.0)", "numpydantic (>=1.6.1)", "pyshacl (>=0.25.0,<0.26.0)"]
 
 [[package]]
 name = "linkml-dataops"
@@ -2263,14 +2349,32 @@ linkml-runtime = ">=1.1.6"
 "ruamel.yaml" = "*"
 
 [[package]]
+name = "linkml-map"
+version = "0.3.8"
+description = "a framework for specifying and executing mappings between data models"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "linkml_map-0.3.8-py3-none-any.whl", hash = "sha256:2779602e4d298070308d2f369213bd52ae06e8e1f29def1761275cb1aa338a5c"},
+    {file = "linkml_map-0.3.8.tar.gz", hash = "sha256:64fb27768384cf02dd865ab146e29e096dc33b08416947cb37e2213957396e0d"},
+]
+
+[package.dependencies]
+asteval = ">=0.9.29,<0.10.0"
+deepdiff = ">=6.7.1,<7.0.0"
+linkml-runtime = ">=1.7.2"
+pydantic = ">=2.0.0"
+ucumvert = ">=0.1.1,<0.2.0"
+
+[[package]]
 name = "linkml-runtime"
-version = "1.8.3"
+version = "1.9.5"
 description = "Runtime environment for LinkML, the Linked open data modeling language"
 optional = false
-python-versions = "<4.0,>=3.8"
+python-versions = ">=3.9"
 files = [
-    {file = "linkml_runtime-1.8.3-py3-none-any.whl", hash = "sha256:0750920f1348fffa903d99e7b5834ce425a2a538285aff9068dbd96d05caabd1"},
-    {file = "linkml_runtime-1.8.3.tar.gz", hash = "sha256:5b7f682eef54aaf0a59c50eeacdb11463b43b124a044caf496cde59936ac05c8"},
+    {file = "linkml_runtime-1.9.5-py3-none-any.whl", hash = "sha256:fece3e8aa25a4246165c6528b6a7fe83a929b985d2ce1951cc8a0f4da1a30b90"},
+    {file = "linkml_runtime-1.9.5.tar.gz", hash = "sha256:78dc1383adf11ad5f20bb11b6adde56ed566fbd2429a292d57699ad4596c738a"},
 ]
 
 [package.dependencies]
@@ -2278,6 +2382,7 @@ click = "*"
 curies = ">=0.5.4"
 deprecated = "*"
 hbreader = "*"
+isodate = {version = ">=0.7.2,<1.0.0", markers = "python_version < \"3.11\""}
 json-flattener = ">=0.1.9"
 jsonasobj2 = ">=1.0.4,<2.dev0"
 jsonschema = ">=3.2.0"
@@ -3103,6 +3208,35 @@ files = [
 
 [package.dependencies]
 ptyprocess = ">=0.5"
+
+[[package]]
+name = "pint"
+version = "0.24.4"
+description = "Physical quantities module"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "Pint-0.24.4-py3-none-any.whl", hash = "sha256:aa54926c8772159fcf65f82cc0d34de6768c151b32ad1deb0331291c38fe7659"},
+    {file = "pint-0.24.4.tar.gz", hash = "sha256:35275439b574837a6cd3020a5a4a73645eb125ce4152a73a2f126bf164b91b80"},
+]
+
+[package.dependencies]
+flexcache = ">=0.3"
+flexparser = ">=0.4"
+platformdirs = ">=2.1.0"
+typing-extensions = ">=4.0.0"
+
+[package.extras]
+babel = ["babel (<=2.8)"]
+bench = ["pytest", "pytest-codspeed"]
+dask = ["dask"]
+mip = ["mip (>=1.13)"]
+numpy = ["numpy (>=1.23)"]
+pandas = ["pint-pandas (>=0.3)"]
+test = ["pytest", "pytest-benchmark", "pytest-cov", "pytest-mpl", "pytest-subtests"]
+testbase = ["pytest", "pytest-benchmark", "pytest-cov", "pytest-subtests"]
+uncertainties = ["uncertainties (>=3.1.6)"]
+xarray = ["xarray"]
 
 [[package]]
 name = "platformdirs"
@@ -4129,17 +4263,17 @@ rdflib-jsonld = "0.6.1"
 
 [[package]]
 name = "recommonmark"
-version = "0.7.1"
+version = "0.5.0"
 description = "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects."
 optional = false
 python-versions = "*"
 files = [
-    {file = "recommonmark-0.7.1-py2.py3-none-any.whl", hash = "sha256:1b1db69af0231efce3fa21b94ff627ea33dee7079a01dd0a7f8482c3da148b3f"},
-    {file = "recommonmark-0.7.1.tar.gz", hash = "sha256:bdb4db649f2222dcd8d2d844f0006b958d627f732415d399791ee436a3686d67"},
+    {file = "recommonmark-0.5.0-py2.py3-none-any.whl", hash = "sha256:c85228b9b7aea7157662520e74b4e8791c5eacd375332ec68381b52bf10165be"},
+    {file = "recommonmark-0.5.0.tar.gz", hash = "sha256:a520b8d25071a51ae23a27cf6252f2fe387f51bdc913390d83b2b50617f5bb48"},
 ]
 
 [package.dependencies]
-commonmark = ">=0.8.1"
+commonmark = ">=0.7.3"
 docutils = ">=0.11"
 sphinx = ">=1.3.1"
 
@@ -4798,38 +4932,53 @@ pandas = ["pandas (>=1.3.5)"]
 
 [[package]]
 name = "sphinx"
-version = "8.1.3"
+version = "5.3.0"
 description = "Python documentation generator"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.6"
 files = [
-    {file = "sphinx-8.1.3-py3-none-any.whl", hash = "sha256:09719015511837b76bf6e03e42eb7595ac8c2e41eeb9c29c5b755c6b677992a2"},
-    {file = "sphinx-8.1.3.tar.gz", hash = "sha256:43c1911eecb0d3e161ad78611bc905d1ad0e523e4ddc202a58a821773dc4c927"},
+    {file = "Sphinx-5.3.0.tar.gz", hash = "sha256:51026de0a9ff9fc13c05d74913ad66047e104f56a129ff73e174eb5c3ee794b5"},
+    {file = "sphinx-5.3.0-py3-none-any.whl", hash = "sha256:060ca5c9f7ba57a08a1219e547b269fadf125ae25b06b9fa7f66768efb652d6d"},
 ]
 
 [package.dependencies]
-alabaster = ">=0.7.14"
-babel = ">=2.13"
-colorama = {version = ">=0.4.6", markers = "sys_platform == \"win32\""}
-docutils = ">=0.20,<0.22"
+alabaster = ">=0.7,<0.8"
+babel = ">=2.9"
+colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
+docutils = ">=0.14,<0.20"
 imagesize = ">=1.3"
-Jinja2 = ">=3.1"
-packaging = ">=23.0"
-Pygments = ">=2.17"
-requests = ">=2.30.0"
-snowballstemmer = ">=2.2"
-sphinxcontrib-applehelp = ">=1.0.7"
-sphinxcontrib-devhelp = ">=1.0.6"
-sphinxcontrib-htmlhelp = ">=2.0.6"
-sphinxcontrib-jsmath = ">=1.0.1"
-sphinxcontrib-qthelp = ">=1.0.6"
-sphinxcontrib-serializinghtml = ">=1.1.9"
-tomli = {version = ">=2", markers = "python_version < \"3.11\""}
+Jinja2 = ">=3.0"
+packaging = ">=21.0"
+Pygments = ">=2.12"
+requests = ">=2.5.0"
+snowballstemmer = ">=2.0"
+sphinxcontrib-applehelp = "*"
+sphinxcontrib-devhelp = "*"
+sphinxcontrib-htmlhelp = ">=2.0.0"
+sphinxcontrib-jsmath = "*"
+sphinxcontrib-qthelp = "*"
+sphinxcontrib-serializinghtml = ">=1.1.5"
 
 [package.extras]
 docs = ["sphinxcontrib-websupport"]
-lint = ["flake8 (>=6.0)", "mypy (==1.11.1)", "pyright (==1.1.384)", "pytest (>=6.0)", "ruff (==0.6.9)", "sphinx-lint (>=0.9)", "tomli (>=2)", "types-Pillow (==10.2.0.20240822)", "types-Pygments (==2.18.0.20240506)", "types-colorama (==0.4.15.20240311)", "types-defusedxml (==0.7.0.20240218)", "types-docutils (==0.21.0.20241005)", "types-requests (==2.32.0.20240914)", "types-urllib3 (==1.26.25.14)"]
-test = ["cython (>=3.0)", "defusedxml (>=0.7.1)", "pytest (>=8.0)", "setuptools (>=70.0)", "typing_extensions (>=4.9)"]
+lint = ["docutils-stubs", "flake8 (>=3.5.0)", "flake8-bugbear", "flake8-comprehensions", "flake8-simplify", "isort", "mypy (>=0.981)", "sphinx-lint", "types-requests", "types-typed-ast"]
+test = ["cython", "html5lib", "pytest (>=4.6)", "typed_ast"]
+
+[[package]]
+name = "sphinx-click"
+version = "6.0.0"
+description = "Sphinx extension that automatically documents click applications"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "sphinx_click-6.0.0-py3-none-any.whl", hash = "sha256:1e0a3c83bcb7c55497751b19d07ebe56b5d7b85eb76dd399cf9061b497adc317"},
+    {file = "sphinx_click-6.0.0.tar.gz", hash = "sha256:f5d664321dc0c6622ff019f1e1c84e58ce0cecfddeb510e004cf60c2a3ab465b"},
+]
+
+[package.dependencies]
+click = ">=8.0"
+docutils = "*"
+sphinx = ">=4.0"
 
 [[package]]
 name = "sphinxcontrib-applehelp"
@@ -5298,6 +5447,26 @@ files = [
 ]
 
 [[package]]
+name = "ucumvert"
+version = "0.1.2"
+description = "Python parser & interface for UCUM (Unified Code for Units of Measure)."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "ucumvert-0.1.2-py3-none-any.whl", hash = "sha256:480f0cd9315ebc5c6da3117de42296a4f8e35deb84a7f0b8719a909129afb72b"},
+    {file = "ucumvert-0.1.2.tar.gz", hash = "sha256:a7c0dab878571ed5e03abab988c46e40e40092b253d6da5041d2305e1ddecd02"},
+]
+
+[package.dependencies]
+lark = "*"
+pint = "*"
+
+[package.extras]
+dev = ["openpyxl", "pydot", "ruff", "ucumvert[lint,tests]"]
+lint = ["black"]
+tests = ["coverage", "pytest"]
+
+[[package]]
 name = "uri-template"
 version = "1.3.0"
 description = "RFC 6570 URI Template Processor"
@@ -5597,4 +5766,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ccb1fc4e59e2d73310d0a4ac52c39e7b91473780b1ce42c27a6ea0bd7061d287"
+content-hash = "96d383c425a203d5f013ed04c5c36c574a6ff4c865469e0f6ed275e136ced3e1"

@@ -88,7 +88,7 @@ pipeline {
             parallel {
                 stage('kgx-graph-summary') {
                     steps {
-                        sh 'poetry run kgx graph-summary -i tsv --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg_nodes.tsv output/monarch-kg_edges.tsv -o output/merged_graph_stats.yaml'
+                        sh 'poetry run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'                        
                     }
                 }
                 stage('solr') {
@@ -98,7 +98,7 @@ pipeline {
                 }
                 stage('kgx-transforms'){
                     steps {
-                        sh 'poetry run kgx transform -i tsv -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg_nodes.tsv output/monarch-kg_edges.tsv'
+                        sh 'poetry run kgx transform -i duckdb-f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
                     }
                 }
                 stage('neo4j-dump') {
@@ -116,11 +116,6 @@ pipeline {
                         sh 'poetry run ingest export'
                     }
                 }
-            }
-        }
-        stage('prepare release') {
-            steps {
-                sh 'poetry run ingest prepare-release'
             }
         }
 

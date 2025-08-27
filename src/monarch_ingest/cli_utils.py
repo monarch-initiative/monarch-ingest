@@ -434,7 +434,8 @@ def merge_files(
           source=input_dir, 
           output_dir=output_dir,
           schema_path=str(model_yaml_path),
-          mappings=mappings)
+          mappings=mappings,
+          graph_stats=False)
     
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
@@ -548,6 +549,14 @@ def load_jsonl():
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
     """
     )
+
+    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
+    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
+    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
+    jsonl_tar.close()
+
+    os.remove("output/monarch-kg_nodes.jsonl")
+    os.remove("output/monarch-kg_edges.jsonl")
 
 
 def slot_is_multi_valued(slot_name: str) -> bool:
@@ -723,33 +732,6 @@ def create_qc_reports():
 
 def export_tsv():
     export()
-
-
-def do_prepare_release(dir: str = OUTPUT_DIR):
-
-    compressed_artifacts = [
-        'output/monarch-kg.duckdb',
-    ]
-
-    for artifact in compressed_artifacts:
-        if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
-            sh.pigz(artifact, force=True)
-
-    tsv_tar = tarfile.open("output/monarch-kg.tsv.tar.gz", "w:gz")
-    tsv_tar.add("output/monarch-kg_nodes.tsv", arcname="monarch-kg_nodes.tsv")
-    tsv_tar.add("output/monarch-kg_edges.tsv", arcname="monarch-kg_edges.tsv")
-    tsv_tar.close()
-
-    os.remove("output/monarch-kg_nodes.tsv")
-    os.remove("output/monarch-kg_edges.tsv")
-
-    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
-    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
-    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
-    jsonl_tar.close()
-
-    os.remove("output/monarch-kg_nodes.jsonl")
-    os.remove("output/monarch-kg_edges.jsonl")
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):

@@ -20,7 +20,8 @@ biolink-model = "4.2.6rc3"
 bmt = "^1.0.15"
 cat-merge = {git = "https://github.com/monarch-initiative/cat-merge", rev = "duck-it"}
 kghub-downloader = "^0.4.1"
-kgx = "^2.4.2"
+kgx = {git = "https://github.com/biolink/kgx.git", rev = "duckdb-source"}
+#kgx = { git = "https://github/biolink/kgx", rev = "duckdb-source"}
 koza = "^0.6.1"
 linkml = "^1.7.8"
 linkml-solr = {git = "https://github.com/linkml/linkml-solr.git", rev = "performance-optimizations"}

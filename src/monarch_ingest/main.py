@@ -210,10 +210,6 @@ def report():
     """Run Koza QC on specified Monarch ingests"""
     create_qc_reports()
 
-@typer_app.command()
-def prepare_release():
-    do_prepare_release()
-
 
 @typer_app.command()
 def release(
