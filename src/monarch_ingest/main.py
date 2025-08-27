@@ -6,7 +6,6 @@ import yaml
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure,
-    do_prepare_release,
     do_release,
     export_tsv,
     create_qc_reports,
