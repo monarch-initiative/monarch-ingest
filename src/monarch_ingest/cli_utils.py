@@ -580,7 +580,7 @@ def load_sqlite():
         Path("output/phenio.db.gz").unlink()
         
         # Use DuckDB to populate phenio.db from monarch-kg.duckdb
-        con = duckdb.connect('output/monarch-kg.duckdb')
+        con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
         try:
             con.execute("INSTALL sqlite")
             con.execute("LOAD sqlite")
