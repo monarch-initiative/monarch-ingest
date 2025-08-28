@@ -1,24 +1,26 @@
 import csv
+import gzip
 import os
+import shutil
+import sqlite3
+import subprocess
 import sys
 import tarfile
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
-
-import duckdb
-import yaml
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
+
+import duckdb
+import pandas
+import pystow
+import requests
+import sh
+import yaml
 from biolink_model.datamodel import model  # import the pythongen biolink model to get the version
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
-import requests
-from functools import lru_cache
-
-# from loguru import logger
-import pandas
-import pystow
-import sh
 
 from cat_merge.duckdb_merge import merge_duckdb as merge
 from closurizer.closurizer import add_closure
@@ -490,7 +492,121 @@ def apply_closure(
 
 
 def load_sqlite():
-    sh.bash("scripts/load_sqlite.sh")
+    """
+    Load data from DuckDB to SQLite using DuckDB's SQLite extension.
+    Creates monarch-kg.db and updates phenio.db.
+    """
+    logger = get_logger()
+    
+    # Remove existing SQLite database
+    sqlite_db_path = Path("output/monarch-kg.db")
+    if sqlite_db_path.exists():
+        sqlite_db_path.unlink()
+        
+    logger.info("Loading data from DuckDB to SQLite...")
+    
+    # Create empty SQLite database first so DuckDB can attach to it
+    sqlite3.connect('output/monarch-kg.db').close()
+    
+    # Connect to the DuckDB database
+    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    
+    try:
+        # Install and load SQLite extension
+        con.execute("INSTALL sqlite")
+        con.execute("LOAD sqlite")
+        
+        # Attach the SQLite database (now it exists)
+        con.execute("ATTACH 'output/monarch-kg.db' AS sqlite_db (TYPE SQLITE, READ_ONLY FALSE)")
+        
+        # Copy tables from DuckDB to SQLite
+        logger.info("Loading nodes...")
+        con.execute("CREATE TABLE sqlite_db.nodes AS SELECT * FROM nodes")
+        
+        logger.info("Loading edges...")
+        con.execute("CREATE TABLE sqlite_db.edges AS SELECT * FROM edges")
+        
+        logger.info("Loading denormalized_nodes...")
+        con.execute("CREATE TABLE sqlite_db.denormalized_nodes AS SELECT * FROM denormalized_nodes")
+        
+        logger.info("Loading denormalized_edges...")
+        con.execute("CREATE TABLE sqlite_db.denormalized_edges AS SELECT * FROM denormalized_edges")
+        
+        # Load closure from TSV file
+        logger.info("Loading closure...")
+        con.execute("CREATE TABLE sqlite_db.closure (subject TEXT, predicate TEXT, object TEXT)")
+        con.execute("COPY sqlite_db.closure FROM 'data/monarch/phenio-relation-graph.tsv' (FORMAT CSV, DELIMITER '\t', HEADER false)")
+        
+        # Load dangling edges if QC table exists
+        logger.info("Loading dangling edges...")
+        try:
+            con.execute("CREATE TABLE sqlite_db.dangling_edges AS SELECT * FROM dangling_edges WHERE 1=0")
+            con.execute("INSERT INTO sqlite_db.dangling_edges SELECT * FROM dangling_edges")
+        except Exception as e:
+            logger.warning(f"Could not load dangling_edges table: {e}")
+        
+        # Detach SQLite database
+        con.execute("DETACH sqlite_db")
+        
+    finally:
+        con.close()
+    
+    # Create indices using Python sqlite3
+    logger.info("Creating indices...")
+    sqlite_con = sqlite3.connect('output/monarch-kg.db')
+    try:
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_subject_index ON edges (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_object_index ON edges (object)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS closure_subject_index ON closure (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_subject_index ON denormalized_edges (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_object_index ON denormalized_edges (object)")
+        sqlite_con.commit()
+    finally:
+        sqlite_con.close()
+    
+    # Populate phenio.db
+    logger.info("Populating phenio.db...")
+    phenio_gz_path = Path("data/monarch/phenio.db.gz")
+    phenio_db_path = Path("output/phenio.db")
+    
+    if phenio_gz_path.exists():
+        # Copy and decompress phenio.db
+        shutil.copy(phenio_gz_path, "output/phenio.db.gz")
+        
+        with gzip.open("output/phenio.db.gz", 'rb') as f_in:
+            with open(phenio_db_path, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        
+        Path("output/phenio.db.gz").unlink()
+        
+        # Use DuckDB to populate phenio.db from monarch-kg.duckdb
+        con = duckdb.connect('output/monarch-kg.duckdb')
+        try:
+            con.execute("INSTALL sqlite")
+            con.execute("LOAD sqlite")
+            con.execute("ATTACH 'output/phenio.db' AS phenio_db (TYPE SQLITE, READ_ONLY FALSE)")
+            
+            con.execute("""
+                INSERT INTO phenio_db.term_association (id, subject, predicate, object, evidence_type, publication, source) 
+                SELECT id, subject, predicate, object, has_evidence as evidence_type, publications as publication, primary_knowledge_source as source 
+                FROM edges 
+                WHERE category IN ('biolink:GeneToPhenotypicFeatureAssociation','biolink:DiseaseToPhenotypicFeatureAssociation') 
+                  AND predicate = 'biolink:has_phenotype' 
+                  AND negated <> 'True' 
+                  AND has_count <> 0 
+                  AND has_percentage <> 0
+            """)
+            
+            con.execute("DETACH phenio_db")
+        finally:
+            con.close()
+    
+    # Compress databases
+    logger.info("Compressing databases...")
+    subprocess.run(["pigz", "--force", "output/phenio.db"], check=False)
+    subprocess.run(["pigz", "--force", "output/monarch-kg.db"], check=False)
+    
+    logger.info("SQLite database loading completed.")
 
 
 def load_solr():
