@@ -85,10 +85,24 @@ echo "Loading SSSOM mappings"
 grep -v "^#" data/monarch/mondo.sssom.tsv > headless.mondo.sssom.tsv
 grep -v "^#" data/monarch/gene_mappings.sssom.tsv > headless.gene_mappings.sssom.tsv
 grep -v "^#" data/monarch/mesh_chebi_biomappings.sssom.tsv > headless.mesh_chebi_biomappings.sssom.tsv
+grep -v "^#" data/monarch/hp_mesh.sssom.tsv > headless.hp_mesh.sssom.tsv
+grep -v "^#" data/monarch/nbo-go.sssom.tsv > headless.nbo-go.sssom.tsv
+grep -v "^#" data/monarch/uberon.sssom.tsv > headless.uberon.sssom.tsv
+grep -v "^#" data/monarch/umls_hp.sssom.tsv > headless.umls_hp.sssom.tsv
+grep -v "^#" data/monarch/upheno-cross-species.sssom.tsv > headless.upheno-cross-species.sssom.tsv
+grep -v "^#" data/monarch/upheno-species-independent.sssom.tsv > headless.upheno-species-independent.sssom.tsv
+
 # todo: copy the mappings to output/mappings as part of an earlier step
 poetry run lsolr bulkload -C sssom -s model.yaml headless.mondo.sssom.tsv
 poetry run lsolr bulkload -C sssom -s model.yaml headless.gene_mappings.sssom.tsv
 poetry run lsolr bulkload -C sssom -s model.yaml headless.mesh_chebi_biomappings.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.hp_mesh.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.nbo-go.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.uberon.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.umls_hp.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.upheno-cross-species.sssom.tsv
+poetry run lsolr bulkload -C sssom -s model.yaml headless.upheno-species-independent.sssom.tsv
+
 
 echo "Loading entities"
 poetry run lsolr bulkload -C entity -s model.yaml output/monarch-kg-denormalized-nodes.tsv
