@@ -54,6 +54,11 @@ pipeline {
                             ),
                             booleanParam(
                                 defaultValue: false,
+                                description: 'Create Neo4j dump',
+                                name: 'NEO4J_DUMP'
+                            ),
+                            booleanParam(
+                                defaultValue: false,
                                 description: 'Upload to bucket',
                                 name: 'UPLOAD'
                             ),
@@ -94,6 +99,7 @@ pipeline {
                     mkdir data || true
                     gsutil -q -m cp -r gs://data-public-monarchinitiative/monarch-kg-dev/$RELEASE/* output/
                     gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
+                    gunzip output/monarch-kg.duckdb.gz || true
                     ls -lasdf
                 '''
             }
@@ -166,6 +172,17 @@ pipeline {
             }
             steps {
                 sh './scripts/kgx_transforms.sh'
+            }
+        }
+        stage('neo4j-dump') {
+            when {
+                expression {
+                    return params.NEO4J_DUMP
+                }
+            }
+            steps {
+                sh 'rm -rf output/monarch-kg.neo4j.dump || true'
+                sh './scripts/load_neo4j.sh'
             }
         }
         stage('upload files') {

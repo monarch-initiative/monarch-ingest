@@ -192,12 +192,6 @@
   local_name: data/dictybase/all-mutants-ddb_g.txt
   tag: dictybase_gene_to_phenotype
 
-### Flybase
--
-  url: http://ftp.flybase.org/releases/FB2021_05/precomputed_files/references/entity_publication_fb_2021_05.tsv.gz
-  local_name: data/flybase/entity_publication_fb.tsv.gz
-  tag: flybase_publication_to_gene
-
 # HGNC
 -
   url: http://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
@@ -264,11 +258,13 @@
   local_name: data/ncbi/gene_info.gz
   tag: ncbi_gene
 
+
+### Now modularized, but here for posterity...
 ### Panther Gene Orthology (from www.pantherdb.org)
-- 
-  url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
-  local_name: data/panther/AllOrthologs.tar.gz
-  tag: panther_genome_orthologs 
+
+##- url: http://data.pantherdb.org/ftp/ortholog/current_release/AllOrthologs.tar.gz
+##  local_name: data/panther/AllOrthologs.tar.gz
+
 
 ## The following Panther orthology data ingest is not yet implemented
 ##
@@ -496,3 +492,17 @@
   url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
   local_name: data/zfin/id_map_zfin.tsv
   tag: zfin_gene_to_phenotype
+
+### Information Resource Registry
+-
+  url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/infores_catalog.yaml
+  local_name: data/infores/infores_catalog.yaml
+  tag: infores_catalog
+- 
+  url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/src/information_resource_registry/schema/information_resource_registry.yaml
+  local_name: data/infores/information_resource_registry.yaml
+  tag: infores_catalog
+-
+  url: https://github.com/biolink/information-resource-registry/releases/latest/download/infores_catalog.jsonl
+  local_name: data/infores/infores_catalog.jsonl
+  tag: infores_catalog

@@ -11,6 +11,7 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 import requests
+from functools import lru_cache
 
 # from loguru import logger
 import pandas
@@ -428,9 +429,8 @@ def load_solr():
     sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
 
 
-def load_jsonl():
-    db = duckdb.connect('output/monarch-kg.duckdb')
-
+@lru_cache(maxsize=1)
+def get_biolink_ancestor_df():
     biolink_model = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
     )
@@ -441,9 +441,16 @@ def load_jsonl():
             f"biolink:{camelcase(a)}" for a in biolink_model.class_ancestors(c.name)
         ]
     all_slot_names = biolink_model.all_slots().keys()
-
-    # this may appear to be unused, but it's accessed in the duckdb sql queries below
+    
     class_ancestor_df = pandas.DataFrame(list(class_ancestor_dict.items()), columns=['classname', 'ancestors'])
+
+    return class_ancestor_df, all_slot_names, biolink_model
+
+
+def load_jsonl():
+    db = duckdb.connect('output/monarch-kg.duckdb')
+
+    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
     node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
     edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
@@ -472,12 +479,167 @@ def load_jsonl():
     db.sql(
         f"""
     copy (
-      select edges.* replace (ancestors as category, {mv_edge_replacement}),  
+      select edges.* replace (ancestors as category, cast(negated as boolean) as negated, {mv_edge_replacement}),  
       from edges
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
     """
     )
+
+
+def slot_is_multi_valued(slot_name: str) -> bool:
+
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    if slot_name not in all_slot_names:
+        return False
+
+    slot_name = slot_name.lower().replace("_", " ")
+    if slot_name not in all_slot_names:
+        return False
+    return biolink_model.get_slot(slot_name).multivalued
+
+def slot_is_boolean(slot_name: str) -> bool:
+
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    if slot_name not in all_slot_names:
+        return False
+
+    slot_name = slot_name.lower().replace("_", " ")
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how boolean shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "boolean":
+        return True
+    else:
+        return False
+    
+def slot_is_integer(slot_name: str) -> bool:
+    
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+
+    slot_name = slot_name.lower().replace("_", " ")
+
+    if slot_name not in all_slot_names:
+        return False
+
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how integer shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "integer":
+        return True
+    else:
+        return False
+    
+def slot_is_float(slot_name: str) -> bool:
+    
+    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+
+    if slot_name not in all_slot_names:
+        return False
+    slot_name = slot_name.lower().replace("_", " ")
+    induced_slot = biolink_model.induced_slot(slot_name)
+    if induced_slot is None:
+        return False
+    # There could be way more logic here to check for class ranges etc, but that's not how float shows up in biolink model
+    if induced_slot.range is not None and induced_slot.range == "double":
+        return True
+    else:
+        return False
+
+def get_neo4j_column(field: str) -> str:
+    """
+    Convert a field name to a column specification with Neo4j type annotations.
+    Handles multi-valued fields as string[] and applies appropriate type annotations.
+    Does not handle special Neo4j import columns (:ID, :LABEL, :START_ID, :TYPE, :END_ID).
+    """
+    if slot_is_integer(field):
+        return f'{field} as "{field}:long"'
+    if slot_is_float(field):
+        return f'{field} as "{field}:float"'
+    if slot_is_boolean(field):
+        return f'{field} as "{field}:boolean"'
+    if slot_is_multi_valued(field):
+        return f'replace({field}, \'|\', \';\') as "{field}:string[]"'
+    return field
+
+def load_neo4j_csv():
+    """
+    Create CSV files for Neo4j import from the DuckDB database.
+    This function exports nodes and edges to CSV files in the output directory.
+    """
+    db = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+
+    node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
+    edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
+
+    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()        
+
+    # Build node column selection with special handling for id and category
+    node_select_parts = []
+    for col in node_columns:
+        if not col:
+            continue
+        if col == "id":
+            node_select_parts.append('id as ":ID"')
+            node_select_parts.append(get_neo4j_column(col))            
+        elif col == "category":
+            # Duplicate category: one for Neo4j :LABEL, one as regular property
+            node_select_parts.append("array_to_string(ancestors, ';') as ':LABEL'")
+            node_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
+        else:
+            node_select_parts.append(get_neo4j_column(col))
+    node_select = ",\n".join(node_select_parts)
+
+    # Build edge column selection with special handling for subject, predicate, object
+    edge_select_parts = []
+    for col in edge_columns:
+        if not col:
+            continue
+        if col == "category":
+            # Duplicate category: one for Neo4j :LABEL, one as regular property            
+            edge_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
+        elif col == "subject":
+            # Duplicate subject: one for Neo4j :START_ID, one as regular property
+            edge_select_parts.append('subject as ":START_ID"')
+            edge_select_parts.append(col)
+        elif col == "predicate":
+            # Duplicate predicate: one for Neo4j :TYPE, one as regular property
+            edge_select_parts.append('predicate as ":TYPE"')
+            edge_select_parts.append(col)
+        elif col == "object":
+            # Duplicate object: one for Neo4j :END_ID, one as regular property
+            edge_select_parts.append('object as ":END_ID"')
+            edge_select_parts.append(col)
+        else:
+            edge_select_parts.append(get_neo4j_column(col))
+    edge_select = ",\n".join(edge_select_parts)
+
+        # also write to neo4j csv format 
+    edges_query = f"""
+    copy (
+        select
+            {edge_select}
+        from edges
+          join class_ancestor_df on category = classname  
+    ) to 'output/monarch-kg_edges.neo4j.csv'
+    """
+    db.sql(edges_query)
+
+    nodes_query = f"""
+    copy (
+        select
+            {node_select}
+        from nodes
+          join class_ancestor_df on category = classname
+    ) to 'output/monarch-kg_nodes.neo4j.csv'
+    """
+    db.sql(nodes_query)
+
+    print(edges_query)
+    print(nodes_query)
+    
 
 
 def create_qc_reports():

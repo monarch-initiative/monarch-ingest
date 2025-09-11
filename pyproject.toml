@@ -38,6 +38,7 @@ linkml-runtime = "^1.7.5"
 pandas = "2.0.3"
 closurizer = "0.7.3"
 notebook = "^7.3.2"
+duckdb = "^1.3.0"
 
 [tool.poetry.group.dev]
 optional = true

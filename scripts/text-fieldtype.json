@@ -3,6 +3,9 @@
     "name": "text",
     "class": "solr.TextField",
     "positionIncrementGap": "100",
+    "termVectors": "true",
+    "termOffsets": "true",
+    "termPositions": "true",
     "indexAnalyzer": {
       "tokenizer": {
         "class": "solr.StandardTokenizerFactory"
@@ -17,7 +20,7 @@
           "catenateAll":"1",
           "splitOnCaseChange":"0",
           "preserveOriginal":"1",
-          "splitOnNumerics":"0"
+          "splitOnNumerics":"0",
         },
         { "class": "solr.FlattenGraphFilterFactory" },
         { "class": "solr.ASCIIFoldingFilterFactory" },
