@@ -417,28 +417,24 @@ files = [
 
 [[package]]
 name = "cat-merge"
-version = "0.2.1"
+version = "1.0.0"
 description = ""
 optional = false
-python-versions = "^3.10"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "cat_merge-1.0.0-py3-none-any.whl", hash = "sha256:f8a783cab14caa207b202165ce911d758161ae03f31d67eadd043e902c102fc5"},
+    {file = "cat_merge-1.0.0.tar.gz", hash = "sha256:8492600b7f27854410a6328ab024cabc0f79a2f62fdee53a8bc988ef70a709d3"},
+]
 
 [package.dependencies]
-click = "^8"
-duckdb = ">=1.0.0"
-linkml-runtime = "^1.7.0"
-mkdocs = "^1.3.0"
+click = ">=8,<9"
+duckdb = ">=1.0.0,<2.0.0"
+linkml-runtime = ">=1.7.0,<2.0.0"
+mkdocs = ">=1.3.0,<2.0.0"
 pandas = ">=2.0.0,<3.0.0"
-pyyaml = "^6.0"
+pyyaml = ">=6.0,<7.0"
 scipy = ">=1.9,<2.0.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/monarch-initiative/cat-merge"
-reference = "duck-it"
-resolved_reference = "8aea3a929e05d2dade0a0e1c9a28e39c0764e756"
 
 [[package]]
 name = "certifi"
@@ -694,7 +690,7 @@ SQLAlchemy = "^1.4.37"
 type = "git"
 url = "https://github.com/monarch-initiative/closurizer"
 reference = "respect-multivalued"
-resolved_reference = "ded35fb02bb69e0bf8d32e88e00c8bea31ad0ed2"
+resolved_reference = "ffcef0d589b5d90c3d2eeb0a4dbe906b878ec510"
 
 [[package]]
 name = "colorama"
@@ -6057,4 +6053,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "96d383c425a203d5f013ed04c5c36c574a6ff4c865469e0f6ed275e136ced3e1"
+content-hash = "5e211d2ee18f67cb50f543ce705a40cb123a65430e879c946009766c4e304fb9"

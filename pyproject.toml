@@ -18,7 +18,7 @@ packages = [
 python = "^3.10"
 biolink-model = "4.2.6rc3"
 bmt = "^1.0.15"
-cat-merge = {git = "https://github.com/monarch-initiative/cat-merge", rev = "duck-it"}
+cat-merge = "^1.0.0"
 kghub-downloader = "^0.4.1"
 kgx = {git = "https://github.com/biolink/kgx.git", rev = "duckdb-source"}
 #kgx = { git = "https://github/biolink/kgx", rev = "duckdb-source"}
