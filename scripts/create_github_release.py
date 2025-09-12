@@ -8,7 +8,6 @@ DIR = Path(__file__).parent.parent / "output"
 GH_TOKEN = os.environ["GH_RELEASE_TOKEN"]
 UPLOAD_FILES = [
     "monarch-kg.tar.gz",
-    "monarch-kg.duckdb",
     "merged_graph_stats.yaml",
     "qc_report.yaml",
     "metadata.yaml",
