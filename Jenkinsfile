@@ -119,40 +119,40 @@ pipeline {
             }
         }
 
-    //     stage('upload files') {
-    //         steps {
-    //             sh 'poetry run ingest release --kghub'
-    //         }
-    //     }
-    //     stage('create github release') {
-    //         steps {
-    //             sh 'poetry run python scripts/create_github_release.py --kg-version ${RELEASE}'
-    //         }
-    //     }
-    //     stage('update dev deployment') {
-    //         steps {
-    //             sh 'poetry run python scripts/update-dev-solr.py'
-    //         }
-    //     }
-    //     stage('index') {            
-    //         steps {
-    //             sh '''
-    //                 echo "Current directory: $(pwd)"
-    //                 python3 --version
-    //                 pip --version
-    //                 export PATH=$HOME/.local/bin:$PATH
-    //                 echo "Path: $PATH"
+        stage('upload files') {
+            steps {
+                sh 'poetry run ingest release --kghub'
+            }
+        }
+        stage('create github release') {
+            steps {
+                sh 'poetry run python scripts/create_github_release.py --kg-version ${RELEASE}'
+            }
+        }
+        stage('update dev deployment') {
+            steps {
+                sh 'poetry run python scripts/update-dev-solr.py'
+            }
+        }
+        stage('index') {            
+            steps {
+                sh '''
+                    echo "Current directory: $(pwd)"
+                    python3 --version
+                    pip --version
+                    export PATH=$HOME/.local/bin:$PATH
+                    echo "Path: $PATH"
 
-    //                 cd $HOME
-    //                 mkdir data-public
-    //                 gcsfuse --implicit-dirs data-public-monarchinitiative data-public
+                    cd $HOME
+                    mkdir data-public
+                    gcsfuse --implicit-dirs data-public-monarchinitiative data-public
 
-    //                 git clone https://github.com/monarch-initiative/monarch-file-server.git
-    //                 pip install -r monarch-file-server/scripts/requirements.txt
-    //                 python3 monarch-file-server/scripts/directory_indexer.py --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x
-    //             '''
-    //         }
-    //     }
+                    git clone https://github.com/monarch-initiative/monarch-file-server.git
+                    pip install -r monarch-file-server/scripts/requirements.txt
+                    python3 monarch-file-server/scripts/directory_indexer.py --inject monarch-file-server/scripts/directory-index-template.html --directory data-public --prefix https://data.monarchinitiative.org -x
+                '''
+            }
+        }
     }
     post {
         always {
