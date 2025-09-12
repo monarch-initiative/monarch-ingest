@@ -20,11 +20,10 @@ biolink-model = "4.2.6rc3"
 bmt = "^1.0.15"
 cat-merge = "^1.0.0"
 kghub-downloader = "^0.4.1"
-kgx = {git = "https://github.com/biolink/kgx.git", rev = "duckdb-source"}
-#kgx = { git = "https://github/biolink/kgx", rev = "duckdb-source"}
+kgx = "2.6.0"
 koza = "^0.6.1"
 linkml = "^1.7.8"
-linkml-solr = {git = "https://github.com/linkml/linkml-solr.git", rev = "performance-optimizations"}
+linkml-solr = "0.2.0"
 multi-indexer = "0.0.5"
 # Other Dependencies
 botocore = "^1.31"
@@ -37,7 +36,7 @@ yamllint = "^1.35.1"
 linkml-runtime = "^1.7.5"
 # Remove this once cat-merge fixes its pandas dependency
 pandas = "2.0.3"
-closurizer = {git = "https://github.com/monarch-initiative/closurizer", rev = "respect-multivalued"}
+closurizer = "^0.8.0"
 notebook = "^7.3.2"
 duckdb = "^1.3.0"
 pystow = "^0.5.4"
