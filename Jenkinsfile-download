@@ -26,6 +26,9 @@ pipeline {
         stage('post-process') {
             steps {
                 sh '''
+		    ls -la scripts
+		    chmod +x scripts/after_download.sh
+		    ls -la scripts
                     poetry run scripts/after_download.sh
                 '''
             }
