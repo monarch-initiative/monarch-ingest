@@ -82,17 +82,22 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
 
+    logger.info(f"Running ingest: {ingest}")
     # if a url is provided instead of a config, just download the file and copy it to the output dir
     if "url" in ingests[ingest]:
+        logger.info(f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output")
         for url in ingests[ingest]["url"]:
             filename = url.split("/")[-1]
-
+            #Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/ 
+            os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
             if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
+                logger.info(f"{ingest}: {url} already found at {output_dir}/transform_output/{filename}")
                 continue
 
             response = requests.get(url, allow_redirects=True)
             with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
                 f.write(response.content)
+                logger.info(f"{ingest}: {url} downloaded to {output_dir}/transform_output/{filename}")
         return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
@@ -106,7 +111,7 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         return
 
-    logger.info(f"Running ingest: {ingest}")
+
     try:
         transform_source(
             source=source_file.as_posix(),
@@ -159,15 +164,17 @@ def transform_phenio(
     # if log: fh = add_log_fh(logger, "logs/phenio.log")
     logger = get_logger(name="phenio" if log else None, verbose=verbose)
 
+    phenio_tar = "data/monarch/kg-phenio.tar.gz"
+    if not Path(phenio_tar).is_file():
+        # if log: logger.removeHandler(fh)
+        raise FileNotFoundError("data/monarch/kg-phenio.tar.gz")
+    
     # TODO: can this be fetched from a purl?
     biolink_model_schema = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
     )
 
-    phenio_tar = "data/monarch/kg-phenio.tar.gz"
-    if not Path(phenio_tar).is_file():
-        # if log: logger.removeHandler(fh)
-        raise FileNotFoundError("data/monarch/kg-phenio.tar.gz")
+
 
     nodefile = "merged-kg_nodes.tsv"
     edgefile = "merged-kg_edges.tsv"
