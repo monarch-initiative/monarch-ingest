@@ -1,23 +1,28 @@
 import csv
+import gzip
 import os
+import shutil
+import sqlite3
+import subprocess
 import sys
 import tarfile
-
-import duckdb
-import yaml
+import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
+
+import duckdb
+import pandas
+import pystow
+import requests
+import sh
+import yaml
 from biolink_model.datamodel import model  # import the pythongen biolink model to get the version
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
-import requests
-from functools import lru_cache
 
-# from loguru import logger
-import pandas
-import sh
-
-from cat_merge.merge import merge
+from cat_merge.duckdb_merge import merge_duckdb as merge
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_utils import transform_source
@@ -30,6 +35,34 @@ from monarch_ingest.utils.export_utils import export
 
 
 OUTPUT_DIR = "output"
+
+# URLs for model files from monarch-app
+MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/model.yaml"
+SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/similarity.yaml"
+
+def ensure_model_files() -> tuple[Path, Path]:
+    """
+    Download model.yaml and similarity.yaml files to current directory using pystow.
+    Returns tuple of (model_yaml_path, similarity_yaml_path)
+    """
+    import shutil
+    
+    # Use pystow to download and cache files
+    module = pystow.module("monarch-ingest")
+    cached_model_path = module.ensure("model.yaml", url=MODEL_YAML_URL)
+    cached_similarity_path = module.ensure("similarity.yaml", url=SIMILARITY_YAML_URL)
+    
+    # Copy to current directory for backward compatibility
+    local_model_path = Path("model.yaml")
+    local_similarity_path = Path("similarity.yaml")
+    
+    if not local_model_path.exists() or local_model_path.stat().st_mtime < cached_model_path.stat().st_mtime:
+        shutil.copy2(cached_model_path, local_model_path)
+    
+    if not local_similarity_path.exists() or local_similarity_path.stat().st_mtime < cached_similarity_path.stat().st_mtime:
+        shutil.copy2(cached_similarity_path, local_similarity_path)
+    
+    return local_model_path, local_similarity_path
 
 
 def transform_one(
@@ -307,20 +340,45 @@ def transform_all(
         logger.error(f"Error running Phenio ingest: {e}")
 
     ingests = get_ingests()
-    for ingest in ingests:
-        try:
-            transform_one(
-                ingest=ingest,
-                output_dir=output_dir,
-                row_limit=row_limit,
-                rdf=rdf,
-                force=force,
-                verbose=verbose,
-                log=log,
-            )
-        except Exception as e:
-            logger.error(f"Error running ingest {ingest}: {e}")
-            pass
+    
+    # Determine optimal number of workers based on CPU cores
+    # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
+    max_workers = min(os.cpu_count() or 4, len(ingests), 8)
+    logger.info(f"Running {len(ingests)} ingests with {max_workers} parallel workers")
+    
+    start_time = time.time()
+    completed_count = 0
+    
+    # Run ingests in parallel using ProcessPoolExecutor for true CPU parallelism
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(
+                transform_one,
+                ingest,
+                output_dir,
+                row_limit,
+                rdf,
+                force,
+                verbose,
+                log,
+            ): ingest
+            for ingest in ingests
+        }
+        
+        for future in as_completed(futures):
+            ingest = futures[future]
+            try:
+                future.result()
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.info(f"Completed ingest: {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed")
+            except Exception as e:
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.error(f"Error running ingest {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed: {e}")
+    
+    total_time = time.time() - start_time
+    logger.info(f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds using {max_workers} parallel workers")
 
     # if log: logger.removeHandler(fh)
 
@@ -376,13 +434,23 @@ def merge_files(
     logger.info("Generating mappings...")
 
     mappings = []
-    mappings.append("data/monarch/mondo.sssom.tsv")
-    mappings.append("data/monarch/gene_mappings.sssom.tsv")
-    mappings.append("data/monarch/mesh_chebi_biomappings.sssom.tsv")
+    mappings.append("data/monarch/*.sssom.tsv")
 
     logger.info("Merging knowledge graph...")
 
-    merge(name=name, source=input_dir, output_dir=output_dir, mappings=mappings)
+    model_yaml_path, _ = ensure_model_files()
+    merge(name=name, 
+          source=input_dir, 
+          output_dir=output_dir,
+          schema_path=str(model_yaml_path),
+          mappings=mappings,
+          graph_stats=False)
+    
+    # Create information_resource table from infores catalog
+    logger.info("Creating information_resource table...")
+    db = duckdb.connect(f'{output_dir}/{name}.duckdb')
+    db.execute("create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')")
+    db.close()
 
 
 def apply_closure(
@@ -393,8 +461,16 @@ def apply_closure(
     edges_output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
     nodes_output_file = f"{output_dir}/{name}-denormalized-nodes.tsv"
     database = f"{name}.duckdb"
+
+    model_yaml_path, _ = ensure_model_files()
+    sv = SchemaView(str(model_yaml_path))
+    multivalued_slots = []
+    for classname in ["Entity", "Association"]:
+        multivalued_slots.extend([slot.name for slot in sv.class_induced_slots(classname) if slot.multivalued])
+
+
     add_closure(
-        kg_archive=f"{output_dir}/{name}.tar.gz",
+        database_path=os.path.join(output_dir, database),
         closure_file=closure_file,
         edges_output_file=edges_output_file,
         nodes_output_file=nodes_output_file,
@@ -405,8 +481,7 @@ def apply_closure(
             "disease_context_qualifier",
         ],
         #  just populate _label, _category, _namespace properties for these fields
-        edge_fields_to_label=[
-            "qualifiers",
+        edge_fields_to_label=[            
             "species_context_qualifier",
             "stage_qualifier",
             "sex_qualifier",
@@ -417,12 +492,128 @@ def apply_closure(
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
+        # TODO get a complete list of multivalued fields from the monarch-app schema entity and association classes
+        multivalued_fields=[]
     )
-    sh.mv(database, f"{output_dir}/")
+#     sh.mv(database, f"{output_dir}/")
 
 
 def load_sqlite():
-    sh.bash("scripts/load_sqlite.sh")
+    """
+    Load data from DuckDB to SQLite using DuckDB's SQLite extension.
+    Creates monarch-kg.db and updates phenio.db.
+    """
+    logger = get_logger()
+    
+    # Remove existing SQLite database
+    sqlite_db_path = Path("output/monarch-kg.db")
+    if sqlite_db_path.exists():
+        sqlite_db_path.unlink()
+        
+    logger.info("Loading data from DuckDB to SQLite...")
+    
+    # Create empty SQLite database first so DuckDB can attach to it
+    sqlite3.connect('output/monarch-kg.db').close()
+    
+    # Connect to the DuckDB database
+    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    
+    try:
+        # Install and load SQLite extension
+        con.execute("INSTALL sqlite")
+        con.execute("LOAD sqlite")
+        
+        # Attach the SQLite database (now it exists)
+        con.execute("ATTACH 'output/monarch-kg.db' AS sqlite_db (TYPE SQLITE, READ_ONLY FALSE)")
+        
+        # Copy tables from DuckDB to SQLite
+        logger.info("Loading nodes...")
+        con.execute("CREATE TABLE sqlite_db.nodes AS SELECT * FROM nodes")
+        
+        logger.info("Loading edges...")
+        con.execute("CREATE TABLE sqlite_db.edges AS SELECT * FROM edges")
+        
+        logger.info("Loading denormalized_nodes...")
+        con.execute("CREATE TABLE sqlite_db.denormalized_nodes AS SELECT * FROM denormalized_nodes")
+        
+        logger.info("Loading denormalized_edges...")
+        con.execute("CREATE TABLE sqlite_db.denormalized_edges AS SELECT * FROM denormalized_edges")
+        
+        # Load closure from TSV file
+        logger.info("Loading closure...")
+        con.execute("CREATE TABLE sqlite_db.closure (subject TEXT, predicate TEXT, object TEXT)")
+        con.execute("COPY sqlite_db.closure FROM 'data/monarch/phenio-relation-graph.tsv' (FORMAT CSV, DELIMITER '\t', HEADER false)")
+        
+        # Load dangling edges if QC table exists
+        logger.info("Loading dangling edges...")
+        try:
+            con.execute("CREATE TABLE sqlite_db.dangling_edges AS SELECT * FROM dangling_edges WHERE 1=0")
+            con.execute("INSERT INTO sqlite_db.dangling_edges SELECT * FROM dangling_edges")
+        except Exception as e:
+            logger.warning(f"Could not load dangling_edges table: {e}")
+        
+        # Detach SQLite database
+        con.execute("DETACH sqlite_db")
+        
+    finally:
+        con.close()
+    
+    # Create indices using Python sqlite3
+    logger.info("Creating indices...")
+    sqlite_con = sqlite3.connect('output/monarch-kg.db')
+    try:
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_subject_index ON edges (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_object_index ON edges (object)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS closure_subject_index ON closure (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_subject_index ON denormalized_edges (subject)")
+        sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_object_index ON denormalized_edges (object)")
+        sqlite_con.commit()
+    finally:
+        sqlite_con.close()
+    
+    # Populate phenio.db
+    logger.info("Populating phenio.db...")
+    phenio_gz_path = Path("data/monarch/phenio.db.gz")
+    phenio_db_path = Path("output/phenio.db")
+    
+    if phenio_gz_path.exists():
+        # Copy and decompress phenio.db
+        shutil.copy(phenio_gz_path, "output/phenio.db.gz")
+        
+        with gzip.open("output/phenio.db.gz", 'rb') as f_in:
+            with open(phenio_db_path, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        
+        Path("output/phenio.db.gz").unlink()
+        
+        # Use DuckDB to populate phenio.db from monarch-kg.duckdb
+        con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+        try:
+            con.execute("INSTALL sqlite")
+            con.execute("LOAD sqlite")
+            con.execute("ATTACH 'output/phenio.db' AS phenio_db (TYPE SQLITE, READ_ONLY FALSE)")
+            
+            con.execute("""
+                INSERT INTO phenio_db.term_association (id, subject, predicate, object, evidence_type, publication, source) 
+                SELECT id, subject, predicate, object, has_evidence as evidence_type, publications as publication, primary_knowledge_source as source 
+                FROM edges 
+                WHERE category IN ('biolink:GeneToPhenotypicFeatureAssociation','biolink:DiseaseToPhenotypicFeatureAssociation') 
+                  AND predicate = 'biolink:has_phenotype' 
+                  AND negated <> 'True' 
+                  AND has_count <> 0 
+                  AND has_percentage <> 0
+            """)
+            
+            con.execute("DETACH phenio_db")
+        finally:
+            con.close()
+    
+    # Compress databases
+    logger.info("Compressing databases...")
+    subprocess.run(["pigz", "--force", "output/phenio.db"], check=False)
+    subprocess.run(["pigz", "--force", "output/monarch-kg.db"], check=False)
+    
+    logger.info("SQLite database loading completed.")
 
 
 def load_solr():
@@ -446,14 +637,15 @@ def get_biolink_ancestor_df():
 
     return class_ancestor_df, all_slot_names, biolink_model
 
+@lru_cache(maxsize=1)
+def get_monarch_schema() -> SchemaView:
+    model_yaml_path, _ = ensure_model_files()
+    return SchemaView(str(model_yaml_path))
 
 def load_jsonl():
     db = duckdb.connect('output/monarch-kg.duckdb')
 
     class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
-
-    node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
-    edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
 
     def slot_is_multi_valued(slot_name: str) -> bool:
         slot_name = slot_name.lower().replace("_", " ")
@@ -461,15 +653,10 @@ def load_jsonl():
             return False
         return biolink_model.get_slot(slot_name).multivalued
 
-    mv_node_columns = [col for col in node_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_edge_columns = [col for col in edge_columns if slot_is_multi_valued(col) and col != "category"]
-    mv_node_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_node_columns])
-    mv_edge_replacement = ", ".join([f"string_split({col}, '|') as {col}" for col in mv_edge_columns])
-
     db.sql(
         f"""
     copy (
-      select nodes.* replace (ancestors as category, {mv_node_replacement}) 
+      select nodes.* replace (ancestors as category) 
       from nodes
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_nodes.jsonl' (FORMAT JSON);
@@ -479,33 +666,41 @@ def load_jsonl():
     db.sql(
         f"""
     copy (
-      select edges.* replace (ancestors as category, cast(negated as boolean) as negated, {mv_edge_replacement}),  
+      select edges.* replace (ancestors as category, cast(negated as boolean) as negated),  
       from edges
         join class_ancestor_df on category = classname  
     ) to 'output/monarch-kg_edges.jsonl' (FORMAT JSON);
     """
     )
 
+    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
+    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
+    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
+    jsonl_tar.close()
+
+    os.remove("output/monarch-kg_nodes.jsonl")
+    os.remove("output/monarch-kg_edges.jsonl")
+
 
 def slot_is_multi_valued(slot_name: str) -> bool:
 
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+    if slot_name not in sv.all_slots():
         return False
 
-    slot_name = slot_name.lower().replace("_", " ")
-    if slot_name not in all_slot_names:
+    
+    if slot_name not in sv.all_slots():
         return False
-    return biolink_model.get_slot(slot_name).multivalued
+    return sv.get_slot(slot_name).multivalued
 
 def slot_is_boolean(slot_name: str) -> bool:
 
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+    if slot_name not in sv.all_slots():
         return False
 
-    slot_name = slot_name.lower().replace("_", " ")
-    induced_slot = biolink_model.induced_slot(slot_name)
+    
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how boolean shows up in biolink model
@@ -516,14 +711,13 @@ def slot_is_boolean(slot_name: str) -> bool:
     
 def slot_is_integer(slot_name: str) -> bool:
     
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
+    sv = get_monarch_schema()
+    
 
-    slot_name = slot_name.lower().replace("_", " ")
-
-    if slot_name not in all_slot_names:
+    if slot_name not in sv.all_slots():
         return False
 
-    induced_slot = biolink_model.induced_slot(slot_name)
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how integer shows up in biolink model
@@ -533,13 +727,13 @@ def slot_is_integer(slot_name: str) -> bool:
         return False
     
 def slot_is_float(slot_name: str) -> bool:
-    
-    _, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
-    if slot_name not in all_slot_names:
+    sv = get_monarch_schema()
+
+    if slot_name not in sv.all_slots():
         return False
-    slot_name = slot_name.lower().replace("_", " ")
-    induced_slot = biolink_model.induced_slot(slot_name)
+
+    induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
     # There could be way more logic here to check for class ranges etc, but that's not how float shows up in biolink model
@@ -561,7 +755,7 @@ def get_neo4j_column(field: str) -> str:
     if slot_is_boolean(field):
         return f'{field} as "{field}:boolean"'
     if slot_is_multi_valued(field):
-        return f'replace({field}, \'|\', \';\') as "{field}:string[]"'
+        return f"""array_to_string({field}, ';') as "{field}:string[]" """
     return field
 
 def load_neo4j_csv():
@@ -656,32 +850,11 @@ def create_qc_reports():
         raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
     sql = qc_sql.read_text()
 
-    con = duckdb.connect('output/monarch-kg.duckdb')
+    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
     con.execute(sql)
 
 def export_tsv():
     export()
-
-
-def do_prepare_release(dir: str = OUTPUT_DIR):
-
-    compressed_artifacts = [
-        'output/monarch-kg.duckdb',
-        'output/monarch-kg-denormalized-edges.tsv',
-        'output/monarch-kg-denormalized-nodes.tsv',
-    ]
-
-    for artifact in compressed_artifacts:
-        if Path(artifact).exists() and not Path(f"{artifact}.gz").exists():
-            sh.pigz(artifact, force=True)
-
-    jsonl_tar = tarfile.open("output/monarch-kg.jsonl.tar.gz", "w:gz")
-    jsonl_tar.add("output/monarch-kg_nodes.jsonl", arcname="monarch-kg_nodes.jsonl")
-    jsonl_tar.add("output/monarch-kg_edges.jsonl", arcname="monarch-kg_edges.jsonl")
-    jsonl_tar.close()
-
-    os.remove("output/monarch-kg_nodes.jsonl")
-    os.remove("output/monarch-kg_edges.jsonl")
 
 
 def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):

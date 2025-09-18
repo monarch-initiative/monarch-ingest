@@ -5,7 +5,6 @@ import yaml
 from kghub_downloader.download_utils import download_from_yaml
 from monarch_ingest.cli_utils import (
     apply_closure,
-    do_prepare_release,
     do_release,
     export_tsv,
     create_qc_reports,
@@ -143,24 +142,27 @@ def merge(
     verbose: Optional[bool] = typer.Option(
         None, "--debug/--quiet", "-d/-q", help="Use --quiet to suppress log output, --debug for verbose"
     ),
+    closure: bool = typer.Option(False, help="Apply closure to merged graph"),
     kg_name: str = typer.Option("monarch-kg", "--kg-name", "--kg_name", help="The name of the kg being produced. Merge artificat will be ultimately be stored in output/$KG_NAME.tar.gz"),
 ):
     """Merge nodes and edges into kg"""
-    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    start_time = time.time()
+    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_duration = time.time() - start_time
 
     # load qc_report.yaml from output_dir
     qc_report = yaml.safe_load(open(f"{output_dir}/qc_report.yaml"))
-    # edge_counts = {item["name"]: item["total_number"] for item in qc_report["edges"]}
-    # load expected count yaml
-    if(kg_name=="monarch-kg"):expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
-    else: expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
-    
+    if kg_name=="monarch-kg":
+      expected_counts = yaml.safe_load(open(f"src/monarch_ingest/qc_expect.yaml"))
+    else: 
+      expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
+
     error = False
     for type in ['nodes', 'edges']:
         counts = {item["name"]: item["total_number"] for item in qc_report[type]}
         for key in expected_counts[type]["provided_by"]:
             expected = expected_counts[type]["provided_by"][key]["min"]
-            way_less_than_expected = expected * 0.7  # 70% is our threshold for "way" apparently
+            way_less_than_expected = expected * 0.7
             if key not in counts:
                 error = True
                 print(f"ERROR: {type} {key} not found in qc_report.yaml")
@@ -170,6 +172,17 @@ def merge(
                 elif counts[key] < expected * 0.7:
                     print(f"ERROR: expected {key} to have {expected} {type}, only found {counts[key]}")
                     error = True
+
+    closure_duration = None
+    if closure:
+        closure_start = time.time()
+        apply_closure()
+        closure_duration = time.time() - closure_start
+
+    print(f"Merge step took {merge_duration:.2f} seconds.")
+    if closure_duration is not None:
+        print(f"Closure step took {closure_duration:.2f} seconds.")
+
     if error:
         sys.exit(1)
 
@@ -206,10 +219,6 @@ def export():
 def report():
     """Run Koza QC on specified Monarch ingests"""
     create_qc_reports()
-
-@typer_app.command()
-def prepare_release():
-    do_prepare_release()
 
 
 @typer_app.command()

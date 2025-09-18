@@ -78,7 +78,7 @@ def export(
             with open(database_file, 'wb') as f_out:
                 f_out.write(f_in.read())
 
-    database = duckdb.connect('output/monarch-kg.duckdb')
+    database = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
     dir_path = Path(output_dir)
 
     # Fetch all associations

@@ -74,11 +74,6 @@ pipeline {
                 sh 'poetry run ingest report'
             }
         }
-        stage('kgx-graph-summary') {
-            steps {
-                sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
-            }
-        }
         stage('jsonl-conversion'){
             steps {
                 sh 'poetry run ingest jsonl'
@@ -89,36 +84,41 @@ pipeline {
                 sh 'poetry run ingest neo4j-csv'
             }
         }
-        stage('solr') {
-            steps {
-                sh 'poetry run ingest solr'
+        stage('parallel-processing') {
+            parallel {
+                stage('kgx-graph-summary') {
+                    steps {
+                        sh 'poetry run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'                        
+                    }
+                }
+                stage('solr') {
+                    steps {
+                        sh 'poetry run ingest solr'
+                    }
+                }
+                stage('kgx-transforms'){
+                    steps {
+                        sh 'poetry run kgx transform -i duckdb -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
+                    }
+                }
+                stage('neo4j-dump') {
+                    steps {
+                        sh './scripts/load_neo4j.sh'
+                    }
+                }
+                stage('sqlite') {
+                    steps {
+                        sh 'poetry run ingest sqlite'
+                    }
+                }
+                stage('make exports') {
+                    steps {
+                        sh 'poetry run ingest export'
+                    }
+                }
             }
         }
-        stage('kgx-transforms'){
-            steps {
-                sh './scripts/kgx_transforms.sh'
-            }
-        }
-        stage('neo4j-dump') {
-            steps {
-                sh './scripts/load_neo4j.sh'
-            }
-        }
-        stage('sqlite') {
-            steps {
-                sh 'poetry run ingest sqlite'
-            }
-        }
-        stage('make exports') {
-            steps {
-                sh 'poetry run ingest export'
-            }
-        }
-        stage('prepare release') {
-            steps {
-                sh 'poetry run ingest prepare-release'
-            }
-        }
+
         stage('upload files') {
             steps {
                 sh 'poetry run ingest release --kghub'
@@ -134,7 +134,7 @@ pipeline {
                 sh 'poetry run python scripts/update-dev-solr.py'
             }
         }
-        stage('index') {
+        stage('index') {            
             steps {
                 sh '''
                     echo "Current directory: $(pwd)"
@@ -161,7 +161,8 @@ pipeline {
         }
         // upload data and output on failure
         failure {
-            sh 'gsutil cp -r . gs://monarch-archive/monarch-kg-failed/${RELEASE}-${BUILD_TIMESTAMP}'
+            //             sh 'gsutil cp -r . gs://monarch-archive/monarch-kg-failed/${RELEASE}-${BUILD_TIMESTAMP}'
+            sh 'gsutil cp -r output/* gs://monarch-archive/monarch-kg-experiment/${RELEASE}-${BUILD_TIMESTAMP}'
         }
     }
 }

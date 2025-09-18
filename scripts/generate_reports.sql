@@ -44,7 +44,7 @@ copy (
     primary_knowledge_source,
     dangling_edges.provided_by,
     count(*) as count
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz' as dangling_edges
+    from dangling_edges
         left outer join nodes as subject_nodes 
         on subject = subject_nodes.id
         left outer join nodes as object_nodes
@@ -56,11 +56,11 @@ copy (
 
 copy (
     select subject as missing_node, provided_by as edge_ingest, primary_knowledge_source as edge_primary_knowledge_source      
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz'
+    from dangling_edges
     where subject not in (select id from nodes)
     union all
     select object as missing_node, provided_by as edge_ingest, primary_knowledge_source as edge_primary_knowledge_source
-    from 'output/qc/monarch-kg-dangling-edges.tsv.gz'
+    from dangling_edges
     where object not in (select id from nodes)
 ) to 'output/qc/missing_nodes.parquet';
 
@@ -189,8 +189,6 @@ copy (
     from ortholog_counts 
 ) to 'output/qc/human_orthology_coverage.parquet';
 
-create or replace table information_resource 
-as select * from read_json('data/infores/infores_catalog.jsonl'); 
 
 copy (
 with knowledge_source_usage as (
@@ -198,7 +196,7 @@ with knowledge_source_usage as (
             'primary' as usage, 
             provided_by from edges            
     union all
-    select unnest(string_split(aggregator_knowledge_source,'|')) as knowledge_source, 
+    select unnest(aggregator_knowledge_source) as knowledge_source, 
         'aggregator' as usage, provided_by
     from edges
 )
@@ -218,33 +216,32 @@ where infores_exists = false) to 'output/qc/invalid_infores.tsv' (format 'csv', 
 
 -- This is meant to generate the classic 3 circle venn diagram of human genes, orthologs and phenotypes
 
-create or replace view gene_connection_flags as (
-    
-    with orthology as (
-        select subject as gene, object as ortholog 
-        from edges 
-        where predicate = 'biolink:orthologous_to'
-        union 
-        select object as gene, subject as ortholog 
-        from edges 
-        where predicate = 'biolink:orthologous_to'
-    ),
-    phenotype as (
-        select subject as gene, object as phenotype 
-        from edges 
-        where predicate = 'biolink:has_phenotype'
-    ),
-    disease as (
-        select subject as gene, object as disease 
-        from denormalized_edges
-        where subject_category = 'biolink:Gene' and object_category = 'biolink:Disease' 
-    ),
-    ortholog_phenotype as (
-        select orthology.gene, phenotype.phenotype 
-        from orthology
-            join phenotype on orthology.ortholog = phenotype.gene
-        
-    )
+copy(
+with orthology as (
+    select subject as gene, object as ortholog 
+    from edges 
+    where predicate = 'biolink:orthologous_to'
+    union 
+    select object as gene, subject as ortholog 
+    from edges 
+    where predicate = 'biolink:orthologous_to'
+),
+phenotype as (
+    select subject as gene, object as phenotype 
+    from edges 
+    where predicate = 'biolink:has_phenotype'
+),
+disease as (
+    select subject as gene, object as disease 
+    from denormalized_edges
+    where subject_category = 'biolink:Gene' and object_category = 'biolink:Disease' 
+),
+ortholog_phenotype as (
+    select orthology.gene, phenotype.phenotype 
+    from orthology
+        join phenotype on orthology.ortholog = phenotype.gene
+),
+gene_connection_flags as (
     select 
         id, 
         case 
@@ -273,10 +270,7 @@ create or replace view gene_connection_flags as (
     from nodes 
     where category = 'biolink:Gene' 
     and in_taxon = 'NCBITaxon:9606'
-);
-
--- count the number of genes with each flag
-copy(
+)
 select 
     count(*) as count,
     is_protein_coding,
