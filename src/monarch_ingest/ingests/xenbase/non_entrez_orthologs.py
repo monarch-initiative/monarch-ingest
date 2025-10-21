@@ -3,25 +3,22 @@ Ingest of Reference Genome Orthologs from Xenbase
 """
 
 import uuid
-
-from koza.cli_utils import get_koza_app
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation, AgentTypeEnum, KnowledgeLevelEnum
-
 from loguru import logger
 
-koza_app = get_koza_app("xenbase_non_entrez_orthologs")
 
-while (row := koza_app.get_row()) is not None:
-
+@koza.transform_record()
+def transform_record(koza_transform, row):
     try:
         gene_id = row['Xenbase']
-
         predicate = "biolink:orthologous_to"
 
         omim_id = row['OMIM']
         mgi_id = row['MGI']
         zfin_id = row['ZFIN']
+
+        associations = []
 
         # Instantiate the instance of Gene-to-Gene Homology Associations for each ortholog
         if omim_id:
@@ -35,9 +32,7 @@ while (row := koza_app.get_row()) is not None:
                 knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
                 agent_type=AgentTypeEnum.manual_agent,
             )
-
-            # Write the captured Association out
-            koza_app.write(association)
+            associations.append(association)
 
         if mgi_id:
             association = GeneToGeneHomologyAssociation(
@@ -50,9 +45,7 @@ while (row := koza_app.get_row()) is not None:
                 knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
                 agent_type=AgentTypeEnum.manual_agent,
             )
-
-            # Write the captured Association out
-            koza_app.write(association)
+            associations.append(association)
 
         if zfin_id:
             association = GeneToGeneHomologyAssociation(
@@ -65,9 +58,10 @@ while (row := koza_app.get_row()) is not None:
                 knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
                 agent_type=AgentTypeEnum.manual_agent,
             )
+            associations.append(association)
 
-            # Write the captured Association out
-            koza_app.write(association)
+        return associations
 
     except (RuntimeError, AssertionError) as rte:
         logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
+        return []

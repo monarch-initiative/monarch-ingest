@@ -2,54 +2,37 @@ from typing import List
 
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+from koza.io.writer.writer import KozaWriter
+from koza.runner import KozaRunner, KozaTransformHooks
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
+from monarch_ingest.ingests.dictybase.gene import transform_record
+
+
+class MockWriter(KozaWriter):
+    def __init__(self):
+        self.items = []
+
+    def write(self, entities):
+        self.items += entities
+
+    def finalize(self):
+        pass
 
 
 @pytest.fixture
-def source_name():
+def basic_dictybase_1():
     """
-    :return: string source name of Dictybase Gene ingest
+    Test Dictybase Gene ingest with mock data.
     """
-    return "dictybase_gene"
+    row = {"GENE ID": "DDB_G0269222", "Gene Name": "gefB", "Synonyms": "RasGEFB, RasGEF"}
 
-
-@pytest.fixture
-def script():
-    """
-    :return: string path to Dictybase Gene ngest script
-    """
-    return "./src/monarch_ingest/ingests/dictybase/gene.py"
-
-
-@pytest.fixture
-def test_row_1():
-    """
-    :return: Test Dictybase Gene input data row.
-    """
-    return {"GENE ID": "DDB_G0269222", "Gene Name": "gefB", "Synonyms": "RasGEFB, RasGEF"}
-
-
-@pytest.fixture
-def basic_dictybase_1(mock_koza, source_name, script, taxon_label_map_cache, test_row_1, global_table):
-    """
-    Mock Koza run for Dictybase Gene ingest.
-
-    :param mock_koza:
-    :param source_name:
-    :param test_row_1:
-    :param script:
-    :param global_table:
-    :param map_cache:
-
-    :return: mock_koza application
-    """
-    return mock_koza(
-        name=source_name,
-        data=test_row_1,
-        transform_code=script,
-        map_cache=taxon_label_map_cache,
-        global_table=global_table,
-    )
+    writer = MockWriter()
+    runner = KozaRunner(data=iter([row]), writer=writer, hooks=KozaTransformHooks(transform_record=[transform_record]))
+    runner.run()
+    return writer.items
 
 
 def test_dictybase_ncbi_mapped_gene_ingest(basic_dictybase_1):

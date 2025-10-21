@@ -25,8 +25,8 @@ from linkml.utils.helpers import convert_to_snake_case
 from cat_merge.duckdb_merge import merge_duckdb as merge
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
-from koza.cli_utils import transform_source
-from koza.model.config.source_config import OutputFormat
+from koza.runner import KozaRunner
+from koza.model.formats import OutputFormat
 from linkml_runtime.utils.formatutils import camelcase
 
 from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
@@ -40,28 +40,32 @@ OUTPUT_DIR = "output"
 MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/model.yaml"
 SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/similarity.yaml"
 
+
 def ensure_model_files() -> tuple[Path, Path]:
     """
     Download model.yaml and similarity.yaml files to current directory using pystow.
     Returns tuple of (model_yaml_path, similarity_yaml_path)
     """
     import shutil
-    
+
     # Use pystow to download and cache files
     module = pystow.module("monarch-ingest")
     cached_model_path = module.ensure("model.yaml", url=MODEL_YAML_URL)
     cached_similarity_path = module.ensure("similarity.yaml", url=SIMILARITY_YAML_URL)
-    
+
     # Copy to current directory for backward compatibility
     local_model_path = Path("model.yaml")
     local_similarity_path = Path("similarity.yaml")
-    
+
     if not local_model_path.exists() or local_model_path.stat().st_mtime < cached_model_path.stat().st_mtime:
         shutil.copy2(cached_model_path, local_model_path)
-    
-    if not local_similarity_path.exists() or local_similarity_path.stat().st_mtime < cached_similarity_path.stat().st_mtime:
+
+    if (
+        not local_similarity_path.exists()
+        or local_similarity_path.stat().st_mtime < cached_similarity_path.stat().st_mtime
+    ):
         shutil.copy2(cached_similarity_path, local_similarity_path)
-    
+
     return local_model_path, local_similarity_path
 
 
@@ -85,10 +89,12 @@ def transform_one(
     logger.info(f"Running ingest: {ingest}")
     # if a url is provided instead of a config, just download the file and copy it to the output dir
     if "url" in ingests[ingest]:
-        logger.info(f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output")
+        logger.info(
+            f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output"
+        )
         for url in ingests[ingest]["url"]:
             filename = url.split("/")[-1]
-            #Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/ 
+            # Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/
             os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
             if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
                 logger.info(f"{ingest}: {url} already found at {output_dir}/transform_output/{filename}")
@@ -111,20 +117,14 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         return
 
-
-    try:
-        transform_source(
-            source=source_file.as_posix(),
-            output_dir=f"{output_dir}/transform_output",
-            output_format=OutputFormat.tsv,
-            row_limit=row_limit,
-            verbose=verbose,
-            # verbose=False if verbose == None else verbose,
-            # log=log
-        )
-    except ValueError as e:
-        # if log: logger.removeHandler(fh)
-        raise ValueError(f"Missing data - {e}")
+    config, runner = KozaRunner.from_config_file(
+        config_filename=source_file.as_posix(),
+        output_dir=f"{output_dir}/transform_output",
+        output_format=OutputFormat.tsv,
+        row_limit=row_limit,
+        show_progress=verbose or False,
+    )
+    runner.run()
 
     if rdf:
         logger.info(f"Creating rdf output {output_dir}/rdf/{ingest}.nt.gz ...")
@@ -168,13 +168,11 @@ def transform_phenio(
     if not Path(phenio_tar).is_file():
         # if log: logger.removeHandler(fh)
         raise FileNotFoundError("data/monarch/kg-phenio.tar.gz")
-    
+
     # TODO: can this be fetched from a purl?
     biolink_model_schema = SchemaView(
         f"https://raw.githubusercontent.com/biolink/biolink-model/v{model.version}/biolink-model.yaml"
     )
-
-
 
     nodefile = "merged-kg_nodes.tsv"
     edgefile = "merged-kg_edges.tsv"
@@ -340,45 +338,24 @@ def transform_all(
         logger.error(f"Error running Phenio ingest: {e}")
 
     ingests = get_ingests()
-    
-    # Determine optimal number of workers based on CPU cores
-    # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
-    max_workers = min(os.cpu_count() or 4, len(ingests), 8)
-    logger.info(f"Running {len(ingests)} ingests with {max_workers} parallel workers")
-    
+
     start_time = time.time()
-    completed_count = 0
-    
-    # Run ingests in parallel using ProcessPoolExecutor for true CPU parallelism
-    with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(
-                transform_one,
-                ingest,
-                output_dir,
-                row_limit,
-                rdf,
-                force,
-                verbose,
-                log,
-            ): ingest
-            for ingest in ingests
-        }
-        
-        for future in as_completed(futures):
-            ingest = futures[future]
-            try:
-                future.result()
-                completed_count += 1
-                elapsed = time.time() - start_time
-                logger.info(f"Completed ingest: {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed")
-            except Exception as e:
-                completed_count += 1
-                elapsed = time.time() - start_time
-                logger.error(f"Error running ingest {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed: {e}")
-    
+
+    for ingest in ingests:
+        transform_one(
+            ingest=ingest,
+            output_dir=output_dir,
+            row_limit=row_limit,
+            rdf=rdf,
+            force=force,
+            verbose=verbose,
+            log=log,
+        )
+
     total_time = time.time() - start_time
-    logger.info(f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds using {max_workers} parallel workers")
+    logger.info(
+        f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds (sequential execution)"
+    )
 
     # if log: logger.removeHandler(fh)
 
@@ -439,17 +416,21 @@ def merge_files(
     logger.info("Merging knowledge graph...")
 
     model_yaml_path, _ = ensure_model_files()
-    merge(name=name, 
-          source=input_dir, 
-          output_dir=output_dir,
-          schema_path=str(model_yaml_path),
-          mappings=mappings,
-          graph_stats=False)
-    
+    merge(
+        name=name,
+        source=input_dir,
+        output_dir=output_dir,
+        schema_path=str(model_yaml_path),
+        mappings=mappings,
+        graph_stats=False,
+    )
+
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
     db = duckdb.connect(f'{output_dir}/{name}.duckdb')
-    db.execute("create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')")
+    db.execute(
+        "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"
+    )
     db.close()
 
 
@@ -468,7 +449,6 @@ def apply_closure(
     for classname in ["Entity", "Association"]:
         multivalued_slots.extend([slot.name for slot in sv.class_induced_slots(classname) if slot.multivalued])
 
-
     add_closure(
         database_path=os.path.join(output_dir, database),
         closure_file=closure_file,
@@ -481,7 +461,7 @@ def apply_closure(
             "disease_context_qualifier",
         ],
         #  just populate _label, _category, _namespace properties for these fields
-        edge_fields_to_label=[            
+        edge_fields_to_label=[
             "species_context_qualifier",
             "stage_qualifier",
             "sex_qualifier",
@@ -493,8 +473,10 @@ def apply_closure(
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
         # TODO get a complete list of multivalued fields from the monarch-app schema entity and association classes
-        multivalued_fields=[]
+        multivalued_fields=[],
     )
+
+
 #     sh.mv(database, f"{output_dir}/")
 
 
@@ -504,46 +486,48 @@ def load_sqlite():
     Creates monarch-kg.db and updates phenio.db.
     """
     logger = get_logger()
-    
+
     # Remove existing SQLite database
     sqlite_db_path = Path("output/monarch-kg.db")
     if sqlite_db_path.exists():
         sqlite_db_path.unlink()
-        
+
     logger.info("Loading data from DuckDB to SQLite...")
-    
+
     # Create empty SQLite database first so DuckDB can attach to it
     sqlite3.connect('output/monarch-kg.db').close()
-    
+
     # Connect to the DuckDB database
     con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
-    
+
     try:
         # Install and load SQLite extension
         con.execute("INSTALL sqlite")
         con.execute("LOAD sqlite")
-        
+
         # Attach the SQLite database (now it exists)
         con.execute("ATTACH 'output/monarch-kg.db' AS sqlite_db (TYPE SQLITE, READ_ONLY FALSE)")
-        
+
         # Copy tables from DuckDB to SQLite
         logger.info("Loading nodes...")
         con.execute("CREATE TABLE sqlite_db.nodes AS SELECT * FROM nodes")
-        
+
         logger.info("Loading edges...")
         con.execute("CREATE TABLE sqlite_db.edges AS SELECT * FROM edges")
-        
+
         logger.info("Loading denormalized_nodes...")
         con.execute("CREATE TABLE sqlite_db.denormalized_nodes AS SELECT * FROM denormalized_nodes")
-        
+
         logger.info("Loading denormalized_edges...")
         con.execute("CREATE TABLE sqlite_db.denormalized_edges AS SELECT * FROM denormalized_edges")
-        
+
         # Load closure from TSV file
         logger.info("Loading closure...")
         con.execute("CREATE TABLE sqlite_db.closure (subject TEXT, predicate TEXT, object TEXT)")
-        con.execute("COPY sqlite_db.closure FROM 'data/monarch/phenio-relation-graph.tsv' (FORMAT CSV, DELIMITER '\t', HEADER false)")
-        
+        con.execute(
+            "COPY sqlite_db.closure FROM 'data/monarch/phenio-relation-graph.tsv' (FORMAT CSV, DELIMITER '\t', HEADER false)"
+        )
+
         # Load dangling edges if QC table exists
         logger.info("Loading dangling edges...")
         try:
@@ -551,13 +535,13 @@ def load_sqlite():
             con.execute("INSERT INTO sqlite_db.dangling_edges SELECT * FROM dangling_edges")
         except Exception as e:
             logger.warning(f"Could not load dangling_edges table: {e}")
-        
+
         # Detach SQLite database
         con.execute("DETACH sqlite_db")
-        
+
     finally:
         con.close()
-    
+
     # Create indices using Python sqlite3
     logger.info("Creating indices...")
     sqlite_con = sqlite3.connect('output/monarch-kg.db')
@@ -565,35 +549,38 @@ def load_sqlite():
         sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_subject_index ON edges (subject)")
         sqlite_con.execute("CREATE INDEX IF NOT EXISTS edges_object_index ON edges (object)")
         sqlite_con.execute("CREATE INDEX IF NOT EXISTS closure_subject_index ON closure (subject)")
-        sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_subject_index ON denormalized_edges (subject)")
+        sqlite_con.execute(
+            "CREATE INDEX IF NOT EXISTS denormalized_edges_subject_index ON denormalized_edges (subject)"
+        )
         sqlite_con.execute("CREATE INDEX IF NOT EXISTS denormalized_edges_object_index ON denormalized_edges (object)")
         sqlite_con.commit()
     finally:
         sqlite_con.close()
-    
+
     # Populate phenio.db
     logger.info("Populating phenio.db...")
     phenio_gz_path = Path("data/monarch/phenio.db.gz")
     phenio_db_path = Path("output/phenio.db")
-    
+
     if phenio_gz_path.exists():
         # Copy and decompress phenio.db
         shutil.copy(phenio_gz_path, "output/phenio.db.gz")
-        
+
         with gzip.open("output/phenio.db.gz", 'rb') as f_in:
             with open(phenio_db_path, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-        
+
         Path("output/phenio.db.gz").unlink()
-        
+
         # Use DuckDB to populate phenio.db from monarch-kg.duckdb
         con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
         try:
             con.execute("INSTALL sqlite")
             con.execute("LOAD sqlite")
             con.execute("ATTACH 'output/phenio.db' AS phenio_db (TYPE SQLITE, READ_ONLY FALSE)")
-            
-            con.execute("""
+
+            con.execute(
+                """
                 INSERT INTO phenio_db.term_association (id, subject, predicate, object, evidence_type, publication, source) 
                 SELECT id, subject, predicate, object, has_evidence as evidence_type, publications as publication, primary_knowledge_source as source 
                 FROM edges 
@@ -602,17 +589,18 @@ def load_sqlite():
                   AND negated <> 'True' 
                   AND has_count <> 0 
                   AND has_percentage <> 0
-            """)
-            
+            """
+            )
+
             con.execute("DETACH phenio_db")
         finally:
             con.close()
-    
+
     # Compress databases
     logger.info("Compressing databases...")
     subprocess.run(["pigz", "--force", "output/phenio.db"], check=False)
     subprocess.run(["pigz", "--force", "output/monarch-kg.db"], check=False)
-    
+
     logger.info("SQLite database loading completed.")
 
 
@@ -632,15 +620,17 @@ def get_biolink_ancestor_df():
             f"biolink:{camelcase(a)}" for a in biolink_model.class_ancestors(c.name)
         ]
     all_slot_names = biolink_model.all_slots().keys()
-    
+
     class_ancestor_df = pandas.DataFrame(list(class_ancestor_dict.items()), columns=['classname', 'ancestors'])
 
     return class_ancestor_df, all_slot_names, biolink_model
+
 
 @lru_cache(maxsize=1)
 def get_monarch_schema() -> SchemaView:
     model_yaml_path, _ = ensure_model_files()
     return SchemaView(str(model_yaml_path))
+
 
 def load_jsonl():
     db = duckdb.connect('output/monarch-kg.duckdb')
@@ -688,10 +678,10 @@ def slot_is_multi_valued(slot_name: str) -> bool:
     if slot_name not in sv.all_slots():
         return False
 
-    
     if slot_name not in sv.all_slots():
         return False
     return sv.get_slot(slot_name).multivalued
+
 
 def slot_is_boolean(slot_name: str) -> bool:
 
@@ -699,7 +689,6 @@ def slot_is_boolean(slot_name: str) -> bool:
     if slot_name not in sv.all_slots():
         return False
 
-    
     induced_slot = sv.induced_slot(slot_name)
     if induced_slot is None:
         return False
@@ -708,11 +697,11 @@ def slot_is_boolean(slot_name: str) -> bool:
         return True
     else:
         return False
-    
+
+
 def slot_is_integer(slot_name: str) -> bool:
-    
+
     sv = get_monarch_schema()
-    
 
     if slot_name not in sv.all_slots():
         return False
@@ -725,7 +714,8 @@ def slot_is_integer(slot_name: str) -> bool:
         return True
     else:
         return False
-    
+
+
 def slot_is_float(slot_name: str) -> bool:
 
     sv = get_monarch_schema()
@@ -741,6 +731,7 @@ def slot_is_float(slot_name: str) -> bool:
         return True
     else:
         return False
+
 
 def get_neo4j_column(field: str) -> str:
     """
@@ -758,6 +749,7 @@ def get_neo4j_column(field: str) -> str:
         return f"""array_to_string({field}, ';') as "{field}:string[]" """
     return field
 
+
 def load_neo4j_csv():
     """
     Create CSV files for Neo4j import from the DuckDB database.
@@ -768,7 +760,7 @@ def load_neo4j_csv():
     node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
     edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
 
-    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()        
+    class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
     # Build node column selection with special handling for id and category
     node_select_parts = []
@@ -777,7 +769,7 @@ def load_neo4j_csv():
             continue
         if col == "id":
             node_select_parts.append('id as ":ID"')
-            node_select_parts.append(get_neo4j_column(col))            
+            node_select_parts.append(get_neo4j_column(col))
         elif col == "category":
             # Duplicate category: one for Neo4j :LABEL, one as regular property
             node_select_parts.append("array_to_string(ancestors, ';') as ':LABEL'")
@@ -792,7 +784,7 @@ def load_neo4j_csv():
         if not col:
             continue
         if col == "category":
-            # Duplicate category: one for Neo4j :LABEL, one as regular property            
+            # Duplicate category: one for Neo4j :LABEL, one as regular property
             edge_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
         elif col == "subject":
             # Duplicate subject: one for Neo4j :START_ID, one as regular property
@@ -810,7 +802,7 @@ def load_neo4j_csv():
             edge_select_parts.append(get_neo4j_column(col))
     edge_select = ",\n".join(edge_select_parts)
 
-        # also write to neo4j csv format 
+    # also write to neo4j csv format
     edges_query = f"""
     copy (
         select
@@ -833,7 +825,6 @@ def load_neo4j_csv():
 
     print(edges_query)
     print(nodes_query)
-    
 
 
 def create_qc_reports():
@@ -844,7 +835,7 @@ def create_qc_reports():
     # error if the database doesn't exist
     if not Path(database_file).is_file():
         raise FileNotFoundError(database_file, "Database not found")
-    
+
     qc_sql = Path("scripts/generate_reports.sql")
     if not qc_sql.is_file():
         raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
@@ -852,6 +843,7 @@ def create_qc_reports():
 
     con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
     con.execute(sql)
+
 
 def export_tsv():
     export()

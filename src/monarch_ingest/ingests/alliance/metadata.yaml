@@ -1,7 +1,0 @@
-ingest_title: 'Alliance of Genome Resources'
-ingest_url: 'https://www.alliancegenome.org/downloads'
-# ingest files can be found using the Alliance FMS API
-# https://fms.alliancegenome.org/api/releaseversion/current to get the current release
-# https://fms.alliancegenome.org/api/snapshot/release/{release} to get the full file list
-description: 'The Alliance of Genome Resources pulls model organism and human data'
-rights: 'https://www.alliancegenome.org/privacy-warranty-licensing'

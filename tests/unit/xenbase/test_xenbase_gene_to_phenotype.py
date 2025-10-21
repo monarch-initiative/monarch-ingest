@@ -1,12 +1,14 @@
 import pytest
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+from monarch_ingest.ingests.xenbase.gene_to_phenotype import transform_record
 
 
 @pytest.fixture
-def entities(
-    mock_koza,
-):
+def entities():
     row = {
         "SUBJECT": "Xenbase:XB-GENE-1000632",
         "SUBJECT_LABEL": "dctn2",
@@ -22,12 +24,12 @@ def entities(
         "IS_DEFINED_BY": "",
         "QUALIFIER": "",
     }
-    return mock_koza("xenbase_gene_to_phenotype", row, "./src/monarch_ingest/ingests/xenbase/gene_to_phenotype.py")
+    return transform_record(None, row)
 
 
 def test_gene2_phenotype_transform(entities):
     assert entities
-    assert len(entities) == 1
+    assert len(entities) == 3  # gene, phenotype, association
     association = [entity for entity in entities if isinstance(entity, GeneToPhenotypicFeatureAssociation)][0]
     assert association.primary_knowledge_source == "infores:xenbase"
     assert "infores:monarchinitiative" in association.aggregator_knowledge_source

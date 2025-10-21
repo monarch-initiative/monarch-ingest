@@ -18,10 +18,9 @@ packages = [
 python = "^3.10"
 biolink-model = "4.2.6rc3"
 bmt = "^1.0.15"
-cat-merge = "1.0.1"
+cat-merge = {git = "https://github.com/monarch-initiative/cat-merge", rev = "qc_groupby_Fix"}
 kghub-downloader = "^0.4.1"
 kgx = "2.6.0"
-koza = "^0.6.1"
 linkml = "^1.7.8"
 linkml-solr = "0.2.0"
 multi-indexer = "0.0.5"
@@ -40,6 +39,7 @@ closurizer = "^0.8.0"
 notebook = "^7.3.2"
 duckdb = "^1.3.0"
 pystow = "^0.5.4"
+koza = {path = "../koza", develop = true}
 
 [tool.poetry.group.dev]
 optional = true

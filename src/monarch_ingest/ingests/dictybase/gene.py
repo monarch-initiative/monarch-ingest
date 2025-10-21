@@ -1,17 +1,14 @@
-from koza.cli_utils import get_koza_app
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
-koza_app = get_koza_app("dictybase_gene")
-taxon_labels = koza_app.get_map("taxon-labels")
 
-in_taxon = "NCBITaxon:44689"
-in_taxon_label = taxon_labels[in_taxon]['label'] if in_taxon in taxon_labels else "Dictyostelium discoideum"
-
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row):
+    in_taxon = "NCBITaxon:44689"
+    in_taxon_label = "Dictyostelium discoideum"
 
     synonyms = []
-    if row['Synonyms'] is not None:
+    if row.get('Synonyms') and row['Synonyms'].strip():
         synonyms = row['Synonyms'].split(", ")
 
     gene = Gene(
@@ -25,4 +22,5 @@ while (row := koza_app.get_row()) is not None:
         provided_by=["infores:dictybase"],
     )
 
-    koza_app.write(gene)
+    return [gene]
+
