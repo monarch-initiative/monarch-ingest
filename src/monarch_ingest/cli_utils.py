@@ -101,6 +101,7 @@ def transform_one(
                 continue
 
             response = requests.get(url, allow_redirects=True)
+            response.raise_for_status()  # Raise an exception for HTTP error status codes (4xx, 5xx)
             with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
                 f.write(response.content)
                 logger.info(f"{ingest}: {url} downloaded to {output_dir}/transform_output/{filename}")
@@ -112,7 +113,7 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         raise ValueError(f"Source file {source_file} does not exist")
 
-    if ingest_output_exists(ingest, output_dir) and not force:
+    if ingest_output_exists(ingest, f"{output_dir}/transform_output") and not force:
         logger.info(f"Transformed output exists - skipping ingest: {ingest} - To run this ingest anyway, use --force")
         # if log: logger.removeHandler(fh)
         return
@@ -339,23 +340,44 @@ def transform_all(
 
     ingests = get_ingests()
 
+    # Determine optimal number of workers based on CPU cores
+    # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
+    max_workers = min(os.cpu_count() or 4, len(ingests), 8)
+    logger.info(f"Running {len(ingests)} ingests with {max_workers} parallel workers")
+    
     start_time = time.time()
-
-    for ingest in ingests:
-        transform_one(
-            ingest=ingest,
-            output_dir=output_dir,
-            row_limit=row_limit,
-            rdf=rdf,
-            force=force,
-            verbose=verbose,
-            log=log,
-        )
-
+    completed_count = 0
+    
+    # Run ingests in parallel using ProcessPoolExecutor for true CPU parallelism
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(
+                transform_one,
+                ingest,
+                output_dir,
+                row_limit,
+                rdf,
+                force,
+                verbose,
+                log,
+            ): ingest
+            for ingest in ingests
+        }
+        
+        for future in as_completed(futures):
+            ingest = futures[future]
+            try:
+                future.result()
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.info(f"Completed ingest: {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed")
+            except Exception as e:
+                completed_count += 1
+                elapsed = time.time() - start_time
+                logger.error(f"Error running ingest {ingest} ({completed_count}/{len(ingests)}) - {elapsed:.1f}s elapsed: {e}")
+    
     total_time = time.time() - start_time
-    logger.info(
-        f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds (sequential execution)"
-    )
+    logger.info(f"Completed all {len(ingests)} ingests in {total_time:.2f} seconds using {max_workers} parallel workers")
 
     # if log: logger.removeHandler(fh)
 
