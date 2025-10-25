@@ -18,11 +18,16 @@ def transform_record(koza_transform, row):
     ortholog_id = row['entrez_id']
     assert ortholog_id
 
-    # TODO: Re-implement genepage_to_gene_map lookup when mapping file structure is clarified
-    # For now, use the genepage_id directly as gene_id
-    # genepage_to_gene_map = koza_transform.get_map("genepage-2-gene")
-    # gene_ids = genepage_to_gene_map.get(genepage_id).values()
-    gene_ids = [genepage_id]  # Simplified for now
+    # Look up each gene ID from the mapping (tropicalis, laevis_l, laevis_s)
+    gene_ids = []
+    for field in ['tropicalis_id', 'laevis_l_id', 'laevis_s_id']:
+        gene_id = koza_transform.lookup(genepage_id, field, 'genepage-2-gene')
+        if gene_id:  # Filter out None/empty values
+            gene_ids.append(gene_id)
+
+    # Fallback to genepage_id if no mappings found
+    if not gene_ids:
+        gene_ids = [genepage_id]
 
     associations = []
     for gene_id in gene_ids:

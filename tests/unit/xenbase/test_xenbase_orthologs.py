@@ -3,15 +3,29 @@ Unit tests for Xenbase Gene Orthology relationships ingest
 """
 
 import pytest
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation
+from koza import KozaTransform
+from koza.io.writer.passthrough_writer import PassthroughWriter
+
+from monarch_ingest.ingests.xenbase.orthologs import transform_record
 
 
 @pytest.fixture
-def orthology_record():
+def genepage_to_gene_mapping():
+    """Mock genepage-to-gene mapping for testing"""
+    return {
+        "XB-GENEPAGE-478063": {
+            "gene_page_id": "XB-GENEPAGE-478063",
+            "tropicalis_id": "XB-GENE-478064",
+            "laevis_l_id": "XB-GENE-6461998",
+            "laevis_s_id": "XB-GENE-17342561"
+        }
+    }
+
+
+@pytest.fixture
+def orthology_record(genepage_to_gene_mapping):
+    """Test the real transform_record function with KozaTransform"""
     row = {
         'entrez_id': "8928",
         'xb_genepage_id': "XB-GENEPAGE-478063",
@@ -19,50 +33,12 @@ def orthology_record():
         'xb_gene_name': "forkhead box H1, gene 2",
     }
 
-    # Mock the proper mapping behavior by temporarily patching the transform function
-    import monarch_ingest.ingests.xenbase.orthologs as orthologs_module
-
-    original_transform = orthologs_module.transform_record
-
-    def mock_transform_record(koza_transform, row):
-        # Simulate the original genepage-to-gene mapping
-        genepage_id = row['xb_genepage_id']
-        if genepage_id == "XB-GENEPAGE-478063":
-            gene_ids = ['XB-GENE-478064', 'XB-GENE-6461998', 'XB-GENE-17342561']
-        else:
-            gene_ids = [genepage_id]  # fallback
-
-        ortholog_id = row['entrez_id']
-        associations = []
-
-        for gene_id in gene_ids:
-            from biolink_model.datamodel.pydanticmodel_v2 import (
-                GeneToGeneHomologyAssociation,
-                AgentTypeEnum,
-                KnowledgeLevelEnum,
-            )
-            import uuid
-
-            association = GeneToGeneHomologyAssociation(
-                id=f"uuid:{str(uuid.uuid1())}",
-                subject=f"Xenbase:{gene_id}",
-                predicate="biolink:orthologous_to",
-                object=f"NCBIGene:{ortholog_id}",
-                aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source="infores:xenbase",
-                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.manual_agent,
-            )
-            associations.append(association)
-
-        return associations
-
-    # Apply the mock
-    orthologs_module.transform_record = mock_transform_record
-    result = mock_transform_record(None, row)
-
-    # Restore original
-    orthologs_module.transform_record = original_transform
+    koza_transform = KozaTransform(
+        mappings={"genepage-2-gene": genepage_to_gene_mapping},
+        writer=PassthroughWriter(),
+        extra_fields={}
+    )
+    result = transform_record(koza_transform, row)
 
     return result
 
