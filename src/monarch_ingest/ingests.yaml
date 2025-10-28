@@ -43,8 +43,8 @@ alliance_genotype:
     - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_allele_nodes.tsv'
     - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_allele_edges.tsv'
 alliance_gene_to_expression:
-  url: 
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/gene_to_expression_edges.tsv'
+  url:
+    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_gene_to_expression_edges.tsv'
 alliance_phenotype:
   url:
     - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_phenotype_edges.tsv'
