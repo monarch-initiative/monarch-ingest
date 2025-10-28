@@ -586,12 +586,8 @@ def load_sqlite():
                 FROM edges 
                 WHERE category IN ('biolink:GeneToPhenotypicFeatureAssociation','biolink:DiseaseToPhenotypicFeatureAssociation') 
                   AND predicate = 'biolink:has_phenotype' 
-                  AND negated <> 'True' 
-                  AND has_count <> 0 
-                  AND has_percentage <> 0
-            """
-            )
-
+                  AND (negated = false or negated is null) 
+            """)
             con.execute("DETACH phenio_db")
         finally:
             con.close()
