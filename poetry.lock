@@ -420,25 +420,21 @@ name = "cat-merge"
 version = "1.0.1"
 description = ""
 optional = false
-python-versions = "^3.10"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "cat_merge-1.0.1-py3-none-any.whl", hash = "sha256:9b34d94c168c9db6afa631caa9b02df197e377f7c63f4d8f19b0c65186516200"},
+    {file = "cat_merge-1.0.1.tar.gz", hash = "sha256:d3b604144fd7159e872238478877cb0171d9967a8d69a5bab6939a00f0e0e883"},
+]
 
 [package.dependencies]
-click = "^8"
+click = ">=8,<9"
 duckdb = ">=1.0.0,<2.0.0"
-linkml-runtime = "^1.7.0"
-mkdocs = "^1.3.0"
-pandas = "^2.0.0"
-pyyaml = "^6.0"
+linkml-runtime = ">=1.7.0,<2.0.0"
+mkdocs = ">=1.3.0,<2.0.0"
+pandas = ">=2.0.0,<3.0.0"
+pyyaml = ">=6.0,<7.0"
 scipy = ">=1.9,<2.0.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/monarch-initiative/cat-merge"
-reference = "qc_groupby_Fix"
-resolved_reference = "31c019b6758b49a7f591c0e7ebd9b8d036ef70ec"
 
 [[package]]
 name = "certifi"
@@ -2480,30 +2476,28 @@ validators = ">=0.20.0,<0.21.0"
 
 [[package]]
 name = "koza"
-version = "0.0.0"
+version = "2.0.1"
 description = "Data transformation framework for LinkML data models"
 optional = false
-python-versions = "^3.10"
+python-versions = ">=3.10"
 groups = ["main"]
-files = []
-develop = true
+files = [
+    {file = "koza-2.0.1-py3-none-any.whl", hash = "sha256:4f2e1bf51785fd5a096bd11955518db2620d82a3e27a0c4cf7715133530b91ae"},
+    {file = "koza-2.0.1.tar.gz", hash = "sha256:2820e5bf1e0ad6cde340b0733d1a60f903c68c501d5e56dc0634fd57adb19226"},
+]
 
 [package.dependencies]
-coverage = "^7.6.10"
+coverage = ">=7.6.10,<8.0.0"
 duckdb = "*"
 loguru = "*"
 mergedeep = "1.3.4"
 ordered-set = ">=4.1.0"
-pydantic = "^2.4"
+pydantic = ">=2.4,<3.0"
 pyyaml = ">=5.0.0"
-requests = "^2.24.0"
+requests = ">=2.24.0,<3.0.0"
 sssom = ">=0.4"
-tqdm = "^4.67.1"
+tqdm = ">=4.67.1,<5.0.0"
 typer = ">=0.12.3"
-
-[package.source]
-type = "directory"
-url = "../koza"
 
 [[package]]
 name = "lark"
@@ -6161,4 +6155,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "a0987571c1e285b507f7dc692c617b1bb2ff36c2e76d499ff077f11f279d04c1"
+content-hash = "b879045db2ac7c57d064ce368c6df801951ef6e3f80c6d85d02dd2042795e260"
