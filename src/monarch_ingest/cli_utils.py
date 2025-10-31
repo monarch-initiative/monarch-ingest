@@ -37,8 +37,8 @@ from monarch_ingest.utils.export_utils import export
 OUTPUT_DIR = "output"
 
 # URLs for model files from monarch-app
-MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/model.yaml"
-SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/add-descendants-to-denormalized-nodes/backend/src/monarch_py/datamodels/similarity.yaml"
+MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml"
+SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml"
 
 def ensure_model_files() -> tuple[Path, Path]:
     """
