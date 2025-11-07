@@ -417,14 +417,14 @@ files = [
 
 [[package]]
 name = "cat-merge"
-version = "1.0.1"
+version = "1.0.2"
 description = ""
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "cat_merge-1.0.1-py3-none-any.whl", hash = "sha256:9b34d94c168c9db6afa631caa9b02df197e377f7c63f4d8f19b0c65186516200"},
-    {file = "cat_merge-1.0.1.tar.gz", hash = "sha256:d3b604144fd7159e872238478877cb0171d9967a8d69a5bab6939a00f0e0e883"},
+    {file = "cat_merge-1.0.2-py3-none-any.whl", hash = "sha256:77230d3a2d3fa9af1ea5e7852790dadc694c8b87c8988f231a01fc876a1554e0"},
+    {file = "cat_merge-1.0.2.tar.gz", hash = "sha256:be418abf5f0d100c8c59e14bc53e825f0c242ade6ecdcc5073a917de91a6cd9a"},
 ]
 
 [package.dependencies]
@@ -2476,28 +2476,30 @@ validators = ">=0.20.0,<0.21.0"
 
 [[package]]
 name = "koza"
-version = "2.0.1"
+version = "0.0.0"
 description = "Data transformation framework for LinkML data models"
 optional = false
-python-versions = ">=3.10"
+python-versions = "^3.10"
 groups = ["main"]
-files = [
-    {file = "koza-2.0.1-py3-none-any.whl", hash = "sha256:4f2e1bf51785fd5a096bd11955518db2620d82a3e27a0c4cf7715133530b91ae"},
-    {file = "koza-2.0.1.tar.gz", hash = "sha256:2820e5bf1e0ad6cde340b0733d1a60f903c68c501d5e56dc0634fd57adb19226"},
-]
+files = []
+develop = true
 
 [package.dependencies]
-coverage = ">=7.6.10,<8.0.0"
+coverage = "^7.6.10"
 duckdb = "*"
 loguru = "*"
 mergedeep = "1.3.4"
 ordered-set = ">=4.1.0"
-pydantic = ">=2.4,<3.0"
+pydantic = "^2.4"
 pyyaml = ">=5.0.0"
-requests = ">=2.24.0,<3.0.0"
+requests = "^2.24.0"
 sssom = ">=0.4"
-tqdm = ">=4.67.1,<5.0.0"
+tqdm = "^4.67.1"
 typer = ">=0.12.3"
+
+[package.source]
+type = "directory"
+url = "../../koza"
 
 [[package]]
 name = "lark"
@@ -6155,4 +6157,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "b879045db2ac7c57d064ce368c6df801951ef6e3f80c6d85d02dd2042795e260"
+content-hash = "207763a04527008a4cf7348da4a74ba98d6b160d9d704ea4be2a58c8c205bba1"
