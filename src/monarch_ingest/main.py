@@ -148,7 +148,7 @@ def merge(
 ):
     """Merge nodes and edges into kg"""
     start_time = time.time()
-    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_files(name=kg_name,input_dir=input_dir, output_dir=output_dir, verbose=verbose)
     merge_duration = time.time() - start_time
 
     # load qc_report.yaml from output_dir
@@ -189,8 +189,12 @@ def merge(
 
 
 @typer_app.command()
-def closure():
-    apply_closure()
+def closure(
+    name: str = typer.Option("monarch-kg", "--name", help="Name of graph. Will end up creating $NAME.duckdb as an output."),
+    closure_file: str = typer.Option("data/monarch/phenio-relation-filtered.tsv", "--closure_file", help="Name of the closure file."),
+    output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to output data"),
+):
+    apply_closure(name, closure_file, output_dir)
 
 
 @typer_app.command()
@@ -198,8 +202,11 @@ def jsonl():
     load_jsonl()
 
 @typer_app.command()
-def neo4j_csv():
-    load_neo4j_csv()    
+def neo4j_csv(
+    kg_name: str = typer.Option("monarch-kg","--name", help="Name of your kg."),
+    duckdb_db_path: str = typer.Option("output/monarch-kg.duckdb", "--duckdb", help="Location of duckdb database you want to use."),
+):
+    load_neo4j_csv(kg_name,duckdb_db_path)
 
 
 @typer_app.command()

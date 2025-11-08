@@ -22,7 +22,7 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
-from cat_merge.duckdb_merge import merge_duckdb as merge
+from cat_merge.duckdb_merge import merge_duckdb 
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.cli_utils import transform_source
@@ -439,7 +439,7 @@ def merge_files(
     logger.info("Merging knowledge graph...")
 
     model_yaml_path, _ = ensure_model_files()
-    merge(name=name, 
+    merge_duckdb(name=name, 
           source=input_dir, 
           output_dir=output_dir,
           schema_path=str(model_yaml_path),
@@ -756,12 +756,12 @@ def get_neo4j_column(field: str) -> str:
         return f"""array_to_string({field}, ';') as "{field}:string[]" """
     return field
 
-def load_neo4j_csv():
+def load_neo4j_csv(kg_name="monarch-kg",duckdb_db_path="output/monarch-kg.duckdb"):
     """
     Create CSV files for Neo4j import from the DuckDB database.
     This function exports nodes and edges to CSV files in the output directory.
     """
-    db = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    db = duckdb.connect(duckdb_db_path, read_only=True)
 
     node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
     edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
@@ -815,7 +815,7 @@ def load_neo4j_csv():
             {edge_select}
         from edges
           join class_ancestor_df on category = classname  
-    ) to 'output/monarch-kg_edges.neo4j.csv'
+    ) to 'output/{kg_name}_edges.neo4j.csv'
     """
     db.sql(edges_query)
 
@@ -825,7 +825,7 @@ def load_neo4j_csv():
             {node_select}
         from nodes
           join class_ancestor_df on category = classname
-    ) to 'output/monarch-kg_nodes.neo4j.csv'
+    ) to 'output/{kg_name}_nodes.neo4j.csv'
     """
     db.sql(nodes_query)
 

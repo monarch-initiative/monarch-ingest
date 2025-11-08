@@ -76,9 +76,12 @@ else
   echo "\"data/monarch/mondo.sssom.tsv\" does not exist. Skipping it's repair."
 fi
 
-# python one-liner to covnert yaml to json for infores catalog, then extract ids 
-$PYTHON -c "import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))" < data/infores/infores_catalog.yaml > data/infores/infores_catalog.json 
-jq -r '.information_resources[].id' data/infores/infores_catalog.json > data/infores/infores_ids.txt
-
+if [ -f data/infores/infores_catalog.yaml  ]; then
+  # python one-liner to covnert yaml to json for infores catalog, then extract ids 
+  $PYTHON -c "import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))" < data/infores/infores_catalog.yaml > data/infores/infores_catalog.json 
+  jq -r '.information_resources[].id' data/infores/infores_catalog.json > data/infores/infores_ids.txt
+else
+  echo "\"data/infores/infores_catalog.yaml\" does not exist. Skipping creation of \"data/infores/infores_catalog.json\"."
+fi
 
 
