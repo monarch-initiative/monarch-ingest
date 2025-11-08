@@ -188,7 +188,6 @@ def merge(
         sys.exit(1)
 
 
-#Makes a $NAME.duckdb file.
 @typer_app.command()
 def closure(
     name: str = typer.Option("monarch-kg", "--name", help="Name of graph. Will end up creating $NAME.duckdb as an output."),
