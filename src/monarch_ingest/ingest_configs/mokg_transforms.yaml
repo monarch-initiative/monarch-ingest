@@ -2,7 +2,7 @@
 - upheno_phenotype_to_phenotype
 - hpoa
 - hgnc_gene
-- panther_genome_orthologs
+- pantherdb_ortholog
 - pombase_gene
 - dictybase_gene
 - alliance_gene
