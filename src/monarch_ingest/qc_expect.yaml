@@ -85,3 +85,6 @@ edges:
       min: 19000
     clingen_variant_edges:
       min: 5000
+    omim_gene_to_disease_edges:
+      min: 7500
+
