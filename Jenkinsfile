@@ -129,11 +129,11 @@ pipeline {
                 sh 'poetry run python scripts/create_github_release.py --kg-version ${RELEASE}'
             }
         }
-        stage('update dev deployment') {
-            steps {
-                sh 'poetry run python scripts/update-dev-solr.py'
-            }
-        }
+        // stage('update dev deployment') {
+        //     steps {
+        //         sh 'poetry run python scripts/update-dev-solr.py'
+        //     }
+        // }
         stage('index') {            
             steps {
                 sh '''

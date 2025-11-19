@@ -27,7 +27,6 @@ reader:
     - 'Reference'
     - 'Taxon'
     - 'Date'
-    - 'Ploidy'
 
 transform:
   global_table: '../../translation_table.yaml'

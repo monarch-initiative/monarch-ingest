@@ -40,7 +40,7 @@ notebook = "^7.3.2"
 duckdb = "^1.3.0"
 pystow = "^0.5.4"
 #koza = "^2.0.1"
-koza = { path="/Users/kschaper/Monarch/koza", develop = true}
+koza = "^2.0.1"
 [tool.poetry.group.dev]
 optional = true
 

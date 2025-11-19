@@ -54,7 +54,8 @@ edges:
     hpoa_disease_to_phenotype_edges:
       min: 240000
     hpoa_gene_to_disease_edges:
-      min: 15000
+      min: 8000
+      max: 10000 # adding max so that we'll notice if our medgen exclude stops working
     hpoa_gene_to_phenotype_edges:
       min: 200000
     panther_genome_orthologs_edges:
@@ -85,3 +86,6 @@ edges:
       min: 19000
     clingen_variant_edges:
       min: 5000
+    omim_gene_to_disease_edges:
+      min: 7500
+

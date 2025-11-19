@@ -97,3 +97,6 @@ go_annotation:
 zfin_orthology:
   url:
     - 'https://github.com/monarch-initiative/zfin-orthology-ingest/releases/latest/download/zfin_orthology_edges.tsv'
+omim_gene_to_disease:
+  url:
+    - 'https://github.com/monarch-initiative/omim-ingest/releases/latest/download/omim_gene_to_disease_edges.tsv'
