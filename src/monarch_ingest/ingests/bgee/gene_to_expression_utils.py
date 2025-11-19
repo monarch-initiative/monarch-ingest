@@ -106,8 +106,13 @@ class CurieParsingError(Exception):
     """
     Exception raised for errors in parsing the Anatomical Entity ID.
     """
+
     def __init__(self, invalid_values: List[str], row, message: str = "Invalid CURIE format"):
         self.invalid_values = invalid_values
-        full_msg = f"{message}: {', '.join(invalid_values)} in row: {row}" if isinstance(invalid_values, list) else f"{message}: {invalid_values}"
+        full_msg = (
+            f"{message}: {', '.join(invalid_values)} in row: {row}"
+            if isinstance(invalid_values, list)
+            else f"{message}: {invalid_values}"
+        )
         super().__init__(full_msg)
         self.message = full_msg

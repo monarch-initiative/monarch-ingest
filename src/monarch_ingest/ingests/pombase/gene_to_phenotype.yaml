@@ -1,18 +1,12 @@
 name: 'pombase_gene_to_phenotype'
 
-files:
-  - './data/pombase/phenotype_annotations.pombase.phaf.gz'
-
-metadata: './src/monarch_ingest/ingests/pombase/metadata.yaml'
-global_table: './src/monarch_ingest/translation_table.yaml'
-
-header: 0
-
-format: 'csv'
-
-delimiter: '\t'
-
-columns:
+reader:
+  files:
+    - '../../../../data/pombase/phenotype_annotations.pombase.phaf.gz'
+  format: 'csv'
+  delimiter: '\t'
+  header_prefix: '#'
+  columns:
     - 'Database name'
     - 'Gene systematic ID'
     - 'FYPO ID'
@@ -34,17 +28,21 @@ columns:
     - 'Taxon'
     - 'Date'
 
-edge_properties:
-  - 'id'
-  - 'category'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'qualifiers'
-  - 'publications'
-  - 'aggregator_knowledge_source'
-  - 'primary_knowledge_source'
-  - 'knowledge_level'
-  - 'agent_type'
+transform:
+  global_table: '../../translation_table.yaml'
 
-transform_mode: 'flat'
+writer:
+  edge_properties:
+    - 'id'
+    - 'category'
+    - 'subject'
+    - 'predicate'
+    - 'object'
+    - 'qualifiers'
+    - 'publications'
+    - 'aggregator_knowledge_source'
+    - 'primary_knowledge_source'
+    - 'knowledge_level'
+    - 'agent_type'
+
+metadata: './src/monarch_ingest/ingests/pombase/metadata.yaml'

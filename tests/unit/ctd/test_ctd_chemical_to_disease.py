@@ -1,22 +1,28 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import ChemicalToDiseaseOrPhenotypicFeatureAssociation
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+from koza.io.writer.writer import KozaWriter
+from koza.runner import KozaRunner, KozaTransformHooks
+import sys
+import os
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
+from monarch_ingest.ingests.ctd.chemical_to_disease import transform_record
 from monarch_ingest.constants import BIOLINK_TREATS_OR_APPLIED_OR_STUDIED_TO_TREAT
 
 
-@pytest.fixture
-def source_name():
-    return "ctd_chemical_to_disease"
+class MockWriter(KozaWriter):
+    def __init__(self):
+        self.items = []
+
+    def write(self, entities):
+        self.items += entities
+
+    def finalize(self):
+        pass
 
 
 @pytest.fixture
-def script():
-    return "./src/monarch_ingest/ingests/ctd/chemical_to_disease.py"
-
-
-@pytest.fixture
-def no_direct_evidence(mock_koza, source_name, script, global_table):
+def no_direct_evidence():
     row = {
         "ChemicalName": "10074-G5",
         "ChemicalID": "C534883",
@@ -29,16 +35,15 @@ def no_direct_evidence(mock_koza, source_name, script, global_table):
         "OmimIDs": "",
         "PubMedIDs": "26432044",
     }
-    return mock_koza(
-        name=source_name,
-        data=row,
-        transform_code=script,
-        global_table=global_table,
-    )
+
+    writer = MockWriter()
+    runner = KozaRunner(data=iter([row]), writer=writer, hooks=KozaTransformHooks(transform_record=[transform_record]))
+    runner.run()
+    return writer.items
 
 
 @pytest.fixture
-def marker_mechanism(mock_koza, source_name, script, global_table):
+def marker_mechanism():
     row = {
         "ChemicalName": "10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone",
         "ChemicalID": "C112297",
@@ -51,16 +56,15 @@ def marker_mechanism(mock_koza, source_name, script, global_table):
         "OmimIDs": "",
         "PubMedIDs": "19098162",
     }
-    return mock_koza(
-        name=source_name,
-        data=row,
-        transform_code=script,
-        global_table=global_table,
-    )
+
+    writer = MockWriter()
+    runner = KozaRunner(data=iter([row]), writer=writer, hooks=KozaTransformHooks(transform_record=[transform_record]))
+    runner.run()
+    return writer.items
 
 
 @pytest.fixture
-def therapeutic(mock_koza, source_name, script, global_table):
+def therapeutic():
     row = {
         "ChemicalName": "10,11-dihydro-10-hydroxycarbamazepine",
         "ChemicalID": "C039775",
@@ -73,12 +77,11 @@ def therapeutic(mock_koza, source_name, script, global_table):
         "OmimIDs": "",
         "PubMedIDs": "17516704|123",
     }
-    return mock_koza(
-        name=source_name,
-        data=row,
-        transform_code=script,
-        global_table=global_table,
-    )
+
+    writer = MockWriter()
+    runner = KozaRunner(data=iter([row]), writer=writer, hooks=KozaTransformHooks(transform_record=[transform_record]))
+    runner.run()
+    return writer.items
 
 
 def test_no_direct_evidence(no_direct_evidence):

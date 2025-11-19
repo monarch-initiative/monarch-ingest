@@ -1,20 +1,15 @@
 import uuid
-
-from koza.cli_utils import get_koza_app
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
     GeneToPhenotypicFeatureAssociation,
     KnowledgeLevelEnum,
     AgentTypeEnum,
 )
-
 from loguru import logger
 
-koza_app = get_koza_app("zfin_gene_to_phenotype")
 
-while (row := koza_app.get_row()) is not None:
-    eqe2zp = koza_app.get_map("eqe2zp")
-
+@koza.transform_record()
+def transform_record(koza_transform, row):
     if row["Phenotype Tag"] == "abnormal":
         zp_key_elements = [
             row["Affected Structure or Process 1 subterm ID"],
@@ -28,12 +23,18 @@ while (row := koza_app.get_row()) is not None:
 
         zp_key = "-".join([element or "0" for element in zp_key_elements])
 
-        zp_term = eqe2zp[zp_key]["iri"]
+        try:
+            zp_term = koza_transform.lookup(zp_key, 'iri', 'eqe2zp')
+
+        except (KeyError, AttributeError) as e:
+
+            logger.debug("ZP concatenation " + zp_key + " did not match a ZP term")
+            return []
 
         if not zp_term:
             logger.debug("ZP concatenation " + zp_key + " did not match a ZP term")
+            return []
         else:
-
             gene_id = "ZFIN:" + row["Gene ID"]
 
             association = GeneToPhenotypicFeatureAssociation(
@@ -48,4 +49,6 @@ while (row := koza_app.get_row()) is not None:
                 agent_type=AgentTypeEnum.manual_agent,
             )
 
-            koza_app.write(association)
+            return [association]
+
+    return []  # Skip non-abnormal phenotype tags

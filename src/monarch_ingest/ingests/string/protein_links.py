@@ -1,34 +1,38 @@
 import uuid
 from typing import List
-
-from koza.cli_utils import get_koza_app
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import PairwiseGeneToGeneInteraction, KnowledgeLevelEnum, AgentTypeEnum
-
 from loguru import logger
-
-from string_utils import map_evidence_codes
-
-koza_app = get_koza_app("string_protein_links")
-
-seen_rows = set([])
+from monarch_ingest.ingests.string.string_utils import map_evidence_codes
 
 
 def sorted_id_pair(row) -> str:
-    sorted([row['protein1'], row['protein2']])
+    return tuple(sorted([row['protein1'], row['protein2']]))
 
 
-while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in seen_rows:
+@koza.transform_record()
+def transform_record(koza_transform, row):
+    
+    row_key = sorted_id_pair(row)
 
-    entrez_2_string = koza_app.get_map('entrez_2_string')
+    # Initialize seen_rows on the transform object if not present
+    if not hasattr(koza_transform, 'seen_rows'):
+        koza_transform.seen_rows = set()
+
+    # Skip if we've already seen this row (duplicate check)
+    if row_key in koza_transform.seen_rows:
+        return []
+
+    koza_transform.seen_rows.add(row_key)
 
     pid_a = row['protein1']
-    gene_ids_a = entrez_2_string[pid_a]['entrez']
+
+    gene_ids_a = koza_transform.lookup(pid_a, 'entrez', 'entrez_2_string') 
     if not gene_ids_a:
         logger.debug(f"protein1 PID '{str(pid_a)}' has no Entrez mappings?")
 
     pid_b = row['protein2']
-    gene_ids_b = entrez_2_string[pid_b]['entrez']
+    gene_ids_b = koza_transform.lookup(pid_b, 'entrez', 'entrez_2_string') 
     if not gene_ids_b:
         logger.debug(f"protein2 PID '{str(pid_b)}' has no Entrez mappings?")
 
@@ -60,7 +64,9 @@ while (row := koza_app.get_row()) is not None and sorted_id_pair(row) not in see
                     knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
                     agent_type=AgentTypeEnum.not_provided,
                 )
-                seen_rows.add(sorted_id_pair(row))
                 entities.append(association)
 
-        koza_app.write(*entities)
+        return entities
+    # No gene id mapping for one or both proteins, skip this row
+    return []
+

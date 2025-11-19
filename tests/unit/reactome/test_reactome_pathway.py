@@ -1,23 +1,13 @@
+"""
+Unit tests for Reactome pathway ingest
+"""
+
 import pytest
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+from biolink_model.datamodel.pydanticmodel_v2 import Pathway
+from koza import KozaTransform
+from koza.io.writer.passthrough_writer import PassthroughWriter
 
-
-@pytest.fixture
-def source_name():
-    return "reactome_pathway"
-
-
-@pytest.fixture
-def script():
-    return "./src/monarch_ingest/ingests/reactome/pathway.py"
-
-
-@pytest.fixture(scope="package")
-def local_table():
-    """
-    :return: string path to Reactome annotation term mappings file
-    """
-    return "src/monarch_ingest/ingests/reactome/reactome_id_mapping.yaml"
+from monarch_ingest.ingests.reactome.pathway import transform_record
 
 
 @pytest.fixture
@@ -26,11 +16,17 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
-    return mock_koza(source_name, basic_row, script, global_table=global_table, local_table=local_table)
+def basic_pathway(basic_row):
+    koza_transform = KozaTransform(
+        mappings={},
+        writer=PassthroughWriter(),
+        extra_fields={}
+    )
+    return transform_record(koza_transform, basic_row)
 
 
-def test_pathway_id(basic_g2p):
-    pathway = basic_g2p[0]
+def test_pathway_id(basic_pathway):
+    pathway = basic_pathway[0]
+    assert isinstance(pathway, Pathway)
     assert pathway.id == "Reactome:R-BTA-73843"
     assert "infores:reactome" in pathway.provided_by

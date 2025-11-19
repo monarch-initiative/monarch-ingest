@@ -5,6 +5,7 @@ A few Dictybase parse utility functions
 from typing import Optional, Tuple, Dict, List
 
 
+from koza import KozaTransform
 from loguru import logger
 
 
@@ -48,14 +49,14 @@ def parse_gene_id(row: Dict, gene_names_to_ids: Dict) -> Optional[Tuple[str, str
     return gene_id, gene_name
 
 
-def parse_phenotypes(row: Dict, phenotype_names_to_ids: Dict) -> List[str]:
+def parse_phenotypes(row: Dict, koza_transform: KozaTransform) -> List[str]:
     """
     Parses the 'Phenotypes' field of the data row
     to extract a dictybase phenotypes associated
     with the given data row (Dictybase Strain).
 
     :param row: dictionary with an 'Phenotypes' field
-    :param phenotype_names_to_ids: 'Phenotype Name' to 'Phenotype ID' mappings dictionary
+    :param koza_transform: KozaTransform object for accessing mappings
     :return: List of UPHENO-compatible phenotypes.
     """
     error_prefix = f"Input record:\n\t'{str(row)}':\n"
@@ -75,9 +76,17 @@ def parse_phenotypes(row: Dict, phenotype_names_to_ids: Dict) -> List[str]:
     phenotype_ids: List[str] = list()
     for phenotype_name in phenotypes:
         try:
-            phenotype_ids.append(phenotype_names_to_ids[phenotype_name]['id'])
-        except KeyError:
-            logger.debug(f"{error_prefix} Phenotype Name '{phenotype_name}' has unknown identifier mapping?\n")
+            # Use KozaTransform.lookup() to access the mapping
+            phenotype_id = koza_transform.lookup(phenotype_name, 'id', 'dictybase_phenotype_names_to_ids')
+            # Koza's lookup may return the key itself if not found, check if it looks like a valid ID
+            if phenotype_id and phenotype_id.startswith('DDPHENO:'):
+                phenotype_ids.append(phenotype_id)
+            else:
+                # Not a valid phenotype ID
+                logger.debug(f"{error_prefix} Phenotype Name '{phenotype_name}' has unknown identifier mapping?\n")
+                return []
+        except (KeyError, AttributeError, Exception) as e:
+            logger.debug(f"{error_prefix} Phenotype Name '{phenotype_name}' has unknown identifier mapping? {str(e)}\n")
             return []
 
     return phenotype_ids

@@ -3,16 +3,14 @@ import pkgutil
 from pathlib import Path
 import yaml
 
-from koza.io.yaml_loader import UniqueIncludeLoader
-
 
 def get_ingests():
     return yaml.safe_load(pkgutil.get_data("monarch_ingest", "ingests.yaml"))
 
 
-def get_ingest(source: str):
-    ingests = get_ingests()
-    return yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
+def get_qc_expectations():
+    """Get the QC expectations which tell us what files each ingest should produce"""
+    return yaml.safe_load(pkgutil.get_data("monarch_ingest", "qc_expect.yaml"))
 
 
 def file_exists(file):
@@ -20,19 +18,23 @@ def file_exists(file):
 
 
 def ingest_output_exists(source, output_dir):
-    ingests = get_ingests()
+    """Check if ingest output files exist using QC expectations as the source of truth"""
+    qc_expectations = get_qc_expectations()
 
-    ingest_config = yaml.load(pkgutil.get_data("monarch_ingest", ingests[source]["config"]), UniqueIncludeLoader)
+    # Check if this ingest should produce nodes
+    nodes_key = f"{source}_nodes"
+    expects_nodes = nodes_key in qc_expectations.get("nodes", {}).get("provided_by", {})
 
-    has_node_properties = "node_properties" in ingest_config
-    has_edge_properties = "edge_properties" in ingest_config
+    # Check if this ingest should produce edges
+    edges_key = f"{source}_edges"
+    expects_edges = edges_key in qc_expectations.get("edges", {}).get("provided_by", {})
 
-    nodes_file = f"{output_dir}/{ingest_config['name']}_nodes.tsv"
-    edges_file = f"{output_dir}/{ingest_config['name']}_edges.tsv"
+    nodes_file = f"{output_dir}/{source}_nodes.tsv"
+    edges_file = f"{output_dir}/{source}_edges.tsv"
 
-    if has_node_properties and not file_exists(nodes_file):
+    if expects_nodes and not file_exists(nodes_file):
         return False
-    if has_edge_properties and not file_exists(edges_file):
+    if expects_edges and not file_exists(edges_file):
         return False
 
     return True

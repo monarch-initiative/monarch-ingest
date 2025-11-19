@@ -26,23 +26,6 @@ else
 fi
 
 
-#If the number of files which match the pattern data/alliance/BGI_*.gz is greater than 0.
-if [ $(ls data/alliance/BGI_*.gz | wc -l) -gt 0 ]; then
-  # Make a simple text file of all the gene IDs in Alliance
-  ${ZCAT} data/alliance/BGI_*.gz | jq '.data[].basicGeneticEntity.primaryId' | pigz > data/alliance/alliance_gene_ids.txt.gz
-  echo "Found $(ls data/alliance/BGI_*.gz | wc -l) file(s) which match pattern \"data/alliance/BGI_*.gz\". Created \"data/alliance/alliance_gene_ids.txt.gz\"."
-else
-  echo "No files found which matched pattern \"data/alliance/BGI_*.gz\". Skipping the creation of \"data/alliance/alliance_gene_ids.txt.gz\"."
-fi
-
-if [ -f data/alliance/BGI_HUMAN.json.gz ]; then
-  # Make a two column tsv of human gene IDs and SO terms
-  ${ZCAT} data/alliance/BGI_HUMAN.json.gz |  jq -r '.data[] | "\(.basicGeneticEntity.primaryId)\t\(.soTermId)"' > data/hgnc/hgnc_so_terms.tsv
-  echo "\"data/alliance/BGI_HUMAN.json.gz\" exists. Created \"data/hgnc/hgnc_so_terms.tsv\"."
-else
-  echo "\"data/alliance/BGI_HUMAN.json.gz\" does not exist. Skipping creation of \"data/hgnc/hgnc_so_terms.tsv\""
-fi
-
 if [ -f data/dictybase/ddpheno.db ]; then
   # Make an id, name map of DDPHENO terms
   sqlite3 -cmd ".mode tabs" -cmd ".headers on" data/dictybase/ddpheno.db "select subject as id, value as name from rdfs_label_statement where predicate = 'rdfs:label' and subject like 'DDPHENO:%'" > data/dictybase/ddpheno.tsv

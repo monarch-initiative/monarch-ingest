@@ -2,27 +2,24 @@ from typing import Dict, List
 
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToPhenotypicFeatureAssociation
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+from koza import KozaTransform
+from koza.io.writer.passthrough_writer import PassthroughWriter
 
+from monarch_ingest.ingests.dictybase.gene_to_phenotype import transform_record
 from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
 
 
 @pytest.fixture
-def map_cache() -> Dict:
+def phenotype_mapping_cache() -> Dict:
     """
-    :return: Multi-level mock map_cache of test Dictybase Gene & Phenotype, Names to Identifiers.
+    :return: Mock phenotype name to ID mappings for Dictybase.
     """
-
-    dictybase_phenotype_names_to_ids = {
+    return {
         "decreased slug migration": {"id": "DDPHENO:0000225"},
         "aberrant spore morphology": {"id": "DDPHENO:0000163"},
         "delayed aggregation": {"id": "DDPHENO:0000156"},
         "increased cell-substrate adhesion": {"id": "DDPHENO:0000213"},
         "decreased cell motility": {"id": "DDPHENO:0000148"},
-    }
-
-    return {
-        "dictybase_phenotype_names_to_ids": dictybase_phenotype_names_to_ids,
     }
 
 
@@ -59,25 +56,17 @@ def map_cache() -> Dict:
         ),
     ],
 )
-def test_parse_phenotypes(query, map_cache):
-    phenotypes: List[str] = parse_phenotypes(query[0], map_cache["dictybase_phenotype_names_to_ids"])
-    assert query[1] in phenotypes if phenotypes else not query[1]  # sample one, unless None expected
-
-
-@pytest.fixture
-def source_name():
-    """
-    :return: string source name of Dictybase Gene to Phenotype ingest
-    """
-    return "dictybase_gene_to_phenotype"
-
-
-@pytest.fixture
-def script():
-    """
-    :return: string path to Dictybase Gene to Phenotype ingest script
-    """
-    return "./src/monarch_ingest/ingests/dictybase/gene_to_phenotype.py"
+def test_parse_phenotypes(query, phenotype_mapping_cache):
+    koza_transform = KozaTransform(
+        mappings={"dictybase_phenotype_names_to_ids": phenotype_mapping_cache},
+        writer=PassthroughWriter(),
+        extra_fields={}
+    )
+    phenotypes: List[str] = parse_phenotypes(query[0], koza_transform)
+    if query[1]:  # If we expect a phenotype ID
+        assert query[1] in phenotypes
+    else:  # If we expect None (empty list)
+        assert not phenotypes
 
 
 @pytest.fixture
@@ -95,22 +84,16 @@ def test_row_1():
 
 
 @pytest.fixture
-def basic_dictybase_1(mock_koza, source_name, script, test_row_1, global_table, map_cache):
+def basic_dictybase_1(test_row_1, phenotype_mapping_cache):
     """
-    Mock Koza run for Dictybase Gene to Phenotype ingest.
-
-    :param mock_koza:
-    :param source_name:
-    :param test_row_1:
-    :param script:
-    :param global_table:
-    :param map_cache:
-
-    :return: mock_koza application
+    Mock Koza run for Dictybase Gene to Phenotype ingest using KozaTransform.
     """
-    return mock_koza(
-        name=source_name, data=test_row_1, transform_code=script, global_table=global_table, map_cache=map_cache
+    koza_transform = KozaTransform(
+        mappings={"dictybase_phenotype_names_to_ids": phenotype_mapping_cache},
+        writer=PassthroughWriter(),
+        extra_fields={}
     )
+    return transform_record(koza_transform, test_row_1)
 
 
 @pytest.mark.parametrize("cls", [GeneToPhenotypicFeatureAssociation])
@@ -151,22 +134,16 @@ def test_row_2():
 
 
 @pytest.fixture
-def basic_dictybase_2(mock_koza, source_name, script, test_row_2, global_table, map_cache):
+def basic_dictybase_2(test_row_2, phenotype_mapping_cache):
     """
-    Mock Koza run for Dictybase Gene to Phenotype ingest.
-
-    :param mock_koza:
-    :param source_name:
-    :param test_row_2:
-    :param script:
-    :param global_table:
-    :param map_cache:
-
-    :return: mock_koza application
+    Mock Koza run for Dictybase Gene to Phenotype ingest using KozaTransform.
     """
-    return mock_koza(
-        name=source_name, data=test_row_2, transform_code=script, global_table=global_table, map_cache=map_cache
+    koza_transform = KozaTransform(
+        mappings={"dictybase_phenotype_names_to_ids": phenotype_mapping_cache},
+        writer=PassthroughWriter(),
+        extra_fields={}
     )
+    return transform_record(koza_transform, test_row_2)
 
 
 def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
@@ -182,3 +159,49 @@ def test_dictybase_g2p_association_dictybase_gene(basic_dictybase_2):
         assert association.predicate == "biolink:has_phenotype"
         assert association.primary_knowledge_source == "infores:dictybase"
         assert "infores:monarchinitiative" in association.aggregator_knowledge_source
+
+
+@pytest.fixture
+def real_data_row():
+    """Real example from all-mutants-ddb_g.txt file"""
+    return {
+        "Systematic_Name": "DBS0235412",
+        "Strain_Descriptor": "1C7",
+        "Associated gene(s)": "gp130",
+        "DDB_G_ID": "DDB_G0279921",
+        "Phenotypes": "decreased cell-substrate adhesion | delayed development | increased growth rate",
+    }
+
+
+@pytest.fixture
+def real_data_mapping():
+    """Real phenotype mappings from ddpheno.tsv"""
+    return {
+        "decreased cell-substrate adhesion": {"id": "DDPHENO:0000393"},
+        "delayed development": {"id": "DDPHENO:0000162"},
+        "increased growth rate": {"id": "DDPHENO:0000171"},
+    }
+
+
+@pytest.fixture
+def real_data_associations(real_data_row, real_data_mapping):
+    koza_transform = KozaTransform(
+        mappings={"dictybase_phenotype_names_to_ids": real_data_mapping},
+        writer=PassthroughWriter(),
+        extra_fields={}
+    )
+    return transform_record(koza_transform, real_data_row)
+
+
+def test_real_data_from_file(real_data_associations):
+    """Test with actual data from all-mutants-ddb_g.txt"""
+    associations = [
+        association for association in real_data_associations
+        if isinstance(association, GeneToPhenotypicFeatureAssociation)
+    ]
+    assert len(associations) == 3
+
+    for association in associations:
+        assert association.subject == "dictyBase:DDB_G0279921"
+        assert association.object in ["DDPHENO:0000393", "DDPHENO:0000162", "DDPHENO:0000171"]
+        assert association.predicate == "biolink:has_phenotype"

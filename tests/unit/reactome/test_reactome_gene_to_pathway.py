@@ -1,23 +1,9 @@
 import pytest
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+import sys
+import os
 
-
-@pytest.fixture
-def source_name():
-    return "reactome_gene_to_pathway"
-
-
-@pytest.fixture
-def script():
-    return "./src/monarch_ingest/ingests/reactome/gene_to_pathway.py"
-
-
-@pytest.fixture(scope="package")
-def local_table():
-    """
-    :return: string path to Reactome annotation term mappings file
-    """
-    return "src/monarch_ingest/ingests/reactome/reactome_id_mapping.yaml"
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
+from monarch_ingest.ingests.reactome.gene_to_pathway import transform_record
 
 
 @pytest.fixture
@@ -31,8 +17,8 @@ def basic_row():
 
 
 @pytest.fixture
-def basic_g2p(mock_koza, source_name, basic_row, script, global_table, local_table):
-    return mock_koza(source_name, basic_row, script, global_table=global_table, local_table=local_table)
+def basic_g2p(basic_row):
+    return transform_record(None, basic_row)
 
 
 def test_association(basic_g2p):

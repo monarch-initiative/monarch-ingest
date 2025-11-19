@@ -134,17 +134,14 @@ def get_fields(category: str) -> List[str]:
 
     if 'category:"biolink:DiseaseToPhenotypicFeatureAssociation"' in category:
         fields += DISEASE_TO_PHENOTYPE_APPENDS
-    
+
     # Check for specific gene-to-gene association types
-    gene_to_gene_types = [
-        'biolink:PairwiseGeneToGeneInteraction',
-        'biolink:GeneToGeneHomologyAssociation'
-    ]
-    
+    gene_to_gene_types = ['biolink:PairwiseGeneToGeneInteraction', 'biolink:GeneToGeneHomologyAssociation']
+
     # Check if category exactly matches one of the gene-to-gene types
     if category in gene_to_gene_types:
         fields += GENE_TO_GENE_APPENDS
-    
+
     return fields
 
 
