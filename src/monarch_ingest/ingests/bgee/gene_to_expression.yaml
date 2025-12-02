@@ -57,6 +57,10 @@ filters:
     column: 'FDR'
     filter_code: 'lt'
     value: 0.05
+  - inclusion: 'include'
+    column: 'Expression'
+    filter_code: 'eq'
+    value: "present"
 # Prototype for including rank filtering in Koza YAML configuration
 #  - inclusion: 'include'
 #    column: 'Expression rank'
