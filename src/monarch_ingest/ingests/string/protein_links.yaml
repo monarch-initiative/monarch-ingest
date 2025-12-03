@@ -1,65 +1,62 @@
 name: 'string_protein_links'
 
-format: 'csv'
+reader:
+  files:
+    - '../../../../data/string/9606.protein_links.txt.gz'   # Homo sapiens (human)
+    - '../../../../data/string/10116.protein_links.txt.gz'  # Rattus norvegicus (Norway rat)
+    - '../../../../data/string/10090.protein_links.txt.gz'  # Mus musculus (house mouse)
+    - '../../../../data/string/9615.protein_links.txt.gz'   # Canis lupus familiaris (domestic dog)
+    - '../../../../data/string/9913.protein_links.txt.gz'   # Bos taurus (cow)
+    - '../../../../data/string/9031.protein_links.txt.gz'   # Gallus gallus (chicken)
+    - '../../../../data/string/8364.protein_links.txt.gz'   # Xenopus tropicalis (tropical clawed frog)
+    - '../../../../data/string/7955.protein_links.txt.gz'   # Danio rerio (Zebrafish)
+    - '../../../../data/string/7227.protein_links.txt.gz'   # Drosophila melanogaster (fruit fly)
+    - '../../../../data/string/6239.protein_links.txt.gz'   # Caenorhabditis elegans (nematodes)
+    - '../../../../data/string/44689.protein_links.txt.gz'  # Dictyostelium discoideum  (slime mold)
+    - '../../../../data/string/227321.protein_links.txt.gz' # Aspergillus nidulans
+    - '../../../../data/string/284812.protein_links.txt.gz'   # Schizosaccharomyces pombe ("fission" yeast)
+    - '../../../../data/string/4932.protein_links.txt.gz'   # Saccharomyces cerevisiae (baker's "budding" yeast)
+  format: 'csv'
+  delimiter: ' '
+  header_mode: 0
+  columns:
+    - 'protein1'
+    - 'protein2'
+    - 'neighborhood'
+    - 'fusion'
+    - 'cooccurence'
+    - 'coexpression'
+    - 'experimental'
+    - 'database'
+    - 'textmining'
+    - 'combined_score' : 'int'
+  # TODO: could this be preprocessed (e.g. using 'awk' etc.) in the pipeline, perhaps in the download step?
+  filters:
+    - inclusion: 'include'
+      column: 'combined_score'
+      filter_code: 'gt'
+      value: 700
 
-delimiter: ' '
+transform:
+  global_table: './src/monarch_ingest/translation_table.yaml'
+  mappings:
+    - '../../maps/entrez-2-string.yaml'
 
-files:
-  - './data/string/9606.protein_links.txt.gz'   # Homo sapiens (human)
-  - './data/string/10116.protein_links.txt.gz'  # Rattus norvegicus (Norway rat)
-  - './data/string/10090.protein_links.txt.gz'  # Mus musculus (house mouse)
-  - './data/string/9615.protein_links.txt.gz'   # Canis lupus familiaris (domestic dog)
-  - './data/string/9913.protein_links.txt.gz'   # Bos taurus (cow)
-  - './data/string/9031.protein_links.txt.gz'   # Gallus gallus (chicken)
-  - './data/string/8364.protein_links.txt.gz'   # Xenopus tropicalis (tropical clawed frog)
-  - './data/string/7955.protein_links.txt.gz'   # Danio rerio (Zebrafish)
-  - './data/string/7227.protein_links.txt.gz'   # Drosophila melanogaster (fruit fly)
-  - './data/string/6239.protein_links.txt.gz'   # Caenorhabditis elegans (nematodes)
-  - './data/string/44689.protein_links.txt.gz'  # Dictyostelium discoideum  (slime mold)
-  - './data/string/227321.protein_links.txt.gz' # Aspergillus nidulans
-  - './data/string/284812.protein_links.txt.gz'   # Schizosaccharomyces pombe ("fission" yeast)
-  - './data/string/4932.protein_links.txt.gz'   # Saccharomyces cerevisiae (baker's "budding" yeast)
-
-depends_on:
-  - './src/monarch_ingest/maps/entrez-2-string.yaml'
+writer:
+  edge_properties:
+    - 'id'
+    - 'category'
+    - 'subject'
+    - 'predicate'
+    - 'object'
+    - 'aggregator_knowledge_source'
+    - 'primary_knowledge_source'
+    - 'has_evidence'
+    - 'knowledge_level'
+    - 'agent_type'
 
 metadata:
   ingest_title: 'String DB'
   ingest_url: 'https://string-db.org'
   description: 'STRING: functional protein association networks'
   rights: 'https://string-db.org/cgi/access.pl?footer_active_subpage=licensing'
-
-global_table: './src/monarch_ingest/translation_table.yaml'
-
-columns:
-  - 'protein1'
-  - 'protein2'
-  - 'neighborhood'
-  - 'fusion'
-  - 'cooccurence'
-  - 'coexpression'
-  - 'experimental'
-  - 'database'
-  - 'textmining'
-  - 'combined_score' : 'int'
-
-# TODO: could this be preprocessed (e.g. using 'awk' etc.) in the pipeline, perhaps in the download step?
-filters:
-  - inclusion: 'include'
-    column: 'combined_score'
-    filter_code: 'gt'
-    value: 700
-
-edge_properties:
-  - 'id'
-  - 'category'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'aggregator_knowledge_source'
-  - 'primary_knowledge_source'
-  - 'has_evidence'
-  - 'knowledge_level'
-  - 'agent_type'
-
-transform_mode: 'flat'

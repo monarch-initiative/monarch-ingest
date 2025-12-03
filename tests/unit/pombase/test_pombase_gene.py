@@ -1,9 +1,13 @@
 import pytest
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
+from monarch_ingest.ingests.pombase.gene import transform_record
 
 
 @pytest.fixture
-def gene_information_entities(mock_koza, taxon_label_map_cache, global_table):
+def gene_information_entities():
     row = {
         'gene_systematic_id': 'SPAC1002.06c',
         'gene_systematic_id_with_prefix': 'POMBASE:SPAC1002.06c',
@@ -15,17 +19,11 @@ def gene_information_entities(mock_koza, taxon_label_map_cache, global_table):
         'synonyms': 'mug18,rec23',
     }
 
-    return mock_koza(
-        "pombase_gene",
-        row,
-        "./src/monarch_ingest/ingests/pombase/gene.py",
-        map_cache=taxon_label_map_cache,
-        global_table=global_table,
-    )
+    return transform_record(None, row)
 
 
 @pytest.fixture
-def gene_entity_no_name(mock_koza, taxon_label_map_cache, global_table):
+def gene_entity_no_name():
     row = {
         'gene_systematic_id': 'SPAC1002.06c',
         'gene_systematic_id_with_prefix': 'POMBASE:SPAC1002.06c',
@@ -37,13 +35,7 @@ def gene_entity_no_name(mock_koza, taxon_label_map_cache, global_table):
         'synonyms': 'mug18,rec23',
     }
 
-    return mock_koza(
-        "pombase_gene",
-        row,
-        "./src/monarch_ingest/ingests/pombase/gene.py",
-        map_cache=taxon_label_map_cache,
-        global_table=global_table,
-    )
+    return transform_record(None, row)
 
 
 def test_gene_information_gene(gene_information_entities):

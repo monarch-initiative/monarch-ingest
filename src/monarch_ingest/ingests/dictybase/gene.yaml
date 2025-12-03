@@ -1,35 +1,31 @@
 name: 'dictybase_gene'
 
-files:
-  - './data/dictybase/gene_information.txt'
+reader:
+  files:
+    - '../../../../data/dictybase/gene_information.txt'
+  format: 'csv'
+  delimiter: '\t'
+  columns:
+    - 'GENE ID'
+    - 'Gene Name'
+    - 'Synonyms'
+    - 'Gene products'
+
+transform:
+  global_table: './src/monarch_ingest/translation_table.yaml'
+  # depends_on functionality may need to be handled differently in Koza 2.0
+  # depends_on:
+  #   - './src/monarch_ingest/maps/taxon-labels.yaml'
+
+writer:
+  node_properties:
+    - 'id'
+    - 'category'
+    - 'name'
+    - 'symbol'
+    - 'full_name'
+    - 'in_taxon'
+    - 'in_taxon_label'
+    - 'provided_by'
 
 metadata: './src/monarch_ingest/ingests/dictybase/metadata.yaml'
-
-global_table: './src/monarch_ingest/translation_table.yaml'
-
-header: 0
-
-format: 'csv'
-
-delimiter: '\t'
-
-columns:
-  - 'GENE ID'
-  - 'Gene Name'
-  - 'Synonyms'
-  - 'Gene products'
-
-depends_on:
-  - './src/monarch_ingest/maps/taxon-labels.yaml'
-
-node_properties:
-  - 'id'
-  - 'category'
-  - 'name'
-  - 'symbol'
-  - 'full_name'
-  - 'in_taxon'
-  - 'in_taxon_label'
-  - 'provided_by'
-
-transform_mode: 'flat'

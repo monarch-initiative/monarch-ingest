@@ -3,45 +3,45 @@ Ingest of Reference Genome Orthologs from Xenbase
 """
 
 import uuid
-
-from koza.cli_utils import get_koza_app
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToGeneHomologyAssociation, AgentTypeEnum, KnowledgeLevelEnum
-
 from loguru import logger
 
-koza_app = get_koza_app("xenbase_orthologs")
 
-genepage_to_gene_map = koza_app.get_map("genepage-2-gene")
+@koza.transform_record()
+def transform_record(koza_transform, row):
+    genepage_id = row['xb_genepage_id']
+    assert genepage_id
 
-while (row := koza_app.get_row()) is not None:
+    predicate = "biolink:orthologous_to"
 
-    try:
-        genepage_id = row['xb_genepage_id']
-        assert genepage_id
+    ortholog_id = row['entrez_id']
+    assert ortholog_id
 
-        predicate = "biolink:orthologous_to"
+    # Look up each gene ID from the mapping (tropicalis, laevis_l, laevis_s)
+    gene_ids = []
+    for field in ['tropicalis_id', 'laevis_l_id', 'laevis_s_id']:
+        gene_id = koza_transform.lookup(genepage_id, field, 'genepage-2-gene')
+        if gene_id:  # Filter out None/empty values
+            gene_ids.append(gene_id)
 
-        ortholog_id = row['entrez_id']
-        assert ortholog_id
+    # Fallback to genepage_id if no mappings found
+    if not gene_ids:
+        gene_ids = [genepage_id]
 
-        gene_ids = genepage_to_gene_map.get(genepage_id).values()
+    associations = []
+    for gene_id in gene_ids:
+        # Instantiate the instance of Gene-to-Gene Homology Association
+        association = GeneToGeneHomologyAssociation(
+            id=f"uuid:{str(uuid.uuid1())}",
+            subject=f"Xenbase:{gene_id}",
+            predicate=predicate,
+            object=f"NCBIGene:{ortholog_id}",
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:xenbase",
+            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+            agent_type=AgentTypeEnum.manual_agent,
+        )
+        associations.append(association)
 
-        for gene_id in gene_ids:
-            # Instantiate the instance of Gene-to-Gene Homology Association
-            association = GeneToGeneHomologyAssociation(
-                id=f"uuid:{str(uuid.uuid1())}",
-                subject=f"Xenbase:{gene_id}",
-                predicate=predicate,
-                object=f"NCBIGene:{ortholog_id}",
-                aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source="infores:xenbase",
-                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.manual_agent,
-            )
-
-            # Write the captured Association out
-            koza_app.write(association)
-
-    except (RuntimeError, AssertionError) as rte:
-        logger.debug(f"{str(rte)} in data row:\n\t'{str(row)}'")
+    return associations

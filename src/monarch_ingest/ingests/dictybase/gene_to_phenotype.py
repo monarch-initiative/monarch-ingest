@@ -1,40 +1,43 @@
 import uuid
-
-from koza.cli_utils import get_koza_app
-from monarch_ingest.ingests.dictybase.utils import parse_phenotypes
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
     GeneToPhenotypicFeatureAssociation,
     KnowledgeLevelEnum,
     AgentTypeEnum,
 )
 
-koza_app = get_koza_app("dictybase_gene_to_phenotype")
 
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row):
+    # Only process single gene entries
+    gene_ids = row['DDB_G_ID'].split("|")
+    if len(gene_ids) != 1 or not row.get("Phenotypes"):
+        return []
 
-    phenotype_names_to_ids = koza_app.get_map("dictybase_phenotype_names_to_ids")
+    gene_id = f"dictyBase:{gene_ids[0]}"
 
-    gene_identifier = ['dictyBase:' + gene_id for gene_id in row['DDB_G_ID'].split("|")]
+    # Parse and lookup phenotypes
+    phenotype_ids = [
+        pid for name in (p.strip() for p in row["Phenotypes"].split('|') if p.strip())
+        if (pid := koza_transform.lookup(name, 'id', 'dictybase_phenotype_names_to_ids'))
+        and pid.startswith('DDPHENO:')
+    ]
 
-    if len(gene_identifier) == 1:
+    if not phenotype_ids:
+        return []
 
-        # Parse out list of phenotypes...
-        phenotypes = parse_phenotypes(row, phenotype_names_to_ids)
-
-        for phenotype_id in phenotypes:
-            # Create one S-P-O statement per phenotype
-            # TODO: how do we capture the 'Strain Descriptor' (genotype) context of
-            #       Dictylostelium via which a (mutant) gene (allele) is tied to its phenotype?
-            association = GeneToPhenotypicFeatureAssociation(
-                id="uuid:" + str(uuid.uuid1()),
-                subject=gene_identifier[0],  # gene[0] is the resolved gene ID
-                predicate='biolink:has_phenotype',
-                object=phenotype_id,
-                aggregator_knowledge_source=["infores:monarchinitiative"],
-                primary_knowledge_source="infores:dictybase",
-                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.manual_agent,
-            )
-
-            koza_app.write(association)
+    # Create associations
+    return [
+        
+        GeneToPhenotypicFeatureAssociation(
+            id=f"uuid:{uuid.uuid1()}",
+            subject=gene_id,
+            predicate='biolink:has_phenotype',
+            object=phenotype_id,
+            aggregator_knowledge_source=["infores:monarchinitiative"],
+            primary_knowledge_source="infores:dictybase",
+            knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+            agent_type=AgentTypeEnum.manual_agent,
+        )
+        for phenotype_id in phenotype_ids
+    ]

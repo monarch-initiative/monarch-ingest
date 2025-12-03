@@ -1,93 +1,93 @@
 name: 'hgnc_gene'
 
-files:
-  - './data/hgnc/hgnc_complete_set.txt'
+reader:
+  files:
+    - '../../../../data/hgnc/hgnc_complete_set.txt'
+  format: 'csv'
+  delimiter: '\t'
+  header_mode: 0
+  columns:
+    - hgnc_id
+    - symbol
+    - name
+    - locus_group
+    - locus_type
+    - status
+    - location
+    - location_sortable
+    - alias_symbol
+    - alias_name
+    - prev_symbol
+    - prev_name
+    - gene_group
+    - gene_group_id
+    - date_approved_reserved
+    - date_symbol_changed
+    - date_name_changed
+    - date_modified
+    - entrez_id
+    - ensembl_gene_id
+    - vega_id
+    - ucsc_id
+    - ena
+    - refseq_accession
+    - ccds_id
+    - uniprot_ids
+    - pubmed_id
+    - mgd_id
+    - rgd_id
+    - lsdb
+    - cosmic
+    - omim_id
+    - mirbase
+    - homeodb
+    - snornabase
+    - bioparadigms_slc
+    - orphanet
+    - pseudogene.org
+    - horde_id
+    - merops
+    - imgt
+    - iuphar
+    - kznf_gene_catalog
+    - mamit-trnadb
+    - cd
+    - lncrnadb
+    - enzyme_id
+    - intermediate_filament_db
+    - rna_central_id
+    - lncipedia
+    - gtrnadb
+    - agr
+    - mane_select
+    - gencc
 
-format: 'csv'
+transform:
+  global_table: '../../translation_table.yaml'
+  mappings:
+    - '../../maps/hgnc-so-terms.yaml'
 
-delimiter: '\t'
+writer:
+  node_properties:
+    - 'id'
+    - 'category'
+    - 'name'
+    - 'symbol'
+    - 'full_name'
+    - 'in_taxon'
+    - 'in_taxon_label'
+    - 'type'
+    - 'xref'
+    - 'synonym'
+    - 'provided_by'
 
-global_table: './src/monarch_ingest/translation_table.yaml'
+  # Commented out while we're not bringing in publication associations
+  #edge_properties:
+  #  - 'id'
+  #  - 'subject'
+  #  - 'predicate'
+  #  - 'object'
+  #  - 'category'
+  #  - 'provided_by'
 
-depends_on:
-  - './src/monarch_ingest/maps/hgnc-so-terms.yaml'
-
-columns:
-  - hgnc_id
-  - symbol
-  - name
-  - locus_group
-  - locus_type
-  - status
-  - location
-  - location_sortable
-  - alias_symbol
-  - alias_name
-  - prev_symbol
-  - prev_name
-  - gene_group
-  - gene_group_id
-  - date_approved_reserved
-  - date_symbol_changed
-  - date_name_changed
-  - date_modified
-  - entrez_id
-  - ensembl_gene_id
-  - vega_id
-  - ucsc_id
-  - ena
-  - refseq_accession
-  - ccds_id
-  - uniprot_ids
-  - pubmed_id
-  - mgd_id
-  - rgd_id
-  - lsdb
-  - cosmic
-  - omim_id
-  - mirbase
-  - homeodb
-  - snornabase
-  - bioparadigms_slc
-  - orphanet
-  - pseudogene.org
-  - horde_id
-  - merops
-  - imgt
-  - iuphar
-  - kznf_gene_catalog
-  - mamit-trnadb
-  - cd
-  - lncrnadb
-  - enzyme_id
-  - intermediate_filament_db
-  - rna_central_id
-  - lncipedia
-  - gtrnadb
-  - agr
-  - mane_select
-  - gencc
-
-node_properties:
-  - 'id'
-  - 'category'
-  - 'name'
-  - 'symbol'
-  - 'full_name'
-  - 'in_taxon'
-  - 'in_taxon_label'
-  - 'type'
-  - 'xref'
-  - 'synonym'
-  - 'provided_by'
-
-# Commented out while we're not bringing in publication associations
-#edge_properties:
-#  - 'id'
-#  - 'subject'
-#  - 'predicate'
-#  - 'object'
-#  - 'category'
-#  - 'provided_by'
-
-transform_mode: 'flat'
+metadata: './src/monarch_ingest/ingests/hgnc/metadata.yaml'

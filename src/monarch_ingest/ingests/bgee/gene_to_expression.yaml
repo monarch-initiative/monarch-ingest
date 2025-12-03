@@ -1,86 +1,74 @@
 name: 'bgee_gene_to_expression'
 
-# List of files to be ingested
-# We're skipping the model organisms because we get them from other sources
-files:
-  - './data/bgee/Bos_taurus_expr_simple.tsv.gz'
-#  - './data/bgee/Caenorhabditis_elegans_expr_simple.tsv.gz'
-  - './data/bgee/Canis_lupus_familiaris_expr_simple.tsv.gz'
-#  - './data/bgee/Danio_rerio_expr_simple.tsv.gz'
-#  - './data/bgee/Drosophila_melanogaster_expr_simple.tsv.gz'
-  - './data/bgee/Gallus_gallus_expr_simple.tsv.gz'
-  - './data/bgee/Homo_sapiens_expr_simple.tsv.gz'
-#  - './data/bgee/Mus_musculus_expr_simple.tsv.gz'
-#  - './data/bgee/Rattus_norvegicus_expr_simple.tsv.gz'
-  - './data/bgee/Sus_scrofa_expr_simple.tsv.gz'
-#  - './data/bgee/Xenopus_laevis_expr_simple.tsv.gz'
+reader:
+  # List of files to be ingested
+  # We're skipping the model organisms because we get them from other sources
+  files:
+    - '../../../../data/bgee/Bos_taurus_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Caenorhabditis_elegans_expr_simple.tsv.gz'
+    - '../../../../data/bgee/Canis_lupus_familiaris_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Danio_rerio_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Drosophila_melanogaster_expr_simple.tsv.gz'
+    - '../../../../data/bgee/Gallus_gallus_expr_simple.tsv.gz'
+    - '../../../../data/bgee/Homo_sapiens_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Mus_musculus_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Rattus_norvegicus_expr_simple.tsv.gz'
+    - '../../../../data/bgee/Sus_scrofa_expr_simple.tsv.gz'
+  #  - '../../../../data/bgee/Xenopus_laevis_expr_simple.tsv.gz'
+  format: 'csv'
+  delimiter: '\t'
+  # For a csv/tsv file, list expected columns
+  columns:
+    - 'Gene ID'
+    - 'Gene name'
+    - 'Anatomical entity ID'
+    - 'Anatomical entity name'
+    - 'Expression'
+    - 'Call quality'
+    - 'FDR': 'float'
+    - 'Expression score' : 'float'
+    - 'Expression rank' : 'float'
+  filters:
+    - inclusion: 'include'
+      column: 'Expression rank'
+      filter_code: 'lt'
+      value: 10000
+    - inclusion: 'include'
+      column: 'Expression score'
+      filter_code: 'gt'
+      value: 70
+    - inclusion: 'include'
+      column: 'FDR'
+      filter_code: 'lt'
+      value: 0.05
+    - inclusion: 'include'
+      column: 'Expression'
+      filter_code: 'eq'
+      value: "present"  
+  # Prototype for including rank filtering in Koza YAML configuration
+  #  - inclusion: 'include'
+  #    column: 'Expression rank'
+  #    filter_code: 'top_rank'
+  #    group_by: 'Gene ID'
+  #    rank: 10
 
-# Format options csv, json
-format: 'csv'
+transform:
+  # Optionally, if a source file depends on any map files, specify their configuration file here
+  # depends_on:
+  #   - './path/to/map.yaml'
 
-# Specify a delimiter for csv formats
-delimiter: '\t'
+writer:
+  # Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
+  # For node-only ingests
+  edge_properties:
+    - 'id'
+    - 'category'
+    - 'subject'
+    - 'predicate'
+    - 'object'
+    - 'primary_knowledge_source'
+    - 'aggregator_knowledge_source'
+    - 'knowledge_level'
+    - 'agent_type'
+    - 'object_specialization_qualifier'
 
-# Presence of a header defaults to true
-# if no header is present in the file, use
-# header = false
-
-# If the source_file has metadata lines to skip, use
-# skip_lines: 10
-
-# Optionally, if a source file depends on any map files, specify their configuration file here
-# depends_on:
-#   - './path/to/map.yaml'
-
-# For a csv/tsv file, list expected columns
-columns:
-  - 'Gene ID'
-  - 'Gene name'
-  - 'Anatomical entity ID'
-  - 'Anatomical entity name'
-  - 'Expression'
-  - 'Call quality'
-  - 'FDR': 'float'
-  - 'Expression score' : 'float'
-  - 'Expression rank' : 'float'
-
-filters:
-  - inclusion: 'include'
-    column: 'Expression rank'
-    filter_code: 'lt'
-    value: 10000
-  - inclusion: 'include'
-    column: 'Expression score'
-    filter_code: 'gt'
-    value: 70
-  - inclusion: 'include'
-    column: 'FDR'
-    filter_code: 'lt'
-    value: 0.05
-  - inclusion: 'include'
-    column: 'Expression'
-    filter_code: 'eq'
-    value: "present"
-# Prototype for including rank filtering in Koza YAML configuration
-#  - inclusion: 'include'
-#    column: 'Expression rank'
-#    filter_code: 'top_rank'
-#    group_by: 'Gene ID'
-#    rank: 10
-
-# Node and edge properties added in the ingest must be enumerated here to make it into the kgx file
-
-# For node-only ingests
-edge_properties:
-  - 'id'
-  - 'category'
-  - 'subject'
-  - 'predicate'
-  - 'object'
-  - 'primary_knowledge_source'
-  - 'aggregator_knowledge_source'
-  - 'knowledge_level'
-  - 'agent_type'
-  - 'object_specialization_qualifier'
-
-transform_mode: 'flat'
