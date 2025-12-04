@@ -673,14 +673,14 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "closurizer"
-version = "0.8.0"
+version = "0.8.1"
 description = "Add closure expansion fields to kgx files following the Golr pattern"
 optional = false
 python-versions = "<4.0,>=3.8"
 groups = ["main"]
 files = [
-    {file = "closurizer-0.8.0-py3-none-any.whl", hash = "sha256:1ff185ae2a155b8e69e72fc070e0db43f8a9f2a06ca70ccb5533f3c1a2122423"},
-    {file = "closurizer-0.8.0.tar.gz", hash = "sha256:8ac9de536286cfd13cfaa54173e9a51cd7d2850f62311d20fd5913abfe42262f"},
+    {file = "closurizer-0.8.1-py3-none-any.whl", hash = "sha256:86f9e9d0982dc9e31fb8107206e141c7a052f6f3ee6a0d5606f0cce12a935cba"},
+    {file = "closurizer-0.8.1.tar.gz", hash = "sha256:59626a3779ee15b18a2f9ce35ea4ae9facaeb47e67cd742110d24eb2e66b11df"},
 ]
 
 [package.dependencies]
@@ -6153,4 +6153,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "68b8da4a70ffe2fc9b76d6a8472b575cf9bfb5cf020251fcb75b73fbdcf5729e"
+content-hash = "38a1efee01d959c71f8f012e637ef4f87982eb1ff4bb54d9c6cd2ba3b316466b"

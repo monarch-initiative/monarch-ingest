@@ -125,10 +125,10 @@
   tag: mapping
 
 ### Monarch
--
-  url: https://kg-hub.berkeleybop.io/kg-phenio/current/kg-phenio.tar.gz
-  local_name: data/monarch/kg-phenio.tar.gz
-  tag: phenio
+-  
+ url: https://github.com/knowledge-graph-hub/kg-phenio/releases/latest/download/kg-phenio.tar.gz
+ local_name: data/monarch/kg-phenio.tar.gz
+ tag: phenio
 -
   url: https://github.com/monarch-initiative/phenio/releases/latest/download/phenio-relation-graph.gz
   local_name: data/monarch/phenio-relation-graph.tsv.gz
