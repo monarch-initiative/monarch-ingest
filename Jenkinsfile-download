@@ -36,7 +36,7 @@ pipeline {
         stage('upload') {
             steps {
                 sh '''
-                    gsutil -m cp -r data/* gs://monarch-ingest-data-cache
+                    gsutil -m -o GSUtil:use_tracker_files=False cp -r data/* gs://monarch-ingest-data-cache
                 '''
             }
         }
