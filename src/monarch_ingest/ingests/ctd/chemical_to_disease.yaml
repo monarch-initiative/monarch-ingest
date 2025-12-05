@@ -33,5 +33,3 @@ writer:
     - 'primary_knowledge_source'
     - 'knowledge_level'
     - 'agent_type'
-
-metadata: './src/monarch_ingest/ingests/ctd/metadata.yaml'
