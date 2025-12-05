@@ -14,7 +14,7 @@ def gene_information_entities():
         'gene_name': 'bqt2',
         'chromosome_id': 'chromosome_1',
         'gene_product': 'bouquet formation protein Bqt2',
-        'uniprot_id': 'Q9US52',
+        'external_id': 'Q9US52',
         'gene type': 'protein coding gene',
         'synonyms': 'mug18,rec23',
     }
@@ -30,7 +30,7 @@ def gene_entity_no_name():
         'gene_name': '',
         'chromosome_id': 'chromosome_1',
         'gene_product': 'bouquet formation protein Bqt2',
-        'uniprot_id': 'Q9US52',
+        'external_id': 'Q9US52',
         'gene type': 'protein coding gene',
         'synonyms': 'mug18,rec23',
     }

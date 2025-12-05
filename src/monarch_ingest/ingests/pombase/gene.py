@@ -23,8 +23,8 @@ def transform_record(koza_transform, row):
         provided_by=["infores:pombase"],
     )
 
-    if row["uniprot_id"]:
-        gene.xref = ["UniProtKB:" + row["uniprot_id"]]
+    if row["external_id"]:
+        gene.xref = ["UniProtKB:" + row["external_id"]]
 
     if row["synonyms"]:
         gene.synonym = row["synonyms"].split(",")

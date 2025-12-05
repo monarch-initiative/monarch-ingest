@@ -17,7 +17,7 @@ reader:
     - "gene_name"
     - "chromosome_id"
     - "gene_product"
-    - "uniprot_id"
+    - "external_id"
     - "gene_type"
     - "synonyms"
 
