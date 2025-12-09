@@ -9,6 +9,7 @@ from monarch_ingest.cli_utils import (
     do_release,
     export_tsv,
     create_qc_reports,
+    generate_graph_stats,
     get_data_versions,
     get_pkg_versions,
     load_jsonl,
@@ -165,10 +166,16 @@ def merge(
         "--kg_name",
         help="The name of the kg being produced. Merge artificat will be ultimately be stored in output/$KG_NAME.tar.gz",
     ),
+    backend: str = typer.Option(
+        "koza",
+        "--backend",
+        "-b",
+        help="Merge backend to use: 'koza' (new) or 'catmerge' (legacy)",
+    ),
 ):
     """Merge nodes and edges into kg"""
     start_time = time.time()
-    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose, backend=backend)
     merge_duration = time.time() - start_time
 
     # load qc_report.yaml from output_dir
@@ -242,6 +249,35 @@ def export():
 def report():
     """Run Koza QC on specified Monarch ingests"""
     create_qc_reports()
+
+
+@typer_app.command()
+def graph_stats(
+    input_db: str = typer.Option(
+        f"{OUTPUT_DIR}/monarch-kg.duckdb",
+        "--input-db",
+        "-i",
+        help="Path to input DuckDB database",
+    ),
+    output_file: str = typer.Option(
+        f"{OUTPUT_DIR}/merged_graph_stats.yaml",
+        "--output",
+        "-o",
+        help="Output YAML file path",
+    ),
+    backend: str = typer.Option(
+        "koza",
+        "--backend",
+        "-b",
+        help="Backend to use: 'koza' (new) or 'kgx' (legacy)",
+    ),
+):
+    """Generate graph statistics from merged KG database"""
+    generate_graph_stats(
+        input_db=input_db,
+        output_file=output_file,
+        backend=backend,
+    )
 
 
 @typer_app.command()
