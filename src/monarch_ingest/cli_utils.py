@@ -1,4 +1,5 @@
 import csv
+import glob
 import gzip
 import os
 import shutil
@@ -22,7 +23,10 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
-from cat_merge.duckdb_merge import merge_duckdb as merge
+# Both merge backends available for comparison testing
+from cat_merge.duckdb_merge import merge_duckdb as catmerge_merge
+from koza.graph_operations import merge_graphs, prepare_merge_config_from_paths, generate_qc_report
+from koza.model.graph_operations import QCReportConfig
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.runner import KozaRunner
@@ -428,17 +432,123 @@ def merge_files(
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
     verbose: Optional[bool] = None,
+    backend: str = "koza",
 ):
+    """
+    Merge KGX files using specified backend.
+
+    Args:
+        name: Name of the output KG
+        input_dir: Directory containing node/edge TSV files
+        output_dir: Directory for output files
+        verbose: Verbosity level
+        backend: "koza" or "catmerge" - which merge implementation to use
+    """
+    if backend == "koza":
+        _merge_files_koza(name=name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    elif backend == "catmerge":
+        _merge_files_catmerge(name=name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    else:
+        raise ValueError(f"Unknown merge backend: {backend}. Use 'koza' or 'catmerge'")
+
+
+def _merge_files_koza(
+    name: str = "monarch-kg",
+    input_dir: str = f"{OUTPUT_DIR}/transform_output",
+    output_dir: str = OUTPUT_DIR,
+    verbose: Optional[bool] = None,
+):
+    """
+    Merge KGX files using koza graph operations.
+
+    Pipeline: join → normalize → prune
+    """
     logger = get_logger(None, verbose)
-    logger.info("Generating mappings...")
 
-    mappings = []
-    mappings.append("data/monarch/*.sssom.tsv")
+    # Discover node and edge files
+    node_files = glob.glob(f"{input_dir}/*_nodes.tsv")
+    edge_files = glob.glob(f"{input_dir}/*_edges.tsv")
 
-    logger.info("Merging knowledge graph...")
+    logger.info(f"Found {len(node_files)} node files, {len(edge_files)} edge files")
 
+    # Collect SSSOM mapping files
+    mapping_files = glob.glob("data/monarch/*.sssom.tsv")
+    logger.info(f"Found {len(mapping_files)} SSSOM mapping files")
+
+    # Prepare output database path
+    database_path = Path(output_dir) / f"{name}.duckdb"
+
+    # Run merge pipeline (join → normalize → prune)
+    logger.info("Running koza merge pipeline (join → normalize → prune)...")
+
+    config = prepare_merge_config_from_paths(
+        node_files=[Path(f) for f in node_files],
+        edge_files=[Path(f) for f in edge_files],
+        mapping_files=[Path(f) for f in mapping_files],
+        output_database=database_path,
+        skip_normalize=False,
+        skip_prune=False,
+        keep_singletons=True,
+        quiet=not verbose if verbose is not None else True,
+        show_progress=verbose or False,
+    )
+
+    result = merge_graphs(config)
+
+    if not result.success:
+        raise RuntimeError(f"Merge failed: {result.errors}")
+
+    logger.info(f"Merge completed: {result.final_stats.nodes:,} nodes, {result.final_stats.edges:,} edges")
+
+    # Generate QC report (group by file_source for compatibility with qc_expect.yaml)
+    logger.info("Generating QC report...")
+    qc_config = QCReportConfig(
+        database_path=database_path,
+        output_file=Path(output_dir) / "qc_report.yaml",
+        group_by="file_source",
+        quiet=not verbose if verbose is not None else True,
+    )
+    generate_qc_report(qc_config)
+
+    # Create information_resource table from infores catalog
+    logger.info("Creating information_resource table...")
+    db = duckdb.connect(str(database_path))
+    db.execute(
+        "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"
+    )
+    db.close()
+
+
+def _merge_files_catmerge(
+    name: str = "monarch-kg",
+    input_dir: str = f"{OUTPUT_DIR}/transform_output",
+    output_dir: str = OUTPUT_DIR,
+    verbose: Optional[bool] = None,
+):
+    """
+    Merge KGX files using cat-merge.
+
+    Note: Cat-merge handles SSSOM files with different schemas correctly ONLY when
+    passed as a glob pattern (e.g., "data/monarch/*.sssom.tsv"). When passed as
+    individual files, it fails because it uses UNION ALL instead of UNION BY NAME.
+    """
+    logger = get_logger(None, verbose)
+
+    # IMPORTANT: Pass SSSOM files as a glob pattern, NOT as individual files!
+    # Cat-merge uses DuckDB's read_csv_auto with union_by_name=true for glob patterns,
+    # which correctly handles files with different column schemas. When individual
+    # files are passed, cat-merge creates separate temp tables and tries to UNION ALL
+    # them, which fails with "Set operations can only apply to expressions with the
+    # same number of result columns".
+    mappings = ["data/monarch/*.sssom.tsv"]
+    logger.info(f"Using SSSOM mapping pattern: {mappings[0]}")
+
+    logger.info("Running cat-merge...")
+
+    # Ensure model files are available for schema validation
     model_yaml_path, _ = ensure_model_files()
-    merge(
+
+    catmerge_merge(
         name=name,
         source=input_dir,
         output_dir=output_dir,
@@ -449,7 +559,8 @@ def merge_files(
 
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
-    db = duckdb.connect(f'{output_dir}/{name}.duckdb')
+    database_path = Path(output_dir) / f"{name}.duckdb"
+    db = duckdb.connect(str(database_path))
     db.execute(
         "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"
     )
@@ -861,6 +972,89 @@ def create_qc_reports():
 
     con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
     con.execute(sql)
+
+
+def generate_graph_stats(
+    input_db: str = "output/monarch-kg.duckdb",
+    output_file: str = "output/merged_graph_stats.yaml",
+    backend: str = "koza",
+):
+    """
+    Generate graph statistics from a merged KG database.
+
+    Args:
+        input_db: Path to the input DuckDB database
+        output_file: Path to the output YAML file
+        backend: Backend to use - 'koza' or 'kgx'
+    """
+    from pathlib import Path
+
+    input_path = Path(input_db)
+    output_path = Path(output_file)
+
+    # Validate input database exists
+    if not input_path.exists():
+        raise FileNotFoundError(f"Database not found: {input_db}")
+
+    if backend == "koza":
+        _generate_graph_stats_koza(input_path, output_path)
+    elif backend == "kgx":
+        _generate_graph_stats_kgx(input_path, output_path)
+    else:
+        raise ValueError(f"Unknown graph-stats backend: {backend}. Use 'koza' or 'kgx'")
+
+
+def _generate_graph_stats_koza(input_db: Path, output_file: Path):
+    """Generate graph stats using koza backend."""
+    from koza.graph_operations import generate_graph_stats as koza_generate_graph_stats
+    from koza.model.graph_operations import GraphStatsConfig
+
+    print(f"📈 Generating graph statistics with koza backend...")
+    print(f"   Input: {input_db}")
+    print(f"   Output: {output_file}")
+
+    config = GraphStatsConfig(
+        database_path=input_db,
+        output_file=output_file,
+        quiet=False,
+    )
+
+    result = koza_generate_graph_stats(config)
+
+    print(f"✓ Graph statistics generated successfully")
+    print(f"   Total nodes: {result.stats_report.node_stats.total_nodes:,}")
+    print(f"   Total edges: {result.stats_report.edge_stats.total_edges:,}")
+    print(f"   Time: {result.total_time_seconds:.2f}s")
+
+
+def _generate_graph_stats_kgx(input_db: Path, output_file: Path):
+    """Generate graph stats using kgx backend."""
+    import subprocess
+
+    print(f"📈 Generating graph statistics with kgx backend...")
+    print(f"   Input: {input_db}")
+    print(f"   Output: {output_file}")
+
+    cmd = [
+        "kgx", "graph-summary",
+        "-i", "duckdb",
+        "--node-facet-properties", "provided_by",
+        "--edge-facet-properties", "provided_by",
+        str(input_db),
+        "-o", str(output_file),
+    ]
+
+    print(f"   Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print(f"❌ kgx graph-summary failed:")
+        print(result.stderr)
+        raise RuntimeError(f"kgx graph-summary failed with return code {result.returncode}")
+
+    print(f"✓ Graph statistics generated successfully")
+    if result.stdout:
+        print(result.stdout)
 
 
 def export_tsv():
