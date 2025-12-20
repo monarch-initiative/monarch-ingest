@@ -78,6 +78,8 @@ edges:
       min: 650000
     alliance_disease_edges:
       min: 9900
+    zfin_gene_to_phenotype_edges:
+      min: 148000
     zfin_genotype_to_phenotype_edges:
       min: 125000
     zfin_orthology_edges:
