@@ -31,6 +31,8 @@ nodes:
       min: 7000
     clingen_variant_nodes:
       min: 5600
+    phenopacket_ingest_nodes:
+      min: 8000
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
@@ -90,4 +92,6 @@ edges:
       min: 5000
     omim_gene_to_disease_edges:
       min: 7500
+    phenopacket_ingest_edges:
+      min: 180000
 
