@@ -54,6 +54,9 @@ alliance_disease_association:
 biogrid:
   url:
     - 'https://github.com/monarch-initiative/biogrid-ingest/releases/latest/download/biogrid_gene_to_gene_edges.tsv'
+clingen_gene_disease_edges:
+  url:
+    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_gene_disease_edges.tsv'
 clingen_variant:
   url:
     - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
