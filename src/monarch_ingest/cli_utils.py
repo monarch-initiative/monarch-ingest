@@ -609,7 +609,6 @@ def apply_closure(
         evidence_fields=["has_evidence", "publications"],
         additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
         grouping_fields=["subject", "negated", "predicate", "object"],
-        # TODO get a complete list of multivalued fields from the monarch-app schema entity and association classes
         multivalued_fields=[],
     )
 

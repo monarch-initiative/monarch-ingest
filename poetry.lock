@@ -2489,7 +2489,7 @@ dev = ["mkdocs (>=1.6.1)", "mkdocs-material (>=9.7.0)", "mkdocstrings[python] (>
 type = "git"
 url = "https://github.com/monarch-initiative/koza.git"
 reference = "koza-goat-split-and-join"
-resolved_reference = "0b8f50cd9de0b1545b927f1f761631387a9de177"
+resolved_reference = "af4fa9e6596c11922b13ab9813ebad32c2a65cd0"
 
 [[package]]
 name = "lark"
