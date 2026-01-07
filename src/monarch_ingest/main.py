@@ -21,6 +21,7 @@ from monarch_ingest.cli_utils import (
     transform_phenio,
     transform_all,
 )
+from monarch_ingest.utils.log_utils import get_logger
 
 import typer
 
@@ -174,6 +175,7 @@ def merge(
     ),
 ):
     """Merge nodes and edges into kg"""
+    logger = get_logger(None, verbose)
     start_time = time.time()
     merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose, backend=backend)
     merge_duration = time.time() - start_time
@@ -193,12 +195,12 @@ def merge(
             way_less_than_expected = expected * 0.7
             if key not in counts:
                 error = True
-                print(f"ERROR: {type} {key} not found in qc_report.yaml")
+                logger.error(f"{type} {key} not found in qc_report.yaml")
             else:
                 if counts[key] < expected and counts[key] > way_less_than_expected:
-                    print(f"WARNING: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    logger.warning(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
                 elif counts[key] < expected * 0.7:
-                    print(f"ERROR: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    logger.error(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
                     error = True
 
     closure_duration = None
@@ -207,9 +209,9 @@ def merge(
         apply_closure()
         closure_duration = time.time() - closure_start
 
-    print(f"Merge step took {merge_duration:.2f} seconds.")
+    logger.info(f"Merge step took {merge_duration:.2f} seconds")
     if closure_duration is not None:
-        print(f"Closure step took {closure_duration:.2f} seconds.")
+        logger.info(f"Closure step took {closure_duration:.2f} seconds")
 
     if error:
         sys.exit(1)
