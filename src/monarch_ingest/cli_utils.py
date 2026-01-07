@@ -41,31 +41,35 @@ from monarch_ingest.utils.export_utils import export
 OUTPUT_DIR = "output"
 
 # URLs for model files from monarch-app
-MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/model.yaml"
-SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml"
+MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/update-schema-for-phenopacket-ingest/backend/src/monarch_py/datamodels/model.yaml"
+SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/update-schema-for-phenopacket-ingest/backend/src/monarch_py/datamodels/similarity.yaml"
 
 
-def ensure_model_files() -> tuple[Path, Path]:
+def ensure_model_files(force: bool = True) -> tuple[Path, Path]:
     """
     Download model.yaml and similarity.yaml files to current directory using pystow.
     Returns tuple of (model_yaml_path, similarity_yaml_path)
+
+    Args:
+        force: If True (default), always re-download files from source
     """
     import shutil
 
     # Use pystow to download and cache files
     module = pystow.module("monarch-ingest")
-    cached_model_path = module.ensure("model.yaml", url=MODEL_YAML_URL)
-    cached_similarity_path = module.ensure("similarity.yaml", url=SIMILARITY_YAML_URL)
+    cached_model_path = module.ensure("model.yaml", url=MODEL_YAML_URL, force=force)
+    cached_similarity_path = module.ensure("similarity.yaml", url=SIMILARITY_YAML_URL, force=force)
 
     # Copy to current directory for backward compatibility
     local_model_path = Path("model.yaml")
     local_similarity_path = Path("similarity.yaml")
 
-    if not local_model_path.exists() or local_model_path.stat().st_mtime < cached_model_path.stat().st_mtime:
+    if force or not local_model_path.exists() or local_model_path.stat().st_mtime < cached_model_path.stat().st_mtime:
         shutil.copy2(cached_model_path, local_model_path)
 
     if (
-        not local_similarity_path.exists()
+        force
+        or not local_similarity_path.exists()
         or local_similarity_path.stat().st_mtime < cached_similarity_path.stat().st_mtime
     ):
         shutil.copy2(cached_similarity_path, local_similarity_path)
