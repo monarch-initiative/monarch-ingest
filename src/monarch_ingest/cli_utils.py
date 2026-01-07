@@ -23,8 +23,6 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
-# Both merge backends available for comparison testing
-from cat_merge.duckdb_merge import merge_duckdb as catmerge_merge
 from koza.graph_operations import merge_graphs, prepare_merge_config_from_paths, generate_qc_report
 from koza.model.graph_operations import QCReportConfig
 from closurizer.closurizer import add_closure
@@ -436,24 +434,17 @@ def merge_files(
     input_dir: str = f"{OUTPUT_DIR}/transform_output",
     output_dir: str = OUTPUT_DIR,
     verbose: Optional[bool] = None,
-    backend: str = "koza",
 ):
     """
-    Merge KGX files using specified backend.
+    Merge KGX files using koza graph operations.
 
     Args:
         name: Name of the output KG
         input_dir: Directory containing node/edge TSV files
         output_dir: Directory for output files
         verbose: Verbosity level
-        backend: "koza" or "catmerge" - which merge implementation to use
     """
-    if backend == "koza":
-        _merge_files_koza(name=name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
-    elif backend == "catmerge":
-        _merge_files_catmerge(name=name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
-    else:
-        raise ValueError(f"Unknown merge backend: {backend}. Use 'koza' or 'catmerge'")
+    _merge_files_koza(name=name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
 
 
 def _merge_files_koza(
@@ -516,54 +507,6 @@ def _merge_files_koza(
 
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
-    db = duckdb.connect(str(database_path))
-    db.execute(
-        "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"
-    )
-    db.close()
-
-
-def _merge_files_catmerge(
-    name: str = "monarch-kg",
-    input_dir: str = f"{OUTPUT_DIR}/transform_output",
-    output_dir: str = OUTPUT_DIR,
-    verbose: Optional[bool] = None,
-):
-    """
-    Merge KGX files using cat-merge.
-
-    Note: Cat-merge handles SSSOM files with different schemas correctly ONLY when
-    passed as a glob pattern (e.g., "data/monarch/*.sssom.tsv"). When passed as
-    individual files, it fails because it uses UNION ALL instead of UNION BY NAME.
-    """
-    logger = get_logger(None, verbose)
-
-    # IMPORTANT: Pass SSSOM files as a glob pattern, NOT as individual files!
-    # Cat-merge uses DuckDB's read_csv_auto with union_by_name=true for glob patterns,
-    # which correctly handles files with different column schemas. When individual
-    # files are passed, cat-merge creates separate temp tables and tries to UNION ALL
-    # them, which fails with "Set operations can only apply to expressions with the
-    # same number of result columns".
-    mappings = ["data/monarch/*.sssom.tsv"]
-    logger.info(f"Using SSSOM mapping pattern: {mappings[0]}")
-
-    logger.info("Running cat-merge...")
-
-    # Ensure model files are available for schema validation
-    model_yaml_path, _ = ensure_model_files()
-
-    catmerge_merge(
-        name=name,
-        source=input_dir,
-        output_dir=output_dir,
-        schema_path=str(model_yaml_path),
-        mappings=mappings,
-        graph_stats=False,
-    )
-
-    # Create information_resource table from infores catalog
-    logger.info("Creating information_resource table...")
-    database_path = Path(output_dir) / f"{name}.duckdb"
     db = duckdb.connect(str(database_path))
     db.execute(
         "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"

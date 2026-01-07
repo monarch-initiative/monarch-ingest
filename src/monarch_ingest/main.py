@@ -167,17 +167,11 @@ def merge(
         "--kg_name",
         help="The name of the kg being produced. Merge artificat will be ultimately be stored in output/$KG_NAME.tar.gz",
     ),
-    backend: str = typer.Option(
-        "koza",
-        "--backend",
-        "-b",
-        help="Merge backend to use: 'koza' (new) or 'catmerge' (legacy)",
-    ),
 ):
     """Merge nodes and edges into kg"""
     logger = get_logger(None, verbose)
     start_time = time.time()
-    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose, backend=backend)
+    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
     merge_duration = time.time() - start_time
 
     # load qc_report.yaml from output_dir

@@ -18,7 +18,6 @@ packages = [
 python = "^3.10"
 biolink-model = "^4.3.6"
 bmt = "^1.0.15"
-# cat-merge = "1.0.2"  # Replaced by koza graph operations
 kghub-downloader = { git = "https://github.com/monarch-initiative/kghub-downloader.git", branch = "main" }
 kgx = "^2.6.0"
 linkml = "^1.7.8"
@@ -33,7 +32,6 @@ sh = "^1.14.3"
 typer = "^0.20"
 yamllint = "^1.35.1"
 linkml-runtime = "^1.7.5"
-# TODO: Review pandas pin - was for cat-merge compatibility, may be removable now
 pandas = "2.0.3"
 closurizer = "0.8.1"
 notebook = "^7.3.2"
