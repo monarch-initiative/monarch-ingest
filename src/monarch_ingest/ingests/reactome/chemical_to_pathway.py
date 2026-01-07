@@ -1,6 +1,6 @@
 import uuid
 import koza
-from biolink_model.datamodel.pydanticmodel_v2 import ChemicalToPathwayAssociation, AgentTypeEnum, KnowledgeLevelEnum
+from biolink_model.datamodel.pydanticmodel_v2 import ChemicalEntityToPathwayAssociation, AgentTypeEnum, KnowledgeLevelEnum
 
 
 @koza.transform_record()
@@ -47,7 +47,7 @@ def transform_record(koza_transform, row):
     }
     evidence_code_term = evidence_mapping.get(go_evidence_code, go_evidence_code)
 
-    association = ChemicalToPathwayAssociation(
+    association = ChemicalEntityToPathwayAssociation(
         id="uuid:" + str(uuid.uuid1()),
         subject=chemical_id,
         predicate="biolink:participates_in",
