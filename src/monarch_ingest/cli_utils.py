@@ -825,6 +825,25 @@ def get_neo4j_column(field: str) -> str:
     return field
 
 
+def get_neo4j_column_from_db(field: str, column_types: dict) -> str:
+    """
+    Convert a field name to a column specification with Neo4j type annotations.
+    Uses actual database column types to determine if a field is multi-valued.
+    """
+    col_type = column_types.get(field, "VARCHAR")
+    is_array = col_type.endswith("[]")
+
+    if slot_is_integer(field):
+        return f'{field} as "{field}:long"'
+    if slot_is_float(field):
+        return f'{field} as "{field}:float"'
+    if slot_is_boolean(field):
+        return f'{field} as "{field}:boolean"'
+    if is_array:
+        return f"""array_to_string({field}, ';') as "{field}:string[]" """
+    return field
+
+
 def load_neo4j_csv():
     """
     Create CSV files for Neo4j import from the DuckDB database.
@@ -832,8 +851,14 @@ def load_neo4j_csv():
     """
     db = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
 
-    node_columns = db.sql("PRAGMA table_info(nodes);").df()["name"].to_list()
-    edge_columns = db.sql("PRAGMA table_info(edges);").df()["name"].to_list()
+    # Get column names and types from database
+    node_info = db.sql("DESCRIBE nodes").df()
+    node_columns = node_info["column_name"].to_list()
+    node_column_types = dict(zip(node_info["column_name"], node_info["column_type"]))
+
+    edge_info = db.sql("DESCRIBE edges").df()
+    edge_columns = edge_info["column_name"].to_list()
+    edge_column_types = dict(zip(edge_info["column_name"], edge_info["column_type"]))
 
     class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
@@ -844,13 +869,13 @@ def load_neo4j_csv():
             continue
         if col == "id":
             node_select_parts.append('id as ":ID"')
-            node_select_parts.append(get_neo4j_column(col))
+            node_select_parts.append(get_neo4j_column_from_db(col, node_column_types))
         elif col == "category":
-            # Duplicate category: one for Neo4j :LABEL, one as regular property
+            # Use ancestors for Neo4j :LABEL and category property (always treat as array for Neo4j)
             node_select_parts.append("array_to_string(ancestors, ';') as ':LABEL'")
             node_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
         else:
-            node_select_parts.append(get_neo4j_column(col))
+            node_select_parts.append(get_neo4j_column_from_db(col, node_column_types))
     node_select = ",\n".join(node_select_parts)
 
     # Build edge column selection with special handling for subject, predicate, object
@@ -859,7 +884,7 @@ def load_neo4j_csv():
         if not col:
             continue
         if col == "category":
-            # Duplicate category: one for Neo4j :LABEL, one as regular property
+            # Use ancestors for category property (always treat as array for Neo4j)
             edge_select_parts.append(""" array_to_string(ancestors, ';') as "category:string[]" """)
         elif col == "subject":
             # Duplicate subject: one for Neo4j :START_ID, one as regular property
@@ -874,7 +899,7 @@ def load_neo4j_csv():
             edge_select_parts.append('object as ":END_ID"')
             edge_select_parts.append(col)
         else:
-            edge_select_parts.append(get_neo4j_column(col))
+            edge_select_parts.append(get_neo4j_column_from_db(col, edge_column_types))
     edge_select = ",\n".join(edge_select_parts)
 
     # also write to neo4j csv format
