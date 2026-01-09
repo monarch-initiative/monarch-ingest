@@ -24,7 +24,7 @@ from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
 from koza.graph_operations import merge_graphs, prepare_merge_config_from_paths, generate_qc_report
-from koza.model.graph_operations import QCReportConfig
+from koza.model.graph_operations import QCReportConfig, KGXFormat
 from closurizer.closurizer import add_closure
 from kgx.cli.cli_utils import transform as kgx_transform
 from koza.runner import KozaRunner
@@ -486,6 +486,13 @@ def _merge_files_koza(
         keep_singletons=True,
         quiet=not verbose if verbose is not None else True,
         show_progress=verbose or False,
+        # Export as tar.gz archive for GitHub releases
+        export_final=True,
+        export_directory=Path(output_dir),
+        archive=True,
+        compress=True,
+        graph_name=name,
+        output_format=KGXFormat.TSV,
     )
 
     result = merge_graphs(config)
@@ -494,6 +501,11 @@ def _merge_files_koza(
         raise RuntimeError(f"Merge failed: {result.errors}")
 
     logger.info(f"Merge completed: {result.final_stats.nodes:,} nodes, {result.final_stats.edges:,} edges")
+
+    # Log exported archive
+    if result.exported_files:
+        for exported_file in result.exported_files:
+            logger.info(f"Exported archive: {exported_file}")
 
     # Generate QC report (group by file_source for compatibility with qc_expect.yaml)
     logger.info("Generating QC report...")
