@@ -6,13 +6,13 @@ CTD is a robust, publicly available database that aims to advance understanding 
 
 [Chemical to Disease](#chemical_to_disease)
 
-This ingest takes only the chemical to disease rows where a direct evidence label is applied, and creates ChemicalEntity and Disease nodes connected by a ChemicalToDiseaseOrPhenotypicFeatureAssociation. The the chemical ID row is expected to need a 'MESH:' prefix added, the disease id is used as-is. 
+This ingest takes only the chemical to disease rows where a direct evidence label is applied, and creates ChemicalEntity and Disease nodes connected by a ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation. The the chemical ID row is expected to need a 'MESH:' prefix added, the disease id is used as-is. 
 
 Rows are included only if the direct evidence field is 'therapeutic' and the `biolink:affects` predicate is used to avoid making too strong a claim.
 
 __**Biolink Captured**__
 
-* ChemicalToDiseaseOrPhenotypicFeatureAssociation
+* ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation
   * id (random uuid)
   * subject (chemical id)
   * predicate (`biolink:affects`)
