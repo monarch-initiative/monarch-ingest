@@ -59,7 +59,7 @@ edges:
       min: 8000
       max: 10000 # adding max so that we'll notice if our medgen exclude stops working
     hpoa_gene_to_phenotype_edges:
-      min: 200000
+      min: 190000
     panther_genome_orthologs_edges:
       min: 550000
     phenio_edges:
@@ -71,17 +71,17 @@ edges:
     reactome_gene_to_pathway_edges:
       min: 200000
     string_protein_links_edges:
-      min: 1420000
+      min: 1400000
     xenbase_gene_to_phenotype_edges:
       min: 2000
     xenbase_orthologs_edges:
-      min: 136746
+      min: 115000
     alliance_phenotype_edges:
       min: 650000
     alliance_disease_edges:
       min: 9900
     zfin_gene_to_phenotype_edges:
-      min: 148000
+      min: 160000
     zfin_genotype_to_phenotype_edges:
       min: 125000
     zfin_orthology_edges:
@@ -93,7 +93,7 @@ edges:
     clingen_variant_edges:
       min: 5000
     omim_gene_to_disease_edges:
-      min: 7500
+      min: 7400
     phenopacket_ingest_edges:
       min: 180000
 

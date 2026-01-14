@@ -27,25 +27,25 @@ With all transforms complete, the individual kgx node and edge files in `output/
 
 At this point, the individual node and edge KGX files from the transforms may not have matching IDs, and in fact, we may have edges that point to nodes that are not present in our canonical node sources (e.g. a STRING edge that points to an ENSEMBL gene that can't be mapped to HGNC). 
 
-The merge process is broken down into concatenation, mapping, and finally a QC filter step. We developed a tool called [cat merge](https://github.com/monarch-initiative/cat-merge)
+The merge process is broken down into join, normalize, and prune steps, implemented using [koza graph operations](https://github.com/monarch-initiative/koza).
 
-### Concatenate
+### Join
 
-The first step just loads all node kgx files into one dataframe, and all edge kgx files into another.
-    
-### Map
+The first step loads all node KGX files into a single nodes table and all edge KGX files into a single edges table in DuckDB.
 
-The mapping step replaces subject and object IDs in edge files using [SSSOM](https://github.com/mapping-commons/sssom) mapping files, with the IDs from the intial ingests stored in `original_subject` and `original_object` fields. 
+### Normalize
 
-Mappings for genes are generated in our [monarch-gene-mapping](https://github.com/monarch-initiative/monarch-gene-mapping) process, and are available at [data.monarchinitiative.org](http://data.monarchinitiative.org/monty-gene-mapping/). 
+The normalize step replaces subject and object IDs in edge files using [SSSOM](https://github.com/mapping-commons/sssom) mapping files, with the IDs from the initial ingests stored in `original_subject` and `original_object` fields.
 
-Diseases are mapped using the MONDO SSSOM. 
+Mappings for genes are generated in our [monarch-gene-mapping](https://github.com/monarch-initiative/monarch-gene-mapping) process, and are available at [data.monarchinitiative.org](http://data.monarchinitiative.org/monty-gene-mapping/).
 
-This step is requires that the subject of the SSSOM file be our canonical ID, and the object be the non-canonical ID. There is room for improvement here. 
+Diseases are mapped using the MONDO SSSOM.
 
-### QC Filter
+This step requires that the subject of the SSSOM file be our canonical ID, and the object be the non-canonical ID. There is room for improvement here.
 
-After edges have been mapped, it's important to cull the graph that point to nodes that don't exist in the graph. The QC filtering step performs joins against the node table/dataframe to split out these edges into their own kgx file ([monarch-kg-dangling-edges.tsv](https://data.monarchinitiative.org/monarch-kg-dev/latest/monarch-kg-denormalized-edges.tsv.gz) that can be used for QC purposes.
+### Prune
+
+After edges have been normalized, it's important to cull edges that point to nodes that don't exist in the graph. The prune step performs joins against the node table to split out these edges into their own table ([dangling_edges](https://data.monarchinitiative.org/monarch-kg-dev/latest/monarch-kg-denormalized-edges.tsv.gz)) that can be used for QC purposes.
 
 A group of edges that wind up in this file could be due to a number of reasons:
 * We're missing an ontology or other node source that is required for an ingest/source: this is something we want to fix 👎

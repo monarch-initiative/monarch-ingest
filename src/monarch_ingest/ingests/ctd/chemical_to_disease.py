@@ -1,7 +1,7 @@
 import uuid
 import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
-    ChemicalToDiseaseOrPhenotypicFeatureAssociation,
+    ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation,
     KnowledgeLevelEnum,
     AgentTypeEnum,
 )
@@ -18,7 +18,7 @@ def transform_record(koza_transform, row):
         # Update this if we start bringing in marker/mechanism records
         predicate = BIOLINK_TREATS_OR_APPLIED_OR_STUDIED_TO_TREAT
 
-        association = ChemicalToDiseaseOrPhenotypicFeatureAssociation(
+        association = ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation(
             id="uuid:" + str(uuid.uuid1()),
             subject=chemical_id,
             predicate=predicate,

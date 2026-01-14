@@ -28,7 +28,7 @@ __**Biolink captured**__
 * biolink:Pathway
     * id
 
-* biolink:ChemicalToPathwayAssociation
+* biolink:ChemicalEntityToPathwayAssociation
     * id (random uuid)
     * subject (gene.id)
     * predicate (mentions)
@@ -48,7 +48,7 @@ __**Biolink captured**__
 * biolink:Pathway
     * id
 
-* biolink:ChemicalToPathwayAssociation
+* biolink:ChemicalEntityToPathwayAssociation
     * id (random uuid)
     * subject (chemical.id)
     * predicate (mentions)
