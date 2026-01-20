@@ -447,6 +447,12 @@ def merge_files(
         graph_stats=False,
     )
 
+    # Remove bare TSV files since they're already in the tar.gz
+    for tsv_file in [f'{output_dir}/{name}_nodes.tsv', f'{output_dir}/{name}_edges.tsv']:
+        if os.path.exists(tsv_file):
+            os.remove(tsv_file)
+            logger.info(f"Removed {tsv_file} (already in {name}.tar.gz)")
+
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
     db = duckdb.connect(f'{output_dir}/{name}.duckdb')
@@ -843,6 +849,13 @@ def load_neo4j_csv():
 
     print(edges_query)
     print(nodes_query)
+
+    # Gzip the neo4j CSV files
+    for csv_file in ['output/monarch-kg_nodes.neo4j.csv', 'output/monarch-kg_edges.neo4j.csv']:
+        with open(csv_file, 'rb') as f_in:
+            with gzip.open(f'{csv_file}.gz', 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        os.remove(csv_file)
 
 
 def create_qc_reports():

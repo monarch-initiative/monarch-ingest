@@ -2,6 +2,11 @@
 
 echo "Building Neo4j Artifacts"
 
+# Decompress the gzipped CSV files for import
+echo "Decompressing Neo4j CSV files..."
+gunzip -k output/monarch-kg_nodes.neo4j.csv.gz
+gunzip -k output/monarch-kg_edges.neo4j.csv.gz
+
 # Neo4j v4 dump
 echo "Building Neo4j v4 dump..."
 mkdir -p neo4j_data_v4
@@ -46,5 +51,10 @@ docker run --rm \
   neo4j:5 database dump --to-path=/dump neo4j
 
 mv output/neo4j.dump output/monarch-kg.neo4j.v5.dump
+
+# Clean up uncompressed CSV files (gzipped versions remain for upload)
+echo "Cleaning up uncompressed CSV files..."
+rm -f output/monarch-kg_nodes.neo4j.csv
+rm -f output/monarch-kg_edges.neo4j.csv
 
 echo "Done building Neo4j artifacts"
