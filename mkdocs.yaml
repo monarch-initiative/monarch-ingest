@@ -15,7 +15,9 @@ nav:
     - Implement: 'Create-an-Ingest/4. Implement.md'
     - Testing: 'Create-an-Ingest/5. Test.md'
   - KG Build Process: 'KG-Build-Process/kg-build-process.md'
-  - Principles: 'Principles/modeling-principles.md'
+  - Principles:
+    - Overview: 'Principles/index.md'
+    - Modeling Principles: 'Principles/modeling-principles.md'
   - Sources:
     - Overview: 'Sources/index.md'
     - Alliance: 'Sources/alliance.md'
