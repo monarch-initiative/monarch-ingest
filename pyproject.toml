@@ -38,7 +38,7 @@ notebook = "^7.3.2"
 duckdb = "^1.3.0"
 pystow = "^0.5.4"
 # koza = "^2.0.1"  # Using local development version
-koza = { git = "https://github.com/monarch-initiative/koza.git", branch = "koza-goat-split-and-join" }
+koza = { git = "https://github.com/monarch-initiative/koza.git", branch = "main" }
 
 [tool.poetry.group.dev]
 optional = true
