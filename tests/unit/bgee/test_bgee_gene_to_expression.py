@@ -1,6 +1,5 @@
 import pytest
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
-from koza.io.writer.writer import KozaWriter
 import sys
 import os
 
@@ -8,23 +7,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
 from monarch_ingest.ingests.bgee.gene_to_expression import transform_bgee_data
 
 
-class MockWriter(KozaWriter):
+class MockTransform:
+    """Simple mock that collects written items."""
     def __init__(self):
         self.items = []
 
-    def write(self, entities):
-        self.items += entities if isinstance(entities, list) else [entities]
-
-    def finalize(self):
-        pass
-
-
-class MockTransform:
-    def __init__(self, writer):
-        self.writer = writer
-
     def write(self, entity):
-        self.writer.write(entity)
+        self.items.append(entity)
 
 
 @pytest.fixture
@@ -105,13 +94,12 @@ def bgee_complex_anatomical_data():
 
 def test_bgee_ranking_logic(bgee_test_data):
     """Test that the ranking logic works - takes top 10 (or fewer) per gene by Expression rank."""
-    writer = MockWriter()
-    transform = MockTransform(writer)
+    transform = MockTransform()
 
     # Call the transform function directly
     transform_bgee_data(transform, bgee_test_data)
 
-    associations = writer.items
+    associations = transform.items
 
     # Should have 5 associations total (3 for Gene1, 2 for Gene2)
     # because we take top 10 per gene (all available when < 10)
@@ -142,12 +130,11 @@ def test_bgee_ranking_logic(bgee_test_data):
 
 def test_bgee_complex_anatomical_entity(bgee_complex_anatomical_data):
     """Test handling of complex anatomical entities with intersection (∩)."""
-    writer = MockWriter()
-    transform = MockTransform(writer)
+    transform = MockTransform()
 
     transform_bgee_data(transform, bgee_complex_anatomical_data)
 
-    associations = writer.items
+    associations = transform.items
     assert len(associations) == 1
 
     assoc = associations[0]
@@ -182,10 +169,9 @@ def test_bgee_invalid_curie_handling():
         },
     ]
 
-    writer = MockWriter()
-    transform = MockTransform(writer)
+    transform = MockTransform()
 
     transform_bgee_data(transform, invalid_data)
 
     # Should have no associations due to invalid CURIEs
-    assert len(writer.items) == 0
+    assert len(transform.items) == 0
