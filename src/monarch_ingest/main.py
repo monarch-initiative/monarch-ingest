@@ -9,6 +9,7 @@ from monarch_ingest.cli_utils import (
     do_release,
     export_tsv,
     create_qc_reports,
+    generate_graph_stats,
     get_data_versions,
     get_pkg_versions,
     load_jsonl,
@@ -20,6 +21,7 @@ from monarch_ingest.cli_utils import (
     transform_phenio,
     transform_all,
 )
+from monarch_ingest.utils.log_utils import get_logger
 
 import typer
 
@@ -167,8 +169,9 @@ def merge(
     ),
 ):
     """Merge nodes and edges into kg"""
+    logger = get_logger(None, verbose)
     start_time = time.time()
-    merge_files(input_dir=input_dir, output_dir=output_dir, verbose=verbose)
+    merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
     merge_duration = time.time() - start_time
 
     # load qc_report.yaml from output_dir
@@ -186,12 +189,12 @@ def merge(
             way_less_than_expected = expected * 0.7
             if key not in counts:
                 error = True
-                print(f"ERROR: {type} {key} not found in qc_report.yaml")
+                logger.error(f"{type} {key} not found in qc_report.yaml")
             else:
                 if counts[key] < expected and counts[key] > way_less_than_expected:
-                    print(f"WARNING: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    logger.warning(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
                 elif counts[key] < expected * 0.7:
-                    print(f"ERROR: expected {key} to have {expected} {type}, only found {counts[key]}")
+                    logger.error(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
                     error = True
 
     closure_duration = None
@@ -200,9 +203,9 @@ def merge(
         apply_closure()
         closure_duration = time.time() - closure_start
 
-    print(f"Merge step took {merge_duration:.2f} seconds.")
+    logger.info(f"Merge step took {merge_duration:.2f} seconds")
     if closure_duration is not None:
-        print(f"Closure step took {closure_duration:.2f} seconds.")
+        logger.info(f"Closure step took {closure_duration:.2f} seconds")
 
     if error:
         sys.exit(1)
@@ -242,6 +245,35 @@ def export():
 def report():
     """Run Koza QC on specified Monarch ingests"""
     create_qc_reports()
+
+
+@typer_app.command()
+def graph_stats(
+    input_db: str = typer.Option(
+        f"{OUTPUT_DIR}/monarch-kg.duckdb",
+        "--input-db",
+        "-i",
+        help="Path to input DuckDB database",
+    ),
+    output_file: str = typer.Option(
+        f"{OUTPUT_DIR}/merged_graph_stats.yaml",
+        "--output",
+        "-o",
+        help="Output YAML file path",
+    ),
+    backend: str = typer.Option(
+        "koza",
+        "--backend",
+        "-b",
+        help="Backend to use: 'koza' (new) or 'kgx' (legacy)",
+    ),
+):
+    """Generate graph statistics from merged KG database"""
+    generate_graph_stats(
+        input_db=input_db,
+        output_file=output_file,
+        backend=backend,
+    )
 
 
 @typer_app.command()
