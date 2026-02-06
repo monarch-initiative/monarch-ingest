@@ -1116,11 +1116,11 @@
 <li><a href="http://ctdbase.org/downloads/">CTD Bulk Downloads</a> </li>
 </ul>
 <p><a href="#chemical_to_disease">Chemical to Disease</a></p>
-<p>This ingest takes only the chemical to disease rows where a direct evidence label is applied, and creates ChemicalEntity and Disease nodes connected by a ChemicalToDiseaseOrPhenotypicFeatureAssociation. The the chemical ID row is expected to need a 'MESH:' prefix added, the disease id is used as-is. </p>
+<p>This ingest takes only the chemical to disease rows where a direct evidence label is applied, and creates ChemicalEntity and Disease nodes connected by a ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation. The the chemical ID row is expected to need a 'MESH:' prefix added, the disease id is used as-is. </p>
 <p>Rows are included only if the direct evidence field is 'therapeutic' and the <code>biolink:affects</code> predicate is used to avoid making too strong a claim.</p>
 <p><strong><strong>Biolink Captured</strong></strong></p>
 <ul>
-<li>ChemicalToDiseaseOrPhenotypicFeatureAssociation</li>
+<li>ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation</li>
 <li>id (random uuid)</li>
 <li>subject (chemical id)</li>
 <li>predicate (<code>biolink:affects</code>)</li>
