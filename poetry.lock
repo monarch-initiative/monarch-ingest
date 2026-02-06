@@ -2489,8 +2489,8 @@ dev = ["mkdocs (>=1.6.1)", "mkdocs-material (>=9.7.0)", "mkdocstrings[python] (>
 [package.source]
 type = "git"
 url = "https://github.com/monarch-initiative/koza.git"
-reference = "koza-goat-split-and-join"
-resolved_reference = "89450ec1960925fe83e24dc13d646a368da03319"
+reference = "main"
+resolved_reference = "4e90436621df6338d7658617297b5f570870ec91"
 
 [[package]]
 name = "lark"
@@ -6205,4 +6205,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "19b65a818691d8cda682ccf07e64ac17e7e4313ed7b536d4d70b5adcb8bca6b2"
+content-hash = "2beaf2d63557903596b7ab7da4ac50a8a4ddd31a38dd775a7b28affe7447812b"
