@@ -33,6 +33,8 @@ nodes:
       min: 5600
     phenopacket_ingest_nodes:
       min: 8000
+    mmrrc_genotype_nodes:
+      min: 60000
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
@@ -96,4 +98,8 @@ edges:
       min: 7400
     phenopacket_ingest_edges:
       min: 180000
+    mmrrc_allele_to_genotype_edges:
+      min: 40000
+    mmrrc_genotype_to_phenotype_edges:
+      min: 40000
 
