@@ -1017,41 +1017,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gene-to-phenotype" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene to Phenotype
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gene-literature" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene Literature
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Citation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1070,68 +1035,8 @@
 
 
 <h1 id="xenbase">Xenbase</h1>
-<p>Xenbase is a web-accessible resource that integrates all the diverse biological, genomic, genotype and phenotype data available from Xenopus research.</p>
-<p><a href="http://www.xenbase.org/other/static-xenbase/ftpDatafiles.jsp">Xenbase Bulk Data</a>
-<a href="http://ftp.xenbase.org/pub/">Xenbase FTP</a></p>
-<h2 id="gene-to-phenotype"><a href="#gene_to_phenotype">Gene to Phenotype</a></h2>
-<p>This ingest is built against a one-off OBAN formatted file, which makes for a transformation which only requries adding a curie prefix and connecting column names to biolink attributes. Evidence codes are provided as ECO terms but not yet captured in the output. </p>
-<p><strong><strong>Biolink captured</strong></strong></p>
-<ul>
-<li>
-<p>biolink:Gene</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:PhenotypicFeature</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:GeneToPhenotypicFeatureAssociation</p>
-<ul>
-<li>id (random uuid)</li>
-<li>subject (gene.id)</li>
-<li>predicate (has_phenotype)</li>
-<li>object (phenotypicFeature.id)</li>
-<li>publications</li>
-<li>aggregating_knowledge_source (["infores:monarchinitiative"])</li>
-<li>primary_knowledge_source (infores:xenbase)</li>
-</ul>
-</li>
-</ul>
-<h2 id="gene-literature"><a href="#publication_to_gene">Gene Literature</a></h2>
-<p>This ingest reads from Xenbase's <a href="http://ftp.xenbase.org/pub/GenePageReports/LiteratureMatchedGenesByPaper.txt">Genes Associated with Literature</a> file to capture associations between Xenbase's XB-GENEPAGE ids and PMIDs, then relies on a map built from Xenbase's <a href="http://ftp.xenbase.org/pub/GenePageReports/XenbaseGenepageToGeneIdMapping.txt">GenepageToGeneId</a> file to create associations from XB-GENE records to PMID records.</p>
-<p><strong><strong>Biolink captured</strong></strong></p>
-<ul>
-<li>
-<p>Gene</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>Publication</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>InformationContentEntityToNamedThingAssociation</p>
-<ul>
-<li>id (random uuid)</li>
-<li>subject (gene.id)</li>
-<li>predicate (mentions)</li>
-<li>object (publication.id)</li>
-<li>aggregating_knowledge_source (["infores:monarchinitiative"])</li>
-<li>primary_knowledge_source (infores:xenbase)</li>
-</ul>
-</li>
-</ul>
-<h2 id="citation">Citation</h2>
-<p>Fisher et al. 2023, Genetics, 2023;, iyad018, doi:10.1093/genetics/iyad018 (Xenbase / PubMed / Genetics)</p>
+<p>Xenbase ingests have been modularized into their own repository.</p>
+<p>See: <a href="https://github.com/monarch-initiative/xenbase-ingest">https://github.com/monarch-initiative/xenbase-ingest</a></p>
 
 
 

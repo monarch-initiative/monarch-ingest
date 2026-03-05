@@ -991,18 +991,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    ZFIN
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1013,52 +1001,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gene-to-phenotype" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene to Phenotype
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gene-literature" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene Literature
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Citation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -1092,41 +1034,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gene-to-phenotype" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene to Phenotype
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gene-literature" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gene Literature
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Citation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1145,69 +1052,8 @@
 
 
 <h1 id="zfin">ZFIN</h1>
-<p>ZFIN is the Zebrafish Model Organism Database. </p>
-<ul>
-<li><a href="https://zfin.org/downloads">ZFIN bulk downloads</a></li>
-</ul>
-<h2 id="gene-to-phenotype"><a href="#gene_to_phenotype">Gene to Phenotype</a></h2>
-<p>This ingest uses ZFIN's clean gene phenotype download file, which only contains phenotypes which can safely be associated to a single affected gene. This ingest is distinct from the Alliance phenotype index because ZFIN builds Entity-Quality-Entity phenotype statements that can be built from post-composed terms (E1a+E1b+Q+E2a+E2b), </p>
-<p><strong><strong>Biolink captured</strong></strong></p>
-<ul>
-<li>
-<p>biolink:Gene</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:PhenotypicFeature</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:GeneToPhenotypicFeatureAssociation</p>
-<ul>
-<li>id (random uuid)</li>
-<li>subject (gene.id)</li>
-<li>predicate (has_phenotype)</li>
-<li>object (phenotypicFeature.id)</li>
-<li>publications</li>
-<li>aggregating_knowledge_source (["infores:monarchinitiative"])</li>
-<li>primary_knowledge_source (infores:zfin)</li>
-</ul>
-</li>
-</ul>
-<h2 id="gene-literature"><a href="#publication_to_gene">Gene Literature</a></h2>
-<p>This ingest uses ZFIN's gene to publication download file, which only contains assocations between publications and genes that are denoted in some way in the publication. We have selected to use a consistent high level term for 'publication' (IAO:0000311) as it is heterogeneous mix of publication types being referenced. We have also opted to use the ZDB-ID for the publication node rather than a pubmed ID, on the assumption that kgx will clique merge them later.</p>
-<p><strong><strong>Biolink captured</strong></strong></p>
-<ul>
-<li>
-<p>biolink:Gene</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:Publication</p>
-<ul>
-<li>id</li>
-</ul>
-</li>
-<li>
-<p>biolink:InformationContentEntityToNamedThingAssociation</p>
-<ul>
-<li>id (random uuid)</li>
-<li>subject (gene.id)</li>
-<li>predicate (mentions)</li>
-<li>object (publication.id)</li>
-<li>aggregating_knowledge_source (["infores:monarchinitiative"])</li>
-<li>primary_knowledge_source (infores:zfin)</li>
-</ul>
-</li>
-</ul>
-<h2 id="citation">Citation</h2>
-<p>Bradford, Y.M., Van Slyke, C.E., Ruzicka, L., Singer, A., Eagle, A., Fashena, D., Howe, D.G., Frazer, K., Martin, R., Paddock, H., Pich, C., Ramachandran, S., Westerfield, M. (2022) Zebrafish Information Network, the knowledgebase for Danio rerio research. Genetics. 220(4).</p>
+<p>ZFIN ingests have been modularized into their own repository.</p>
+<p>See: <a href="https://github.com/monarch-initiative/zfin-ingest">https://github.com/monarch-initiative/zfin-ingest</a></p>
 
 
 
