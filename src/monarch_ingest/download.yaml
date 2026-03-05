@@ -55,11 +55,6 @@
   local_name: data/bgee/Gallus_gallus_expr_simple.tsv.gz
   tag: bgee_gene_to_expression
 
-### BioGRID
-- url: https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.226/BIOGRID-ALL-4.4.226.mitab.zip
-  local_name: data/biogrid/biogrid.mitab.zip
-  tag: biogrid
-
 ### CTD
 -
   url: http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
@@ -87,27 +82,6 @@
   url: http://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
   local_name: data/hgnc/hgnc_complete_set.txt
   tag: hgnc_gene
-
-# HPOA
--
-  url: http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa
-  local_name: data/hpoa/phenotype.hpoa
-  tag: hpoa_disease_phenotype
-
--
-  url: http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt
-  local_name: data/hpoa/genes_to_phenotype.txt
-  tag: hpoa_gene_to_phenotype
--
-  url: http://purl.obolibrary.org/obo/hp/hpoa/genes_to_disease.txt
-  local_name: data/hpoa/genes_to_disease.txt
-  tag: hpoa_gene_to_disease
-
-### MGI
--
-  url: http://www.informatics.jax.org/downloads/reports/MRK_Reference.rpt
-  local_name: data/mgi/MRK_Reference.rpt
-  tag: mgi_publication_to_gene
 
 ### Mapping files
 -
@@ -141,13 +115,6 @@
 #   url: https://ci.monarchinitiative.org/job/monarch-ontology-json-sri/lastSuccessfulBuild/artifact/build/monarch-ontology-final.json
 #   local_name: data/monarch/monarch.json
 #   tag: monarch_ontology
-
-### NCBI
--
-  url: https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
-  local_name: data/ncbi/gene_info.gz
-  tag: ncbi_gene
-
 
 ### Now modularized, but here for posterity...
 ### Panther Gene Orthology (from www.pantherdb.org)
@@ -215,18 +182,6 @@
   url: https://www.pombase.org/data/names_and_identifiers/gene_IDs_names_products.tsv
   local_name: data/pombase/gene_IDs_names_products.tsv
   tag: pombase_gene
-
-### RGD
--
-  url: https://download.rgd.mcw.edu/pub/data_release/GENES_RAT.txt
-  local_name: data/rgd/GENES_RAT.txt
-  tag: rgd_publication_to_gene
-
-### SGD
--
-  url: http://sgd-archive.yeastgenome.org/curation/literature/gene2pmid.tab
-  local_name: data/sgd/gene2pmid.tab
-  tag: sgd_publication_to_gene
 
 ### Reactome
 -
@@ -329,59 +284,6 @@
 #    head -1 all_organisms.entrez_2_string.2018.tsv >10116.entrez_2_string.tsv
 #    grep -P "^10116\s" all_organisms.entrez_2_string.2018.tsv >>10116.entrez_2_string.tsv
 #    gzip 10116.entrez_2_string.tsv
-
-### Xenbase
--
-  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGenepageToGeneIdMapping.txt
-  local_name: data/xenbase/XenbaseGenepageToGeneIdMapping.txt
-  tag: xenbase_publication_to_gene
--
-  url: https://download.xenbase.org/xenbase/GenePageReports/LiteratureMatchedGenesByPaper.txt
-  local_name: data/xenbase/LiteratureMatchedGenesByPaper.txt
-  tag: xenbase_publication_to_gene
--
-  url: https://storage.googleapis.com/monarch-ingest/manually-uploaded-data/xb_xpo_spo_v_v1.tab
-  local_name: data/xenbase/xb_xpo_spo_v_v1.tab
-  tag: xenbase_gene_to_phenotype
-
-#### Xenopus orthologs
-
-- # Homo sapiens (human)
-  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneHumanOrthologMapping.txt
-  local_name: data/xenbase/XenbaseGeneHumanOrthologMapping.txt
-  tag: xenbase_orthologs
-
-- # Mus musculus (house mouse)
-  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneMouseOrthologMapping.txt
-  local_name: data/xenbase/XenbaseGeneMouseOrthologMapping.txt
-  tag: xenbase_orthologs
-
-- # Danio rerio (Zebrafish)
-  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneZebrafishOrthologMapping.txt
-  local_name: data/xenbase/XenbaseGeneZebrafishOrthologMapping.txt
-  tag: xenbase_orthologs
-
-
-# TODO: parse this oddball non-Entrez ortholog file separately?
-#
-- # Non-Entrez OMIM, MGI, and ZFIN genes
-  url: https://download.xenbase.org/xenbase/GenePageReports/XenbaseGeneNonEntrezOrthologMapping.txt
-  local_name: data/xenbase/XenbaseGeneNonEntrezOrthologMapping.txt
-  tag: xenbase_non_entrez_orthologs
-
-### Zfin
--
-  url: https://zfin.org/downloads/phenoGeneCleanData_fish.txt
-  local_name: data/zfin/phenoGeneCleanData_fish.txt
-  tag: zfin_gene_to_phenotype
--
-  url: https://zfin.org/downloads/gene_publication.txt
-  local_name: data/zfin/gene_publication.txt
-  tag: zfin_publication_to_gene
--
-  url: https://raw.githubusercontent.com/obophenotype/zebrafish-phenotype-ontology/master/src/curation/id_map_zfin.tsv
-  local_name: data/zfin/id_map_zfin.tsv
-  tag: zfin_gene_to_phenotype
 
 ### Information Resource Registry
 -

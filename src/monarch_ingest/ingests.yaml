@@ -23,14 +23,6 @@ reactome_gene_to_pathway:
   config: 'ingests/reactome/gene_to_pathway.yaml'
 reactome_pathway:
   config: 'ingests/reactome/pathway.yaml'
-xenbase_gene_to_phenotype:
-  config: 'ingests/xenbase/gene_to_phenotype.yaml'
-xenbase_orthologs:
-  config: 'ingests/xenbase/orthologs.yaml'
-xenbase_non_entrez_orthologs:
-  config: 'ingests/xenbase/non_entrez_orthologs.yaml'
-zfin_gene_to_phenotype:
-  config: 'ingests/zfin/gene_to_phenotype.yaml'
 
 ## Pass-through modular ingests
 alliance_gene:
@@ -91,15 +83,18 @@ upheno_filtered_phenotype_to_phenotype:
 pantherdb_ortholog:
   url:
     - https://github.com/monarch-initiative/pantherdb-orthologs-ingest/releases/latest/download/panther_genome_orthologs_edges.tsv
+zfin_gene_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_gene_to_phenotype_edges.tsv'
 zfin_genotype_to_phenotype:
   url:
-    - 'https://github.com/monarch-initiative/zfin-genotype-to-phenotype-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
+    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
 go_annotation:
   url:
     - 'https://github.com/monarch-initiative/go-ingest/releases/latest/download/go_annotation_edges.tsv'
 zfin_orthology:
   url:
-    - 'https://github.com/monarch-initiative/zfin-orthology-ingest/releases/latest/download/zfin_orthology_edges.tsv'
+    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_orthology_edges.tsv'
 omim_gene_to_disease:
   url:
     - 'https://github.com/monarch-initiative/omim-ingest/releases/latest/download/omim_gene_to_disease_edges.tsv'
@@ -107,3 +102,12 @@ phenopacket_ingest:
   url:
     - 'https://github.com/monarch-initiative/phenopacket-ingest/releases/latest/download/phenopacket_ingest_nodes.tsv'
     - 'https://github.com/monarch-initiative/phenopacket-ingest/releases/latest/download/phenopacket_ingest_edges.tsv'
+xenbase_gene_to_phenotype:
+  url:
+    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_gene_to_phenotype_edges.tsv'
+xenbase_orthologs:
+  url:
+    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_orthologs_edges.tsv'
+xenbase_non_entrez_orthologs:
+  url:
+    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_non_entrez_orthologs_edges.tsv'
