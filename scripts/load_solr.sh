@@ -93,7 +93,7 @@ echo "Loading entities"
 
 poetry run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
 
-poetry run lsolr bulkload-db -C association -s model.yaml output/monarch-kg.duckdb solr_denormalized_edges
+poetry run lsolr bulkload-db -C association -s model.yaml -c 50000 output/monarch-kg.duckdb solr_denormalized_edges
 
 echo "Optimizing indexes (single merge pass)"
 for core_name in entity association sssom; do
