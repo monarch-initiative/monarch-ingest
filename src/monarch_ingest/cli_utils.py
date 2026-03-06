@@ -26,7 +26,7 @@ from linkml.utils.helpers import convert_to_snake_case
 from koza.graph_operations import merge_graphs, prepare_merge_config_from_paths, generate_qc_report
 from koza.model.graph_operations import QCReportConfig, KGXFormat
 from closurizer.closurizer import add_closure
-from kgx.cli.cli_utils import transform as kgx_transform
+
 from koza.runner import KozaRunner
 from koza.model.formats import OutputFormat
 from linkml_runtime.utils.formatutils import camelcase
@@ -79,7 +79,6 @@ def transform_one(
     ingest: Optional[str] = None,
     output_dir: str = OUTPUT_DIR,
     row_limit: Optional[int] = None,
-    rdf: bool = False,
     force: Optional[bool] = False,
     verbose: Optional[bool] = None,
     log: bool = False,
@@ -132,28 +131,6 @@ def transform_one(
         show_progress=verbose or False,
     )
     runner.run()
-
-    if rdf:
-        logger.info(f"Creating rdf output {output_dir}/rdf/{ingest}.nt.gz ...")
-
-        Path(f"{output_dir}/rdf").mkdir(parents=True, exist_ok=True)
-
-        src_files = []
-        src_nodes = f"{output_dir}/transform_output/{ingest}_nodes.tsv"
-        src_edges = f"{output_dir}/transform_output/{ingest}_edges.tsv"
-        if Path(src_nodes).is_file():
-            src_files.append(src_nodes)
-        if Path(src_edges).is_file():
-            src_files.append(src_edges)
-
-        kgx_transform(
-            inputs=src_files,
-            input_format="tsv",
-            stream=True,
-            output=f"{output_dir}/rdf/{ingest}.nt.gz",
-            output_format="nt",
-            output_compression="gz",
-        )
 
     if not ingest_output_exists(ingest, f"{output_dir}/transform_output"):
         # if log: logger.removeHandler(fh)
@@ -327,7 +304,6 @@ def transform_phenio(
 def transform_all(
     output_dir: str = OUTPUT_DIR,
     row_limit: Optional[int] = None,
-    rdf: bool = False,
     force: bool = False,
     verbose: Optional[bool] = None,
     log: bool = False,
@@ -362,7 +338,6 @@ def transform_all(
                 ingest,
                 output_dir,
                 row_limit,
-                rdf,
                 force,
                 verbose,
                 log,
