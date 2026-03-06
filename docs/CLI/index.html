@@ -866,7 +866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/bgee/" class="md-nav__link">
+      <a href="../Sources/bgee.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -910,7 +910,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/ctd/" class="md-nav__link">
+      <a href="../Sources/ctd.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -954,7 +954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/hgnc/" class="md-nav__link">
+      <a href="../Sources/hgnc.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1064,7 +1064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/pombase/" class="md-nav__link">
+      <a href="../Sources/pombase.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1086,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/reactome/" class="md-nav__link">
+      <a href="../Sources/reactome.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1108,7 +1108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sources/string/" class="md-nav__link">
+      <a href="../Sources/string.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1318,7 +1318,7 @@
 </ul>
 <p><strong>Commands</strong>:</p>
 <ul>
-<li><code>download</code>: Downloads data defined in download.yaml</li>
+<li><code>download</code>: Downloads data defined in download.yaml...</li>
 <li><code>transform</code>: Run Koza transformation on specified...</li>
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>closure</code></li>
@@ -1332,7 +1332,7 @@
 <li><code>release</code>: Copy data to Monarch GCP data buckets</li>
 </ul>
 <h2 id="ingest-download"><code>ingest download</code></h2>
-<p>Downloads data defined in download.yaml</p>
+<p>Downloads data defined in download.yaml and runs post-download processing</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>download<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
@@ -1341,7 +1341,7 @@
 <li><code>-i, --ingest TEXT</code>: Run a single ingest (see download.yaml for a list)</li>
 <li><code>--ingests TEXT</code>: Which ingests to download data for</li>
 <li><code>--ingest_file PATH</code>: A yaml file which has a newline seperated list of ingests to perform.</li>
-<li><code>--all / --no-all</code>: Download all ingest datasets  [default: no-all]</li>
+<li><code>--all / --no-all</code>: Download all ingest datasets  [default: all]</li>
 <li><code>--write-metadata / --no-write-metadata</code>: Write versions of ingests to metadata.yaml  [default: no-write-metadata]</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
