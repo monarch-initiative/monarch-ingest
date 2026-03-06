@@ -47,22 +47,10 @@ def download(
     ingest_file: Path = typer.Option(
         None, "--ingest_file", help="A yaml file which has a newline seperated list of ingests to perform."
     ),
-    all: bool = typer.Option(False, help="Download all ingest datasets"),
+    all: bool = typer.Option(True, help="Download all ingest datasets"),
     write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
-    """Downloads data defined in download.yaml"""
-    if ingest == None and ingests == None and ingest_file == None and all == False:
-        raise ValueError(
-            'Bad "ingest download" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all. None of these flags are provided.'
-        )
-    # The following checks that *exactly* one of ingest, ingests, and ingest_file is set (i.e. has a value other than None).
-    # If this isn't the case, we need to fail.
-    if ((ingest != None) + (ingests != None) + (ingest_file != None) + (all != False)) != 1:
-        raise ValueError(
-            f'Bad "ingest download" cli config. Exactly one flag can to be provided for the following options"--ingest/-i"'
-            + f'"--ingests", "--ingest_file", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all}.'
-        )
-
+    """Downloads data defined in download.yaml and runs post-download processing"""
     if ingest:
         ingests = [ingest]
     if ingest_file:
@@ -74,8 +62,21 @@ def download(
             output_dir=".",
             tags=ingests,
         )
-    elif all:
+    else:
         download_from_yaml(yaml_file="src/monarch_ingest/download.yaml", output_dir=".")
+
+    # Run post-download processing (prefix repairs, phenio filtering, etc.)
+    after_download_script = Path("scripts/after_download.sh")
+    if after_download_script.exists():
+        import subprocess
+        logger = get_logger()
+        logger.info("Running post-download processing...")
+        result = subprocess.run(["sh", str(after_download_script)], capture_output=True, text=True)
+        if result.returncode != 0:
+            logger.error(f"after_download.sh failed: {result.stderr}")
+        else:
+            logger.info("Post-download processing complete.")
+
     if write_metadata:
         get_data_versions(output_dir="data")
 
