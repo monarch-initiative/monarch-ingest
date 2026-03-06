@@ -77,9 +77,6 @@ scripts/add_entity_copyfields.sh
 scripts/add_association_copyfields.sh
 sleep 5
 
-echo "Adding update processor for phenotype frequency to association core"
-scripts/add_update_processor.sh
-
 echo "Load infores"
 
 # load directly to avoid linkml-solr's unhappiness with jsonl loading
@@ -94,7 +91,7 @@ echo "Loading entities"
 
 poetry run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
 
-poetry run lsolr bulkload-db -C association -s model.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
+poetry run lsolr bulkload-db -C association -s model.yaml output/monarch-kg.duckdb solr_denormalized_edges
 # curl "http://localhost:8983/solr/association/select?q=*:*"
 
 
