@@ -120,3 +120,8 @@ xenbase_orthologs:
 xenbase_non_entrez_orthologs:
   url:
     - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_non_entrez_orthologs_edges.tsv'
+mmrrc:
+  url:
+    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_allele_to_genotype_edges.tsv'
+    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_nodes.tsv'
+    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_to_phenotype_edges.tsv'
