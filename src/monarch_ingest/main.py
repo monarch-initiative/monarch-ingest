@@ -22,6 +22,7 @@ from monarch_ingest.cli_utils import (
     transform_all,
 )
 from monarch_ingest.utils.log_utils import get_logger
+from monarch_ingest.utils.ingest_utils import validate_qc_counts
 
 import typer
 
@@ -182,21 +183,7 @@ def merge(
     else:
         expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
 
-    error = False
-    for type in ['nodes', 'edges']:
-        counts = {item["name"]: item["total_number"] for item in qc_report[type]}
-        for key in expected_counts[type]["provided_by"]:
-            expected = expected_counts[type]["provided_by"][key]["min"]
-            way_less_than_expected = expected * 0.7
-            if key not in counts:
-                error = True
-                logger.error(f"{type} {key} not found in qc_report.yaml")
-            else:
-                if counts[key] < expected and counts[key] > way_less_than_expected:
-                    logger.warning(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
-                elif counts[key] < expected * 0.7:
-                    logger.error(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
-                    error = True
+    error = validate_qc_counts(qc_report, expected_counts, logger=logger)
 
     closure_duration = None
     if closure:
