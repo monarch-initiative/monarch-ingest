@@ -36,11 +36,7 @@ pipeline {
         }
         stage('download') {
             steps {
-                sh '''
-                    poetry run ingest download --all --write-metadata
-                    chmod +x scripts/after_download.sh
-                    poetry run scripts/after_download.sh
-                '''
+                sh 'poetry run ingest download --all --write-metadata'
             }
         }
         stage('transform') {
