@@ -28,6 +28,9 @@ class TestIngestsYaml:
                 )
 
     def test_all_urls_end_with_tsv(self):
+        """All ingest source URLs must be TSV files. The pass-through download
+        pipeline and Koza transforms expect tab-separated input; other formats
+        (csv, jsonl, etc.) would require format-specific handling."""
         ingests = get_ingests()
         for name, entry in ingests.items():
             urls = entry.get("url", [])

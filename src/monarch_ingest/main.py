@@ -3,24 +3,7 @@ import time
 from typing import List, Optional
 from pathlib import Path
 import yaml
-from kghub_downloader.download_utils import download_from_yaml
-from monarch_ingest.cli_utils import (
-    apply_closure,
-    do_release,
-    export_tsv,
-    create_qc_reports,
-    generate_graph_stats,
-    get_data_versions,
-    get_pkg_versions,
-    load_jsonl,
-    load_neo4j_csv,
-    load_sqlite,
-    load_solr,
-    merge_files,
-    transform_one,
-    transform_phenio,
-    transform_all,
-)
+
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.ingest_utils import validate_qc_counts
 
@@ -52,6 +35,9 @@ def download(
     write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
     """Downloads data defined in download.yaml and runs post-download processing"""
+    from kghub_downloader.download_utils import download_from_yaml
+    from monarch_ingest.cli_utils import get_data_versions
+
     if ingest:
         ingests = [ingest]
     if ingest_file:
@@ -109,6 +95,8 @@ def transform(
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
+    from monarch_ingest.cli_utils import transform_one, transform_phenio, transform_all, get_pkg_versions
+
     if ingest == None and ingests == None and ingest_file == None and all == False and phenio == False:
         raise ValueError(
             'Bad "ingest transform" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all, or --phenio. None of these flags are provided.'
@@ -171,6 +159,8 @@ def merge(
     ),
 ):
     """Merge nodes and edges into kg"""
+    from monarch_ingest.cli_utils import apply_closure, merge_files
+
     logger = get_logger(None, verbose)
     start_time = time.time()
     merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
@@ -201,37 +191,51 @@ def merge(
 
 @typer_app.command()
 def closure():
+    from monarch_ingest.cli_utils import apply_closure
+
     apply_closure()
 
 
 @typer_app.command()
 def jsonl():
+    from monarch_ingest.cli_utils import load_jsonl
+
     load_jsonl()
 
 
 @typer_app.command()
 def neo4j_csv():
+    from monarch_ingest.cli_utils import load_neo4j_csv
+
     load_neo4j_csv()
 
 
 @typer_app.command()
 def sqlite():
+    from monarch_ingest.cli_utils import load_sqlite
+
     load_sqlite()
 
 
 @typer_app.command()
 def solr():
+    from monarch_ingest.cli_utils import load_solr
+
     load_solr()
 
 
 @typer_app.command()
 def export():
+    from monarch_ingest.cli_utils import export_tsv
+
     export_tsv()
 
 
 @typer_app.command()
 def report():
     """Run Koza QC on specified Monarch ingests"""
+    from monarch_ingest.cli_utils import create_qc_reports
+
     create_qc_reports()
 
 
@@ -257,6 +261,8 @@ def graph_stats(
     ),
 ):
     """Generate graph statistics from merged KG database"""
+    from monarch_ingest.cli_utils import generate_graph_stats
+
     generate_graph_stats(
         input_db=input_db,
         output_file=output_file,
@@ -270,6 +276,8 @@ def release(
     kghub: bool = typer.Option(False, help="Also release to kghub S3 bucket"),
 ):
     """Copy data to Monarch GCP data buckets"""
+    from monarch_ingest.cli_utils import do_release
+
     do_release(dir, kghub)
 
 
