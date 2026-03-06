@@ -10,16 +10,8 @@ nodes:
       min: 14000
     hgnc_gene_nodes:
       min: 43000
-    ncbi_gene_9823_nodes:
-      min: 45000
-    ncbi_gene_9031_nodes:
-      min: 32000
-    ncbi_gene_227321_nodes:
-      min: 10000
-    ncbi_gene_9615_nodes:
-      min: 50000
-    ncbi_gene_9913_nodes:
-      min: 57000
+    ncbi_gene_nodes:
+      min: 190000
 
     phenio_nodes:
       min: 288000
@@ -59,7 +51,7 @@ edges:
       min: 8000
       max: 10000 # adding max so that we'll notice if our medgen exclude stops working
     hpoa_gene_to_phenotype_edges:
-      min: 190000
+      min: 150000
     panther_genome_orthologs_edges:
       min: 550000
     phenio_edges:

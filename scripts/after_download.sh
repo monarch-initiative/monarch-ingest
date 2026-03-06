@@ -26,28 +26,12 @@ else
 fi
 
 
-if [ -f data/dictybase/ddpheno.db ]; then
-  # Make an id, name map of DDPHENO terms
-  sqlite3 -cmd ".mode tabs" -cmd ".headers on" data/dictybase/ddpheno.db "select subject as id, value as name from rdfs_label_statement where predicate = 'rdfs:label' and subject like 'DDPHENO:%'" > data/dictybase/ddpheno.tsv
-  echo "\"data/monarch/taxon_labels.tsv\" created from \"data/dictybase/ddpheno.db\"."
-else
-  echo "\"data/dictybase/ddpheno.tsv\" does not exist. Skipping creation of \"data/dictybase/ddpheno.tsv\"."
-fi
-
 if [ -f data/monarch/phenio-relation-graph.tsv.gz ]; then
   # Unpack the phenio relation graph file
   gunzip --force data/monarch/phenio-relation-graph.tsv.gz 
   awk '{ if ($2 == "rdfs:subClassOf" || $2 == "BFO:0000050" || $2 == "UPHENO:0000001") { print } }' data/monarch/phenio-relation-graph.tsv > data/monarch/phenio-relation-filtered.tsv
 else
   echo "\"data/monarch/phenio-relation-graph.tsv.gz\" does not exist. Skipping creation of \"data/monarch/phenio-relation-filtered.tsv\"."
-fi
-
-# Extract NCBITaxon node names into their own basic tsv for gene ingests
-if [ -f data/monarch/kg-phenio.tar.gz ]; then
-  tar xfO data/monarch/kg-phenio.tar.gz merged-kg_nodes.tsv | grep ^NCBITaxon | cut -f 1,3 > data/monarch/taxon_labels.tsv
-  echo "\"data/monarch/taxon_labels.tsv\" created from \"data/monarch/kg-phenio.tar.gz\"."
-else
-  echo "\"data/monarch/kg-phenio.tar.gz\" does not exist. Skipping creation of \"data/monarch/taxon_labels.tsv\"."
 fi
 
 if [ -f data/monarch/mondo.sssom.tsv ]; then
