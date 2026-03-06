@@ -58,7 +58,9 @@ for core_name in "${core_names[@]}"; do
     -H "Content-type: application/json" \
     -d '{
       "set-property": {
-        "updateLog.numRecordsToKeep": 0
+        "updateLog.numRecordsToKeep": 0,
+        "updateHandler.autoCommit.maxDocs": -1,
+        "updateHandler.autoCommit.maxTime": -1
       }
     }'
   curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=$core_name"
@@ -92,9 +94,11 @@ echo "Loading entities"
 poetry run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
 
 poetry run lsolr bulkload-db -C association -s model.yaml output/monarch-kg.duckdb solr_denormalized_edges
-# curl "http://localhost:8983/solr/association/select?q=*:*"
 
-
+echo "Optimizing indexes (single merge pass)"
+for core_name in entity association sssom; do
+  curl "http://localhost:8983/solr/$core_name/update?optimize=true&maxSegments=1&waitSearcher=false"
+done
 
 # For now, just leaving solr running. It will go away on it's own in the jenkins builder
 # and otherwise that makes this script a nice way to just run solr locally
