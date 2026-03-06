@@ -36,12 +36,7 @@ pipeline {
         }
         stage('download') {
             steps {
-                sh '''
-                    mkdir data || true
-                    gsutil -q -m cp -r gs://monarch-ingest-data-cache/* data/
-                    ls -lafs
-                    ls -la data
-                '''
+                sh 'poetry run ingest download --all --write-metadata'
             }
         }
         stage('transform') {

@@ -1,9 +1,6 @@
-from importlib import metadata
 import importlib.metadata
 
-# lib_name = "monarch_ingest"  # Your library's "distribution package" name
-# lib_version = importlib.metadata.version(lib_name)
-# print(lib_version)
-# exit()
-
-# __version__ = metadata.version("monarch_ingest")
+try:
+    __version__ = importlib.metadata.version("monarch_ingest")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "0.0.0-dev"

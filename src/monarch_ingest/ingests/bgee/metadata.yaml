@@ -1,7 +1,0 @@
-ingest_title: 'Bgee'
-ingest_url: 'https://bgee.org/'
-# ingest files can be found using the species interface on the main web page
-# https://bgee.org/ftp/bgee_v15_0/download/calls/expr_calls/ to get the current release, release v15
-# https://bgee.org/ftp/{release} to get the full file list
-description: 'GENE EXPRESSION DATA IN ANIMALS'
-rights: 'https://bgee.org/about/'

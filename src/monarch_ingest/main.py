@@ -3,25 +3,9 @@ import time
 from typing import List, Optional
 from pathlib import Path
 import yaml
-from kghub_downloader.download_utils import download_from_yaml
-from monarch_ingest.cli_utils import (
-    apply_closure,
-    do_release,
-    export_tsv,
-    create_qc_reports,
-    generate_graph_stats,
-    get_data_versions,
-    get_pkg_versions,
-    load_jsonl,
-    load_neo4j_csv,
-    load_sqlite,
-    load_solr,
-    merge_files,
-    transform_one,
-    transform_phenio,
-    transform_all,
-)
+
 from monarch_ingest.utils.log_utils import get_logger
+from monarch_ingest.utils.ingest_utils import validate_qc_counts
 
 import typer
 
@@ -47,21 +31,12 @@ def download(
     ingest_file: Path = typer.Option(
         None, "--ingest_file", help="A yaml file which has a newline seperated list of ingests to perform."
     ),
-    all: bool = typer.Option(False, help="Download all ingest datasets"),
+    all: bool = typer.Option(True, help="Download all ingest datasets"),
     write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
-    """Downloads data defined in download.yaml"""
-    if ingest == None and ingests == None and ingest_file == None and all == False:
-        raise ValueError(
-            'Bad "ingest download" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all. None of these flags are provided.'
-        )
-    # The following checks that *exactly* one of ingest, ingests, and ingest_file is set (i.e. has a value other than None).
-    # If this isn't the case, we need to fail.
-    if ((ingest != None) + (ingests != None) + (ingest_file != None) + (all != False)) != 1:
-        raise ValueError(
-            f'Bad "ingest download" cli config. Exactly one flag can to be provided for the following options"--ingest/-i"'
-            + f'"--ingests", "--ingest_file", "--all". We were provided "--ingest/-i"={ingest}, "--ingests"={ingests}, "--ingest_file"={ingest_file},"--all"={all}.'
-        )
+    """Downloads data defined in download.yaml and runs post-download processing"""
+    from kghub_downloader.download_utils import download_from_yaml
+    from monarch_ingest.cli_utils import get_data_versions
 
     if ingest:
         ingests = [ingest]
@@ -74,8 +49,21 @@ def download(
             output_dir=".",
             tags=ingests,
         )
-    elif all:
+    else:
         download_from_yaml(yaml_file="src/monarch_ingest/download.yaml", output_dir=".")
+
+    # Run post-download processing (prefix repairs, phenio filtering, etc.)
+    after_download_script = Path("scripts/after_download.sh")
+    if after_download_script.exists():
+        import subprocess
+        logger = get_logger()
+        logger.info("Running post-download processing...")
+        result = subprocess.run(["sh", str(after_download_script)], capture_output=True, text=True)
+        if result.returncode != 0:
+            logger.error(f"after_download.sh failed: {result.stderr}")
+        else:
+            logger.info("Post-download processing complete.")
+
     if write_metadata:
         get_data_versions(output_dir="data")
 
@@ -107,6 +95,8 @@ def transform(
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
+    from monarch_ingest.cli_utils import transform_one, transform_phenio, transform_all, get_pkg_versions
+
     if ingest == None and ingests == None and ingest_file == None and all == False and phenio == False:
         raise ValueError(
             'Bad "ingest transform" cli config. A flag must be provided for one of --ingest/-i, --ingests, --ingest_file, --all, or --phenio. None of these flags are provided.'
@@ -169,6 +159,8 @@ def merge(
     ),
 ):
     """Merge nodes and edges into kg"""
+    from monarch_ingest.cli_utils import apply_closure, merge_files
+
     logger = get_logger(None, verbose)
     start_time = time.time()
     merge_files(name=kg_name, input_dir=input_dir, output_dir=output_dir, verbose=verbose)
@@ -181,21 +173,7 @@ def merge(
     else:
         expected_counts = yaml.safe_load(open(f"src/monarch_ingest/{kg_name}_qc_expect.yaml"))
 
-    error = False
-    for type in ['nodes', 'edges']:
-        counts = {item["name"]: item["total_number"] for item in qc_report[type]}
-        for key in expected_counts[type]["provided_by"]:
-            expected = expected_counts[type]["provided_by"][key]["min"]
-            way_less_than_expected = expected * 0.7
-            if key not in counts:
-                error = True
-                logger.error(f"{type} {key} not found in qc_report.yaml")
-            else:
-                if counts[key] < expected and counts[key] > way_less_than_expected:
-                    logger.warning(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
-                elif counts[key] < expected * 0.7:
-                    logger.error(f"Expected {key} to have {expected} {type}, only found {counts[key]}")
-                    error = True
+    error = validate_qc_counts(qc_report, expected_counts, logger=logger)
 
     closure_duration = None
     if closure:
@@ -213,37 +191,51 @@ def merge(
 
 @typer_app.command()
 def closure():
+    from monarch_ingest.cli_utils import apply_closure
+
     apply_closure()
 
 
 @typer_app.command()
 def jsonl():
+    from monarch_ingest.cli_utils import load_jsonl
+
     load_jsonl()
 
 
 @typer_app.command()
 def neo4j_csv():
+    from monarch_ingest.cli_utils import load_neo4j_csv
+
     load_neo4j_csv()
 
 
 @typer_app.command()
 def sqlite():
+    from monarch_ingest.cli_utils import load_sqlite
+
     load_sqlite()
 
 
 @typer_app.command()
 def solr():
+    from monarch_ingest.cli_utils import load_solr
+
     load_solr()
 
 
 @typer_app.command()
 def export():
+    from monarch_ingest.cli_utils import export_tsv
+
     export_tsv()
 
 
 @typer_app.command()
 def report():
     """Run Koza QC on specified Monarch ingests"""
+    from monarch_ingest.cli_utils import create_qc_reports
+
     create_qc_reports()
 
 
@@ -269,6 +261,8 @@ def graph_stats(
     ),
 ):
     """Generate graph statistics from merged KG database"""
+    from monarch_ingest.cli_utils import generate_graph_stats
+
     generate_graph_stats(
         input_db=input_db,
         output_file=output_file,
@@ -282,6 +276,8 @@ def release(
     kghub: bool = typer.Option(False, help="Also release to kghub S3 bucket"),
 ):
     """Copy data to Monarch GCP data buckets"""
+    from monarch_ingest.cli_utils import do_release
+
     do_release(dir, kghub)
 
 
