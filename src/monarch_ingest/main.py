@@ -82,7 +82,7 @@ def transform(
     force: bool = typer.Option(
         False, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"
     ),
-    rdf: bool = typer.Option(False, help="Output rdf files along with tsv"),
+
     verbose: Optional[bool] = typer.Option(
         None,
         "--debug/--quiet",
@@ -122,7 +122,6 @@ def transform(
                 ingest=ingest,
                 output_dir=output_dir,
                 row_limit=row_limit,
-                rdf=rdf,
                 force=True if force is None else force,
                 verbose=verbose,
                 log=log,
@@ -131,7 +130,6 @@ def transform(
         transform_all(
             output_dir=output_dir,
             row_limit=row_limit,
-            rdf=rdf,
             force=force,
             verbose=verbose,
             log=log,
