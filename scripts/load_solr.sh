@@ -18,7 +18,7 @@ echo "Download the schema files using pystow"
 python -c "from monarch_ingest.cli_utils import ensure_model_files; ensure_model_files()"
 
 echo "Starting the server"
-poetry run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
+poetry run lsolr start-server --memory 16g --heap-size 6g --ram-buffer-mb 512
 echo "Waiting for Solr to be ready..."
 for i in {1..30}; do
   if curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
