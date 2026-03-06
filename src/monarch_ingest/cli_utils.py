@@ -667,7 +667,37 @@ def load_sqlite():
 
 
 def load_solr():
-    sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
+    logger = get_logger()
+    db_path = "output/monarch-kg.duckdb"
+
+    # Create ephemeral view with computed frequency column (replaces Solr JS processor)
+    # CREATE OR REPLACE handles leftover views from interrupted runs
+    logger.info("Creating solr_denormalized_edges view with frequency_computed_sortable_float...")
+    db = duckdb.connect(db_path)
+    db.execute("""
+        CREATE OR REPLACE VIEW solr_denormalized_edges AS
+        SELECT *,
+            CASE
+                WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS FLOAT)
+                WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
+                WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
+                WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
+                WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
+                WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
+                ELSE 0.0
+            END AS frequency_computed_sortable_float
+        FROM denormalized_edges
+    """)
+    db.close()
+
+    try:
+        sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
+    finally:
+        # Clean up view so it doesn't persist in distributed DuckDB artifacts
+        logger.info("Dropping solr_denormalized_edges view...")
+        db = duckdb.connect(db_path)
+        db.execute("DROP VIEW IF EXISTS solr_denormalized_edges")
+        db.close()
 
 
 @lru_cache(maxsize=1)
