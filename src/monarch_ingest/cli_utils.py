@@ -666,38 +666,291 @@ def load_sqlite():
     logger.info("SQLite database loading completed.")
 
 
-def load_solr():
+### Solr indexing configuration ###
+
+SOLR_URL = "http://localhost:8983/solr"
+ALL_CORES = ["infores", "sssom", "entity", "association"]
+SOLR_CORE_CONFIG = {
+    "entity": {
+        "schema_file": "model.yaml",
+        "top_class": "Entity",
+        "duckdb_table": "denormalized_nodes",
+        "chunk_size": 100000,
+        "copyfields_script": "scripts/add_entity_copyfields.sh",
+        "disable_txlog": True,
+    },
+    "association": {
+        "schema_file": "model.yaml",
+        "top_class": "Association",
+        "duckdb_table": "solr_denormalized_edges",
+        "chunk_size": 50000,
+        "copyfields_script": "scripts/add_association_copyfields.sh",
+        "disable_txlog": True,
+    },
+    "sssom": {
+        "schema_file": "model.yaml",
+        "top_class": "Mapping",
+        "duckdb_table": "mappings",
+        "chunk_size": 100000,
+        "copyfields_script": None,
+        "disable_txlog": False,
+    },
+    "infores": {
+        "schema_file": "data/infores/information_resource_registry.yaml",
+        "top_class": "InformationResource",
+        "duckdb_table": None,
+        "chunk_size": None,
+        "copyfields_script": None,
+        "disable_txlog": False,
+    },
+}
+
+
+def load_solr(
+    cores: Optional[list[str]] = None,
+    limit: Optional[int] = None,
+    skip_setup: bool = False,
+    skip_export: bool = False,
+):
     logger = get_logger()
     db_path = "output/monarch-kg.duckdb"
 
-    # Create ephemeral view with computed frequency column (replaces Solr JS processor)
-    # CREATE OR REPLACE handles leftover views from interrupted runs
-    logger.info("Creating solr_denormalized_edges view with frequency_computed_sortable_float...")
+    # Phase 1: Resolve target cores
+    target_cores = cores if cores else ALL_CORES
+    for c in target_cores:
+        if c not in ALL_CORES:
+            raise ValueError(f"Unknown core: {c}. Valid cores: {', '.join(ALL_CORES)}")
+
+    logger.info(f"Target cores: {target_cores}" + (f" (limit: {limit})" if limit else ""))
+
+    # Phase 2: DuckDB view creation
+    ephemeral_views = []
     db = duckdb.connect(db_path)
-    db.execute("""
-        CREATE OR REPLACE VIEW solr_denormalized_edges AS
-        SELECT *,
-            CASE
-                WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS FLOAT)
-                WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
-                WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
-                WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
-                WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
-                WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
-                ELSE 0.0
-            END AS frequency_computed_sortable_float
-        FROM denormalized_edges
-    """)
-    db.close()
+    try:
+        # Association view with frequency_computed_sortable_float (with optional LIMIT)
+        if "association" in target_cores:
+            limit_clause = f" LIMIT {limit}" if limit else ""
+            logger.info("Creating solr_denormalized_edges view...")
+            db.execute(f"""
+                CREATE OR REPLACE VIEW solr_denormalized_edges AS
+                SELECT *,
+                    CASE
+                        WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS FLOAT)
+                        WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
+                        WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
+                        WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
+                        WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
+                        WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
+                        ELSE 0.0
+                    END AS frequency_computed_sortable_float
+                FROM denormalized_edges
+                {limit_clause}
+            """)
+            ephemeral_views.append("solr_denormalized_edges")
+
+        # Limited entity view
+        if limit and "entity" in target_cores:
+            logger.info(f"Creating limited entity view (limit={limit})...")
+            db.execute(f"""
+                CREATE OR REPLACE VIEW _solr_limited_denormalized_nodes AS
+                SELECT * FROM denormalized_nodes LIMIT {limit}
+            """)
+            ephemeral_views.append("_solr_limited_denormalized_nodes")
+
+        # Limited sssom view
+        if limit and "sssom" in target_cores:
+            logger.info(f"Creating limited sssom view (limit={limit})...")
+            db.execute(f"""
+                CREATE OR REPLACE VIEW _solr_limited_mappings AS
+                SELECT * FROM mappings LIMIT {limit}
+            """)
+            ephemeral_views.append("_solr_limited_mappings")
+    finally:
+        db.close()
 
     try:
-        sh.bash("scripts/load_solr.sh", _out=sys.stdout, _err=sys.stderr)
+        # Phase 3: Server setup (skippable)
+        if not skip_setup:
+            _solr_setup(logger)
+
+        # Phase 4: Data loading
+        _solr_load_cores(logger, db_path, target_cores, limit)
+
+        # Phase 5: Finalize
+        _solr_finalize(logger, target_cores, skip_export)
+
     finally:
-        # Clean up view so it doesn't persist in distributed DuckDB artifacts
-        logger.info("Dropping solr_denormalized_edges view...")
-        db = duckdb.connect(db_path)
-        db.execute("DROP VIEW IF EXISTS solr_denormalized_edges")
-        db.close()
+        # Cleanup: drop ephemeral views so they don't persist in distributed DuckDB artifacts
+        if ephemeral_views:
+            logger.info("Dropping ephemeral DuckDB views...")
+            db = duckdb.connect(db_path)
+            for view in ephemeral_views:
+                db.execute(f"DROP VIEW IF EXISTS {view}")
+            db.close()
+
+
+def _solr_setup(logger):
+    """Phase 3: Solr server setup, core creation, schema configuration."""
+
+    # Stop/remove existing container
+    logger.info("Stopping existing Solr container...")
+    subprocess.run(["docker", "stop", "my_solr"], capture_output=True)
+    subprocess.run(["docker", "rm", "my_solr"], capture_output=True)
+
+    # Decompress TSV files if needed
+    for gz_file in ["output/monarch-kg-denormalized-edges.tsv.gz", "output/monarch-kg-denormalized-nodes.tsv.gz"]:
+        if Path(gz_file).exists():
+            logger.info(f"Decompressing {gz_file}...")
+            subprocess.run(["gunzip", "--force", gz_file], check=True)
+
+    # Download schema files
+    logger.info("Downloading schema files...")
+    ensure_model_files()
+
+    # Start Solr
+    logger.info("Starting Solr server...")
+    subprocess.run(
+        ["poetry", "run", "lsolr", "start-server", "--memory", "16g", "--heap-size", "6g", "--ram-buffer-mb", "512"],
+        check=True,
+    )
+
+    # Poll for readiness
+    logger.info("Waiting for Solr to be ready...")
+    for i in range(1, 31):
+        try:
+            r = requests.get(f"{SOLR_URL}/admin/info/system", timeout=5)
+            if r.ok:
+                logger.info("Solr is ready!")
+                break
+        except requests.ConnectionError:
+            pass
+        logger.info(f"Waiting for Solr... ({i * 5}/150 seconds)")
+        time.sleep(5)
+    else:
+        raise RuntimeError("Solr failed to start within 150 seconds")
+
+    # Create all 4 cores (always, even if only loading a subset - needed for fieldtype/schema scripts)
+    logger.info("Adding cores...")
+    subprocess.run(
+        ["poetry", "run", "lsolr", "add-cores", "entity", "association", "sssom", "infores"],
+        check=True,
+    )
+    time.sleep(30)
+
+    # Add fieldtypes
+    logger.info("Adding fieldtypes...")
+    subprocess.run(["sh", "scripts/add_fieldtypes.sh"], check=True)
+    time.sleep(5)
+
+    # Create schemas (in same order as shell script)
+    for core_name in ["entity", "association", "sssom", "infores"]:
+        config = SOLR_CORE_CONFIG[core_name]
+        logger.info(f"Creating schema for {core_name}...")
+        subprocess.run(
+            [
+                "poetry", "run", "lsolr", "create-schema",
+                "-C", core_name,
+                "-s", config["schema_file"],
+                "-t", config["top_class"],
+            ],
+            check=True,
+        )
+        time.sleep(5)
+
+        # Disable txlog/autocommit for big cores right after their schema is created
+        if config["disable_txlog"]:
+            logger.info(f"Disabling txlog for {core_name}...")
+            requests.post(
+                f"{SOLR_URL}/{core_name}/config",
+                json={
+                    "set-property": {
+                        "updateLog.numRecordsToKeep": 0,
+                        "updateHandler.autoCommit.maxDocs": -1,
+                        "updateHandler.autoCommit.maxTime": -1,
+                    }
+                },
+            )
+            requests.get(f"{SOLR_URL}/admin/cores?action=RELOAD&core={core_name}")
+
+    # Add copyfields
+    logger.info("Adding entity copyfields...")
+    subprocess.run(["sh", "scripts/add_entity_copyfields.sh"], check=True)
+    logger.info("Adding association copyfields...")
+    subprocess.run(["sh", "scripts/add_association_copyfields.sh"], check=True)
+    time.sleep(5)
+
+
+def _solr_load_cores(logger, db_path, target_cores, limit):
+    """Phase 4: Load data into target Solr cores."""
+    from linkml_solr.utils.solr_bulkload import bulkload_duckdb
+
+    for core_name in target_cores:
+        config = SOLR_CORE_CONFIG[core_name]
+
+        # Infores: direct curl POST of JSONL (no limit, it's tiny)
+        if core_name == "infores":
+            logger.info("Loading infores...")
+            resp = requests.post(
+                f"{SOLR_URL}/infores/update/json/docs?commit=true",
+                headers={"Content-Type": "application/json"},
+                data=Path("data/infores/infores_catalog.jsonl").read_bytes(),
+            )
+            resp.raise_for_status()
+            logger.info(f"Infores loaded: {resp.status_code}")
+            continue
+
+        # Determine which table/view to read from
+        table = config["duckdb_table"]
+        if limit and core_name == "entity":
+            table = "_solr_limited_denormalized_nodes"
+        elif limit and core_name == "sssom":
+            table = "_solr_limited_mappings"
+        # For association, limit is already baked into the solr_denormalized_edges view
+
+        schema = SchemaView(config["schema_file"]).schema
+
+        logger.info(f"Loading {core_name} from {table} (chunk_size={config['chunk_size']})...")
+        start = time.time()
+        count = bulkload_duckdb(
+            db_path=db_path,
+            table_name=table,
+            base_url=SOLR_URL,
+            core=core_name,
+            schema=schema,
+            chunk_size=config["chunk_size"],
+        )
+        elapsed = time.time() - start
+        logger.info(f"Loaded {count:,} documents into {core_name} in {elapsed:.1f}s")
+
+        # Commit (bulkload_duckdb doesn't commit, unlike the CLI wrapper)
+        logger.info(f"Committing {core_name}...")
+        resp = requests.post(
+            f"{SOLR_URL}/{core_name}/update?commit=true",
+            headers={"Content-Type": "application/json"},
+            json={},
+        )
+        logger.info(f"Commit {core_name}: {resp.status_code}")
+
+
+def _solr_finalize(logger, target_cores, skip_export):
+    """Phase 5: Optimize loaded cores and optionally export solr.tar.gz."""
+
+    # Optimize loaded cores (skip infores, it's tiny)
+    for core_name in target_cores:
+        if core_name == "infores":
+            continue
+        logger.info(f"Optimizing {core_name}...")
+        requests.get(f"{SOLR_URL}/{core_name}/update?optimize=true&maxSegments=1&waitSearcher=false")
+
+    if not skip_export:
+        logger.info("Exporting solr.tar.gz...")
+        with open("output/solr.tar.gz", "wb") as f:
+            subprocess.run(
+                ["docker", "exec", "my_solr", "tar", "czf", "-", "-C", "/var/solr", "data"],
+                stdout=f,
+                check=True,
+            )
+        logger.info("solr.tar.gz exported.")
 
 
 @lru_cache(maxsize=1)

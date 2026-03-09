@@ -216,10 +216,15 @@ def sqlite():
 
 
 @typer_app.command()
-def solr():
+def solr(
+    core: Optional[List[str]] = typer.Option(None, "--core", "-C", help="Which core(s) to load (repeatable). Default: all 4"),
+    limit: Optional[int] = typer.Option(None, "--limit", "-n", help="Max records per core (for testing)"),
+    skip_setup: bool = typer.Option(False, "--skip-setup", help="Skip server start, core/schema creation"),
+    skip_export: bool = typer.Option(False, "--skip-export", help="Skip final solr.tar.gz creation"),
+):
     from monarch_ingest.cli_utils import load_solr
 
-    load_solr()
+    load_solr(cores=core, limit=limit, skip_setup=skip_setup, skip_export=skip_export)
 
 
 @typer_app.command()
