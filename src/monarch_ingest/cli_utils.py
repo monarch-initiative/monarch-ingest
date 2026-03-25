@@ -468,6 +468,8 @@ def _merge_files_koza(
         compress=True,
         graph_name=name,
         output_format=KGXFormat.TSV,
+        # Require primary_knowledge_source on all edges (issue #1276)
+        required_edge_fields=["primary_knowledge_source"],
     )
 
     result = merge_graphs(config)
