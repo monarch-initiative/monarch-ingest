@@ -125,3 +125,10 @@ mmrrc:
     - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_allele_to_genotype_edges.tsv'
     - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_nodes.tsv'
     - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_to_phenotype_edges.tsv'
+medic_drug_to_disease:
+  url:
+    - 'https://github.com/monarch-initiative/medic-ingest/releases/latest/download/medic_indication_edges.tsv'
+cureid:
+  url:
+    - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_nodes.tsv'
+    - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_edges.tsv'
