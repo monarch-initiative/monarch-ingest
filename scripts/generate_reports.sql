@@ -8,6 +8,7 @@ copy (
         object_namespace,
         object_taxon,
         primary_knowledge_source,
+        aggregator_knowledge_source,
         species_context_qualifier,
         provided_by,
         count(*) as count
