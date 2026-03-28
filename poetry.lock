@@ -2460,15 +2460,13 @@ validators = ">=0.20.0,<0.21.0"
 
 [[package]]
 name = "koza"
-version = "2.3.0"
+version = "2.3.0.post1.dev0+234ff73"
 description = "Data transformation framework for LinkML data models"
 optional = false
 python-versions = "<4,>=3.10"
 groups = ["main"]
-files = [
-    {file = "koza-2.3.0-py3-none-any.whl", hash = "sha256:856f5578fd88e5efdfc47f9ad0fbbdd81dd0681c0090acd48be6c068d7ec7e02"},
-    {file = "koza-2.3.0.tar.gz", hash = "sha256:f175cdd09182ea927bfa2bd5525598dd5dace8c0693971bb2e1ebe9263f7a845"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 biolink-model = ">=4.3.6"
@@ -2487,6 +2485,12 @@ typer = ">=0.20.0"
 
 [package.extras]
 dev = ["mkdocs (>=1.6.1)", "mkdocs-material (>=9.7.0)", "mkdocstrings[python] (>=1.0.0)", "pytest", "ruff"]
+
+[package.source]
+type = "git"
+url = "https://github.com/monarch-initiative/koza.git"
+reference = "fix/flatten-single-valued-jsonl-arrays"
+resolved_reference = "234ff73aca5561f8815cd23f1b7d0b1039867b0b"
 
 [[package]]
 name = "lark"
@@ -6201,4 +6205,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "44f919ef9ae37595b4f86ebe88c557a3b022923ab567319ae7e393e79a3ee157"
+content-hash = "32e24a84ed562ec154b7debd9ff0407f22cc174e3e31fa86fa0bd6906e55d206"
