@@ -92,6 +92,35 @@ class TestIngestOutputExists:
         with patch("monarch_ingest.utils.ingest_utils.get_qc_expectations", return_value=mock_qc):
             assert ingest_output_exists("hgnc_gene", str(tmp_path)) is True
 
+    def test_jsonl_edges_detected(self, tmp_path):
+        """When edges are .jsonl instead of .tsv, they should still be found."""
+        self._make_file(tmp_path, "dismech_edges.jsonl")
+        mock_qc = {
+            "nodes": {"provided_by": {}},
+            "edges": {"provided_by": {"dismech_edges": {"min": 100}}},
+        }
+        with patch("monarch_ingest.utils.ingest_utils.get_qc_expectations", return_value=mock_qc):
+            assert ingest_output_exists("dismech", str(tmp_path)) is True
+
+    def test_jsonl_nodes_detected(self, tmp_path):
+        """When nodes are .jsonl instead of .tsv, they should still be found."""
+        self._make_file(tmp_path, "some_source_nodes.jsonl")
+        mock_qc = {
+            "nodes": {"provided_by": {"some_source_nodes": {"min": 100}}},
+            "edges": {"provided_by": {}},
+        }
+        with patch("monarch_ingest.utils.ingest_utils.get_qc_expectations", return_value=mock_qc):
+            assert ingest_output_exists("some_source", str(tmp_path)) is True
+
+    def test_jsonl_edges_missing(self, tmp_path):
+        """When edges .jsonl is expected but missing, should return False."""
+        mock_qc = {
+            "nodes": {"provided_by": {}},
+            "edges": {"provided_by": {"dismech_edges": {"min": 100}}},
+        }
+        with patch("monarch_ingest.utils.ingest_utils.get_qc_expectations", return_value=mock_qc):
+            assert ingest_output_exists("dismech", str(tmp_path)) is False
+
 
 class TestGetIngests:
     def test_returns_dict(self):

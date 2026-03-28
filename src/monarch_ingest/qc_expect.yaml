@@ -28,7 +28,7 @@ nodes:
     mmrrc_genotype_nodes:
       min: 60000
     cureid_nodes:
-      min: 500
+      min: 10
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
@@ -93,11 +93,13 @@ edges:
     phenopacket_ingest_edges:
       min: 180000
     mmrrc_allele_to_genotype_edges:
-      min: 40000
+      min: 25000
     mmrrc_genotype_to_phenotype_edges:
       min: 40000
     medic_indication_edges:
-      min: 15000
+      min: 7000
     cureid_edges:
-      min: 300
+      min: 200
+    dismech_edges:
+      min: 10000
 

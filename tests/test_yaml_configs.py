@@ -27,18 +27,16 @@ class TestIngestsYaml:
                     f"Ingest '{name}' has non-https URL: {url}"
                 )
 
-    def test_all_urls_end_with_tsv(self):
-        """All ingest source URLs must be TSV files. The pass-through download
-        pipeline and Koza transforms expect tab-separated input; other formats
-        (csv, jsonl, etc.) would require format-specific handling."""
+    def test_all_urls_end_with_supported_extension(self):
+        """All ingest source URLs must be TSV or JSONL files."""
         ingests = get_ingests()
         for name, entry in ingests.items():
             urls = entry.get("url", [])
             if urls is None:
                 continue
             for url in urls:
-                assert url.endswith(".tsv"), (
-                    f"Ingest '{name}' has URL not ending in .tsv: {url}"
+                assert url.endswith(".tsv") or url.endswith(".jsonl"), (
+                    f"Ingest '{name}' has URL with unsupported extension: {url}"
                 )
 
 

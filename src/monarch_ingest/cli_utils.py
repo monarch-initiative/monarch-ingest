@@ -97,8 +97,10 @@ def transform_one(
         logger.info(
             f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output"
         )
+        save_as_map = ingests[ingest].get("save_as", {})
         for url in ingests[ingest]["url"]:
             filename = url.split("/")[-1]
+            filename = save_as_map.get(filename, filename)
             # Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/
             os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
             if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
@@ -436,8 +438,8 @@ def _merge_files_koza(
     logger = get_logger(None, verbose)
 
     # Discover node and edge files
-    node_files = glob.glob(f"{input_dir}/*_nodes.tsv")
-    edge_files = glob.glob(f"{input_dir}/*_edges.tsv")
+    node_files = glob.glob(f"{input_dir}/*_nodes.tsv") + glob.glob(f"{input_dir}/*_nodes.jsonl")
+    edge_files = glob.glob(f"{input_dir}/*_edges.tsv") + glob.glob(f"{input_dir}/*_edges.jsonl")
 
     logger.info(f"Found {len(node_files)} node files, {len(edge_files)} edge files")
 

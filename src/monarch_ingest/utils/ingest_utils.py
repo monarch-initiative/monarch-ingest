@@ -19,6 +19,14 @@ def file_exists(file):
     return Path(file).is_file() and os.stat(file).st_size > 1000
 
 
+def _output_file_exists(output_dir, base_name):
+    """Check if an output file exists with any supported extension (.tsv or .jsonl)."""
+    for ext in ('.tsv', '.jsonl'):
+        if file_exists(f"{output_dir}/{base_name}{ext}"):
+            return True
+    return False
+
+
 def ingest_output_exists(source, output_dir):
     """Check if ingest output files exist using QC expectations as the source of truth"""
     qc_expectations = get_qc_expectations()
@@ -31,12 +39,9 @@ def ingest_output_exists(source, output_dir):
     edges_key = f"{source}_edges"
     expects_edges = edges_key in qc_expectations.get("edges", {}).get("provided_by", {})
 
-    nodes_file = f"{output_dir}/{source}_nodes.tsv"
-    edges_file = f"{output_dir}/{source}_edges.tsv"
-
-    if expects_nodes and not file_exists(nodes_file):
+    if expects_nodes and not _output_file_exists(output_dir, f"{source}_nodes"):
         return False
-    if expects_edges and not file_exists(edges_file):
+    if expects_edges and not _output_file_exists(output_dir, f"{source}_edges"):
         return False
 
     return True

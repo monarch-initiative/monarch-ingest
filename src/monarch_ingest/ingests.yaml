@@ -132,3 +132,6 @@ cureid:
   url:
     - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_nodes.tsv'
     - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_edges.tsv'
+dismech:
+  url:
+    - 'https://github.com/monarch-initiative/dismech/releases/latest/download/dismech_edges.jsonl'
