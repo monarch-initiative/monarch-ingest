@@ -1,3 +1,6 @@
+RUN=uv run
+INSTALL_CMD=uv sync
+
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
@@ -20,17 +23,17 @@ all: install format test clean
 
 .PHONY: install
 install:
-	poetry install
+	$(INSTALL_CMD)
 
 
 .PHONY: install-full
 install-full:
-	poetry install --with dev
+	$(INSTALL_CMD) --extra dev
 	
 
 .PHONY: test
 test: install
-	$(RUN) python -m pytest tests
+	$(RUN) pytest tests
 
 
 .PHONY: docs
