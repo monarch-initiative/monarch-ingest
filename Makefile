@@ -15,8 +15,6 @@ WGET = /usr/bin/env wget --timestamping --no-verbose
 .DEFAULT_GOAL := all
 SHELL := bash
 
-RUN = poetry run
-
 .PHONY: all
 all: install format test clean
 
