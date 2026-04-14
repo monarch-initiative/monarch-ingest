@@ -100,6 +100,4 @@ edges:
       min: 7000
     cureid_edges:
       min: 200
-    dismech_edges:
-      min: 10000
 
