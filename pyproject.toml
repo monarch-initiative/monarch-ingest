@@ -1,60 +1,61 @@
-[tool.poetry]
+[project]
 name = "monarch-ingest"
 version = "0.8.0"
 description = ""
 authors = [
-    "The Monarch Initiative <info@monarchinitiative.org>",
-    "Kevin Schaper <kevinschaper@gmail.com>",
-    "Victoria Soesanto <victoria.soesanto@cuanschutz.edu>",
-    "Glass Elsarboukh <g.elsarboukh@gmail.com>",
-    "Kent Shefchek <kent@tislab.org>",
-    "Richard Bruskiewich <richard.bruskiewich@delphinai.com>",
+    {name="The Monarch Initiative",email="info@monarchinitiative.org"},
+    {name="Kevin Schaper", email="kevinschaper@gmail.com"},
+    {name="Victoria Soesanto", email="victoria.soesanto@cuanschutz.edu"},
+    {name="Glass Elsarboukh", email="g.elsarboukh@gmail.com"},
+    {name="Kent Shefchek", email="kent@tislab.org"},
+    {name="Richard Bruskiewich", email="richard.bruskiewich@delphinai.com"},
 ]
 packages = [
     { include = "monarch_ingest", from = "src" },
 ]
+requires-python=">=3.10,<4"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-biolink-model = "^4.3.6"
-bmt = "^1.0.15"
-kghub-downloader = "^0.4.5"
-kgx = "^2.6.0"
-linkml = "^1.7.8"
-linkml-solr = "0.2.0"
-multi-indexer = "0.0.5"
-# Other Dependencies
-botocore = "^1.31"
-importlib-metadata = ">=4.6.1"
-loguru = "*"
-pydantic = "^2.5"
-sh = "^1.14.3"
-typer = "^0.20"
-yamllint = "^1.35.1"
-linkml-runtime = "^1.7.5"
-pandas = "2.0.3"
-closurizer = "0.8.1"
-notebook = "^7.3.2"
-duckdb = "^1.3.0"
-pystow = "^0.5.4"
-koza = "^2.3.1"
+dependencies = [
+    "biolink-model>=4.3.6,<5",
+    "bmt>=1.0.15,<2",
+    "kghub-downloader>=0.4.5,<1",
+    "kgx>=2.6.0,<3",
+    "linkml>=1.7.8,<2",
+    "linkml-solr==0.2.0",
+    "multi-indexer==0.0.5",
+    # Other Dependencies,
+    "botocore>=1.31,<2",
+    "importlib-metadata>=4.6.1",
+    "loguru",
+    "pydantic>=2.5,<3",
+    "sh>=1.14.3,<2",
+    "typer>=0.20,<1",
+    "yamllint>=1.35.1,<2",
+    "linkml-runtime>=1.7.5,<2",
+    "pandas==2.0.3",
+    "closurizer==0.8.1",
+    "notebook>=7.3.2,<8",
+    "duckdb>=1.3.0,<2",
+    "pystow>=0.5.4,<1",
+    "koza>=2.3.1,<3",
+]
 
-[tool.poetry.group.dev]
-optional = true
+[project.optional-dependencies]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"
-mkdocs = "^1.4"
-mkdocs-material = ">=9.5"
-black = "^24.3"
-ruff = "*"
+dev = [
+    "pytest>=8.1.1,<9",
+    "mkdocs>=1.4,<2",
+    "mkdocs-material>=9.5",
+    "black>=24.3,<25",
+    "ruff",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 ingest = "monarch_ingest.main:typer_app"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 120
@@ -66,5 +67,24 @@ ignore = [
     "F541", # f-strings with no placeholders
 
 ]
+
+lint.fixable = ["ALL"]
+
+# Select or ignore from https://docs.astral.sh/ruff/rules/
+lint.select = [
+    "B",  # bugbear
+    "D",  # pydocstyle
+    "E",  # pycodestyle errors
+    "F",  # Pyflakes
+    "I",  # isort 
+    "S",  # flake8-bandit
+    "W",  # Warning
+    "C90", #MCcabe
+]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**.py" = ["F811"] # redefinition of unused imports (mock_koza)
+
+[tool.ruff.lint.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
