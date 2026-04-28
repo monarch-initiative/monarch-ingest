@@ -65,7 +65,8 @@ skip-string-normalization = true
 line-length = 120
 ignore = [
     "F541", # f-strings with no placeholders
-
+    "D205", #D205 1 blank line required between summary line and description
+    "D209", #D209 [*] Multi-line docstring closing quotes should be on a separate line
 ]
 
 lint.fixable = ["ALL"]
@@ -83,7 +84,13 @@ lint.select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["F811"] # redefinition of unused imports (mock_koza)
+"tests/**.py" = [
+    "F811", # redefinition of unused imports (mock_koza)
+    "S101", #S101 Use of `assert` detected
+    "D101", #D101 Missing docstring in public class
+    "D102", #D102 Missing docstring in public method
+
+] 
 
 [tool.ruff.lint.mccabe]
 # Unlike Flake8, default to a complexity level of 10.

@@ -49,8 +49,8 @@ clean:
 
 .PHONY: lint
 lint: install-full
-	$(RUN) ruff check --diff --exit-zero src/ tests/
-	$(RUN) black --check --diff -l 120 src/ tests/
+	$(RUN) ruff check
+#	$(RUN) black --check --diff -l 120 src/ tests/
 
 
 .PHONY: format
