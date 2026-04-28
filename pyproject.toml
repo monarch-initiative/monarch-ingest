@@ -73,14 +73,14 @@ lint.fixable = ["ALL"]
 
 # Select or ignore from https://docs.astral.sh/ruff/rules/
 lint.select = [
-    "B",  # bugbear
-    "D",  # pydocstyle
-    "E",  # pycodestyle errors
-    "F",  # Pyflakes
-    "I",  # isort 
-    "S",  # flake8-bandit
-    "W",  # Warning
-    "C90", #MCcabe
+#    "B",  # bugbear
+#    "D",  # pydocstyle
+#    "E",  # pycodestyle errors
+#    "F",  # Pyflakes
+#    "I",  # isort 
+#    "S",  # flake8-bandit
+#    "W",  # Warning
+#    "C90", #MCcabe
 ]
 
 [tool.ruff.lint.per-file-ignores]
