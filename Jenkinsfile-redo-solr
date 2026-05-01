@@ -2,7 +2,7 @@ pipeline {
     agent { label 'monarch-agent-large' }
     environment {
         HOME = "${env.WORKSPACE}"
-        PATH = "/opt/poetry/bin:${env.PATH}"
+        PATH = "/opt/uv:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
@@ -76,19 +76,14 @@ pipeline {
             steps {
                 sh '''
                     echo "Current directory: $(pwd)"
-                    # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
-                    
-                    # echo $SHELL
+
                     python3 --version
                     pip --version
-                    poetry --version
-                  
+                    uv --version
 
-                    # poetry config experimental.new-installer false
-                    poetry install --with dev
-                    poetry run which ingest
-
+                    make install-full
+                    uv run which ingest
                 '''
             }
         }
@@ -111,7 +106,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
+                sh 'uv run kgx graph-summary -i tsv -c "tar.gz" --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.tar.gz -o output/merged_graph_stats.yaml'
             }
         }
         stage('denormalize') {
@@ -121,7 +116,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run ingest closure'
+                sh 'uv run ingest closure'
             }
         }
         stage('solr') {
@@ -131,7 +126,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run ingest solr'
+                sh 'uv run ingest solr'
             }
         }
         stage('sqlite') {
@@ -141,7 +136,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run ingest sqlite'
+                sh 'uv run ingest sqlite'
             }
         }
         stage('make tsv exports') {
@@ -151,7 +146,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run ingest export'
+                sh 'uv run ingest export'
             }
         }
         stage("jsonl") {
@@ -161,7 +156,7 @@ pipeline {
                }
             }
            steps {
-               sh 'poetry run ingest jsonl'
+               sh 'uv run ingest jsonl'
            }
         }
         stage('kgx-transforms'){
@@ -202,7 +197,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'poetry run python scripts/update-dev-solr.py'
+                sh 'uv run python scripts/update-dev-solr.py'
             }
         }
     }
