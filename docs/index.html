@@ -1355,33 +1355,30 @@
 <p>The eventual output of the Monarch Ingest process is the <strong>Monarch KG</strong>.<br />
 The latest version of this can be found at <a href="https://data.monarchinitiative.org/monarch-kg-dev/latest/monarch-kg.tar.gz">data.monarchinitiative.org</a></p>
 <p>See also the folder <a href="https://data.monarchinitiative.org/monarch-kg-dev/latest/">monarch-kg-dev/latest</a></p>
-<p>Monarch Ingest is built using <a href="https://python-poetry.org">Poetry</a>, which will create its own virtual environment. </p>
+<p>Monarch Ingest is managed with <a href="https://docs.astral.sh/uv/">uv</a>, which creates and manages its own virtual environment.</p>
 <h2 id="installation">Installation</h2>
-<p>monarch-ingest is a Python 3.8+ package, installable via <a href="https://python-poetry.org">Poetry</a>.  </p>
+<p>monarch-ingest is a Python 3.10+ package, managed with <a href="https://docs.astral.sh/uv/">uv</a>.</p>
 <ol>
 <li>
-<p><a href="https://python-poetry.org/docs/" target="_blank">Install Poetry</a>, if you don't already have it:<br />
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sSL<span class="w"> </span>https://install.python-poetry.org<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-
-
-<span class="c1"># Optional: Have poetry create its venvs in your project directories</span>
-poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
+<p><a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank">Install uv</a>, if you don't already have it:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 </code></pre></div></p>
 </li>
 <li>
-<p>Clone the repo and build the code:
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com/monarch-initiative/monarch-ingest
+<p>Clone the repo:
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:monarch-initiative/monarch-ingest
 </code></pre></div></p>
 </li>
 <li>
 <p>Install monarch-ingest:
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>monarch-ingest
-poetry<span class="w"> </span>install
+uv<span class="w"> </span>sync
 </code></pre></div></p>
 </li>
 <li>
 <p>(Optional) Activate the virtual environment:
-<div class="highlight"><pre><span></span><code><span class="c1"># This step removes the need to prefix all commands with `poetry run`</span>
-poetry<span class="w"> </span>shell
+<div class="highlight"><pre><span></span><code><span class="c1"># This step removes the need to prefix all commands with `uv run`</span>
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 </code></pre></div></p>
 </li>
 </ol>
