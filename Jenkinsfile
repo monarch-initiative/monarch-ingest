@@ -4,7 +4,7 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
         BUILD_TIMESTAMP = sh(script: "echo `date +%s`", returnStdout: true).trim()
-        PATH = "/opt/poetry/bin:${env.PATH}"
+        PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         GH_RELEASE_TOKEN = credentials('GH_RELEASE_TOKEN')
@@ -14,18 +14,19 @@ pipeline {
             steps {
                 sh '''
                     echo "Current directory: \\$(pwd)"
-                    # export PATH=$PATH:$HOME/.local/bin
                     echo "Path: $PATH"
-                    
-                    # echo $SHELL
+
                     python3 --version
                     pip --version
-                    poetry --version
-                  
 
-                    # poetry config experimental.new-installer false
-                    poetry install --with dev
-                    poetry run which ingest
+                    # Install uv if not already present on the agent
+                    if ! command -v uv >/dev/null 2>&1; then
+                        curl -LsSf https://astral.sh/uv/install.sh | sh
+                    fi
+                    uv --version
+
+                    make install-full
+                    uv run which ingest
 
                     # temporarily disabling, there isn't a .boto file
                     # create & edit ~/.boto to include AWS credentials
@@ -36,12 +37,12 @@ pipeline {
         }
         stage('download') {
             steps {
-                sh 'poetry run ingest download --all --write-metadata'
+                sh 'uv run ingest download --all --write-metadata'
             }
         }
         stage('transform') {
             steps {
-                sh 'poetry run ingest transform --all --log --write-metadata'
+                sh 'uv run ingest transform --all --log --write-metadata'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
@@ -50,44 +51,44 @@ pipeline {
         }
         stage('merge') {
             steps {
-                sh 'poetry run ingest merge'
+                sh 'uv run ingest merge'
             }
         }
         stage('denormalize') {
             steps {
-                sh 'poetry run ingest closure'
+                sh 'uv run ingest closure'
             }
         }
         stage('report') {
             steps {
-                sh 'poetry run ingest report'
+                sh 'uv run ingest report'
             }
         }
         stage('jsonl-conversion'){
             steps {
-                sh 'poetry run ingest jsonl'
+                sh 'uv run ingest jsonl'
             }
         }
         stage('neo4j-csv') {
             steps {
-                sh 'poetry run ingest neo4j-csv'
+                sh 'uv run ingest neo4j-csv'
             }
         }
         stage('parallel-processing') {
             parallel {
                 stage('kgx-graph-summary') {
                     steps {
-                        sh 'poetry run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'                        
+                        sh 'uv run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'                        
                     }
                 }
                 stage('solr') {
                     steps {
-                        sh 'poetry run ingest solr'
+                        sh 'uv run ingest solr'
                     }
                 }
                 stage('kgx-transforms'){
                     steps {
-                        sh 'poetry run kgx transform -i duckdb -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
+                        sh 'uv run kgx transform -i duckdb -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
                     }
                 }
                 stage('neo4j-dump') {
@@ -97,12 +98,12 @@ pipeline {
                 }
                 stage('sqlite') {
                     steps {
-                        sh 'poetry run ingest sqlite'
+                        sh 'uv run ingest sqlite'
                     }
                 }
                 stage('make exports') {
                     steps {
-                        sh 'poetry run ingest export'
+                        sh 'uv run ingest export'
                     }
                 }
             }
@@ -110,17 +111,17 @@ pipeline {
 
         stage('upload files') {
             steps {
-                sh 'poetry run ingest release --kghub'
+                sh 'uv run ingest release --kghub'
             }
         }
         stage('create github release') {
             steps {
-                sh 'poetry run python scripts/create_github_release.py --kg-version ${RELEASE}'
+                sh 'uv run python scripts/create_github_release.py --kg-version ${RELEASE}'
             }
         }
         // stage('update dev deployment') {
         //     steps {
-        //         sh 'poetry run python scripts/update-dev-solr.py'
+        //         sh 'uv run python scripts/update-dev-solr.py'
         //     }
         // }
         stage('index') {            
