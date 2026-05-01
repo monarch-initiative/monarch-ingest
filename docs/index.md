@@ -9,35 +9,32 @@ The latest version of this can be found at [data.monarchinitiative.org](https://
 
 See also the folder [monarch-kg-dev/latest](https://data.monarchinitiative.org/monarch-kg-dev/latest/)
 
-Monarch Ingest is built using [Poetry](https://python-poetry.org), which will create its own virtual environment. 
+Monarch Ingest is managed with [uv](https://docs.astral.sh/uv/), which creates and manages its own virtual environment.
 
 ## Installation
 
-monarch-ingest is a Python 3.8+ package, installable via [Poetry](https://python-poetry.org).  
+monarch-ingest is a Python 3.10+ package, managed with [uv](https://docs.astral.sh/uv/).
 
-1. <a href="https://python-poetry.org/docs/" target="_blank">Install Poetry</a>, if you don't already have it:  
+1. <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank">Install uv</a>, if you don't already have it:
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Optional: Have poetry create its venvs in your project directories
-poetry config virtualenvs.in-project true
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-1. Clone the repo and build the code:
+1. Clone the repo:
 ```bash
-git clone git@github.com/monarch-initiative/monarch-ingest
+git clone git@github.com:monarch-initiative/monarch-ingest
 ```
 
 1. Install monarch-ingest:
 ```bash
 cd monarch-ingest
-poetry install
+uv sync
 ```
 
 1. (Optional) Activate the virtual environment:
 ```bash
-# This step removes the need to prefix all commands with `poetry run`
-poetry shell
+# This step removes the need to prefix all commands with `uv run`
+source .venv/bin/activate
 ```
 
 ## Usage
