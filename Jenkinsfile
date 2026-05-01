@@ -4,7 +4,7 @@ pipeline {
         HOME = "${env.WORKSPACE}"
         RELEASE = sh(script: "echo `date +%Y-%m-%d`", returnStdout: true).trim()
         BUILD_TIMESTAMP = sh(script: "echo `date +%s`", returnStdout: true).trim()
-        PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
+        PATH = "/opt/uv:${env.PATH}"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         GH_RELEASE_TOKEN = credentials('GH_RELEASE_TOKEN')
@@ -18,11 +18,6 @@ pipeline {
 
                     python3 --version
                     pip --version
-
-                    # Install uv if not already present on the agent
-                    if ! command -v uv >/dev/null 2>&1; then
-                        curl -LsSf https://astral.sh/uv/install.sh | sh
-                    fi
                     uv --version
 
                     make install-full
