@@ -18,7 +18,7 @@ echo "Download the schema files using pystow"
 python -c "from monarch_ingest.cli_utils import ensure_model_files; ensure_model_files()"
 
 echo "Starting the server"
-poetry run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
+uv run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
 echo "Waiting for Solr to be ready..."
 for i in {1..30}; do
   if curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
@@ -35,7 +35,7 @@ if ! curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
 fi
 
 echo "Adding cores"
-poetry run lsolr add-cores entity association sssom infores
+uv run lsolr add-cores entity association sssom infores
 sleep 30
 
 # todo: ideally, this will live in linkml-solr
@@ -44,11 +44,11 @@ scripts/add_fieldtypes.sh
 sleep 5
 
 echo "Adding entity schema"
-poetry run lsolr create-schema -C entity -s model.yaml -t Entity
+uv run lsolr create-schema -C entity -s model.yaml -t Entity
 sleep 5
 
 echo "Adding association schema"
-poetry run lsolr create-schema -C association -s model.yaml -t Association
+uv run lsolr create-schema -C association -s model.yaml -t Association
 sleep 5
 
 # turn off transaction logging for the big indexes
@@ -65,11 +65,11 @@ for core_name in "${core_names[@]}"; do
 done
 
 echo "Adding sssom schema"
-poetry run lsolr create-schema -C sssom -s model.yaml -t Mapping
+uv run lsolr create-schema -C sssom -s model.yaml -t Mapping
 sleep 5
 
 echo "Adding infores schema"
-poetry run lsolr create-schema -C infores -s data/infores/information_resource_registry.yaml -t InformationResource
+uv run lsolr create-schema -C infores -s data/infores/information_resource_registry.yaml -t InformationResource
 
 # todo: this also should live in linkml-solr, and copy-fields should be based on the schema
 echo "Add dynamic fields and copy fields declarations"
@@ -88,13 +88,13 @@ curl -X POST -H 'Content-Type: application/json' \
   --data-binary @data/infores/infores_catalog.jsonl
 
 
-poetry run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
+uv run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
 
 echo "Loading entities"
 
-poetry run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
+uv run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
 
-poetry run lsolr bulkload-db -C association -s model.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
+uv run lsolr bulkload-db -C association -s model.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
 # curl "http://localhost:8983/solr/association/select?q=*:*"
 
 

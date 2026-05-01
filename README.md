@@ -8,26 +8,23 @@ The output of the Monarch Ingest process is the **Monarch KG**, available at [da
 
 ## Installation
 
-monarch-ingest is a Python 3.8+ package, installable via [Poetry](https://python-poetry.org).
+monarch-ingest is a Python 3.10+ package, managed with [uv](https://docs.astral.sh/uv/).
 
-1. Install Poetry:
+1. Install uv:
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Optional: Have poetry create its venvs in your project directories
-poetry config virtualenvs.in-project true
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 2. Clone and install:
 ```bash
 git clone git@github.com:monarch-initiative/monarch-ingest
 cd monarch-ingest
-poetry install
+uv sync
 ```
 
-3. (Optional) Activate the virtual environment:
+3. Run commands with `uv run` (or activate the venv with `source .venv/bin/activate`):
 ```bash
-poetry shell
+uv run ingest --help
 ```
 
 ## Quick Start
