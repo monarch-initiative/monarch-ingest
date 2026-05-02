@@ -32,11 +32,9 @@ def download(
         None, "--ingest_file", help="A yaml file which has a newline seperated list of ingests to perform."
     ),
     all: bool = typer.Option(True, help="Download all ingest datasets"),
-    write_metadata: bool = typer.Option(False, help="Write versions of ingests to metadata.yaml"),
 ):
     """Downloads data defined in download.yaml and runs post-download processing"""
     from kghub_downloader.download_utils import download_from_yaml
-    from monarch_ingest.cli_utils import get_data_versions
 
     if ingest:
         ingests = [ingest]
@@ -64,8 +62,86 @@ def download(
         else:
             logger.info("Post-download processing complete.")
 
-    if write_metadata:
-        get_data_versions(output_dir="data")
+
+@typer_app.command("download-release-metadata")
+def download_release_metadata_cmd(
+    output_dir: str = typer.Option(
+        "data/release-metadata",
+        "--output-dir",
+        "-o",
+        help="Directory to write per-repo release-metadata.yaml files",
+    ),
+):
+    """Fetch `release-metadata.yaml` from each ingest repo's latest GitHub release."""
+    from monarch_ingest.cli_utils import download_release_metadata
+
+    download_release_metadata(output_dir=output_dir)
+
+
+@typer_app.command("build-receipt")
+def build_receipt_cmd(
+    input_dir: str = typer.Option(
+        "data/release-metadata",
+        "--input-dir",
+        "-i",
+        help="Directory of per-ingest release-metadata.yaml files",
+    ),
+    output_dir: str = typer.Option(
+        OUTPUT_DIR, "--output-dir", "-o", help="Directory to write metadata.yaml"
+    ),
+    kg_name: str = typer.Option("monarch-kg", "--kg-name", help="Name of the KG being built"),
+    kg_version: str = typer.Option(
+        None, "--kg-version", help="Version tag (defaults to today's date)"
+    ),
+):
+    """Aggregate per-ingest release-metadata.yaml files into output/metadata.yaml."""
+    from importlib.metadata import version as pkg_version, PackageNotFoundError
+
+    from monarch_ingest.cli_utils import get_release_version
+    from monarch_ingest.release_metadata import (
+        aggregate,
+        collect_kg_artifacts,
+        write_receipt,
+    )
+
+    logger = get_logger()
+
+    packages = {}
+    for pkg in ("biolink-model", "koza", "monarch-ingest"):
+        try:
+            packages[pkg.replace("-model", "")] = pkg_version(pkg)
+        except PackageNotFoundError:
+            pass
+
+    artifacts = collect_kg_artifacts(
+        output_dir,
+        [f"{kg_name}.tar.gz", "merged_graph_stats.yaml", "qc_report.yaml"],
+    )
+
+    receipt = aggregate(
+        input_dir=input_dir,
+        kg_name=kg_name,
+        kg_version=kg_version or get_release_version(),
+        packages=packages,
+        artifacts=artifacts,
+    )
+
+    out_path = Path(output_dir) / "metadata.yaml"
+    write_receipt(receipt, out_path)
+
+    n_sources = len(receipt.get("sources") or [])
+    n_disagreements = len(receipt.get("disagreements") or [])
+    n_drift = len(receipt.get("version_drift") or [])
+    logger.info(
+        f"Wrote build receipt for {kg_name} {receipt['version']} "
+        f"to {out_path} ({n_sources} ingest sources, "
+        f"{n_disagreements} disagreement(s), {n_drift} drift)"
+    )
+
+    for d in receipt.get("disagreements") or []:
+        logger.warning(f"version disagreement on {d['id']}: {d['by_ingest']}")
+    for d in receipt.get("version_drift") or []:
+        logger.warning(f"rolling-source drift on {d['id']}: {d['by_ingest']}")
 
 
 @typer_app.command()
@@ -91,11 +167,10 @@ def transform(
     ),
     log: bool = typer.Option(False, "--log", "-l", help="Write DEBUG level logs to ./logs/ for each ingest"),
     row_limit: int = typer.Option(None, "--row-limit", "-n", help="Number of rows to process"),
-    write_metadata: bool = typer.Option(False, help="Write data/package versions to output_dir/metadata.yaml"),
     # parallel: int = typer.Option(None, "--parallel", "-p", help="Utilize Dask to perform multiple ingests in parallel"),
 ):
     """Run Koza transformation on specified Monarch ingests"""
-    from monarch_ingest.cli_utils import transform_one, transform_phenio, transform_all, get_pkg_versions
+    from monarch_ingest.cli_utils import transform_one, transform_phenio, transform_all
 
     if ingest == None and ingests == None and ingest_file == None and all == False and phenio == False:
         raise ValueError(
@@ -134,8 +209,6 @@ def transform(
             verbose=verbose,
             log=log,
         )
-    if write_metadata:
-        get_pkg_versions(output_dir=output_dir)
 
 
 @typer_app.command()

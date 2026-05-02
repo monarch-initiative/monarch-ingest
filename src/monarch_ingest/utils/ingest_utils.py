@@ -6,8 +6,35 @@ import yaml
 from monarch_ingest.utils.log_utils import get_logger
 
 
+RELEASE_ASSET_URL = "https://github.com/monarch-initiative/{repo}/releases/latest/download/{file}"
+
+
 def get_ingests():
     return yaml.safe_load(pkgutil.get_data("monarch_ingest", "ingests.yaml"))
+
+
+def get_release_metadata_repos():
+    """Repos contributing to the build receipt — derived from kozahub-style entries."""
+    seen = []
+    for entry in get_ingests().values():
+        repo = entry.get("repo") if isinstance(entry, dict) else None
+        if repo and repo not in seen:
+            seen.append(repo)
+    return seen
+
+
+def ingest_urls(entry: dict) -> list:
+    """Resolve an ingest entry to its list of download URLs.
+
+    Handles both `url:`-style (explicit URLs) and `repo:`+`files:`-style
+    (kozahub ingest, URLs derived from the GitHub release).
+    """
+    if "url" in entry:
+        return list(entry["url"] or [])
+    if "repo" in entry:
+        repo = entry["repo"]
+        return [RELEASE_ASSET_URL.format(repo=repo, file=f) for f in entry.get("files", []) or []]
+    return []
 
 
 def get_qc_expectations():

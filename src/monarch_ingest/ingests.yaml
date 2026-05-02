@@ -1,131 +1,208 @@
-
-## Pass-through modular ingests
+## Entries come in three shapes:
+##
+##   url:    a list of explicit URLs to fetch (pass-through download).
+##   config: path to a koza transform config yaml.
+##   repo:   a kozahub ingest repo whose `release-metadata.yaml` is fetched as
+##           part of the build receipt. URLs are derived as
+##           https://github.com/monarch-initiative/<repo>/releases/latest/download/<file>.
 
 bgee_gene_to_expression:
-  url:
-    - 'https://github.com/monarch-initiative/bgee-ingest/releases/latest/download/bgee_gene_to_expression_edges.tsv'
+  repo: bgee-ingest
+  files:
+    - bgee_gene_to_expression_edges.tsv
+
 string_protein_links:
-  url:
-    - 'https://github.com/monarch-initiative/string-ingest/releases/latest/download/string_protein_links_edges.tsv'
+  repo: string-ingest
+  files:
+    - string_protein_links_edges.tsv
+
 ctd_chemical_to_disease:
-  url:
-    - 'https://github.com/monarch-initiative/ctd-ingest/releases/latest/download/ctd_chemical_to_disease_edges.tsv'
+  repo: ctd-ingest
+  files:
+    - ctd_chemical_to_disease_edges.tsv
+
 dictybase_gene:
-  url:
-    - 'https://github.com/monarch-initiative/dictybase-ingest/releases/latest/download/dictybase_gene_nodes.tsv'
+  repo: dictybase-ingest
+  files:
+    - dictybase_gene_nodes.tsv
+
 dictybase_gene_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/dictybase-ingest/releases/latest/download/dictybase_gene_to_phenotype_edges.tsv'
+  repo: dictybase-ingest
+  files:
+    - dictybase_gene_to_phenotype_edges.tsv
+
 hgnc_gene:
-  url:
-    - 'https://github.com/monarch-initiative/hgnc-ingest/releases/latest/download/hgnc_gene_nodes.tsv'
+  repo: hgnc-ingest
+  files:
+    - hgnc_gene_nodes.tsv
+
 pombase_gene:
-  url:
-    - 'https://github.com/monarch-initiative/pombase-ingest/releases/latest/download/pombase_gene_nodes.tsv'
+  repo: pombase-ingest
+  files:
+    - pombase_gene_nodes.tsv
+
 pombase_gene_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/pombase-ingest/releases/latest/download/pombase_gene_to_phenotype_edges.tsv'
+  repo: pombase-ingest
+  files:
+    - pombase_gene_to_phenotype_edges.tsv
+
 reactome_pathway:
-  url:
-    - 'https://github.com/monarch-initiative/reactome-ingest/releases/latest/download/reactome_pathway_nodes.tsv'
+  repo: reactome-ingest
+  files:
+    - reactome_pathway_nodes.tsv
+
 reactome_gene_to_pathway:
-  url:
-    - 'https://github.com/monarch-initiative/reactome-ingest/releases/latest/download/reactome_gene_to_pathway_edges.tsv'
+  repo: reactome-ingest
+  files:
+    - reactome_gene_to_pathway_edges.tsv
+
 reactome_chemical_to_pathway:
-  url:
-    - 'https://github.com/monarch-initiative/reactome-ingest/releases/latest/download/reactome_chemical_to_pathway_edges.tsv'
+  repo: reactome-ingest
+  files:
+    - reactome_chemical_to_pathway_edges.tsv
+
 alliance_gene:
-  url: 
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_gene_nodes.tsv'
+  repo: alliance-ingest
+  files:
+    - alliance_gene_nodes.tsv
+
 alliance_genotype:
-  url:
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_genotype_nodes.tsv'
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_genotype_edges.tsv'
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_allele_nodes.tsv'
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_allele_edges.tsv'
+  repo: alliance-ingest
+  files:
+    - alliance_genotype_nodes.tsv
+    - alliance_genotype_edges.tsv
+    - alliance_allele_nodes.tsv
+    - alliance_allele_edges.tsv
+
 alliance_gene_to_expression:
-  url:
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_gene_to_expression_edges.tsv'
+  repo: alliance-ingest
+  files:
+    - alliance_gene_to_expression_edges.tsv
+
 alliance_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/alliance_phenotype_edges.tsv'
+  repo: alliance-ingest
+  files:
+    - alliance_phenotype_edges.tsv
+
 alliance_disease_association:
-  url:
-    - 'https://github.com/monarch-initiative/alliance-disease-association-ingest/releases/latest/download/alliance_disease_edges.tsv'
+  repo: alliance-ingest
+  files:
+    - alliance_disease_edges.tsv
+
 biogrid:
-  url:
-    - 'https://github.com/monarch-initiative/biogrid-ingest/releases/latest/download/biogrid_gene_to_gene_edges.tsv'
+  repo: biogrid-ingest
+  files:
+    - biogrid_gene_to_gene_edges.tsv
+
 clingen_gene_disease_edges:
-  url:
-    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_gene_disease_edges.tsv'
+  repo: clingen-ingest
+  files:
+    - clingen_gene_disease_edges.tsv
+
 clingen_variant:
-  url:
-    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_nodes.tsv'
-    - 'https://github.com/monarch-initiative/clingen-ingest/releases/latest/download/clingen_variant_edges.tsv'
+  repo: clingen-ingest
+  files:
+    - clingen_variant_nodes.tsv
+    - clingen_variant_edges.tsv
+
 clinvar_variant:
-  url:
-    - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_nodes.tsv'
-    - 'https://github.com/monarch-initiative/clinvar-ingest/releases/latest/download/clinvar_variant_edges.tsv'
+  repo: clinvar-ingest
+  files:
+    - clinvar_variant_nodes.tsv
+    - clinvar_variant_edges.tsv
+
 hpoa:
-  url:
-    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_mode_of_inheritance_edges.tsv'
-    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_disease_to_phenotype_edges.tsv'
-    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_disease_edges.tsv'
-    - 'https://github.com/monarch-initiative/monarch-phenotype-profile-ingest/releases/latest/download/hpoa_gene_to_phenotype_edges.tsv'
+  repo: monarch-phenotype-profile-ingest
+  files:
+    - hpoa_disease_mode_of_inheritance_edges.tsv
+    - hpoa_disease_to_phenotype_edges.tsv
+    - hpoa_gene_to_disease_edges.tsv
+    - hpoa_gene_to_phenotype_edges.tsv
+
 ncbi_gene:
-  url:
-    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9615_nodes.tsv'
-    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9913_nodes.tsv'
-    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9823_nodes.tsv'
-    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_9031_nodes.tsv'
-    - 'https://github.com/monarch-initiative/ncbi-gene/releases/latest/download/ncbi_gene_227321_nodes.tsv'
+  repo: ncbi-gene
+  files:
+    - ncbi_gene_9615_nodes.tsv
+    - ncbi_gene_9913_nodes.tsv
+    - ncbi_gene_9823_nodes.tsv
+    - ncbi_gene_9031_nodes.tsv
+    - ncbi_gene_227321_nodes.tsv
+
 upheno_phenotype_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/upheno-cross-species-ingest/releases/download/latest/upheno_phenotype_to_phenotype_edges.tsv'
+  repo: upheno-cross-species-ingest
+  files:
+    - upheno_phenotype_to_phenotype_edges.tsv
+
 upheno_filtered_phenotype_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/upheno-cross-species-ingest/releases/download/latest/upheno_phenotype_to_phenotype_filtered_edges.tsv'
+  repo: upheno-cross-species-ingest
+  files:
+    - upheno_phenotype_to_phenotype_filtered_edges.tsv
 
 pantherdb_ortholog:
-  url:
-    - https://github.com/monarch-initiative/pantherdb-orthologs-ingest/releases/latest/download/panther_genome_orthologs_edges.tsv
+  repo: pantherdb-orthologs-ingest
+  files:
+    - panther_genome_orthologs_edges.tsv
+
 zfin_gene_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_gene_to_phenotype_edges.tsv'
+  repo: zfin-ingest
+  files:
+    - zfin_gene_to_phenotype_edges.tsv
+
 zfin_genotype_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_genotype_to_phenotype_edges.tsv'
+  repo: zfin-ingest
+  files:
+    - zfin_genotype_to_phenotype_edges.tsv
+
 go_annotation:
-  url:
-    - 'https://github.com/monarch-initiative/go-ingest/releases/latest/download/go_annotation_edges.tsv'
+  repo: go-ingest
+  files:
+    - go_annotation_edges.tsv
+
 zfin_orthology:
-  url:
-    - 'https://github.com/monarch-initiative/zfin-ingest/releases/latest/download/zfin_orthology_edges.tsv'
+  repo: zfin-ingest
+  files:
+    - zfin_orthology_edges.tsv
+
 omim_gene_to_disease:
-  url:
-    - 'https://github.com/monarch-initiative/omim-ingest/releases/latest/download/omim_gene_to_disease_edges.tsv'
+  repo: omim-ingest
+  files:
+    - omim_gene_to_disease_edges.tsv
+
 phenopacket_ingest:
-  url:
-    - 'https://github.com/monarch-initiative/phenopacket-ingest/releases/latest/download/phenopacket_ingest_nodes.tsv'
-    - 'https://github.com/monarch-initiative/phenopacket-ingest/releases/latest/download/phenopacket_ingest_edges.tsv'
+  repo: phenopacket-ingest
+  files:
+    - phenopacket_ingest_nodes.tsv
+    - phenopacket_ingest_edges.tsv
+
 xenbase_gene_to_phenotype:
-  url:
-    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_gene_to_phenotype_edges.tsv'
+  repo: xenbase-ingest
+  files:
+    - xenbase_gene_to_phenotype_edges.tsv
+
 xenbase_orthologs:
-  url:
-    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_orthologs_edges.tsv'
+  repo: xenbase-ingest
+  files:
+    - xenbase_orthologs_edges.tsv
+
 xenbase_non_entrez_orthologs:
-  url:
-    - 'https://github.com/monarch-initiative/xenbase-ingest/releases/latest/download/xenbase_non_entrez_orthologs_edges.tsv'
+  repo: xenbase-ingest
+  files:
+    - xenbase_non_entrez_orthologs_edges.tsv
+
 mmrrc:
-  url:
-    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_allele_to_genotype_edges.tsv'
-    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_nodes.tsv'
-    - 'https://github.com/monarch-initiative/mmrrc-ingest/releases/latest/download/mmrrc_genotype_to_phenotype_edges.tsv'
+  repo: mmrrc-ingest
+  files:
+    - mmrrc_allele_to_genotype_edges.tsv
+    - mmrrc_genotype_nodes.tsv
+    - mmrrc_genotype_to_phenotype_edges.tsv
+
 medic_drug_to_disease:
-  url:
-    - 'https://github.com/monarch-initiative/medic-ingest/releases/latest/download/medic_indication_edges.tsv'
+  repo: medic-ingest
+  files:
+    - medic_indication_edges.tsv
+
 cureid:
-  url:
-    - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_nodes.tsv'
-    - 'https://github.com/monarch-initiative/cureid-ingest/releases/latest/download/cureid_edges.tsv'
+  repo: cureid-ingest
+  files:
+    - cureid_nodes.tsv
+    - cureid_edges.tsv

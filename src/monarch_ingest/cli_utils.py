@@ -31,7 +31,13 @@ from koza.runner import KozaRunner
 from koza.model.formats import OutputFormat
 from linkml_runtime.utils.formatutils import camelcase
 
-from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
+from monarch_ingest.utils.ingest_utils import (
+    ingest_output_exists,
+    file_exists,
+    get_ingests,
+    get_release_metadata_repos,
+    ingest_urls,
+)
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.export_utils import export
 
@@ -92,13 +98,14 @@ def transform_one(
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
 
     logger.info(f"Running ingest: {ingest}")
-    # if a url is provided instead of a config, just download the file and copy it to the output dir
-    if "url" in ingests[ingest]:
+    # If urls can be resolved (url-style or kozahub repo-style), just download and copy.
+    urls = ingest_urls(ingests[ingest])
+    if urls:
         logger.info(
             f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output"
         )
         save_as_map = ingests[ingest].get("save_as", {})
-        for url in ingests[ingest]["url"]:
+        for url in urls:
             filename = url.split("/")[-1]
             filename = save_as_map.get(filename, filename)
             # Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/
@@ -365,45 +372,56 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
+RELEASE_METADATA_URL = (
+    "https://github.com/monarch-initiative/{repo}/releases/latest/download/release-metadata.yaml"
+)
+
+
+def download_release_metadata(
+    repos: Optional[list] = None,
+    output_dir: str = "data/release-metadata",
+):
+    """Fetch each ingest repo's `release-metadata.yaml` GitHub release asset.
+
+    Missing or unreachable files log a warning and are skipped — the build receipt
+    will be incomplete rather than fail. Returns the list of repos for which a
+    metadata file was successfully written.
+    """
+    logger = get_logger()
+    if repos is None:
+        repos = get_release_metadata_repos()
+
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+
+    written = []
+    for repo in repos:
+        url = RELEASE_METADATA_URL.format(repo=repo)
+        try:
+            resp = requests.get(url, allow_redirects=True, timeout=30)
+        except requests.RequestException as e:
+            logger.warning(f"release-metadata.yaml fetch failed for {repo}: {e}")
+            continue
+        if resp.status_code == 404:
+            logger.warning(f"release-metadata.yaml not found for {repo} (skipping)")
+            continue
+        if not resp.ok:
+            logger.warning(
+                f"release-metadata.yaml fetch returned {resp.status_code} for {repo} (skipping)"
+            )
+            continue
+        (out / f"{repo}.yaml").write_bytes(resp.content)
+        written.append(repo)
+        logger.info(f"Fetched release-metadata.yaml for {repo}")
+
+    logger.info(f"Wrote release-metadata for {len(written)}/{len(repos)} repos to {output_dir}")
+    return written
+
+
 def get_release_version():
     import datetime
 
     return datetime.datetime.now().strftime("%Y-%m-%d")
-
-
-def get_data_versions(output_dir: str = OUTPUT_DIR):
-    import requests as r
-
-    data = {}
-    data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
-    data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
-    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/metadata.yaml", "w") as f:
-        f.write("data:\n")
-        for data_source, version in data.items():
-            f.write(f"  {data_source}: {str(version)}\n")
-
-
-def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: Optional[str] = None):
-    from importlib.metadata import version
-
-    packages = {}
-    packages["biolink"] = version("biolink-model")
-    packages["koza"] = version("koza")
-    packages["monarch-ingest"] = version("monarch-ingest")
-    kg_version = get_release_version() if release_version is None else release_version
-    with open("data/metadata.yaml", "r") as f:
-        data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
-
-    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/metadata.yaml", "w") as f:
-        f.write(f"kg-version: {str(kg_version)}\n\n")
-        f.write("packages:\n")
-        for k, v in packages.items():
-            f.write(f"  {k}: {str(v)}\n")
-        f.write("\ndata:\n")
-        for k, v in data_versions.items():
-            f.write(f"  {k}: {str(v)}\n")
 
 
 def merge_files(

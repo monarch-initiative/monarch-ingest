@@ -1,6 +1,6 @@
 """Smoke tests validating config file integrity for ingests.yaml and qc_expect.yaml."""
 
-from monarch_ingest.utils.ingest_utils import get_ingests, get_qc_expectations
+from monarch_ingest.utils.ingest_utils import get_ingests, get_qc_expectations, ingest_urls
 
 
 class TestIngestsYaml:
@@ -9,20 +9,24 @@ class TestIngestsYaml:
         assert isinstance(ingests, dict)
         assert len(ingests) > 0
 
-    def test_every_ingest_has_url_or_config(self):
+    def test_every_ingest_has_known_shape(self):
         ingests = get_ingests()
         for name, entry in ingests.items():
-            assert "url" in entry or "config" in entry, (
-                f"Ingest '{name}' has neither 'url' nor 'config'"
+            has_known_shape = "url" in entry or "config" in entry or "repo" in entry
+            assert has_known_shape, (
+                f"Ingest '{name}' has none of 'url', 'config', or 'repo'"
             )
+
+    def test_repo_entries_have_files(self):
+        ingests = get_ingests()
+        for name, entry in ingests.items():
+            if "repo" in entry:
+                assert entry.get("files"), f"Ingest '{name}' has 'repo' but no 'files'"
 
     def test_all_urls_are_https(self):
         ingests = get_ingests()
         for name, entry in ingests.items():
-            urls = entry.get("url", [])
-            if urls is None:
-                continue
-            for url in urls:
+            for url in ingest_urls(entry):
                 assert url.startswith("https://"), (
                     f"Ingest '{name}' has non-https URL: {url}"
                 )
@@ -31,10 +35,7 @@ class TestIngestsYaml:
         """All ingest source URLs must be TSV or JSONL files."""
         ingests = get_ingests()
         for name, entry in ingests.items():
-            urls = entry.get("url", [])
-            if urls is None:
-                continue
-            for url in urls:
+            for url in ingest_urls(entry):
                 assert url.endswith(".tsv") or url.endswith(".jsonl"), (
                     f"Ingest '{name}' has URL with unsupported extension: {url}"
                 )

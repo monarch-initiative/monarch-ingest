@@ -3,7 +3,13 @@
 import os
 from unittest.mock import patch
 
-from monarch_ingest.utils.ingest_utils import file_exists, ingest_output_exists, get_ingests, get_qc_expectations
+from monarch_ingest.utils.ingest_utils import (
+    file_exists,
+    ingest_output_exists,
+    get_ingests,
+    get_qc_expectations,
+    get_release_metadata_repos,
+)
 
 
 class TestFileExists:
@@ -131,6 +137,55 @@ class TestGetIngests:
     def test_known_ingest_present(self):
         result = get_ingests()
         assert "hgnc_gene" in result
+
+
+class TestGetReleaseMetadataRepos:
+    def test_derives_unique_repos_from_kozahub_entries(self):
+        repos = get_release_metadata_repos()
+        assert isinstance(repos, list)
+        assert "alliance-ingest" in repos
+        assert "ncbi-gene" in repos
+        # Deduplicated even though alliance-ingest appears in many transforms.
+        assert len(repos) == len(set(repos))
+        # maxo-annotation-ingest is not consumed by any transform — must not appear.
+        assert "maxo-annotation-ingest" not in repos
+        # alliance-disease-association-ingest was an oversight; alliance disease now comes from alliance-ingest.
+        assert "alliance-disease-association-ingest" not in repos
+
+
+class TestDownloadReleaseMetadata:
+    def test_writes_files_skips_404_and_errors(self, tmp_path):
+        from unittest.mock import MagicMock
+        import requests
+
+        from monarch_ingest.cli_utils import download_release_metadata
+
+        ok_resp = MagicMock(status_code=200, ok=True, content=b"source: foo\n")
+        miss_resp = MagicMock(status_code=404, ok=False)
+        bad_resp = MagicMock(status_code=500, ok=False)
+
+        responses = {
+            "https://github.com/monarch-initiative/foo/releases/latest/download/release-metadata.yaml": ok_resp,
+            "https://github.com/monarch-initiative/missing/releases/latest/download/release-metadata.yaml": miss_resp,
+            "https://github.com/monarch-initiative/broken/releases/latest/download/release-metadata.yaml": bad_resp,
+        }
+
+        def fake_get(url, **_kwargs):
+            if "boom" in url:
+                raise requests.ConnectionError("nope")
+            return responses[url]
+
+        with patch("monarch_ingest.cli_utils.requests.get", side_effect=fake_get):
+            written = download_release_metadata(
+                repos=["foo", "missing", "broken", "boom"],
+                output_dir=str(tmp_path),
+            )
+
+        assert written == ["foo"]
+        assert (tmp_path / "foo.yaml").read_bytes() == b"source: foo\n"
+        assert not (tmp_path / "missing.yaml").exists()
+        assert not (tmp_path / "broken.yaml").exists()
+        assert not (tmp_path / "boom.yaml").exists()
 
 
 class TestGetQcExpectations:
