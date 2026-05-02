@@ -2009,8 +2009,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.3.0"
-source = { registry = "https://pypi.org/simple" }
+version = "0.0.0"
+source = { git = "https://github.com/monarch-initiative/koza.git?rev=force-multivalued-subsets#5c52113b8517a5c3fd351d2f6e367bcf87dca6fd" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -2025,10 +2025,6 @@ dependencies = [
     { name = "sssom" },
     { name = "tqdm" },
     { name = "typer" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/19/ec/4689f30f1a9ae619c0d3ac74105848d527cc3d534df46d5e2b66df761ec4/koza-2.3.0.tar.gz", hash = "sha256:f175cdd09182ea927bfa2bd5525598dd5dace8c0693971bb2e1ebe9263f7a845", size = 341336, upload-time = "2026-03-25T21:27:52.366Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c8/cc/0e1cc20000355a232f8ae1c709327b870d9d7c9a3cc8be22048b83c91d1f/koza-2.3.0-py3-none-any.whl", hash = "sha256:856f5578fd88e5efdfc47f9ad0fbbdd81dd0681c0090acd48be6c068d7ec7e02", size = 103443, upload-time = "2026-03-25T21:27:51.396Z" },
 ]
 
 [[package]]
@@ -2430,7 +2426,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=master" },
-    { name = "koza", specifier = ">=2,<2.3.1,<3" },
+    { name = "koza", git = "https://github.com/monarch-initiative/koza.git?rev=force-multivalued-subsets" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.0" },
