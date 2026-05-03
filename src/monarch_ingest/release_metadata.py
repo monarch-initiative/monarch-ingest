@@ -72,7 +72,11 @@ def to_nested_release(per_ingest: dict) -> dict:
 # `version_method` values whose "version" is a moving snapshot timestamp
 # (not a stable release identifier). Skew across ingests on these methods is
 # expected — they're flagged as `version_drift` rather than `disagreements`.
-ROLLING_VERSION_METHODS = frozenset({"http_last_modified", "github_branch_head"})
+ROLLING_VERSION_METHODS = frozenset({
+    "http_last_modified",
+    "github_branch_head",
+    "max_published_date",
+})
 
 
 def find_disagreements(per_ingest_docs: list[dict]) -> tuple[list[dict], list[dict]]:
