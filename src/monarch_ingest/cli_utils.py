@@ -1046,9 +1046,9 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     # ensure that files that should be compressed are
 
     with open(f"{dir}/metadata.yaml", "r") as f:
-        versions = yaml.load(f, Loader=yaml.FullLoader)
+        receipt = yaml.load(f, Loader=yaml.FullLoader)
 
-    release_ver = versions["kg-version"]
+    release_ver = receipt["version"]
 
     logger = get_logger()
     logger.info(f"Creating dated release: {release_ver}...")
