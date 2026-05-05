@@ -7,20 +7,37 @@ from monarch_ingest.utils.log_utils import get_logger
 
 
 RELEASE_ASSET_URL = "https://github.com/monarch-initiative/{repo}/releases/latest/download/{file}"
+DEFAULT_METADATA_URL = (
+    "https://github.com/monarch-initiative/{repo}/releases/latest/download/release-metadata.yaml"
+)
 
 
 def get_ingests():
     return yaml.safe_load(pkgutil.get_data("monarch_ingest", "ingests.yaml"))
 
 
-def get_release_metadata_repos():
-    """Repos contributing to the build receipt — derived from kozahub-style entries."""
-    seen = []
+def get_release_metadata_sources():
+    """`(repo, metadata_url)` for each kozahub-style entry contributing to the receipt.
+
+    Honors a per-entry `metadata_url:` override; otherwise falls back to the
+    standard GitHub-releases asset URL. Deduplicates by repo (first seen wins).
+    """
+    seen: dict[str, str] = {}
     for entry in get_ingests().values():
-        repo = entry.get("repo") if isinstance(entry, dict) else None
-        if repo and repo not in seen:
-            seen.append(repo)
-    return seen
+        if not isinstance(entry, dict):
+            continue
+        repo = entry.get("repo")
+        if not repo or repo in seen:
+            continue
+        seen[repo] = entry.get("metadata_url") or DEFAULT_METADATA_URL.format(repo=repo)
+    return list(seen.items())
+
+
+def is_metadata_only(entry: dict) -> bool:
+    """An entry that contributes only to the build receipt — no download, no transform."""
+    if not isinstance(entry, dict):
+        return False
+    return "repo" in entry and not entry.get("files") and "url" not in entry and "config" not in entry
 
 
 def ingest_urls(entry: dict) -> list:

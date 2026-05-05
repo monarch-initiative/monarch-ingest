@@ -5,6 +5,10 @@
 ##   repo:   a kozahub ingest repo whose `release-metadata.yaml` is fetched as
 ##           part of the build receipt. URLs are derived as
 ##           https://github.com/monarch-initiative/<repo>/releases/latest/download/<file>.
+##           Optional `metadata_url:` overrides the default release-metadata.yaml
+##           location for repos that don't publish via GitHub releases.
+##           Omit `files:` for a metadata-only entry — contributes to the build
+##           receipt but isn't a transform target.
 
 bgee_gene_to_expression:
   repo: bgee-ingest
@@ -206,3 +210,10 @@ cureid:
   files:
     - cureid_nodes.tsv
     - cureid_edges.tsv
+
+# kg-phenio is consumed via download.yaml (kg-phenio.tar.gz), not via the
+# kozahub artifact pattern, so this is a metadata-only entry: it contributes
+# its release-metadata.yaml to the build receipt but has no transform.
+kg_phenio:
+  repo: kg-phenio
+  metadata_url: https://kg-hub.berkeleybop.io/kg-phenio/current/release-metadata.yaml

@@ -35,8 +35,9 @@ from monarch_ingest.utils.ingest_utils import (
     ingest_output_exists,
     file_exists,
     get_ingests,
-    get_release_metadata_repos,
+    get_release_metadata_sources,
     ingest_urls,
+    is_metadata_only,
 )
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.export_utils import export
@@ -96,6 +97,11 @@ def transform_one(
     if ingest not in ingests:
         # if log: logger.removeHandler(fh)
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
+
+    if is_metadata_only(ingests[ingest]):
+        raise ValueError(
+            f"{ingest} is a metadata-only entry (contributes to the build receipt but is not a transform)"
+        )
 
     logger.info(f"Running ingest: {ingest}")
     # If urls can be resolved (url-style or kozahub repo-style), just download and copy.
@@ -329,7 +335,7 @@ def transform_all(
     except Exception as e:
         logger.error(f"Error running Phenio ingest: {e}")
 
-    ingests = get_ingests()
+    ingests = {k: v for k, v in get_ingests().items() if not is_metadata_only(v)}
 
     # Determine optimal number of workers based on CPU cores
     # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
@@ -372,31 +378,26 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
-RELEASE_METADATA_URL = (
-    "https://github.com/monarch-initiative/{repo}/releases/latest/download/release-metadata.yaml"
-)
-
-
 def download_release_metadata(
-    repos: Optional[list] = None,
+    sources: Optional[list] = None,
     output_dir: str = "data/release-metadata",
 ):
-    """Fetch each ingest repo's `release-metadata.yaml` GitHub release asset.
+    """Fetch each kozahub repo's `release-metadata.yaml`.
 
-    Missing or unreachable files log a warning and are skipped — the build receipt
-    will be incomplete rather than fail. Returns the list of repos for which a
-    metadata file was successfully written.
+    `sources` is a list of `(repo, url)` tuples; defaults to whatever
+    `ingests.yaml` declares (`metadata_url:` override, otherwise the standard
+    GitHub-releases asset URL). Missing or unreachable files log a warning
+    and are skipped. Returns the list of repos for which a file was written.
     """
     logger = get_logger()
-    if repos is None:
-        repos = get_release_metadata_repos()
+    if sources is None:
+        sources = get_release_metadata_sources()
 
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
     written = []
-    for repo in repos:
-        url = RELEASE_METADATA_URL.format(repo=repo)
+    for repo, url in sources:
         try:
             resp = requests.get(url, allow_redirects=True, timeout=30)
         except requests.RequestException as e:
@@ -414,7 +415,7 @@ def download_release_metadata(
         written.append(repo)
         logger.info(f"Fetched release-metadata.yaml for {repo}")
 
-    logger.info(f"Wrote release-metadata for {len(written)}/{len(repos)} repos to {output_dir}")
+    logger.info(f"Wrote release-metadata for {len(written)}/{len(sources)} repos to {output_dir}")
     return written
 
 

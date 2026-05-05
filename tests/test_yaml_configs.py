@@ -17,11 +17,15 @@ class TestIngestsYaml:
                 f"Ingest '{name}' has none of 'url', 'config', or 'repo'"
             )
 
-    def test_repo_entries_have_files(self):
+    def test_repo_entries_have_files_or_metadata_url(self):
+        """A `repo:` entry either has `files:` (a transform target) or
+        `metadata_url:` (a metadata-only contribution to the build receipt)."""
         ingests = get_ingests()
         for name, entry in ingests.items():
             if "repo" in entry:
-                assert entry.get("files"), f"Ingest '{name}' has 'repo' but no 'files'"
+                assert entry.get("files") or entry.get("metadata_url"), (
+                    f"Ingest '{name}' has 'repo' but neither 'files' nor 'metadata_url'"
+                )
 
     def test_all_urls_are_https(self):
         ingests = get_ingests()
