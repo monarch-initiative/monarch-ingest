@@ -1,12 +1,9 @@
 """Aggregate per-ingest `release-metadata.yaml` files into a monarch-kg build receipt.
 
-Each per-ingest file (a `kozahub_metadata_schema:ReleaseMetadata`) is rewritten
-as a nested `Release` (per the recursive shape in kozahub-metadata-schema): the
-top-level `source`/`source_version` becomes `id`/`version`. Leaf upstream
-`SourceVersion` records already use `id`/`version` and slot in unchanged.
-
-Cross-ingest version disagreements (same `infores:` consumed at different
-versions across contributing ingests) are surfaced at the top level of the
+Each per-ingest file is a `kozahub_metadata_schema:Release` and slots in
+verbatim as a nested `Release` under monarch-kg's `sources`. Cross-ingest
+version disagreements (same `infores:` consumed at different versions
+across contributing ingests) are surfaced at the top level of the
 aggregated document.
 """
 
@@ -37,38 +34,6 @@ def load_per_ingest_metadata(input_dir: str | Path) -> list[dict]:
     return [yaml.safe_load(p.read_text()) for p in files]
 
 
-_NESTED_KEY_ORDER = (
-    "id",
-    "version",
-    "transform_version",
-    "biolink_version",
-    "build_version",
-    "generated_at",
-    "sources",
-    "artifacts",
-    "tools",
-)
-
-
-def to_nested_release(per_ingest: dict) -> dict:
-    """Promote a per-ingest `ReleaseMetadata` doc to a nested `Release`.
-
-    Renames `source` → `id` and `source_version` → `version`; everything else
-    (transform_version, biolink_version, build_version, generated_at, sources,
-    artifacts, tools) is already in the right shape.
-    """
-    promoted = dict(per_ingest)
-    promoted["id"] = promoted.pop("source")
-    if "source_version" in promoted:
-        promoted["version"] = promoted.pop("source_version")
-
-    ordered = {k: promoted[k] for k in _NESTED_KEY_ORDER if k in promoted}
-    for k, v in promoted.items():
-        if k not in ordered:
-            ordered[k] = v
-    return ordered
-
-
 # `version_method` values whose "version" is a moving snapshot timestamp
 # (not a stable release identifier). Skew across ingests on these methods is
 # expected — they're flagged as `version_drift` rather than `disagreements`.
@@ -90,7 +55,7 @@ def find_disagreements(per_ingest_docs: list[dict]) -> tuple[list[dict], list[di
     """
     by_source: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
     for doc in per_ingest_docs:
-        ingest = doc.get("source")
+        ingest = doc.get("id")
         for src in doc.get("sources") or []:
             sid = src.get("id")
             if sid:
@@ -131,7 +96,6 @@ def aggregate(
     the contributing builds).
     """
     per_ingest_docs = load_per_ingest_metadata(input_dir)
-    nested_sources = [to_nested_release(d) for d in per_ingest_docs]
     disagreements, drift = find_disagreements(per_ingest_docs)
 
     receipt: dict = {
@@ -143,7 +107,7 @@ def aggregate(
         receipt["packages"] = dict(packages)
     if artifacts:
         receipt["artifacts"] = list(artifacts)
-    receipt["sources"] = nested_sources
+    receipt["sources"] = per_ingest_docs
     receipt["disagreements"] = disagreements
     receipt["version_drift"] = drift
     return receipt
