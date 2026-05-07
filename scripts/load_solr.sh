@@ -99,10 +99,21 @@ uv run lsolr bulkload-db -C association -s model.yaml --processor frequency_upda
 
 
 
-# For now, just leaving solr running. It will go away on it's own in the jenkins builder
-# and otherwise that makes this script a nice way to just run solr locally
-# docker stop my_solr
-# docker rm my_solr
+# Commit pending writes on every core, then stop Solr cleanly so the
+# index isn't being mutated while we tar it. Without this, GNU tar
+# bails with "file changed as we read it" when Solr merges a segment
+# mid-archive (jenkins parallel-processing surfaced the race).
+for core in entity association sssom infores; do
+  curl -s "http://localhost:8983/solr/$core/update?commit=true&waitSearcher=true" \
+    -H "Content-type: text/xml" --data-binary '' >/dev/null || true
+done
 
-docker exec my_solr tar czf - -C /var/solr data > output/solr.tar.gz
+docker stop my_solr
+
+# Tar from a sidecar that mounts the stopped container's volumes — the
+# index is now quiet on disk.
+docker run --rm --volumes-from my_solr busybox \
+  tar czf - -C /var/solr data > output/solr.tar.gz
+
+docker rm my_solr
 
