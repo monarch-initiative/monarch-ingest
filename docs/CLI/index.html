@@ -483,6 +483,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-download-release-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest download-release-metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-build-receipt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest build-receipt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-transform" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1409,6 +1431,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-download-release-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest download-release-metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-build-receipt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest build-receipt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-transform" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1563,6 +1607,8 @@
 <p><strong>Commands</strong>:</p>
 <ul>
 <li><code>download</code>: Downloads data defined in download.yaml...</li>
+<li><code>download-release-metadata</code>: Fetch <code>release-metadata.yaml</code> from each...</li>
+<li><code>build-receipt</code>: Aggregate per-ingest release-metadata.yaml...</li>
 <li><code>transform</code>: Run Koza transformation on specified...</li>
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>closure</code></li>
@@ -1586,7 +1632,29 @@
 <li><code>--ingests TEXT</code>: Which ingests to download data for</li>
 <li><code>--ingest_file PATH</code>: A yaml file which has a newline seperated list of ingests to perform.</li>
 <li><code>--all / --no-all</code>: Download all ingest datasets  [default: all]</li>
-<li><code>--write-metadata / --no-write-metadata</code>: Write versions of ingests to metadata.yaml  [default: no-write-metadata]</li>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-download-release-metadata"><code>ingest download-release-metadata</code></h2>
+<p>Fetch <code>release-metadata.yaml</code> from each ingest repo&#x27;s latest GitHub release.</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>download-release-metadata<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>-o, --output-dir TEXT</code>: Directory to write per-repo release-metadata.yaml files  [default: data/release-metadata]</li>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-build-receipt"><code>ingest build-receipt</code></h2>
+<p>Aggregate per-ingest release-metadata.yaml files into output/metadata.yaml.</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>build-receipt<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>-i, --input-dir TEXT</code>: Directory of per-ingest release-metadata.yaml files  [default: data/release-metadata]</li>
+<li><code>-o, --output-dir TEXT</code>: Directory to write metadata.yaml  [default: output]</li>
+<li><code>--kg-name TEXT</code>: Name of the KG being built  [default: monarch-kg]</li>
+<li><code>--kg-version TEXT</code>: Version tag (defaults to today&#x27;s date)</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-transform"><code>ingest transform</code></h2>
@@ -1606,7 +1674,6 @@
 <li><code>-d, --debug / -q, --quiet</code>: Use --quiet to suppress log output, --debug for verbose, including Koza logs</li>
 <li><code>-l, --log</code>: Write DEBUG level logs to ./logs/ for each ingest</li>
 <li><code>-n, --row-limit INTEGER</code>: Number of rows to process</li>
-<li><code>--write-metadata / --no-write-metadata</code>: Write data/package versions to output_dir/metadata.yaml  [default: no-write-metadata]</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-merge"><code>ingest merge</code></h2>
