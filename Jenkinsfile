@@ -32,12 +32,13 @@ pipeline {
         }
         stage('download') {
             steps {
-                sh 'uv run ingest download --all --write-metadata'
+                sh 'uv run ingest download --all'
+                sh 'uv run ingest download-release-metadata'
             }
         }
         stage('transform') {
             steps {
-                sh 'uv run ingest transform --all --log --write-metadata'
+                sh 'uv run ingest transform --all --log'
                 sh '''
                    sed -i.bak 's@\r@@g' output/transform_output/*.tsv
                    rm output/transform_output/*.bak
@@ -104,6 +105,11 @@ pipeline {
             }
         }
 
+        stage('build receipt') {
+            steps {
+                sh 'uv run ingest build-receipt --kg-version ${RELEASE}'
+            }
+        }
         stage('upload files') {
             steps {
                 sh 'uv run ingest release --kghub'

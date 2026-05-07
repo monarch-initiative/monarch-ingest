@@ -3,7 +3,14 @@
 import os
 from unittest.mock import patch
 
-from monarch_ingest.utils.ingest_utils import file_exists, ingest_output_exists, get_ingests, get_qc_expectations
+from monarch_ingest.utils.ingest_utils import (
+    file_exists,
+    ingest_output_exists,
+    get_ingests,
+    get_qc_expectations,
+    get_release_metadata_sources,
+    is_metadata_only,
+)
 
 
 class TestFileExists:
@@ -131,6 +138,87 @@ class TestGetIngests:
     def test_known_ingest_present(self):
         result = get_ingests()
         assert "hgnc_gene" in result
+
+
+class TestGetReleaseMetadataSources:
+    def test_derives_unique_sources_from_kozahub_entries(self):
+        sources = get_release_metadata_sources()
+        assert isinstance(sources, list)
+        repos = [r for r, _ in sources]
+        assert "alliance-ingest" in repos
+        assert "ncbi-gene" in repos
+        # Deduplicated even though alliance-ingest appears in many transforms.
+        assert len(repos) == len(set(repos))
+        # maxo-annotation-ingest is not consumed by any transform — must not appear.
+        assert "maxo-annotation-ingest" not in repos
+        # alliance-disease-association-ingest was an oversight; alliance disease now comes from alliance-ingest.
+        assert "alliance-disease-association-ingest" not in repos
+        # Default URL when no override.
+        alliance_url = dict(sources)["alliance-ingest"]
+        assert alliance_url == (
+            "https://github.com/monarch-initiative/alliance-ingest/releases/latest/download/release-metadata.yaml"
+        )
+
+    def test_metadata_url_override_is_honored(self):
+        sources = dict(get_release_metadata_sources())
+        # kg-phenio is published to KG-Hub S3, not GitHub releases.
+        assert sources.get("kg-phenio") == (
+            "https://kg-hub.berkeleybop.io/kg-phenio/current/release-metadata.yaml"
+        )
+
+
+class TestIsMetadataOnly:
+    def test_kg_phenio_is_metadata_only(self):
+        ingests = get_ingests()
+        assert is_metadata_only(ingests["kg_phenio"])
+
+    def test_kozahub_entries_with_files_are_not_metadata_only(self):
+        ingests = get_ingests()
+        assert not is_metadata_only(ingests["alliance_gene"])
+
+
+class TestDownloadReleaseMetadata:
+    def test_writes_files_skips_404_and_errors(self, tmp_path):
+        from unittest.mock import MagicMock
+        import requests
+
+        from monarch_ingest.cli_utils import download_release_metadata
+
+        ok_resp = MagicMock(status_code=200, ok=True, content=b"source: foo\n")
+        miss_resp = MagicMock(status_code=404, ok=False)
+        bad_resp = MagicMock(status_code=500, ok=False)
+        custom_resp = MagicMock(status_code=200, ok=True, content=b"source: kg-phenio\n")
+
+        responses = {
+            "https://github.com/monarch-initiative/foo/releases/latest/download/release-metadata.yaml": ok_resp,
+            "https://github.com/monarch-initiative/missing/releases/latest/download/release-metadata.yaml": miss_resp,
+            "https://github.com/monarch-initiative/broken/releases/latest/download/release-metadata.yaml": bad_resp,
+            "https://kg-hub.example/kg-phenio/release-metadata.yaml": custom_resp,
+        }
+
+        def fake_get(url, **_kwargs):
+            if "boom" in url:
+                raise requests.ConnectionError("nope")
+            return responses[url]
+
+        with patch("monarch_ingest.cli_utils.requests.get", side_effect=fake_get):
+            written = download_release_metadata(
+                sources=[
+                    ("foo", "https://github.com/monarch-initiative/foo/releases/latest/download/release-metadata.yaml"),
+                    ("missing", "https://github.com/monarch-initiative/missing/releases/latest/download/release-metadata.yaml"),
+                    ("broken", "https://github.com/monarch-initiative/broken/releases/latest/download/release-metadata.yaml"),
+                    ("boom", "https://github.com/monarch-initiative/boom/releases/latest/download/release-metadata.yaml"),
+                    ("kg-phenio", "https://kg-hub.example/kg-phenio/release-metadata.yaml"),
+                ],
+                output_dir=str(tmp_path),
+            )
+
+        assert written == ["foo", "kg-phenio"]
+        assert (tmp_path / "foo.yaml").read_bytes() == b"source: foo\n"
+        assert (tmp_path / "kg-phenio.yaml").read_bytes() == b"source: kg-phenio\n"
+        assert not (tmp_path / "missing.yaml").exists()
+        assert not (tmp_path / "broken.yaml").exists()
+        assert not (tmp_path / "boom.yaml").exists()
 
 
 class TestGetQcExpectations:

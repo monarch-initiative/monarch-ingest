@@ -31,7 +31,14 @@ from koza.runner import KozaRunner
 from koza.model.formats import OutputFormat
 from linkml_runtime.utils.formatutils import camelcase
 
-from monarch_ingest.utils.ingest_utils import ingest_output_exists, file_exists, get_ingests
+from monarch_ingest.utils.ingest_utils import (
+    ingest_output_exists,
+    file_exists,
+    get_ingests,
+    get_release_metadata_sources,
+    ingest_urls,
+    is_metadata_only,
+)
 from monarch_ingest.utils.log_utils import get_logger
 from monarch_ingest.utils.export_utils import export
 
@@ -91,14 +98,20 @@ def transform_one(
         # if log: logger.removeHandler(fh)
         raise ValueError(f"{ingest} is not a valid ingest - see ingests.yaml for a list of options")
 
+    if is_metadata_only(ingests[ingest]):
+        raise ValueError(
+            f"{ingest} is a metadata-only entry (contributes to the build receipt but is not a transform)"
+        )
+
     logger.info(f"Running ingest: {ingest}")
-    # if a url is provided instead of a config, just download the file and copy it to the output dir
-    if "url" in ingests[ingest]:
+    # If urls can be resolved (url-style or kozahub repo-style), just download and copy.
+    urls = ingest_urls(ingests[ingest])
+    if urls:
         logger.info(
             f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output"
         )
         save_as_map = ingests[ingest].get("save_as", {})
-        for url in ingests[ingest]["url"]:
+        for url in urls:
             filename = url.split("/")[-1]
             filename = save_as_map.get(filename, filename)
             # Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/
@@ -322,7 +335,7 @@ def transform_all(
     except Exception as e:
         logger.error(f"Error running Phenio ingest: {e}")
 
-    ingests = get_ingests()
+    ingests = {k: v for k, v in get_ingests().items() if not is_metadata_only(v)}
 
     # Determine optimal number of workers based on CPU cores
     # Use min of (cpu_count, number_of_ingests, 8) to avoid overwhelming the system
@@ -365,45 +378,51 @@ def transform_all(
     # if log: logger.removeHandler(fh)
 
 
+def download_release_metadata(
+    sources: Optional[list] = None,
+    output_dir: str = "data/release-metadata",
+):
+    """Fetch each kozahub repo's `release-metadata.yaml`.
+
+    `sources` is a list of `(repo, url)` tuples; defaults to whatever
+    `ingests.yaml` declares (`metadata_url:` override, otherwise the standard
+    GitHub-releases asset URL). Missing or unreachable files log a warning
+    and are skipped. Returns the list of repos for which a file was written.
+    """
+    logger = get_logger()
+    if sources is None:
+        sources = get_release_metadata_sources()
+
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+
+    written = []
+    for repo, url in sources:
+        try:
+            resp = requests.get(url, allow_redirects=True, timeout=30)
+        except requests.RequestException as e:
+            logger.warning(f"release-metadata.yaml fetch failed for {repo}: {e}")
+            continue
+        if resp.status_code == 404:
+            logger.warning(f"release-metadata.yaml not found for {repo} (skipping)")
+            continue
+        if not resp.ok:
+            logger.warning(
+                f"release-metadata.yaml fetch returned {resp.status_code} for {repo} (skipping)"
+            )
+            continue
+        (out / f"{repo}.yaml").write_bytes(resp.content)
+        written.append(repo)
+        logger.info(f"Fetched release-metadata.yaml for {repo}")
+
+    logger.info(f"Wrote release-metadata for {len(written)}/{len(sources)} repos to {output_dir}")
+    return written
+
+
 def get_release_version():
     import datetime
 
     return datetime.datetime.now().strftime("%Y-%m-%d")
-
-
-def get_data_versions(output_dir: str = OUTPUT_DIR):
-    import requests as r
-
-    data = {}
-    data["phenio"] = r.get("https://api.github.com/repos/monarch-initiative/phenio/releases").json()[0]["tag_name"]
-    data["alliance"] = r.get("https://fms.alliancegenome.org/api/releaseversion/current").json()["releaseVersion"]
-    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/metadata.yaml", "w") as f:
-        f.write("data:\n")
-        for data_source, version in data.items():
-            f.write(f"  {data_source}: {str(version)}\n")
-
-
-def get_pkg_versions(output_dir: str = OUTPUT_DIR, release_version: Optional[str] = None):
-    from importlib.metadata import version
-
-    packages = {}
-    packages["biolink"] = version("biolink-model")
-    packages["koza"] = version("koza")
-    packages["monarch-ingest"] = version("monarch-ingest")
-    kg_version = get_release_version() if release_version is None else release_version
-    with open("data/metadata.yaml", "r") as f:
-        data_versions = yaml.load(f, Loader=yaml.FullLoader)["data"]
-
-    Path(f"{output_dir}").mkdir(parents=True, exist_ok=True)
-    with open(f"{output_dir}/metadata.yaml", "w") as f:
-        f.write(f"kg-version: {str(kg_version)}\n\n")
-        f.write("packages:\n")
-        for k, v in packages.items():
-            f.write(f"  {k}: {str(v)}\n")
-        f.write("\ndata:\n")
-        for k, v in data_versions.items():
-            f.write(f"  {k}: {str(v)}\n")
 
 
 def merge_files(
@@ -1028,9 +1047,9 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
     # ensure that files that should be compressed are
 
     with open(f"{dir}/metadata.yaml", "r") as f:
-        versions = yaml.load(f, Loader=yaml.FullLoader)
+        receipt = yaml.load(f, Loader=yaml.FullLoader)
 
-    release_ver = versions["kg-version"]
+    release_ver = receipt["version"]
 
     logger = get_logger()
     logger.info(f"Creating dated release: {release_ver}...")
