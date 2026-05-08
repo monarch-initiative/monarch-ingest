@@ -615,6 +615,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-release" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1563,6 +1574,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-release" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1619,6 +1641,7 @@
 <li><code>export</code></li>
 <li><code>report</code>: Run Koza QC on specified Monarch ingests</li>
 <li><code>graph-stats</code>: Generate graph statistics from merged KG...</li>
+<li><code>connectivity</code>: Generate connectivity (connected...</li>
 <li><code>release</code>: Copy data to Monarch GCP data buckets</li>
 </ul>
 <h2 id="ingest-download"><code>ingest download</code></h2>
@@ -1757,6 +1780,17 @@
 <li><code>-i, --input-db TEXT</code>: Path to input DuckDB database  [default: output/monarch-kg.duckdb]</li>
 <li><code>-o, --output TEXT</code>: Output YAML file path  [default: output/merged_graph_stats.yaml]</li>
 <li><code>-b, --backend TEXT</code>: Backend to use: &#x27;koza&#x27; (new) or &#x27;kgx&#x27; (legacy)  [default: koza]</li>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-connectivity"><code>ingest connectivity</code></h2>
+<p>Generate connectivity (connected component) report from merged KG database</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>connectivity<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>-i, --input-db TEXT</code>: Path to input DuckDB database  [default: output/monarch-kg.duckdb]</li>
+<li><code>-o, --output TEXT</code>: Output YAML summary path  [default: output/connectivity_summary.yaml]</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-release"><code>ingest release</code></h2>
