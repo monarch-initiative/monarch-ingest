@@ -6,6 +6,7 @@ bash scripts/after_download.sh
 uv run ingest transform --phenio
 uv run ingest transform --ingest_file src/monarch_ingest/ingest_configs/mokg_transforms.txt
 uv run ingest merge --kg-name mokg
+uv run ingest connectivity --input-db output/mokg.duckdb --output output/connectivity_summary.yaml
 uv run ingest build-receipt --kg-name mokg
 
 #This is a command to convert the KGX output found in output/mokg.tar.gz into RDF output.

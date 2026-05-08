@@ -161,9 +161,8 @@ class TestGetReleaseMetadataSources:
 
     def test_metadata_url_override_is_honored(self):
         sources = dict(get_release_metadata_sources())
-        # kg-phenio is published to KG-Hub S3, not GitHub releases.
         assert sources.get("kg-phenio") == (
-            "https://kg-hub.berkeleybop.io/kg-phenio/current/release-metadata.yaml"
+            "https://github.com/Knowledge-Graph-Hub/kg-phenio/releases/latest/download/release-metadata.yaml"
         )
 
 

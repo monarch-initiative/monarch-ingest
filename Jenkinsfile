@@ -74,7 +74,12 @@ pipeline {
             parallel {
                 stage('kgx-graph-summary') {
                     steps {
-                        sh 'uv run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'                        
+                        sh 'uv run kgx graph-summary -i duckdb --node-facet-properties provided_by --edge-facet-properties provided_by output/monarch-kg.duckdb -o output/merged_graph_stats.yaml'
+                    }
+                }
+                stage('connectivity-report') {
+                    steps {
+                        sh 'uv run ingest connectivity --input-db output/monarch-kg.duckdb --output output/connectivity_summary.yaml'
                     }
                 }
                 stage('solr') {
@@ -84,7 +89,10 @@ pipeline {
                 }
                 stage('kgx-transforms'){
                     steps {
-                        sh 'uv run kgx transform -i duckdb -f nt -d gz -o output/monarch-kg.nt.gz output/monarch-kg.duckdb'
+                        sh '''
+                            uv run kgx transform --stream --parallel 8 -i duckdb -f nt -o output/monarch-kg.nt output/monarch-kg.duckdb
+                            pigz --force output/monarch-kg.nt
+                        '''
                     }
                 }
                 stage('neo4j-dump') {
