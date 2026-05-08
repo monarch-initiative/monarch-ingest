@@ -216,4 +216,4 @@ cureid:
 # its release-metadata.yaml to the build receipt but has no transform.
 kg_phenio:
   repo: kg-phenio
-  metadata_url: https://kg-hub.berkeleybop.io/kg-phenio/current/release-metadata.yaml
+  metadata_url: https://github.com/Knowledge-Graph-Hub/kg-phenio/releases/latest/download/release-metadata.yaml
