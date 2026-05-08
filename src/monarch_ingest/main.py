@@ -115,7 +115,13 @@ def build_receipt_cmd(
 
     artifacts = collect_kg_artifacts(
         output_dir,
-        [f"{kg_name}.tar.gz", "merged_graph_stats.yaml", "qc_report.yaml"],
+        [
+            f"{kg_name}.tar.gz",
+            "merged_graph_stats.yaml",
+            "qc_report.yaml",
+            "connectivity_summary.yaml",
+            f"{kg_name}_schema_report.yaml",
+        ],
     )
 
     receipt = aggregate(
@@ -339,6 +345,27 @@ def graph_stats(
         output_file=output_file,
         backend=backend,
     )
+
+
+@typer_app.command()
+def connectivity(
+    input_db: str = typer.Option(
+        f"{OUTPUT_DIR}/monarch-kg.duckdb",
+        "--input-db",
+        "-i",
+        help="Path to input DuckDB database",
+    ),
+    output_file: str = typer.Option(
+        f"{OUTPUT_DIR}/connectivity_summary.yaml",
+        "--output",
+        "-o",
+        help="Output YAML summary path",
+    ),
+):
+    """Generate connectivity (connected component) report from merged KG database"""
+    from monarch_ingest.cli_utils import generate_connectivity_report
+
+    generate_connectivity_report(input_db=input_db, output_file=output_file)
 
 
 @typer_app.command()

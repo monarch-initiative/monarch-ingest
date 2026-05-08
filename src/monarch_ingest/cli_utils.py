@@ -1038,6 +1038,25 @@ def _generate_graph_stats_kgx(input_db: Path, output_file: Path):
         print(result.stdout)
 
 
+def generate_connectivity_report(
+    input_db: str = "output/monarch-kg.duckdb",
+    output_file: str = "output/connectivity_summary.yaml",
+):
+    from koza.graph_operations.connectivity import generate_connectivity_report as koza_generate_connectivity_report
+    from koza.model.graph_operations import ConnectivityReportConfig
+
+    input_path = Path(input_db)
+    if not input_path.exists():
+        raise FileNotFoundError(f"Database not found: {input_db}")
+
+    config = ConnectivityReportConfig(
+        database_path=input_path,
+        output_file=Path(output_file),
+        graph_name="monarch-kg",
+    )
+    koza_generate_connectivity_report(config)
+
+
 def export_tsv():
     export()
 
