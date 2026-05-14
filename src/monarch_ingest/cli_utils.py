@@ -245,6 +245,15 @@ def transform_phenio(
                 "aggregator_knowledge_source",
                 "knowledge_level",
                 "agent_type",
+                # Preserve the source predicate (RO/SSSOM/etc.) that kg-phenio
+                # captures from KGX's `relation`. KGX flattens RO predicates to
+                # biolink slots via a bmt mapping, and any RO term that has no
+                # mapping (notably RO:0004003 "has material basis in germline
+                # mutation in") falls through to biolink:related_to. Keeping
+                # original_predicate lets downstream consumers recover the
+                # specific RO term — and it's already a real column in monarch-kg
+                # populated by other ingests (zfin/SO, clinvar/Pathogenic, …).
+                "original_predicate",
             ]
         ),
         axis=1,
