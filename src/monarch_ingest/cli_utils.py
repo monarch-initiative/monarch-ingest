@@ -245,6 +245,7 @@ def transform_phenio(
                 "aggregator_knowledge_source",
                 "knowledge_level",
                 "agent_type",
+                "original_predicate",
             ]
         ),
         axis=1,
