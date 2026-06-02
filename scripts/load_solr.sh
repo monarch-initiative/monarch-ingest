@@ -93,9 +93,6 @@ scripts/add_entity_copyfields.sh
 scripts/add_association_copyfields.sh
 sleep 5
 
-echo "Adding update processor for phenotype frequency to association core"
-scripts/add_update_processor.sh
-
 echo "Load infores"
 
 # load directly to avoid linkml-solr's unhappiness with jsonl loading
@@ -106,11 +103,41 @@ curl -X POST -H 'Content-Type: application/json' \
 
 uv run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
 
+# Materialize the edges with `frequency_computed_sortable_float` — the
+# derived field the Solr UI sorts on to rank phenotypes by prevalence.
+# Previously this was set by a per-doc StatelessScriptUpdateProcessorFactory
+# (Nashorn JS) on the association core, which dominated load time. Doing it
+# once, vectorised in DuckDB, lets the edges load run substantially faster.
+# Mapping mirrors HPO's frequency sub-ontology (HP:0040280..HP:0040285) and
+# matches the legacy JS processor's outputs; rows with neither `has_quotient`
+# nor a known `frequency_qualifier` get 0.0, same as before.
+echo "Materializing edges with frequency_computed_sortable_float..."
+uv run python -c "
+import duckdb
+db = duckdb.connect('output/monarch-kg.duckdb')
+db.execute('''
+    CREATE OR REPLACE TABLE _solr_edges AS
+    SELECT *,
+           CASE
+             WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS DOUBLE)
+             WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
+             WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
+             WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
+             WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
+             WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
+             WHEN frequency_qualifier = 'HP:0040285' THEN 0.0
+             ELSE 0.0
+           END AS frequency_computed_sortable_float
+    FROM denormalized_edges
+''')
+print('Done.')
+"
+
 echo "Loading entities"
 
 uv run lsolr bulkload-db -C entity -s output/monarch-kg-schema.yaml output/monarch-kg.duckdb denormalized_nodes
 
-uv run lsolr bulkload-db -C association -s output/monarch-kg-schema.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
+uv run lsolr bulkload-db -C association -s output/monarch-kg-schema.yaml output/monarch-kg.duckdb _solr_edges
 # curl "http://localhost:8983/solr/association/select?q=*:*"
 
 
