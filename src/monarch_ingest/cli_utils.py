@@ -23,9 +23,9 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
-from koza.graph_operations import merge_graphs, prepare_merge_config_from_paths, generate_qc_report
-from koza.model.graph_operations import QCReportConfig, KGXFormat
-from closurizer.closurizer import add_closure
+from koza.graph_operations import closurize_graph, merge_graphs, prepare_merge_config_from_paths, generate_qc_report
+from koza.graph_operations.graph_schema import export_schema
+from koza.model.graph_operations import ClosurizeConfig, QCReportConfig, KGXFormat
 
 from koza.runner import KozaRunner
 from koza.model.formats import OutputFormat
@@ -530,41 +530,49 @@ def apply_closure(
     closure_file: str = f"data/monarch/phenio-relation-filtered.tsv",
     output_dir: str = OUTPUT_DIR,
 ):
-    edges_output_file = f"{output_dir}/{name}-denormalized-edges.tsv"
-    nodes_output_file = f"{output_dir}/{name}-denormalized-nodes.tsv"
-    database = f"{name}.duckdb"
+    """Closurize the merged KG in place and export its schema.
 
-    model_yaml_path, _ = ensure_model_files()
-    sv = SchemaView(str(model_yaml_path))
-    multivalued_slots = []
-    for classname in ["Entity", "Association"]:
-        multivalued_slots.extend([slot.name for slot in sv.class_induced_slots(classname) if slot.multivalued])
+    Expands `subject` / `object` / `disease_context_qualifier` along the phenio
+    closure relation, decorates the other qualifier fields with their
+    `_label` / `_category` / `_namespace` properties, and rolls up phenotype
+    evidence into grouped aggregates. After closurize, writes
+    `<output_dir>/<name>-schema.yaml` — the canonical KG-shape artifact
+    monarch-app imports and lsolr loads from.
+    """
+    database_path = Path(output_dir) / f"{name}.duckdb"
 
-    add_closure(
-        database_path=os.path.join(output_dir, database),
-        closure_file=closure_file,
-        edges_output_file=edges_output_file,
-        nodes_output_file=nodes_output_file,
-        # full closure expansion for these fields
-        edge_fields=[
-            "subject",
-            "object",
-            "disease_context_qualifier",
-        ],
-        #  just populate _label, _category, _namespace properties for these fields
-        edge_fields_to_label=[
-            "species_context_qualifier",
-            "stage_qualifier",
-            "sex_qualifier",
-            "onset_qualifier",
-            "frequency_qualifier",
-        ],
-        node_fields=["has_phenotype"],
-        evidence_fields=["has_evidence", "publications"],
-        additional_node_constraints="has_phenotype_edges.negated is null or has_phenotype_edges.negated = 'False'",
-        grouping_fields=["subject", "negated", "predicate", "object"],
-        multivalued_fields=[],
+    result = closurize_graph(
+        ClosurizeConfig(
+            database_path=database_path,
+            closure_file=Path(closure_file),
+            # full closure expansion for these fields
+            edge_fields=["subject", "object", "disease_context_qualifier"],
+            # just populate _label, _category, _namespace properties for these fields
+            edge_fields_to_label=[
+                "species_context_qualifier",
+                "stage_qualifier",
+                "sex_qualifier",
+                "onset_qualifier",
+                "frequency_qualifier",
+            ],
+            node_fields=["has_phenotype"],
+            evidence_fields=["has_evidence", "publications"],
+            # `e` is the closurize edges alias for the side-table constraint.
+            additional_node_constraints="e.negated IS NULL OR e.negated = false OR e.negated = 'False'",
+            grouping_fields=["subject", "negated", "predicate", "object"],
+        )
     )
+    if not result.success:
+        raise RuntimeError(f"Closurize failed: {result.errors}")
+
+    schema_yaml_path = Path(output_dir) / f"{name}-schema.yaml"
+    conn = duckdb.connect(str(database_path), read_only=True)
+    try:
+        schema_yaml_path.write_text(export_schema(conn, project_denormalized=True))
+    finally:
+        conn.close()
+    logger = get_logger()
+    logger.info(f"Schema artifact written to {schema_yaml_path}")
 
 
 #     sh.mv(database, f"{output_dir}/")
