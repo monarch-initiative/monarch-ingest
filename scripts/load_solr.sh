@@ -15,10 +15,26 @@ if test -f "output/monarch-kg-denormalized-nodes.tsv.gz"; then
 fi
 
 echo "Download the schema files using pystow"
+# monarch-app's model.yaml is still used for the Mapping (sssom) core, but
+# the Entity and Association core schemas now come from the koza-produced
+# monarch-kg-schema.yaml that closurize emits alongside output/monarch-kg.duckdb.
 python -c "from monarch_ingest.cli_utils import ensure_model_files; ensure_model_files()"
 
+if ! test -f "output/monarch-kg-schema.yaml"; then
+    echo "ERROR: output/monarch-kg-schema.yaml not found. Run \`ingest merge\` + \`ingest closure\` first."
+    exit 1
+fi
+
 echo "Starting the server"
-uv run lsolr start-server --memory 8g --heap-size 6g --ram-buffer-mb 2048
+# Tunables — override via env to size Solr per host.
+# Defaults are sized for a laptop with ~16 GB RAM; bump on bigger machines.
+: "${SOLR_MEMORY:=12g}"
+: "${SOLR_HEAP_SIZE:=10g}"
+: "${SOLR_RAM_BUFFER_MB:=2048}"
+uv run lsolr start-server \
+  --memory "$SOLR_MEMORY" \
+  --heap-size "$SOLR_HEAP_SIZE" \
+  --ram-buffer-mb "$SOLR_RAM_BUFFER_MB"
 echo "Waiting for Solr to be ready..."
 for i in {1..30}; do
   if curl -s http://localhost:8983/solr/admin/info/system >/dev/null 2>&1; then
@@ -43,12 +59,12 @@ echo "Adding additional fieldtypes"
 scripts/add_fieldtypes.sh
 sleep 5
 
-echo "Adding entity schema"
-uv run lsolr create-schema -C entity -s model.yaml -t Entity
+echo "Adding entity schema (from koza-produced monarch-kg-schema.yaml)"
+uv run lsolr create-schema -C entity -s output/monarch-kg-schema.yaml -t Entity
 sleep 5
 
-echo "Adding association schema"
-uv run lsolr create-schema -C association -s model.yaml -t Association
+echo "Adding association schema (from koza-produced monarch-kg-schema.yaml)"
+uv run lsolr create-schema -C association -s output/monarch-kg-schema.yaml -t Association
 sleep 5
 
 # turn off transaction logging for the big indexes
@@ -92,9 +108,9 @@ uv run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mapping
 
 echo "Loading entities"
 
-uv run lsolr bulkload-db -C entity -s model.yaml output/monarch-kg.duckdb denormalized_nodes
+uv run lsolr bulkload-db -C entity -s output/monarch-kg-schema.yaml output/monarch-kg.duckdb denormalized_nodes
 
-uv run lsolr bulkload-db -C association -s model.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
+uv run lsolr bulkload-db -C association -s output/monarch-kg-schema.yaml --processor frequency_update_processor output/monarch-kg.duckdb denormalized_edges
 # curl "http://localhost:8983/solr/association/select?q=*:*"
 
 
@@ -108,12 +124,20 @@ for core in entity association sssom infores; do
     -H "Content-type: text/xml" --data-binary '' >/dev/null || true
 done
 
-docker stop my_solr
+# The tarball is the release artifact Jenkins publishes; for local runs we
+# usually just want the live container to query against, and producing the
+# ~30 GB tar adds minutes for no benefit. Set SOLR_SKIP_TARBALL=1 to skip
+# the tar step (and leave the container running so it stays queryable).
+if [ "${SOLR_SKIP_TARBALL:-0}" = "1" ]; then
+  echo "SOLR_SKIP_TARBALL=1 — leaving my_solr running, skipping output/solr.tar.gz"
+else
+  docker stop my_solr
 
-# Tar from a sidecar that mounts the stopped container's volumes — the
-# index is now quiet on disk.
-docker run --rm --volumes-from my_solr busybox \
-  tar czf - -C /var/solr data > output/solr.tar.gz
+  # Tar from a sidecar that mounts the stopped container's volumes — the
+  # index is now quiet on disk.
+  docker run --rm --volumes-from my_solr busybox \
+    tar czf - -C /var/solr data > output/solr.tar.gz
 
-docker rm my_solr
+  docker rm my_solr
+fi
 
