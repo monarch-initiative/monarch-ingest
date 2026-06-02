@@ -248,7 +248,7 @@ wheels = [
 
 [[package]]
 name = "biolink-model"
-version = "4.4.0"
+version = "4.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -262,9 +262,9 @@ dependencies = [
     { name = "requests" },
     { name = "stringcase" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/10/ae/0a8da43ad809d79f2d4da912a47b8901a8a069baa12910dcd0d3c06abdc5/biolink_model-4.4.0.tar.gz", hash = "sha256:08c703f3936a899ff3bc555c47dcda7ce6a3c81a88a89ee1f9fda7f2ea407fa9", size = 3817271, upload-time = "2026-05-07T23:55:38.755Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/51/c1911e3c34f53eefd6939083fbfba0ee02d070b6a261461f814f2ba644bd/biolink_model-4.4.2.tar.gz", hash = "sha256:c69ccb9fd8cbd9935b36a4aec578a4c5ee8a3c39d75eb4d9495ded6cf205c39b", size = 3784369, upload-time = "2026-05-22T19:09:21.851Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/74/5d/7b4a25c5fe7846d6a6e69129b6cfbc3d6928c8ea212bb7506bd79957135f/biolink_model-4.4.0-py3-none-any.whl", hash = "sha256:690ae5caaab2af8063dace85bd7418469f33c1d8b34f0274bcd8daac6178e4af", size = 334177, upload-time = "2026-05-07T23:55:37.199Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/63/545021b6c7162e2b6711d71f267cbab618598c1730e5de95a9d8c302adc1/biolink_model-4.4.2-py3-none-any.whl", hash = "sha256:939083a7f9c9ebe0fe580e6e02a9d01642825a85041be804e0e39a33fabc98d4", size = 336628, upload-time = "2026-05-22T19:09:18.783Z" },
 ]
 
 [[package]]
@@ -659,20 +659,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b9/2e/0090cbf739cee7d23781ad4b89a9894a41538e4fcf4c31dcdd705b78eb8b/click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a", size = 226593, upload-time = "2024-12-21T18:38:44.339Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7e/d4/7ebdbd03970677812aac39c869717059dbb71a4cfc033ca6e5221787892c/click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2", size = 98188, upload-time = "2024-12-21T18:38:41.666Z" },
-]
-
-[[package]]
-name = "closurizer"
-version = "0.8.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "click" },
-    { name = "duckdb" },
-    { name = "sqlalchemy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e7/7d/bf198686953b0cc59851c9cdc016488d9840313be5f53a0e04fd3d148473/closurizer-0.8.1.tar.gz", hash = "sha256:59626a3779ee15b18a2f9ce35ea4ae9facaeb47e67cd742110d24eb2e66b11df", size = 5688, upload-time = "2025-12-04T00:59:46.763Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3a/a5/e0e4263820894630860066c908778299ded8e6819f798d47bf29570637b9/closurizer-0.8.1-py3-none-any.whl", hash = "sha256:86f9e9d0982dc9e31fb8107206e141c7a052f6f3ee6a0d5606f0cce12a935cba", size = 6845, upload-time = "2025-12-04T00:59:45.726Z" },
 ]
 
 [[package]]
@@ -2190,7 +2176,7 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.4.0"
+version = "2.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "biolink-model" },
@@ -2208,9 +2194,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0f/56/5e51dc9a24d40c4a601ea2b0d60c4638b63915ba98975ed420bcbf48b567/koza-2.4.0.tar.gz", hash = "sha256:dca0292aaa97efeac3f5929e5276b14a03504662a42e60613395aa470d1d368f", size = 352694, upload-time = "2026-05-06T23:55:35.582Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9b/26/4fb4b21a553377b44114978dc25a9fddd60a2e4813aa8687d2f46bdbb137/koza-2.5.0.tar.gz", hash = "sha256:758ebb2780f6eb31bda2d65a2afb6ca651cc3f4c8009858d58ffe29f4b3ed74e", size = 390142, upload-time = "2026-06-01T20:56:07.73Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7d/63/be263a4389626338b8ce3e5df27c9262241d157877f8a00322dc027a9e6d/koza-2.4.0-py3-none-any.whl", hash = "sha256:b963c5d32ed16fe11b1d2e0aad4ea76112699fcadc715856c1f8c640cf998a1e", size = 112238, upload-time = "2026-05-06T23:55:34.403Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/4c/e9642b254312715e4c95694baff4889fbfef43a3c5b4d830708b732bd3d9/koza-2.5.0-py3-none-any.whl", hash = "sha256:e6f38528d120c3656deaab9c1df3ec7837e72d1e0f47044e4eb4284189c43870", size = 135531, upload-time = "2026-06-01T20:56:06.483Z" },
 ]
 
 [package.optional-dependencies]
@@ -2664,7 +2650,6 @@ dependencies = [
     { name = "biolink-model" },
     { name = "bmt" },
     { name = "botocore" },
-    { name = "closurizer" },
     { name = "duckdb" },
     { name = "importlib-metadata" },
     { name = "kghub-downloader" },
@@ -2696,16 +2681,15 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "biolink-model", specifier = ">=4.3.6" },
+    { name = "biolink-model", specifier = ">=4.4.2" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=24.3,<25" },
     { name = "bmt", specifier = ">=1.0.15,<2" },
     { name = "botocore", specifier = ">=1.31,<2" },
-    { name = "closurizer", specifier = "==0.8.1" },
     { name = "duckdb", specifier = ">=1.3.0,<2" },
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], specifier = ">=2.4,<3" },
+    { name = "koza", extras = ["grape"], specifier = ">=2.5,<3" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.0" },
