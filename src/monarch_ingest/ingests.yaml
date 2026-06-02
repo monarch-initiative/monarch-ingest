@@ -137,11 +137,6 @@ upheno_phenotype_to_phenotype:
   files:
     - upheno_phenotype_to_phenotype_edges.tsv
 
-upheno_filtered_phenotype_to_phenotype:
-  repo: upheno-cross-species-ingest
-  files:
-    - upheno_phenotype_to_phenotype_filtered_edges.tsv
-
 pantherdb_ortholog:
   repo: pantherdb-orthologs-ingest
   files:
