@@ -506,12 +506,15 @@ def _merge_files_koza(
         for exported_file in result.exported_files:
             logger.info(f"Exported archive: {exported_file}")
 
-    # Generate QC report (group by file_source for compatibility with qc_expect.yaml)
+    # Group by provided_by. Koza's merge currently overrides both provided_by
+    # and file_source to the per-TSV name, so the two are functionally identical
+    # here, but provided_by is the semantically correct axis (qc_expect.yaml
+    # keys are organized under `provided_by:`).
     logger.info("Generating QC report...")
     qc_config = QCReportConfig(
         database_path=database_path,
         output_file=Path(output_dir) / "qc_report.yaml",
-        group_by="file_source",
+        group_by="provided_by",
         quiet=not verbose if verbose is not None else True,
     )
     generate_qc_report(qc_config)
