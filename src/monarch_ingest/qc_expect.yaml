@@ -10,8 +10,19 @@ nodes:
       min: 14000
     hgnc_gene_nodes:
       min: 43000
-    ncbi_gene_nodes:
-      min: 190000
+    # Koza merge labels rows by per-TSV file_source / provided_by; ncbi-gene
+    # publishes per-species KGX TSVs, so the qc_report ends up with one row
+    # per species. Mins set ~at current per-species counts; <70% errors.
+    ncbi_gene_227321_nodes:
+      min: 10000
+    ncbi_gene_9031_nodes:
+      min: 30000
+    ncbi_gene_9615_nodes:
+      min: 48000
+    ncbi_gene_9823_nodes:
+      min: 43000
+    ncbi_gene_9913_nodes:
+      min: 54000
 
     phenio_nodes:
       min: 288000
@@ -32,7 +43,7 @@ nodes:
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
-      min: 1870000
+      min: 1900000
     alliance_genotype_edges:
       min: 260000
     alliance_allele_edges:
