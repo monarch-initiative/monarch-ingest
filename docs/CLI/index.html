@@ -538,6 +538,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-prepare-solr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest prepare-solr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1497,6 +1508,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-prepare-solr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest prepare-solr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1634,6 +1656,7 @@
 <li><code>transform</code>: Run Koza transformation on specified...</li>
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>closure</code></li>
+<li><code>prepare-solr</code>: Materialize <code>_solr_edges</code>...</li>
 <li><code>jsonl</code></li>
 <li><code>neo4j-csv</code></li>
 <li><code>sqlite</code></li>
@@ -1716,6 +1739,19 @@
 <h2 id="ingest-closure"><code>ingest closure</code></h2>
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>closure<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-prepare-solr"><code>ingest prepare-solr</code></h2>
+<p>Materialize <code>_solr_edges</code> (denormalized_edges + frequency_computed_sortable_float).</p>
+<p>Run sequentially after <code>merge</code>/<code>closure</code> and before the parallel post-merge
+stages so the solr stage doesn&#x27;t take a write lock on the duckdb while
+other readers (kgx-graph-summary, kgx-transforms, neo4j-dump, sqlite,
+connectivity) are running.</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>prepare-solr<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
