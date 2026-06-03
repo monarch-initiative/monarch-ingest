@@ -210,6 +210,39 @@ def transform_phenio(
     excluded_nodes = nodes_df[nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith(tuple(exclude_prefixes))]
 
+    # Drop phenio Gene nodes for taxa already covered by the per-species
+    # ncbi_gene ingest (its TSVs are the authoritative source). Other taxa
+    # phenio carries (cat, sheep, horse, rabbit, macaque, marmoset, hamster,
+    # goat, quail, medaka, etc.) have no other ingest, so we keep them.
+    ncbi_gene_covered_taxa = {
+        "NCBITaxon:9031",  # Gallus gallus (chicken)
+        "NCBITaxon:9615",  # Canis lupus familiaris (dog)
+        "NCBITaxon:9823",  # Sus scrofa (pig)
+        "NCBITaxon:9913",  # Bos taurus (cow)
+        "NCBITaxon:227321",  # Neurospora crassa
+    }
+    gene_mask = nodes_df["category"] == "biolink:Gene"
+    duplicate_gene_mask = gene_mask & nodes_df["in_taxon"].isin(ncbi_gene_covered_taxa)
+    if duplicate_gene_mask.any():
+        excluded_nodes = pandas.concat([excluded_nodes, nodes_df[duplicate_gene_mask]])
+        logger.info(
+            f"Removing {int(duplicate_gene_mask.sum())} phenio Gene nodes for taxa already covered by ncbi_gene"
+        )
+        nodes_df = nodes_df[~duplicate_gene_mask]
+
+    # Drop Gene-category rows with no in_taxon. They're a handful of orphan
+    # NCBIGene stubs (one is literally `NCBIGene:None`, the rest have empty
+    # name/description/xref) — without a taxon we can't responsibly include
+    # them under the cross-species expansion rationale.
+    gene_mask = nodes_df["category"] == "biolink:Gene"
+    empty_taxon_gene_mask = gene_mask & nodes_df["in_taxon"].fillna("").eq("")
+    if empty_taxon_gene_mask.any():
+        excluded_nodes = pandas.concat([excluded_nodes, nodes_df[empty_taxon_gene_mask]])
+        logger.info(
+            f"Removing {int(empty_taxon_gene_mask.sum())} phenio Gene nodes with empty in_taxon"
+        )
+        nodes_df = nodes_df[~empty_taxon_gene_mask]
+
     # Replace biolink:Occurrent category with biolink:BiologicalProcessOrActivity as a fallback to rescue
     # GO nodes that are getting a mixin category of Occurrent that we don't want to exclude all of
     nodes_df["category"] = nodes_df["category"].str.replace("biolink:Occurrent", "biolink:BiologicalProcessOrActivity")
