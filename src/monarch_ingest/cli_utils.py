@@ -308,11 +308,32 @@ def transform_phenio(
         for field in ["subject", "object"]:
             edges_df[field] = edges_df[field].str.replace(f"OBO:{prefix}_", f"{prefix}:")
 
-    # Only keep edges where the subject and object both are within our allowable prefix list
+    # Edge-side prefix exclusions are narrower than node-side: HGNC edges
+    # need a finer carve-out (see below), so they're handled separately.
+    edge_exclude_prefixes = [p for p in exclude_prefixes if p != "HGNC"]
     edges_df = edges_df[
-        ~edges_df["subject"].str.startswith(tuple(exclude_prefixes))
-        & ~edges_df["object"].str.startswith(tuple(exclude_prefixes))
+        ~edges_df["subject"].str.startswith(tuple(edge_exclude_prefixes))
+        & ~edges_df["object"].str.startswith(tuple(edge_exclude_prefixes))
     ]
+
+    # HGNC-incident edges: drop the `biolink:subclass_of` typing-axiom
+    # shape (e.g. `HGNC:X subclass_of biolink:Gene`). That's pure clutter —
+    # gene typing already comes from hgnc_gene's `category` column. Keep
+    # the rest, crucially the ~6k disease→gene assertions whose
+    # `original_predicate` is RO:0004003 ("has material basis in germline
+    # mutation in") and a small RO:0004020 / RO:0004004 tail. They flatten
+    # to `biolink:related_to` in the biolink mapping but the specific RO
+    # term (preserved as original_predicate, see 0f0ee6e) is the signal —
+    # OMIM/Orphanet germline disease-gene calls aggregated by phenio.
+    hgnc_typing_mask = (
+        (edges_df["subject"].str.startswith("HGNC:") | edges_df["object"].str.startswith("HGNC:"))
+        & (edges_df["predicate"] == "biolink:subclass_of")
+    )
+    if hgnc_typing_mask.any():
+        logger.info(
+            f"Removing {int(hgnc_typing_mask.sum())} HGNC-incident biolink:subclass_of typing-axiom edges"
+        )
+        edges_df = edges_df[~hgnc_typing_mask]
 
     # Remove edges where the subject or object is NA
     edges_df = edges_df[~edges_df["subject"].isna() & ~edges_df["object"].isna()]
