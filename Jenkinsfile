@@ -70,6 +70,14 @@ pipeline {
                 sh 'uv run ingest neo4j-csv'
             }
         }
+        // Materialize `_solr_edges` here so the parallel-processing stages
+        // (including solr) can all open monarch-kg.duckdb read-only without
+        // racing on a write lock.
+        stage('prepare-solr') {
+            steps {
+                sh 'uv run ingest prepare-solr'
+            }
+        }
         stage('parallel-processing') {
             parallel {
                 stage('kgx-graph-summary') {

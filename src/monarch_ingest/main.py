@@ -273,6 +273,20 @@ def closure():
     apply_closure()
 
 
+@typer_app.command("prepare-solr")
+def prepare_solr_cmd():
+    """Materialize `_solr_edges` (denormalized_edges + frequency_computed_sortable_float).
+
+    Run sequentially after `merge`/`closure` and before the parallel post-merge
+    stages so the solr stage doesn't take a write lock on the duckdb while
+    other readers (kgx-graph-summary, kgx-transforms, neo4j-dump, sqlite,
+    connectivity) are running.
+    """
+    from monarch_ingest.cli_utils import prepare_solr
+
+    prepare_solr()
+
+
 @typer_app.command()
 def jsonl():
     from monarch_ingest.cli_utils import load_jsonl
