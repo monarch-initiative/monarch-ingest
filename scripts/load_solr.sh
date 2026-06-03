@@ -103,34 +103,20 @@ curl -X POST -H 'Content-Type: application/json' \
 
 uv run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
 
-# Materialize the edges with `frequency_computed_sortable_float` — the
-# derived field the Solr UI sorts on to rank phenotypes by prevalence.
-# Previously this was set by a per-doc StatelessScriptUpdateProcessorFactory
-# (Nashorn JS) on the association core, which dominated load time. Doing it
-# once, vectorised in DuckDB, lets the edges load run substantially faster.
-# Mapping mirrors HPO's frequency sub-ontology (HP:0040280..HP:0040285) and
-# matches the legacy JS processor's outputs; rows with neither `has_quotient`
-# nor a known `frequency_qualifier` get 0.0, same as before.
-echo "Materializing edges with frequency_computed_sortable_float..."
+# `_solr_edges` (denormalized_edges + frequency_computed_sortable_float) is
+# materialized by `ingest prepare-solr`, run sequentially before this stage,
+# so we open the duckdb strictly read-only here — necessary because the
+# Jenkinsfile fans this stage out in parallel with kgx-graph-summary /
+# connectivity-report / kgx-transforms / neo4j-dump / sqlite, which would all
+# race on the file lock otherwise. Fail loud if the precondition isn't met.
+echo "Verifying _solr_edges was materialized by prepare-solr..."
 uv run python -c "
-import duckdb
-db = duckdb.connect('output/monarch-kg.duckdb')
-db.execute('''
-    CREATE OR REPLACE TABLE _solr_edges AS
-    SELECT *,
-           CASE
-             WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS DOUBLE)
-             WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
-             WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
-             WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
-             WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
-             WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
-             WHEN frequency_qualifier = 'HP:0040285' THEN 0.0
-             ELSE 0.0
-           END AS frequency_computed_sortable_float
-    FROM denormalized_edges
-''')
-print('Done.')
+import duckdb, sys
+con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+rows = con.execute(\"SELECT 1 FROM information_schema.tables WHERE table_name='_solr_edges'\").fetchall()
+if not rows:
+    sys.exit('ERROR: _solr_edges not found - run \\\"ingest prepare-solr\\\" first.')
+print('_solr_edges present.')
 "
 
 echo "Loading entities"

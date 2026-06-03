@@ -578,6 +578,54 @@ def apply_closure(
     logger.info(f"Schema artifact written to {schema_yaml_path}")
 
 
+def prepare_solr(
+    name: str = "monarch-kg",
+    output_dir: str = OUTPUT_DIR,
+):
+    """Materialize `_solr_edges` in the merged DuckDB ahead of the Solr load.
+
+    `_solr_edges` is `denormalized_edges` plus `frequency_computed_sortable_float`
+    — the field the Solr UI sorts phenotypes by prevalence on. Previously a
+    per-doc Nashorn JS update processor on the association core handled this
+    during indexing; doing it once, vectorised in DuckDB, is dramatically
+    faster. Mapping mirrors HPO's frequency sub-ontology
+    (HP:0040280..HP:0040285); rows without a quotient or known frequency
+    qualifier get 0.0, matching the legacy processor.
+
+    Split out as its own step because the Jenkinsfile fans the post-merge work
+    out across parallel stages (kgx-graph-summary, connectivity-report, solr,
+    kgx-transforms, neo4j-dump, sqlite) — all of which need to open the same
+    duckdb. If the solr stage takes a write lock for this CREATE TABLE, every
+    other stage races on the file lock. Running this sequentially before the
+    fan-out lets every parallel reader use `read_only=True`.
+    """
+    database_path = Path(output_dir) / f"{name}.duckdb"
+    logger = get_logger()
+    logger.info(f"Materializing _solr_edges in {database_path}...")
+    conn = duckdb.connect(str(database_path))
+    try:
+        conn.execute(
+            """
+            CREATE OR REPLACE TABLE _solr_edges AS
+            SELECT *,
+                   CASE
+                     WHEN has_quotient IS NOT NULL THEN CAST(has_quotient AS DOUBLE)
+                     WHEN frequency_qualifier = 'HP:0040280' THEN 1.0
+                     WHEN frequency_qualifier = 'HP:0040281' THEN 0.8
+                     WHEN frequency_qualifier = 'HP:0040282' THEN 0.3
+                     WHEN frequency_qualifier = 'HP:0040283' THEN 0.05
+                     WHEN frequency_qualifier = 'HP:0040284' THEN 0.01
+                     WHEN frequency_qualifier = 'HP:0040285' THEN 0.0
+                     ELSE 0.0
+                   END AS frequency_computed_sortable_float
+            FROM denormalized_edges
+            """
+        )
+    finally:
+        conn.close()
+    logger.info("Materialized _solr_edges")
+
+
 #     sh.mv(database, f"{output_dir}/")
 
 
