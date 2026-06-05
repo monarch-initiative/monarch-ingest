@@ -196,11 +196,26 @@ def transform_phenio(
     nodes_df = nodes_df[~nodes_df["id"].str.contains("omim.org|hgnc_id")]
     nodes_df = nodes_df[~nodes_df["id"].str.startswith("MGI:")]
 
-    # Hopefully this won't be necessary long term, but these IDs are coming
-    # in with odd OBO prefixes from Phenio currently.
-    obo_prefixes_to_repair = ["FBbt", "WBbt", "ZFA", "XAO"]
-    for prefix in obo_prefixes_to_repair:
-        nodes_df["id"] = nodes_df["id"].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+    # kg-phenio publishes Drosophila and C. elegans anatomy nodes with
+    # all-uppercase prefixes (FBBT:, WBBT:) instead of the canonical OBO
+    # Foundry mixed-case form (FBbt:, WBbt:) that the Alliance gene-expression
+    # ingest (and other consumers) use. ~28k FBBT nodes and ~7.5k WBBT nodes
+    # in kg-phenio, all under the wrong case. Without this normalization,
+    # every Drosophila and C. elegans alliance_gene_to_expression edge goes
+    # dangling (~503k edges, the bulk of that ingest's anatomy side).
+    #
+    # Short-term workaround. Tracking upstream fix in kg-phenio (the
+    # IRI->CURIE conversion in their OWL-to-TSV step uppercases the prefix);
+    # once that lands this block becomes a no-op and can be removed.
+    #
+    # (The previous `obo_prefixes_to_repair = ["FBbt","WBbt","ZFA","XAO"]`
+    # block that rewrote `OBO:X_xxx -> X:xxx` is removed: the current
+    # kg-phenio release has 0 nodes / 0 edges of that shape for any of the
+    # four prefixes, so the block was unreachable. If `OBO:`-shaped IDs
+    # reappear in some future kg-phenio output, restore as needed.)
+    case_normalizations = {"FBBT:": "FBbt:", "WBBT:": "WBbt:"}
+    for old, new in case_normalizations.items():
+        nodes_df["id"] = nodes_df["id"].str.replace(old, new, regex=False)
 
     # These bring in nodes necessary for other ingests, but won't capture the same_as / equivalentClass
     # associations that we'll also need
@@ -302,11 +317,14 @@ def transform_phenio(
     # assign level association category if edge category is empty
     edges_df["category"].fillna("biolink:Association", inplace=True)
 
-    # Hopefully this won't be necessary long term, but these IDs are coming
-    # in with odd OBO prefixes from Phenio currently.
-    for prefix in obo_prefixes_to_repair:
+    # Match the node-side FBBT/WBBT -> FBbt/WBbt case normalization so
+    # phenio's internal anatomy-anatomy edges (subClassOf, part_of, etc.)
+    # also use the canonical OBO Foundry prefix and don't break under the
+    # node renaming above. Short-term workaround; remove once kg-phenio
+    # emits canonical-case prefixes.
+    for old, new in case_normalizations.items():
         for field in ["subject", "object"]:
-            edges_df[field] = edges_df[field].str.replace(f"OBO:{prefix}_", f"{prefix}:")
+            edges_df[field] = edges_df[field].str.replace(old, new, regex=False)
 
     # Edge-side prefix exclusions are narrower than node-side: HGNC edges
     # need a finer carve-out (see below), so they're handled separately.
