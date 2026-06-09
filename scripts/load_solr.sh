@@ -137,6 +137,46 @@ for core in entity association sssom infores; do
     -H "Content-type: text/xml" --data-binary '' >/dev/null || true
 done
 
+# Post-load verification (defense in depth). The bulk loader now fails loud on
+# dropped chunks, but a silently short index is the single worst release defect
+# we can ship — build #328 published a half-empty entity core that still passed
+# as SUCCESS. So independently assert each big core's committed numDocs equals
+# the count of distinct ids in its source table, and abort the release if not.
+echo "Verifying Solr core doc counts against source tables..."
+uv run python - <<'PYEOF'
+import sys
+import duckdb
+import requests
+
+DB = "output/monarch-kg.duckdb"
+# core -> source table feeding it (Solr dedupes by id, so the expected number of
+# indexed docs is the count of DISTINCT ids in the source).
+CHECKS = {
+    "entity": "denormalized_nodes",
+    "association": "_solr_edges",
+}
+
+con = duckdb.connect(DB, read_only=True)
+failures = []
+for core, table in CHECKS.items():
+    expected = con.execute(f"SELECT count(DISTINCT id) FROM {table}").fetchone()[0]
+    resp = requests.get(
+        f"http://localhost:8983/solr/{core}/select",
+        params={"q": "*:*", "rows": 0},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    got = resp.json()["response"]["numFound"]
+    status = "OK" if got == expected else "MISMATCH"
+    print(f"  {core}: numDocs={got:,} expected={expected:,} ({status})")
+    if got != expected:
+        failures.append(f"{core}: {got} indexed != {expected} expected ({table})")
+
+if failures:
+    sys.exit("ERROR: Solr load incomplete:\n  - " + "\n  - ".join(failures))
+print("All core doc counts match source tables.")
+PYEOF
+
 # The tarball is the release artifact Jenkins publishes; for local runs we
 # usually just want the live container to query against, and producing the
 # ~30 GB tar adds minutes for no benefit. Set SOLR_SKIP_TARBALL=1 to skip
