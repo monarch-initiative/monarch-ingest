@@ -2396,7 +2396,7 @@ wheels = [
 
 [[package]]
 name = "linkml-solr"
-version = "0.2.0"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "duckdb" },
@@ -2407,9 +2407,9 @@ dependencies = [
     { name = "pysolr" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a7/fe/62199369b4a6a75d3366f438c326357dd77119fa7e0a7d6cd5aa94d5377e/linkml_solr-0.2.0.tar.gz", hash = "sha256:7953d23ae572d80f19debee0242d092add43163304bfba5d6864f214be0ae819", size = 16676, upload-time = "2025-09-11T18:30:39.908Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/21/0d34262581a48a637ddda70a523b9fbfb3cf14044d4764ee9511489cc8ce/linkml_solr-0.2.3.tar.gz", hash = "sha256:5de9a3ff2c6f6fc466293e61d87ef72bdd4097b0fceee2e4b6958effc4c209cc", size = 18008, upload-time = "2026-06-09T15:24:52.790942Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/77/54f39b4137c60e4a8a4218fe551f02c680d9e5b4422d86f3a0ba782cc1e6/linkml_solr-0.2.0-py3-none-any.whl", hash = "sha256:9418b1b598cb3762ceba41394f365c8f8a3367b6dc2c59d24c89938dd32dd82c", size = 20744, upload-time = "2025-09-11T18:30:38.871Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/09/716105c0bc0615e1d31f084c34c0cf52b7af50f1061a8d2569353e862111/linkml_solr-0.2.3-py3-none-any.whl", hash = "sha256:e921d758dd30dd7e1cdf2b327f4a6dff21738ff253174fa6166d7d2df6dc29eb", size = 22086, upload-time = "2026-06-09T15:24:51.860349Z" },
 ]
 
 [[package]]
@@ -2692,7 +2692,7 @@ requires-dist = [
     { name = "koza", extras = ["grape"], specifier = ">=2.5,<3" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
-    { name = "linkml-solr", specifier = "==0.2.0" },
+    { name = "linkml-solr", specifier = "==0.2.3" },
     { name = "loguru" },
     { name = "mkdocs", marker = "extra == 'dev'", specifier = ">=1.4,<2" },
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.5" },

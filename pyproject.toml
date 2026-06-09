@@ -21,7 +21,7 @@ dependencies = [
     "kghub-downloader>=0.4.5,<1",
     "kgx>=2.6.0,<3",
     "linkml>=1.9,<2", #TODO: upgrade this to 1.11 when biolink-model makes that upgrade. https://github.com/biolink/biolink-model/issues/1726
-    "linkml-solr==0.2.0",
+    "linkml-solr==0.2.3",
     "multi-indexer==0.0.5",
     # Other Dependencies,
     "botocore>=1.31,<2",
