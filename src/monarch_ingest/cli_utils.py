@@ -1215,6 +1215,15 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
         # copy to monarch-archive bucket
         sh.gsutil(*f"-q -m cp -r {dir}/* gs://monarch-archive/monarch-kg-dev/{release_ver}".split(" "))
 
+        # gsutil auto-detects *.tsv.gz as text/tab-separated-values (from the .tsv part),
+        # which makes browsers render the gzip inline instead of downloading it. Set the
+        # correct type here; all downstream GCS->GCS copies inherit it.
+        sh.gsutil(
+            *"-q -m setmeta -h".split(" "),
+            "Content-Type:application/gzip",
+            f"gs://monarch-archive/monarch-kg-dev/{release_ver}/tsv/**/*.tsv.gz",
+        )
+
         # copy to data-public bucket
         sh.gsutil(
             *"-q -m cp -r".split(" "),
