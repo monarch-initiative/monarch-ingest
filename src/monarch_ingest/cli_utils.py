@@ -23,9 +23,15 @@ from biolink_model.datamodel import model  # import the pythongen biolink model 
 from linkml_runtime import SchemaView
 from linkml.utils.helpers import convert_to_snake_case
 
-from koza.graph_operations import closurize_graph, merge_graphs, prepare_merge_config_from_paths, generate_qc_report
+from koza.graph_operations import (
+    closurize_graph,
+    compute_information_content,
+    merge_graphs,
+    prepare_merge_config_from_paths,
+    generate_qc_report,
+)
 from koza.graph_operations.graph_schema import export_schema
-from koza.model.graph_operations import ClosurizeConfig, QCReportConfig, KGXFormat
+from koza.model.graph_operations import ClosurizeConfig, QCReportConfig, KGXFormat, InformationContentConfig
 
 from koza.runner import KozaRunner
 from koza.model.formats import OutputFormat
@@ -696,6 +702,49 @@ def prepare_solr(
     finally:
         conn.close()
     logger.info("Materialized _solr_edges")
+
+
+def apply_information_content(
+    name: str = "monarch-kg",
+    output_dir: str = OUTPUT_DIR,
+):
+    """Compute the semantic-similarity precompute tables on the merged KG via koza.
+
+    Builds `information_content` (term -> information content) and `closure_size`
+    (entity -> #distinct closure subsumers of its phenotypes) into
+    `<output_dir>/<name>.duckdb`. monarch-app's in-process similarity engine
+    reads these straight from the KG artifact instead of rebuilding them per
+    worker at startup (which was the source of the api memory spike).
+
+    Run after `closure` (it reads the `closure` table closurize produces) and,
+    like `prepare_solr`, before the parallel post-merge stages so it takes the
+    write lock while every other stage can still open the duckdb read-only.
+
+    Closure predicate (rdfs:subClassOf) and the has_phenotype Gene/Disease
+    associations are koza's defaults; passed explicitly here so the Monarch
+    contract is visible at the call site and independent of koza's defaults.
+    """
+    database_path = Path(output_dir) / f"{name}.duckdb"
+    logger = get_logger()
+    logger.info(f"Building information-content precompute tables in {database_path}...")
+    result = compute_information_content(
+        InformationContentConfig(
+            database_path=database_path,
+            closure_predicates=["rdfs:subClassOf"],
+            association_categories=[
+                "biolink:GeneToPhenotypicFeatureAssociation",
+                "biolink:DiseaseToPhenotypicFeatureAssociation",
+            ],
+            association_predicate="biolink:has_phenotype",
+            include_negated=False,
+        )
+    )
+    if not result.success:
+        raise RuntimeError(f"information-content failed: {result.errors}")
+    logger.info(
+        f"Built information_content ({result.ic_term_count:,} terms) and "
+        f"closure_size ({result.closure_size_entity_count:,} entities)"
+    )
 
 
 #     sh.mv(database, f"{output_dir}/")
