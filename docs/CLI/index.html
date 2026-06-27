@@ -549,6 +549,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-information-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest information-content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1519,6 +1530,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-information-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest information-content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1657,6 +1679,7 @@
 <li><code>merge</code>: Merge nodes and edges into kg</li>
 <li><code>closure</code></li>
 <li><code>prepare-solr</code>: Materialize <code>_solr_edges</code>...</li>
+<li><code>information-content</code>: Compute semantic-similarity precompute...</li>
 <li><code>jsonl</code></li>
 <li><code>neo4j-csv</code></li>
 <li><code>sqlite</code></li>
@@ -1752,6 +1775,20 @@ other readers (kgx-graph-summary, kgx-transforms, neo4j-dump, sqlite,
 connectivity) are running.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>prepare-solr<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-information-content"><code>ingest information-content</code></h2>
+<p>Compute semantic-similarity precompute tables (information_content, closure_size).</p>
+<p>Run after <code>closure</code> and, like <code>prepare-solr</code>, sequentially before the
+parallel post-merge stages — it takes a write lock on monarch-kg.duckdb so
+the read-only fan-out (solr, connectivity, sqlite, ...) doesn&#x27;t race it.
+The api&#x27;s in-process similarity engine reads these tables from the KG
+artifact instead of rebuilding them per worker.</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>information-content<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
