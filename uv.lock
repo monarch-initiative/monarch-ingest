@@ -269,21 +269,24 @@ wheels = [
 
 [[package]]
 name = "bioregistry"
-version = "0.13.52"
+version = "0.13.64"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "curies" },
+    { name = "idna" },
     { name = "more-click" },
     { name = "pydantic", extra = ["email"] },
     { name = "pystow" },
+    { name = "python-multipart" },
     { name = "requests" },
     { name = "sssom-pydantic" },
     { name = "tqdm" },
+    { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/25/c9c1ebdae5fee980f2a7ed6fa7d78815659d9c1934762091ad18701ae35e/bioregistry-0.13.52.tar.gz", hash = "sha256:69ef6c140d2faf3cde52eeef98b70ef8d6d8f9290b072b515ac7671872b9c296", size = 6030620, upload-time = "2026-05-08T14:57:37.596Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/43/83ebc6de5b27d224b366c2afd96cb1b490c6792eea080bd5028828125c8d/bioregistry-0.13.64.tar.gz", hash = "sha256:befa229ce90b475f4bda6eda0b301b115bdb694456e550c55081e51711a7f3c7", size = 6086829, upload-time = "2026-06-27T04:44:02.847Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4b/6a/64feba0f22bc910674825e40df188f94c22a121c2dc7bd78d266d9ecd140/bioregistry-0.13.52-py3-none-any.whl", hash = "sha256:c6f4ff45da2ff81920c2b2a781822a3ee9232ca7d6dbeb6acb23f90758a132c2", size = 6117564, upload-time = "2026-05-08T14:59:12.814Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/bb/660966104a8b51555f522187797572241367c34090c4f1b51722553188ea/bioregistry-0.13.64-py3-none-any.whl", hash = "sha256:12c6a88c1350d8cffd896b0bbd7159d7457adc615b66748ce6a1060d83f8c25e", size = 6177972, upload-time = "2026-06-27T04:44:00.281Z" },
 ]
 
 [[package]]
@@ -1502,11 +1505,11 @@ wheels = [
 
 [[package]]
 name = "idna"
-version = "3.13"
+version = "3.18"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ce/cc/762dfb036166873f0059f3b7de4565e1b5bc3d6f28a414c13da27e442f99/idna-3.13.tar.gz", hash = "sha256:585ea8fe5d69b9181ec1afba340451fba6ba764af97026f92a91d4eef164a242", size = 194210, upload-time = "2026-04-22T16:42:42.314Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cd/63/9496c57188a2ee585e0f1db071d75089a11e98aa86eb99d9d7618fc1edce/idna-3.18.tar.gz", hash = "sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848", size = 196711, upload-time = "2026-06-02T14:34:07.794Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5d/13/ad7d7ca3808a898b4612b6fe93cde56b53f3034dcde235acb1f0e1df24c6/idna-3.13-py3-none-any.whl", hash = "sha256:892ea0cde124a99ce773decba204c5552b69c3c67ffd5f232eb7696135bc8bb3", size = 68629, upload-time = "2026-04-22T16:42:40.909Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/5e/d4e9f1a599fb8e573b7b87160658329fbf28d19eac2718f51fc3def3aa5a/idna-3.18-py3-none-any.whl", hash = "sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2", size = 65455, upload-time = "2026-06-02T14:34:06.319Z" },
 ]
 
 [[package]]
@@ -2176,7 +2179,7 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.5.0"
+version = "2.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "biolink-model" },
@@ -2194,9 +2197,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/26/4fb4b21a553377b44114978dc25a9fddd60a2e4813aa8687d2f46bdbb137/koza-2.5.0.tar.gz", hash = "sha256:758ebb2780f6eb31bda2d65a2afb6ca651cc3f4c8009858d58ffe29f4b3ed74e", size = 390142, upload-time = "2026-06-01T20:56:07.73Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/26/d2/fe686cb6602a2abb358073b72e2256aa42c1cc5570a4df3c8dfd9408983a/koza-2.6.0.tar.gz", hash = "sha256:fb270938de295bbf01a59b976a43719f8947ace9ece697ff7decf067d82a8318", size = 432871, upload-time = "2026-06-27T18:07:24.096Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fd/4c/e9642b254312715e4c95694baff4889fbfef43a3c5b4d830708b732bd3d9/koza-2.5.0-py3-none-any.whl", hash = "sha256:e6f38528d120c3656deaab9c1df3ec7837e72d1e0f47044e4eb4284189c43870", size = 135531, upload-time = "2026-06-01T20:56:06.483Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/75/1e015ee7ba9c252d246a93c55572cef0ac4f47fc6501c0d2fb147504b225/koza-2.6.0-py3-none-any.whl", hash = "sha256:f07e208badc1a515bc32407bdd5e8086607f65239c647294dea573d0429ce913", size = 166926, upload-time = "2026-06-27T18:07:22.57Z" },
 ]
 
 [package.optional-dependencies]
@@ -2407,9 +2410,9 @@ dependencies = [
     { name = "pysolr" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/21/0d34262581a48a637ddda70a523b9fbfb3cf14044d4764ee9511489cc8ce/linkml_solr-0.2.3.tar.gz", hash = "sha256:5de9a3ff2c6f6fc466293e61d87ef72bdd4097b0fceee2e4b6958effc4c209cc", size = 18008, upload-time = "2026-06-09T15:24:52.790942Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/21/0d34262581a48a637ddda70a523b9fbfb3cf14044d4764ee9511489cc8ce/linkml_solr-0.2.3.tar.gz", hash = "sha256:5de9a3ff2c6f6fc466293e61d87ef72bdd4097b0fceee2e4b6958effc4c209cc", size = 18008, upload-time = "2026-06-09T15:24:52.79Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/09/716105c0bc0615e1d31f084c34c0cf52b7af50f1061a8d2569353e862111/linkml_solr-0.2.3-py3-none-any.whl", hash = "sha256:e921d758dd30dd7e1cdf2b327f4a6dff21738ff253174fa6166d7d2df6dc29eb", size = 22086, upload-time = "2026-06-09T15:24:51.860349Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/09/716105c0bc0615e1d31f084c34c0cf52b7af50f1061a8d2569353e862111/linkml_solr-0.2.3-py3-none-any.whl", hash = "sha256:e921d758dd30dd7e1cdf2b327f4a6dff21738ff253174fa6166d7d2df6dc29eb", size = 22086, upload-time = "2026-06-09T15:24:51.86Z" },
 ]
 
 [[package]]
@@ -2689,7 +2692,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], specifier = ">=2.5,<3" },
+    { name = "koza", extras = ["grape"], specifier = ">=2.6,<3" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.3" },
@@ -4070,6 +4073,15 @@ wheels = [
 ]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.32"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/42/55c32bb9b12693c092ad250a0e82edb5b31ddeda6eb772de5f308b3804ad/python_multipart-0.0.32.tar.gz", hash = "sha256:be54b7f3fa167bb83e4fcd936b887b708f4e57fe75911c02aebf53efaf8d938e", size = 46881, upload-time = "2026-06-04T16:18:58.647Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl", hash = "sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23", size = 30042, upload-time = "2026-06-04T16:18:57.319Z" },
+]
+
+[[package]]
 name = "pytz"
 version = "2026.2"
 source = { registry = "https://pypi.org/simple" }
@@ -4826,7 +4838,7 @@ wheels = [
 
 [[package]]
 name = "sssom-pydantic"
-version = "0.5.7"
+version = "0.5.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "curies" },
@@ -4835,9 +4847,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/18/04/275f5dbe7d52d79f5a9e7af1670fa39a1528723c72445ad58ae9412ac7d2/sssom_pydantic-0.5.7.tar.gz", hash = "sha256:d03c2f57b088758ee1bb8eebe1d3ac02102b06478ec55fdceebbefa093fe955f", size = 59274, upload-time = "2026-05-06T15:49:57.408Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/23/02d4e16a12ac622231992e1fb57586ffd5e474afbcc5f84e4677ad08ed86/sssom_pydantic-0.5.11.tar.gz", hash = "sha256:69e57b2c786640bbcd8a0b662e67ff13adb659b059ed2e4f649490e112e398b7", size = 69738, upload-time = "2026-06-09T10:53:25.908Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/38/5d01b8bdc003423c5f42140ec96b2bb2eb4443319b70d75a15b2386646b4/sssom_pydantic-0.5.7-py3-none-any.whl", hash = "sha256:f955bca080ad8134690acee91a6c0194586c4eeedadca1bb3a00b29816876e5d", size = 72675, upload-time = "2026-05-06T15:49:55.275Z" },
+    { url = "https://files.pythonhosted.org/packages/29/68/fd19236d12994440102a74ad9888ec9142bee508494d655470ebb64db5d6/sssom_pydantic-0.5.11-py3-none-any.whl", hash = "sha256:02851b369063ef248c6fc0e6f56f23caf24197673ef538126c5f4d2dd8fc09ba", size = 83827, upload-time = "2026-06-09T10:53:24.386Z" },
 ]
 
 [[package]]

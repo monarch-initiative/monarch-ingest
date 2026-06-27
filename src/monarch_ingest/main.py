@@ -287,6 +287,21 @@ def prepare_solr_cmd():
     prepare_solr()
 
 
+@typer_app.command("information-content")
+def information_content_cmd():
+    """Compute semantic-similarity precompute tables (information_content, closure_size).
+
+    Run after `closure` and, like `prepare-solr`, sequentially before the
+    parallel post-merge stages — it takes a write lock on monarch-kg.duckdb so
+    the read-only fan-out (solr, connectivity, sqlite, ...) doesn't race it.
+    The api's in-process similarity engine reads these tables from the KG
+    artifact instead of rebuilding them per worker.
+    """
+    from monarch_ingest.cli_utils import apply_information_content
+
+    apply_information_content()
+
+
 @typer_app.command()
 def jsonl():
     from monarch_ingest.cli_utils import load_jsonl
