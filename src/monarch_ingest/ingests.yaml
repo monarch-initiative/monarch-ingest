@@ -206,6 +206,35 @@ cureid:
     - cureid_nodes.tsv
     - cureid_edges.tsv
 
+# LOINC clinical measurements (kozahub loinc-ingest, alpha). One repo, five
+# transforms: two node sets (leaf measurement codes + backbone "part" nodes) and
+# three edge sets (compositional related_to, is_a hierarchy, outcome-typed
+# phenotype correlated_with).
+loinc_nodes:
+  repo: loinc-ingest
+  files:
+    - loinc_nodes_nodes.tsv
+
+loinc_parts:
+  repo: loinc-ingest
+  files:
+    - loinc_parts_nodes.tsv
+
+loinc_composition:
+  repo: loinc-ingest
+  files:
+    - loinc_composition_edges.tsv
+
+loinc_hierarchy:
+  repo: loinc-ingest
+  files:
+    - loinc_hierarchy_edges.tsv
+
+loinc_phenotype:
+  repo: loinc-ingest
+  files:
+    - loinc_phenotype_edges.tsv
+
 # kg-phenio is consumed via download.yaml (kg-phenio.tar.gz), not via the
 # kozahub artifact pattern, so this is a metadata-only entry: it contributes
 # its release-metadata.yaml to the build receipt but has no transform.

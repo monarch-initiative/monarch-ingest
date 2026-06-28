@@ -40,6 +40,10 @@ nodes:
       min: 60000
     cureid_nodes:
       min: 10
+    loinc_nodes_nodes:
+      min: 100000
+    loinc_parts_nodes:
+      min: 3000
 edges:
   provided_by:
     alliance_gene_to_expression_edges:
@@ -111,4 +115,10 @@ edges:
       min: 7000
     cureid_edges:
       min: 200
+    loinc_hierarchy_edges:
+      min: 24000
+    loinc_composition_edges:
+      min: 13000
+    loinc_phenotype_edges:
+      min: 10000
 
