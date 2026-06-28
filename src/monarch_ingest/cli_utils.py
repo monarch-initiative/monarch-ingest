@@ -570,6 +570,12 @@ def _merge_files_koza(
         output_format=KGXFormat.TSV,
         # Require primary_knowledge_source on all edges (issue #1276)
         required_edge_fields=["primary_knowledge_source"],
+        # Collapse `category` to a single value on both nodes and edges. koza >=2.6
+        # preserves Biolink-multivalued slots (category is multivalued), which would
+        # flip monarch-kg's `category` from scalar to a list — but the API model
+        # (Association/Node `category: str`), Solr, and the similarity engine all
+        # expect a single string. Keep the historical scalar convention.
+        force_single_valued=["category"],
     )
 
     result = merge_graphs(config)
