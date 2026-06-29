@@ -1028,16 +1028,26 @@ def get_neo4j_column(field: str) -> str:
 def get_neo4j_column_from_db(field: str, column_types: dict) -> str:
     """
     Convert a field name to a column specification with Neo4j type annotations.
-    Uses actual database column types to determine if a field is multi-valued.
-    """
-    col_type = column_types.get(field, "VARCHAR")
-    is_array = col_type.endswith("[]")
 
-    if slot_is_integer(field):
+    Derives the Neo4j type entirely from the actual DuckDB column type. This is
+    self-contained — it does not consult the LinkML schema — so neo4j export
+    works on whatever the merge produced and doesn't depend on a downloadable
+    monarch model schema being resolvable (see get_monarch_schema /
+    ensure_model_files, which couldn't resolve `monarch_kg_schema.yaml`).
+    """
+    col_type = column_types.get(field, "VARCHAR").upper()
+    is_array = col_type.endswith("[]")
+    base = col_type[:-2] if is_array else col_type
+
+    integer_types = {"BIGINT", "INTEGER", "HUGEINT", "SMALLINT", "TINYINT",
+                     "UBIGINT", "UINTEGER", "USMALLINT", "UTINYINT"}
+    float_types = {"DOUBLE", "FLOAT", "REAL", "DECIMAL"}
+
+    if base in integer_types:
         return f'{field} as "{field}:long"'
-    if slot_is_float(field):
+    if base in float_types or base.startswith("DECIMAL"):
         return f'{field} as "{field}:float"'
-    if slot_is_boolean(field):
+    if base == "BOOLEAN":
         return f'{field} as "{field}:boolean"'
     if is_array:
         return f"""array_to_string({field}, ';') as "{field}:string[]" """
