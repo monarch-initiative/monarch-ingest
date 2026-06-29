@@ -14,11 +14,16 @@ if test -f "output/monarch-kg-denormalized-nodes.tsv.gz"; then
     gunzip --force output/monarch-kg-denormalized-nodes.tsv.gz
 fi
 
-echo "Download the schema files using pystow"
-# monarch-app's model.yaml is still used for the Mapping (sssom) core, but
-# the Entity and Association core schemas now come from the koza-produced
-# monarch-kg-schema.yaml that closurize emits alongside output/monarch-kg.duckdb.
-python -c "from monarch_ingest.cli_utils import ensure_model_files; ensure_model_files()"
+# No schema is downloaded from monarch-app anymore. All core schemas come from
+# the ingest side:
+#   - entity / association : the koza-produced output/monarch-kg-schema.yaml
+#     (closurize emits it alongside output/monarch-kg.duckdb)
+#   - sssom (Mapping)      : the canonical SSSOM schema shipped by the installed
+#     sssom-schema package (the mappings ARE SSSOM, unrelated to the KG schema)
+#   - infores             : data/infores/information_resource_registry.yaml
+echo "Resolving the SSSOM schema from the installed sssom-schema package"
+SSSOM_SCHEMA=$(uv run python -c "import sssom_schema, pathlib; print(pathlib.Path(sssom_schema.__file__).parent / 'schema' / 'sssom_schema.yaml')")
+echo "SSSOM schema: $SSSOM_SCHEMA"
 
 if ! test -f "output/monarch-kg-schema.yaml"; then
     echo "ERROR: output/monarch-kg-schema.yaml not found. Run \`ingest merge\` + \`ingest closure\` first."
@@ -81,7 +86,7 @@ for core_name in "${core_names[@]}"; do
 done
 
 echo "Adding sssom schema"
-uv run lsolr create-schema -C sssom -s model.yaml -t Mapping
+uv run lsolr create-schema -C sssom -s "$SSSOM_SCHEMA" -t mapping
 sleep 5
 
 echo "Adding infores schema"
@@ -101,7 +106,7 @@ curl -X POST -H 'Content-Type: application/json' \
   --data-binary @data/infores/infores_catalog.jsonl
 
 
-uv run lsolr bulkload-db -C sssom -s model.yaml output/monarch-kg.duckdb mappings
+uv run lsolr bulkload-db -C sssom -s "$SSSOM_SCHEMA" output/monarch-kg.duckdb mappings
 
 # `_solr_edges` (denormalized_edges + frequency_computed_sortable_float) is
 # materialized by `ingest prepare-solr`, run sequentially before this stage,
