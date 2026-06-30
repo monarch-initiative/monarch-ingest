@@ -1292,6 +1292,15 @@ def do_release(dir: str = OUTPUT_DIR, kghub: bool = False):
             f"gs://monarch-archive/monarch-kg-dev/{release_ver}/tsv/**/*.tsv.gz",
         )
 
+        # gsutil serves *.yaml as application/octet-stream, which makes browsers
+        # download them instead of rendering. Serve as text/plain so they're
+        # viewable inline; all downstream GCS->GCS copies inherit it.
+        sh.gsutil(
+            *"-q -m setmeta -h".split(" "),
+            "Content-Type:text/plain; charset=utf-8",
+            f"gs://monarch-archive/monarch-kg-dev/{release_ver}/*.yaml",
+        )
+
         # copy to data-public bucket
         sh.gsutil(
             *"-q -m cp -r".split(" "),
