@@ -321,7 +321,7 @@ def transform_phenio(
     edges_df = edges_df[edges_df["predicate"].str.contains(":")]
 
     # assign level association category if edge category is empty
-    edges_df["category"].fillna("biolink:Association", inplace=True)
+    edges_df["category"] = edges_df["category"].fillna("biolink:Association")
 
     # Match the node-side FBBT/WBBT -> FBbt/WBbt case normalization so
     # phenio's internal anatomy-anatomy edges (subClassOf, part_of, etc.)
