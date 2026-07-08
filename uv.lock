@@ -2179,7 +2179,7 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.6.0"
+version = "2.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "biolink-model" },
@@ -2197,9 +2197,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/26/d2/fe686cb6602a2abb358073b72e2256aa42c1cc5570a4df3c8dfd9408983a/koza-2.6.0.tar.gz", hash = "sha256:fb270938de295bbf01a59b976a43719f8947ace9ece697ff7decf067d82a8318", size = 432871, upload-time = "2026-06-27T18:07:24.096Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f6/b0/1c151142a80ad37cf23839a0e932457b15736667952762b84e7a36fba69f/koza-2.6.1.tar.gz", hash = "sha256:376fce55541a7ace62b6f24242e1cb5a8a16ac4d49f8dba3c7626f815b2c55e5", size = 435096, upload-time = "2026-07-08T04:52:28.516Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9e/75/1e015ee7ba9c252d246a93c55572cef0ac4f47fc6501c0d2fb147504b225/koza-2.6.0-py3-none-any.whl", hash = "sha256:f07e208badc1a515bc32407bdd5e8086607f65239c647294dea573d0429ce913", size = 166926, upload-time = "2026-06-27T18:07:22.57Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/e7/5b4f3ae558f104560cbb9d07158cedbd3cbd6381c1152ad65d2a5cddd6c5/koza-2.6.1-py3-none-any.whl", hash = "sha256:0d0fbe20d4ce545a6926fc888d2f7de5da017a0abedc2ec39430156e15cd3c95", size = 168209, upload-time = "2026-07-08T04:52:27.13Z" },
 ]
 
 [package.optional-dependencies]
@@ -2692,7 +2692,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], specifier = ">=2.6,<3" },
+    { name = "koza", extras = ["grape"], specifier = ">=2.6.1,<3" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.3" },
