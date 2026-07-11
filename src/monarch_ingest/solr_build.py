@@ -273,6 +273,23 @@ def _commit(cfg: SolrBuildConfig, core: str) -> None:
     requests.get(f"{cfg.base_url}/{core}/update", params={"commit": "true", "waitSearcher": "true"}, timeout=600)
 
 
+def _unload_core(cfg: SolrBuildConfig, core: str) -> None:
+    """Unload a core and delete its index/data/instance dirs (used to drop shard cores)."""
+    if cfg.dry_run:
+        return
+    requests.get(
+        f"{cfg.base_url}/admin/cores",
+        params={
+            "action": "UNLOAD",
+            "core": core,
+            "deleteIndex": "true",
+            "deleteDataDir": "true",
+            "deleteInstanceDir": "true",
+        },
+        timeout=120,
+    )
+
+
 def _run_schema_script(cfg: SolrBuildConfig, script: str) -> None:
     """Run one of the scripts/add_*.sh helpers, retargeted to this base URL.
 
@@ -659,6 +676,12 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
         logger.info(f"{cfg.sharded_target}: numDocs={got:,} expected={expected:,} ({status})")
         if got != expected:
             raise RuntimeError(f"sharded load incomplete: {got} != {expected}")
+
+    # Drop the intermediate shard cores (index + dirs) so the tarball contains only
+    # the merged target, not N redundant copies of the same data.
+    logger.info(f"unloading {cfg.n_shards} intermediate shard cores")
+    for core in shards:
+        _unload_core(cfg, core)
 
     if cfg.skip_tarball:
         logger.info(f"skip_tarball set — leaving Solr running, not producing {cfg.tarball}")
