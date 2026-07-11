@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -194,39 +195,26 @@ class SolrRuntime:
                 self._proc.kill()
 
     def tar_index(self, dest: Path) -> None:
-        """Tar the quiesced index. Solr must be committed & stopped before this."""
+        """Tar the quiesced index. Solr must be committed & stopped before this.
+
+        Compresses with pigz (parallel gzip) when available — single-threaded gzip
+        of a multi-GB index is a serial tail nearly as long as the load itself.
+        """
         cfg = self.cfg
         dest.parent.mkdir(parents=True, exist_ok=True)
+        gz = "pigz" if shutil.which("pigz") else "gzip"
         if self.kind == "docker":
-            # index is quiet on disk in the stopped container's volume; tar via a sidecar
-            with open(dest, "wb") as fh:
-                if cfg.dry_run:
-                    logger.info(
-                        f"$ docker run --rm --volumes-from {cfg.container} busybox "
-                        f"tar czf - -C /var/solr data > {dest}"
-                    )
-                else:
-                    subprocess.run(
-                        [
-                            "docker",
-                            "run",
-                            "--rm",
-                            "--volumes-from",
-                            cfg.container,
-                            "busybox",
-                            "tar",
-                            "czf",
-                            "-",
-                            "-C",
-                            "/var/solr",
-                            "data",
-                        ],
-                        stdout=fh,
-                        check=True,
-                    )
-            _run(["docker", "rm", cfg.container], dry_run=cfg.dry_run, check=False)
+            # busybox tars the stopped container's volume uncompressed to stdout;
+            # compress on the host so we can use the (parallel) pigz.
+            src = f"docker run --rm --volumes-from {cfg.container} busybox tar cf - -C /var/solr data"
         else:  # apptainer: the host bind dir *is* /var/solr
-            _run(["tar", "czf", str(dest), "-C", str(cfg.solrhome), "data"], dry_run=cfg.dry_run)
+            src = f"tar cf - -C {shlex.quote(str(cfg.solrhome))} data"
+        cmd = f"{src} | {gz} > {shlex.quote(str(dest))}"
+        logger.info(f"$ {cmd}")
+        if not cfg.dry_run:
+            subprocess.run(cmd, shell=True, check=True)
+        if self.kind == "docker":
+            _run(["docker", "rm", cfg.container], dry_run=cfg.dry_run, check=False)
 
     # -- readiness --------------------------------------------------------
     def wait_ready(self, timeout: int = 150) -> None:
@@ -531,19 +519,22 @@ def _setup_shard_core(cfg: SolrBuildConfig, core: str) -> None:
 
 
 def _load_shard_worker(a: tuple) -> tuple:
-    """Stream one shard's `WHERE hash(id) % N = j` slice to its core.
+    """Stream one core's rows (optionally a `WHERE hash(id) % N = j` slice).
 
     Module-level (picklable) so ProcessPoolExecutor can fan it out. Reads the
     duckdb read-only with a capped memory_limit and streams fetchmany(batch)
-    rows, POSTing batches through a per-shard thread pool for upload concurrency.
+    rows, POSTing batches through a thread pool for upload concurrency. With
+    ``where=None`` it loads the whole table into ``core`` (the N=1 direct path,
+    no shard/merge).
     """
-    duckdb_path, base, table, n, j, mem, batch, workers = a
+    duckdb_path, base, core, table, where, mem, batch, workers = a
     con = duckdb.connect(duckdb_path, read_only=True)
     con.execute(f"SET memory_limit='{mem}'")
     con.execute("SET threads=2")
-    cur = con.execute(f"SELECT * FROM {table} WHERE hash(id) % {n} = {j}")
+    query = f"SELECT * FROM {table}" + (f" WHERE {where}" if where else "")
+    cur = con.execute(query)
     cols = [d[0] for d in cur.description]
-    url = f"{base}/shard_{j}/update/json/docs"
+    url = f"{base}/{core}/update/json/docs"
     sess = requests.Session()
     sess.mount(base, HTTPAdapter(pool_connections=workers, pool_maxsize=workers * 2))
 
@@ -573,9 +564,9 @@ def _load_shard_worker(a: tuple) -> tuple:
                 total += sum(f.result() for f in done)
         for f in as_completed(inflight):
             total += f.result()
-    sess.get(f"{base}/shard_{j}/update", params={"commit": "true", "waitSearcher": "true"}, timeout=600)
+    sess.get(f"{base}/{core}/update", params={"commit": "true", "waitSearcher": "true"}, timeout=600)
     dt = time.time() - t0
-    return f"shard_{j}", total, round(dt, 1), round(total / dt) if dt else 0
+    return core, total, round(dt, 1), round(total / dt) if dt else 0
 
 
 def _numfound(cfg: SolrBuildConfig, core: str) -> int:
@@ -633,41 +624,48 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
     if runtime.kind == "apptainer":
         _cap_merge_threads(cfg)  # docker keeps the configset in-container; rely on small N instead
 
-    shards = [f"shard_{j}" for j in range(cfg.n_shards)]
-    logger.info(f"setting up {cfg.n_shards} shard cores + target '{cfg.sharded_target}'")
-    for core in [*shards, cfg.sharded_target]:
+    # N=1 loads straight into the target — no shard cores, no collapse (the merge is
+    # CPU/throttle-bound, not I/O-bound, so on a single machine it's pure overhead).
+    sharded = cfg.n_shards > 1
+    shards = [f"shard_{j}" for j in range(cfg.n_shards)] if sharded else []
+    load_cores = shards if sharded else [cfg.sharded_target]
+
+    logger.info(f"setting up {'%d shard cores + ' % cfg.n_shards if sharded else ''}target '{cfg.sharded_target}'")
+    for core in ([*shards, cfg.sharded_target] if sharded else [cfg.sharded_target]):
         _setup_shard_core(cfg, core)
 
-    logger.info(f"streaming load: {cfg.n_shards} shards x {cfg.upload_workers} upload threads")
+    mode = f"{cfg.n_shards} shards" if sharded else "direct (N=1, no merge)"
+    logger.info(f"streaming load: {mode} x {cfg.upload_workers} upload threads")
     if not cfg.dry_run:
         args = [
             (
                 str(cfg.duckdb),
                 cfg.base_url,
+                core,
                 cfg.sharded_table,
-                cfg.n_shards,
-                j,
+                (f"hash(id) % {cfg.n_shards} = {j}" if sharded else None),
                 cfg.duckdb_memory_limit,
                 cfg.batch_size,
                 cfg.upload_workers,
             )
-            for j in range(cfg.n_shards)
+            for j, core in enumerate(load_cores)
         ]
-        with ProcessPoolExecutor(max_workers=cfg.n_shards) as ex:
+        with ProcessPoolExecutor(max_workers=len(load_cores)) as ex:
             results = list(ex.map(_load_shard_worker, args))
         loaded = 0
         for core, total, secs, dps in sorted(results):
             loaded += total
             logger.info(f"  {core}: {total:,} docs in {secs}s ({dps:,}/s)")
-        logger.info(f"loaded {loaded:,} across {cfg.n_shards} shards")
+        logger.info(f"loaded {loaded:,} across {len(load_cores)} core(s)")
 
     expected = None
     if not cfg.dry_run:
         con = duckdb.connect(str(cfg.duckdb), read_only=True)
         expected = con.execute(f"SELECT count(DISTINCT id) FROM {cfg.sharded_table}").fetchone()[0]
 
-    logger.info(f"collapse: MERGEINDEXES {cfg.n_shards} shards -> {cfg.sharded_target}")
-    merge_indexes(cfg, cfg.sharded_target, shards, expected=expected)
+    if sharded:
+        logger.info(f"collapse: MERGEINDEXES {cfg.n_shards} shards -> {cfg.sharded_target}")
+        merge_indexes(cfg, cfg.sharded_target, shards, expected=expected)
 
     if not cfg.dry_run:
         got = _numfound(cfg, cfg.sharded_target)
@@ -678,9 +676,10 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
 
     # Drop the intermediate shard cores (index + dirs) so the tarball contains only
     # the merged target, not N redundant copies of the same data.
-    logger.info(f"unloading {cfg.n_shards} intermediate shard cores")
-    for core in shards:
-        _unload_core(cfg, core)
+    if sharded:
+        logger.info(f"unloading {cfg.n_shards} intermediate shard cores")
+        for core in shards:
+            _unload_core(cfg, core)
 
     if cfg.skip_tarball:
         logger.info(f"skip_tarball set — leaving Solr running, not producing {cfg.tarball}")
