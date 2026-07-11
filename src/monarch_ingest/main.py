@@ -330,6 +330,40 @@ def solr():
     load_solr()
 
 
+@typer_app.command("build-solr")
+def build_solr_cmd(
+    runtime: str = typer.Option("", help="Container runtime: 'docker' | 'apptainer' | '' (auto)."),
+    port: int = typer.Option(8983, help="Solr HTTP port."),
+    heap: str = typer.Option("10g", help="JVM heap (-Xms/-Xmx)."),
+    memory: str = typer.Option("12g", help="Container memory limit (docker -m)."),
+    ram_buffer_mb: int = typer.Option(2048, help="Solr ramBufferSizeMB."),
+    workers: int = typer.Option(4, help="Parallel upload workers per bulk load."),
+    sif: Optional[Path] = typer.Option(None, help="Apptainer .sif (pulled from image if absent)."),
+    duckdb_path: Path = typer.Option(Path("output/monarch-kg.duckdb"), "--duckdb", help="KG duckdb."),
+    schema: Path = typer.Option(Path("output/monarch-kg-schema.yaml"), help="Koza-produced KG schema."),
+    skip_tarball: bool = typer.Option(False, help="Leave Solr running, don't produce solr.tar.gz."),
+    dry_run: bool = typer.Option(False, help="Print the plan without starting Solr or loading."),
+):
+    """Runtime-agnostic (Apptainer/Docker) Solr build — replacement for scripts/load_solr.sh."""
+    from monarch_ingest.solr_build import SolrBuildConfig, build_solr
+
+    build_solr(
+        SolrBuildConfig(
+            duckdb=duckdb_path,
+            schema=schema,
+            runtime=runtime,
+            sif=sif,
+            port=port,
+            heap=heap,
+            memory=memory,
+            ram_buffer_mb=ram_buffer_mb,
+            parallel_workers=workers,
+            skip_tarball=skip_tarball,
+            dry_run=dry_run,
+        )
+    )
+
+
 @typer_app.command()
 def export():
     from monarch_ingest.cli_utils import export_tsv
