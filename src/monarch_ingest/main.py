@@ -379,6 +379,10 @@ def build_solr_sharded_cmd(
     heap: str = typer.Option("16g", help="JVM heap (-Xms/-Xmx)."),
     ram_buffer_mb: int = typer.Option(512, help="Solr ramBufferSizeMB (per core)."),
     sif: Optional[Path] = typer.Option(None, help="Apptainer .sif (pulled from image if absent)."),
+    solrhome: Path = typer.Option(
+        Path(".solrhome"), help="Host dir bound to /var/solr (point at node-local disk, e.g. /tmp/solrhome)."
+    ),
+    tarball: Path = typer.Option(Path("output/solr.tar.gz"), help="Output solr tarball path."),
     duckdb_path: Path = typer.Option(Path("output/monarch-kg.duckdb"), "--duckdb", help="KG duckdb."),
     schema: Path = typer.Option(Path("output/monarch-kg-schema.yaml"), help="Koza-produced KG schema."),
     skip_tarball: bool = typer.Option(False, help="Leave Solr running, don't produce solr.tar.gz."),
@@ -392,6 +396,8 @@ def build_solr_sharded_cmd(
             duckdb=duckdb_path,
             schema=schema,
             runtime=runtime,
+            solrhome=solrhome,
+            tarball=tarball,
             sif=sif,
             port=port,
             heap=heap,

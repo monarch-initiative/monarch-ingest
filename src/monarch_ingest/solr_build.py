@@ -82,6 +82,7 @@ class SolrBuildConfig:
     duckdb_memory_limit: str = "4GB"  # capped per shard reader so N readers stay bounded
     batch_size: int = 5000
     merge_threads: int = 2  # ConcurrentMergeScheduler maxThreadCount per shard (so N shards != 4N threads)
+    merge_timeout: int = 7200  # seconds to wait for the MERGEINDEXES collapse to finish
     sharded_table: str = "_solr_edges"
     sharded_top_class: str = "Association"
     sharded_copyfields: str = "add_association_copyfields.sh"
@@ -561,14 +562,44 @@ def _load_shard_worker(a: tuple) -> tuple:
     return f"shard_{j}", total, round(dt, 1), round(total / dt) if dt else 0
 
 
-def merge_indexes(cfg: SolrBuildConfig, target: str, sources: list) -> None:
-    """MERGEINDEXES the source cores into `target` (segment copy, no re-analysis), then commit."""
+def _numfound(cfg: SolrBuildConfig, core: str) -> int:
+    r = requests.get(f"{cfg.base_url}/{core}/select", params={"q": "*:*", "rows": 0}, timeout=120)
+    return r.json()["response"]["numFound"]
+
+
+def merge_indexes(cfg: SolrBuildConfig, target: str, sources: list, expected: Optional[int] = None) -> None:
+    """MERGEINDEXES the source cores into ``target`` (segment copy, no re-analysis).
+
+    Robust to a dropped connection: a large merge runs server-side on the Lucene
+    writer thread and can outlive the HTTP request (Jetty may close a long-blocked
+    request that sends no response bytes). So fire the request, tolerate a
+    disconnect, and *poll* the target doc count until the merge lands — never
+    blindly retry the merge (addIndexes is not idempotent; it would duplicate ids).
+    """
     if cfg.dry_run:
         logger.info(f"[dry-run] would MERGEINDEXES {sources} -> {target}")
         return
     src = "".join(f"&srcCore={s}" for s in sources)
-    requests.get(f"{cfg.base_url}/admin/cores?action=mergeindexes&core={target}{src}", timeout=3600)
-    _commit(cfg, target)
+    url = f"{cfg.base_url}/admin/cores?action=mergeindexes&core={target}{src}"
+    logger.info(f"MERGEINDEXES {len(sources)} shards -> {target} (polling for completion)")
+    try:
+        requests.get(url, timeout=(30, cfg.merge_timeout))
+    except requests.exceptions.RequestException as e:
+        logger.warning(f"mergeindexes connection dropped ({e}); merge continues server-side, polling")
+
+    deadline = time.time() + cfg.merge_timeout
+    last = -1
+    while time.time() < deadline:
+        _commit(cfg, target)
+        got = _numfound(cfg, target)
+        logger.info(f"  merged {got:,}" + (f"/{expected:,}" if expected is not None else ""))
+        if expected is not None and got >= expected:
+            return
+        if expected is None and got > 0 and got == last:
+            return  # count stabilized and no expected target given
+        last = got
+        time.sleep(30)
+    raise RuntimeError(f"MERGEINDEXES did not complete within {cfg.merge_timeout}s (target has {got})")
 
 
 def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
@@ -614,19 +645,18 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
             logger.info(f"  {core}: {total:,} docs in {secs}s ({dps:,}/s)")
         logger.info(f"loaded {loaded:,} across {cfg.n_shards} shards")
 
-    logger.info(f"collapse: MERGEINDEXES {cfg.n_shards} shards -> {cfg.sharded_target}")
-    merge_indexes(cfg, cfg.sharded_target, shards)
-
+    expected = None
     if not cfg.dry_run:
         con = duckdb.connect(str(cfg.duckdb), read_only=True)
         expected = con.execute(f"SELECT count(DISTINCT id) FROM {cfg.sharded_table}").fetchone()[0]
-        got = requests.get(
-            f"{cfg.base_url}/{cfg.sharded_target}/select", params={"q": "*:*", "rows": 0}, timeout=120
-        ).json()["response"]["numFound"]
-        logger.info(
-            f"{cfg.sharded_target}: numDocs={got:,} expected={expected:,} "
-            f"({'OK' if got == expected else 'MISMATCH'})"
-        )
+
+    logger.info(f"collapse: MERGEINDEXES {cfg.n_shards} shards -> {cfg.sharded_target}")
+    merge_indexes(cfg, cfg.sharded_target, shards, expected=expected)
+
+    if not cfg.dry_run:
+        got = _numfound(cfg, cfg.sharded_target)
+        status = "OK" if got == expected else "MISMATCH"
+        logger.info(f"{cfg.sharded_target}: numDocs={got:,} expected={expected:,} ({status})")
         if got != expected:
             raise RuntimeError(f"sharded load incomplete: {got} != {expected}")
 
