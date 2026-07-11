@@ -369,6 +369,9 @@ def build_solr_sharded_cmd(
     n_shards: int = typer.Option(4, "--shards", help="Number of shards (keep <= node cores / 4)."),
     upload_workers: int = typer.Option(4, help="Concurrent POST threads within each shard."),
     merge_threads: int = typer.Option(2, help="ConcurrentMergeScheduler maxThreadCount per shard."),
+    preanalyze_closure_labels: bool = typer.Option(
+        False, help="Pre-tokenize *_closure_label once per distinct value (cuts index-time analysis CPU)."
+    ),
     memory_limit: str = typer.Option("4GB", help="DuckDB memory_limit per shard reader."),
     batch: int = typer.Option(5000, help="Rows per POST batch."),
     target: str = typer.Option("association", help="Merged target core name."),
@@ -409,6 +412,7 @@ def build_solr_sharded_cmd(
             n_shards=n_shards,
             upload_workers=upload_workers,
             merge_threads=merge_threads,
+            preanalyze_closure_labels=preanalyze_closure_labels,
             duckdb_memory_limit=memory_limit,
             batch_size=batch,
             sharded_target=target,

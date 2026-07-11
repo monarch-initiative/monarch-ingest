@@ -91,6 +91,23 @@ class SolrBuildConfig:
     sharded_copyfields: str = "add_association_copyfields.sh"
     sharded_target: str = "association"
 
+    # PreAnalyzedField: pre-tokenize the closure-label fields once per distinct value
+    # (~356K) instead of re-analyzing every occurrence (~617M) at index time. Cuts
+    # index-time analysis CPU; the _t fields are populated by the loader (not copyField).
+    preanalyze_closure_labels: bool = False
+    preanalyze_via_fieldtype: str = "text"  # analyzer to pre-run (must match the query analyzer)
+
+    @property
+    def preanalyze_map(self) -> tuple:
+        """(raw duckdb column -> target *_t field) pairs to pre-analyze, or ()."""
+        if not self.preanalyze_closure_labels:
+            return ()
+        # subject/object closure labels are the searched _t fields (see the association qf)
+        return (
+            ("subject_closure_label", "subject_closure_label_t"),
+            ("object_closure_label", "object_closure_label_t"),
+        )
+
     @property
     def base_url(self) -> str:
         """Base Solr URL, e.g. http://localhost:8983/solr."""
@@ -503,9 +520,16 @@ def _add_fieldtypes_to_core(cfg: SolrBuildConfig, core: str) -> None:
 
 
 def _add_copyfields_to_core(cfg: SolrBuildConfig, core: str, script: str) -> None:
-    """Retarget a scripts/add_*_copyfields.sh to one specific core + port, run it."""
+    """Retarget a scripts/add_*_copyfields.sh to one specific core + port, run it.
+
+    When a column is pre-analyzed, drop it from the copyField loop — the loader
+    populates its _t field with pre-analyzed tokens, and copying the raw value in
+    would fail to parse as pre-analyzed JSON.
+    """
     text = (cfg.scripts_dir / script).read_text()
     text = text.replace("localhost:8983", f"{cfg.host}:{cfg.port}").replace("/solr/association/", f"/solr/{core}/")
+    for raw_col, _ in cfg.preanalyze_map:
+        text = text.replace(f" {raw_col}\n", "\n").replace(f" {raw_col} ", " ")
     d = Path(".benchscripts")
     d.mkdir(exist_ok=True)
     patched = d / f"cf_{core}.sh"
@@ -521,6 +545,83 @@ def _setup_shard_core(cfg: SolrBuildConfig, core: str) -> None:
     _create_schema(cfg, core, cfg.sharded_top_class, cfg.schema)
     _disable_tlog_and_reload(cfg, core)
     _add_copyfields_to_core(cfg, core, cfg.sharded_copyfields)
+    if cfg.preanalyze_map:
+        _setup_preanalyzed_fields(cfg, core)
+
+
+def _preanalyze(base: str, core: str, fieldtype: str, sess: requests.Session, label: str) -> str:
+    """Return the Solr JsonPreAnalyzedParser serialization of `label` under `fieldtype`."""
+    r = sess.get(
+        f"{base}/{core}/analysis/field",
+        params={"analysis.fieldtype": fieldtype, "analysis.fieldvalue": label, "wt": "json"},
+        timeout=30,
+    )
+    final = r.json()["analysis"]["field_types"][fieldtype]["index"][-1]
+    toks = [
+        {
+            "t": t["text"],
+            "s": t.get("start"),
+            "e": t.get("end"),
+            "i": t["positionIncrement"] if isinstance(t.get("positionIncrement"), int) else 1,
+        }
+        for t in final
+    ]
+    return json.dumps({"v": "1", "str": label, "tokens": toks})
+
+
+def build_preanalyzed_cache(cfg: SolrBuildConfig) -> Optional[Path]:
+    """Analyze each DISTINCT closure-label value once; write {value: preanalyzed_json} to disk.
+
+    Returns the cache path (workers load it), or None if pre-analysis is off. Solr
+    must be up (uses its analysis endpoint against `preanalyze_via_fieldtype`).
+    """
+    if not cfg.preanalyze_map or cfg.dry_run:
+        return None
+    raw_cols = [raw for raw, _ in cfg.preanalyze_map]
+    con = duckdb.connect(str(cfg.duckdb), read_only=True)
+    unions = " UNION ".join(f"SELECT DISTINCT unnest({c}) AS v FROM {cfg.sharded_table}" for c in raw_cols)
+    labels = [r[0] for r in con.execute(f"SELECT DISTINCT v FROM ({unions}) t WHERE v IS NOT NULL").fetchall()]
+    logger.info(f"pre-analyzing {len(labels):,} distinct label values (once, vs re-analyzing every occurrence)")
+    sess = requests.Session()
+    sess.mount(cfg.base_url, HTTPAdapter(pool_connections=24, pool_maxsize=48))
+
+    def one(label):
+        return label, _preanalyze(cfg.base_url, cfg.sharded_target, cfg.preanalyze_via_fieldtype, sess, label)
+
+    cache = {}
+    with ThreadPoolExecutor(max_workers=24) as ex:
+        for label, js in ex.map(one, labels):
+            cache[label] = js
+    dest = Path(".preanalyzed_cache.json")
+    dest.write_text(json.dumps(cache))
+    logger.info(f"wrote pre-analyzed cache: {len(cache):,} entries -> {dest}")
+    return dest
+
+
+def _setup_preanalyzed_fields(cfg: SolrBuildConfig, core: str) -> None:
+    """Add the preanalyzed_text type and define the *_closure_label_t fields as it."""
+    if cfg.dry_run:
+        return
+    requests.post(
+        f"{cfg.base_url}/{core}/schema",
+        data=(cfg.scripts_dir / "preanalyzed-fieldtype.json").read_bytes(),
+        headers={"Content-Type": "application/json"},
+        timeout=60,
+    )
+    for _, t_field in cfg.preanalyze_map:
+        requests.post(
+            f"{cfg.base_url}/{core}/schema",
+            json={
+                "add-field": {
+                    "name": t_field,
+                    "type": "preanalyzed_text",
+                    "indexed": True,
+                    "stored": False,
+                    "multiValued": True,
+                }
+            },
+            timeout=60,
+        )
 
 
 def _load_shard_worker(a: tuple) -> tuple:
@@ -530,9 +631,11 @@ def _load_shard_worker(a: tuple) -> tuple:
     duckdb read-only with a capped memory_limit and streams fetchmany(batch)
     rows, POSTing batches through a thread pool for upload concurrency. With
     ``where=None`` it loads the whole table into ``core`` (the N=1 direct path,
-    no shard/merge).
+    no shard/merge). If ``preanalyze`` (a (raw_col, t_field) list) and a cache
+    path are given, the *_t fields are populated with pre-analyzed tokens from the
+    cache instead of relying on copyField re-analysis.
     """
-    duckdb_path, base, core, table, where, mem, batch, workers = a
+    duckdb_path, base, core, table, where, mem, batch, workers, preanalyze, cache_path = a
     con = duckdb.connect(duckdb_path, read_only=True)
     con.execute(f"SET memory_limit='{mem}'")
     con.execute("SET threads=2")
@@ -542,6 +645,15 @@ def _load_shard_worker(a: tuple) -> tuple:
     url = f"{base}/{core}/update/json/docs"
     sess = requests.Session()
     sess.mount(base, HTTPAdapter(pool_connections=workers, pool_maxsize=workers * 2))
+    cache = json.loads(Path(cache_path).read_text()) if cache_path else {}
+
+    def build_doc(row) -> dict:
+        doc = {c: v for c, v in zip(cols, row) if v is not None}
+        for raw_col, t_field in preanalyze:
+            vals = doc.get(raw_col)
+            if vals:
+                doc[t_field] = [cache[v] for v in vals if v in cache]
+        return doc
 
     def post(docs: list) -> int:
         r = sess.post(
@@ -562,7 +674,7 @@ def _load_shard_worker(a: tuple) -> tuple:
             rows = cur.fetchmany(batch)
             if not rows:
                 break
-            docs = [{c: v for c, v in zip(cols, row) if v is not None} for row in rows]
+            docs = [build_doc(row) for row in rows]
             inflight.add(ex.submit(post, docs))
             if len(inflight) >= cap:
                 done, inflight = wait(inflight, return_when=FIRST_COMPLETED)
@@ -639,6 +751,8 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
     for core in ([*shards, cfg.sharded_target] if sharded else [cfg.sharded_target]):
         _setup_shard_core(cfg, core)
 
+    cache_path = str(build_preanalyzed_cache(cfg)) if cfg.preanalyze_map else None
+
     mode = f"{cfg.n_shards} shards" if sharded else "direct (N=1, no merge)"
     logger.info(f"streaming load: {mode} x {cfg.upload_workers} upload threads")
     if not cfg.dry_run:
@@ -652,6 +766,8 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
                 cfg.duckdb_memory_limit,
                 cfg.batch_size,
                 cfg.upload_workers,
+                cfg.preanalyze_map,
+                cache_path,
             )
             for j, core in enumerate(load_cores)
         ]

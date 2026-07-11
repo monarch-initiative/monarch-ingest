@@ -1,0 +1,22 @@
+{
+  "add-field-type": {
+    "name": "preanalyzed_text",
+    "class": "solr.PreAnalyzedField",
+    "parserImpl": "org.apache.solr.schema.JsonPreAnalyzedParser",
+    "storeOffsetsWithPositions": "true",
+    "queryAnalyzer": {
+      "tokenizer": { "class": "solr.StandardTokenizerFactory" },
+      "filters": [
+        { "class": "solr.StopFilterFactory", "ignoreCase": "true", "words": "stopwords.txt" },
+        { "class": "solr.WordDelimiterGraphFilterFactory", "generateWordParts": "1", "generateNumberParts": "1",
+          "catenateWords": "0", "catenateNumbers": "0", "catenateAll": "1", "splitOnCaseChange": "0",
+          "preserveOriginal": "1", "splitOnNumerics": "0" },
+        { "class": "solr.ASCIIFoldingFilterFactory" },
+        { "class": "solr.LowerCaseFilterFactory" },
+        { "class": "solr.KeywordMarkerFilterFactory", "protected": "protwords.txt" },
+        { "class": "solr.EnglishMinimalStemFilterFactory" },
+        { "class": "solr.RemoveDuplicatesTokenFilterFactory" }
+      ]
+    }
+  }
+}
