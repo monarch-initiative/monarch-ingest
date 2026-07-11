@@ -21,17 +21,20 @@ Wire-up: ``ingest build-solr`` (see main.py). The legacy ``ingest solr`` /
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
 import sys
 import time
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, ThreadPoolExecutor, as_completed, wait
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import duckdb
 import requests
+from requests.adapters import HTTPAdapter
 
 from monarch_ingest.utils.log_utils import get_logger
 
@@ -71,6 +74,18 @@ class SolrBuildConfig:
     tarball: Path = Path("output/solr.tar.gz")
     scripts_dir: Path = Path("scripts")
     dry_run: bool = False
+
+    # -- sharded build (step 2): shard one big core N ways, load in parallel with
+    #    our streaming loader, then MERGEINDEXES-collapse into `sharded_target`.
+    n_shards: int = 1
+    upload_workers: int = 4  # concurrent POST threads *within* each shard
+    duckdb_memory_limit: str = "4GB"  # capped per shard reader so N readers stay bounded
+    batch_size: int = 5000
+    merge_threads: int = 2  # ConcurrentMergeScheduler maxThreadCount per shard (so N shards != 4N threads)
+    sharded_table: str = "_solr_edges"
+    sharded_top_class: str = "Association"
+    sharded_copyfields: str = "add_association_copyfields.sh"
+    sharded_target: str = "association"
 
     @property
     def base_url(self) -> str:
@@ -388,6 +403,236 @@ def build_solr(cfg: Optional[SolrBuildConfig] = None) -> None:
         return
 
     logger.info("committing + stopping Solr, then tarring the index")
+    runtime.stop()
+    time.sleep(3)
+    runtime.tar_index(cfg.tarball)
+    logger.info(f"wrote {cfg.tarball}")
+
+
+# ============================================================================
+# Step 2: sharded build — parallelize one big core past a single IndexWriter.
+#
+# Shard the source table N ways by hash(id), load each shard core in parallel
+# with our streaming loader (read-only, memory-capped, concurrent upload — no
+# linkml-solr, no snapshot, no partition files), then MERGEINDEXES-collapse the
+# N shard cores into one target core. The collapse copies segments (no
+# re-analysis), so the expensive tokenization/copyfield work happens once, in
+# parallel, in the shards. Sharding is the only way past a single Lucene
+# IndexWriter's merge ceiling; on one node keep N <= cores/4 (each shard drives
+# ~upload_workers analysis threads + merge_threads merge threads).
+# ============================================================================
+
+
+def install_default_configset(cfg: SolrBuildConfig) -> None:
+    """Apptainer: copy the image's ``_default`` configset into SOLR_HOME.
+
+    SOLR_HOME is /var/solr/data — a fresh empty bind — so HTTP CREATE with
+    configSet=_default can't find the configset (it ships in the image at
+    /opt/solr/...). Copy it in once before creating cores.
+    """
+    if cfg.dry_run:
+        logger.info("[dry-run] would install _default configset into SOLR_HOME")
+        return
+    sif = cfg.sif or Path(".solr8.sif")
+    subprocess.run(
+        [
+            "apptainer",
+            "exec",
+            "--bind",
+            f"{cfg.solrhome}:/var/solr",
+            str(sif),
+            "bash",
+            "-c",
+            "mkdir -p /var/solr/data/configsets && "
+            "cp -rn /opt/solr/server/solr/configsets/_default /var/solr/data/configsets/_default",
+        ],
+        check=True,
+    )
+
+
+def _cap_merge_threads(cfg: SolrBuildConfig) -> None:
+    """Cap ConcurrentMergeScheduler threads in the installed configset's solrconfig.
+
+    Without this, N shards spawn up to 4N merge threads and thrash the node.
+    Cores copy the configset at CREATE time, so edit it before creating shards.
+    """
+    conf = cfg.solrhome / "data" / "configsets" / "_default" / "conf" / "solrconfig.xml"
+    if cfg.dry_run or not conf.exists():
+        return
+    text = conf.read_text()
+    if "<mergeScheduler" in text:
+        return
+    ms = (
+        '<mergeScheduler class="org.apache.lucene.index.ConcurrentMergeScheduler">'
+        f'<int name="maxThreadCount">{cfg.merge_threads}</int>'
+        '<int name="maxMergeCount">6</int></mergeScheduler>'
+    )
+    if "<indexConfig>" in text:
+        text = text.replace("<indexConfig>", "<indexConfig>\n    " + ms, 1)
+    else:
+        text = text.replace("</config>", f"  <indexConfig>\n    {ms}\n  </indexConfig>\n</config>", 1)
+    conf.write_text(text)
+
+
+def _add_fieldtypes_to_core(cfg: SolrBuildConfig, core: str) -> None:
+    """POST the custom field-type definitions to one specific core."""
+    if cfg.dry_run:
+        return
+    for f in (
+        "text-fieldtype.json",
+        "autocomplete-fieldtype.json",
+        "grounding-fieldtype.json",
+        "sortable-float-fieldtype.json",
+    ):
+        requests.post(
+            f"{cfg.base_url}/{core}/schema",
+            data=(cfg.scripts_dir / f).read_bytes(),
+            headers={"Content-Type": "application/json"},
+            timeout=60,
+        )
+
+
+def _add_copyfields_to_core(cfg: SolrBuildConfig, core: str, script: str) -> None:
+    """Retarget a scripts/add_*_copyfields.sh to one specific core + port, run it."""
+    text = (cfg.scripts_dir / script).read_text()
+    text = text.replace("localhost:8983", f"{cfg.host}:{cfg.port}").replace("/solr/association/", f"/solr/{core}/")
+    d = Path(".benchscripts")
+    d.mkdir(exist_ok=True)
+    patched = d / f"cf_{core}.sh"
+    patched.write_text(text)
+    patched.chmod(0o755)
+    _run(["bash", str(patched)], dry_run=cfg.dry_run, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def _setup_shard_core(cfg: SolrBuildConfig, core: str) -> None:
+    """Create one shard/target core with the full association schema."""
+    _create_core(cfg, core)
+    _add_fieldtypes_to_core(cfg, core)
+    _create_schema(cfg, core, cfg.sharded_top_class, cfg.schema)
+    _disable_tlog_and_reload(cfg, core)
+    _add_copyfields_to_core(cfg, core, cfg.sharded_copyfields)
+
+
+def _load_shard_worker(a: tuple) -> tuple:
+    """Stream one shard's `WHERE hash(id) % N = j` slice to its core.
+
+    Module-level (picklable) so ProcessPoolExecutor can fan it out. Reads the
+    duckdb read-only with a capped memory_limit and streams fetchmany(batch)
+    rows, POSTing batches through a per-shard thread pool for upload concurrency.
+    """
+    duckdb_path, base, table, n, j, mem, batch, workers = a
+    con = duckdb.connect(duckdb_path, read_only=True)
+    con.execute(f"SET memory_limit='{mem}'")
+    con.execute("SET threads=2")
+    cur = con.execute(f"SELECT * FROM {table} WHERE hash(id) % {n} = {j}")
+    cols = [d[0] for d in cur.description]
+    url = f"{base}/shard_{j}/update/json/docs"
+    sess = requests.Session()
+    sess.mount(base, HTTPAdapter(pool_connections=workers, pool_maxsize=workers * 2))
+
+    def post(docs: list) -> int:
+        r = sess.post(
+            url,
+            params={"commit": "false"},
+            data=json.dumps(docs, default=str),
+            headers={"Content-Type": "application/json"},
+            timeout=300,
+        )
+        r.raise_for_status()
+        return len(docs)
+
+    total, t0 = 0, time.time()
+    inflight: set = set()
+    cap = workers * 2
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        while True:
+            rows = cur.fetchmany(batch)
+            if not rows:
+                break
+            docs = [{c: v for c, v in zip(cols, row) if v is not None} for row in rows]
+            inflight.add(ex.submit(post, docs))
+            if len(inflight) >= cap:
+                done, inflight = wait(inflight, return_when=FIRST_COMPLETED)
+                total += sum(f.result() for f in done)
+        for f in as_completed(inflight):
+            total += f.result()
+    sess.get(f"{base}/shard_{j}/update", params={"commit": "true", "waitSearcher": "true"}, timeout=600)
+    dt = time.time() - t0
+    return f"shard_{j}", total, round(dt, 1), round(total / dt) if dt else 0
+
+
+def merge_indexes(cfg: SolrBuildConfig, target: str, sources: list) -> None:
+    """MERGEINDEXES the source cores into `target` (segment copy, no re-analysis), then commit."""
+    if cfg.dry_run:
+        logger.info(f"[dry-run] would MERGEINDEXES {sources} -> {target}")
+        return
+    src = "".join(f"&srcCore={s}" for s in sources)
+    requests.get(f"{cfg.base_url}/admin/cores?action=mergeindexes&core={target}{src}", timeout=3600)
+    _commit(cfg, target)
+
+
+def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
+    """Sharded build of one big core (default: association / _solr_edges)."""
+    cfg = cfg or SolrBuildConfig()
+    if cfg.n_shards < 1:
+        raise ValueError("n_shards must be >= 1")
+    if not cfg.schema.exists() and not cfg.dry_run:
+        raise FileNotFoundError(f"{cfg.schema} not found — run `ingest merge` + `ingest closure` first.")
+
+    runtime = SolrRuntime(cfg)
+    runtime.start()
+    runtime.wait_ready()
+    if runtime.kind == "apptainer":
+        install_default_configset(cfg)
+        _cap_merge_threads(cfg)
+
+    shards = [f"shard_{j}" for j in range(cfg.n_shards)]
+    logger.info(f"setting up {cfg.n_shards} shard cores + target '{cfg.sharded_target}'")
+    for core in [*shards, cfg.sharded_target]:
+        _setup_shard_core(cfg, core)
+
+    logger.info(f"streaming load: {cfg.n_shards} shards x {cfg.upload_workers} upload threads")
+    if not cfg.dry_run:
+        args = [
+            (
+                str(cfg.duckdb),
+                cfg.base_url,
+                cfg.sharded_table,
+                cfg.n_shards,
+                j,
+                cfg.duckdb_memory_limit,
+                cfg.batch_size,
+                cfg.upload_workers,
+            )
+            for j in range(cfg.n_shards)
+        ]
+        with ProcessPoolExecutor(max_workers=cfg.n_shards) as ex:
+            results = list(ex.map(_load_shard_worker, args))
+        loaded = 0
+        for core, total, secs, dps in sorted(results):
+            loaded += total
+            logger.info(f"  {core}: {total:,} docs in {secs}s ({dps:,}/s)")
+        logger.info(f"loaded {loaded:,} across {cfg.n_shards} shards")
+
+    logger.info(f"collapse: MERGEINDEXES {cfg.n_shards} shards -> {cfg.sharded_target}")
+    merge_indexes(cfg, cfg.sharded_target, shards)
+
+    if not cfg.dry_run:
+        con = duckdb.connect(str(cfg.duckdb), read_only=True)
+        expected = con.execute(f"SELECT count(DISTINCT id) FROM {cfg.sharded_table}").fetchone()[0]
+        got = requests.get(
+            f"{cfg.base_url}/{cfg.sharded_target}/select", params={"q": "*:*", "rows": 0}, timeout=120
+        ).json()["response"]["numFound"]
+        logger.info(
+            f"{cfg.sharded_target}: numDocs={got:,} expected={expected:,} "
+            f"({'OK' if got == expected else 'MISMATCH'})"
+        )
+        if got != expected:
+            raise RuntimeError(f"sharded load incomplete: {got} != {expected}")
+
+    if cfg.skip_tarball:
+        logger.info(f"skip_tarball set — leaving Solr running, not producing {cfg.tarball}")
+        return
     runtime.stop()
     time.sleep(3)
     runtime.tar_index(cfg.tarball)
