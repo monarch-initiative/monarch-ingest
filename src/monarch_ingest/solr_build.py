@@ -66,6 +66,8 @@ class SolrBuildConfig:
     port: int = 8983
     memory: str = "12g"  # container memory limit (docker -m)
     heap: str = "10g"  # JVM -Xms/-Xmx
+    active_processors: Optional[int] = None  # -XX:ActiveProcessorCount; set on hosts where nproc/cgroup
+    #   under-reports CPUs (SLURM cpuset), else Lucene's merge scheduler auto-throttles merge I/O to a crawl
     ram_buffer_mb: int = 2048
     parallel_workers: int = 4
     chunk_size: int = 100_000
@@ -140,10 +142,13 @@ class SolrRuntime:
     def start(self) -> None:
         """Launch Solr (detached) under the resolved runtime."""
         cfg = self.cfg
+        solr_opts = f"-Dsolr.ramBufferSizeMB={cfg.ram_buffer_mb} -Dsolr.jetty.request.header.size=65535"
+        if cfg.active_processors:
+            solr_opts += f" -XX:ActiveProcessorCount={cfg.active_processors}"
         env_solr = {
             "SOLR_PORT": str(cfg.port),
             "SOLR_JAVA_MEM": f"-Xms{cfg.heap} -Xmx{cfg.heap}",
-            "SOLR_OPTS": f"-Dsolr.ramBufferSizeMB={cfg.ram_buffer_mb} -Dsolr.jetty.request.header.size=65535",
+            "SOLR_OPTS": solr_opts,
         }
         if self.kind == "docker":
             _run(["docker", "rm", "-f", cfg.container], dry_run=cfg.dry_run, check=False)

@@ -377,6 +377,9 @@ def build_solr_sharded_cmd(
     runtime: str = typer.Option("", help="Container runtime: 'docker' | 'apptainer' | '' (auto)."),
     port: int = typer.Option(8983, help="Solr HTTP port."),
     heap: str = typer.Option("16g", help="JVM heap (-Xms/-Xmx)."),
+    active_processors: int = typer.Option(
+        None, help="-XX:ActiveProcessorCount; set = allocated CPUs on SLURM where nproc under-reports."
+    ),
     ram_buffer_mb: int = typer.Option(512, help="Solr ramBufferSizeMB (per core)."),
     sif: Optional[Path] = typer.Option(None, help="Apptainer .sif (pulled from image if absent)."),
     solrhome: Path = typer.Option(
@@ -401,6 +404,7 @@ def build_solr_sharded_cmd(
             sif=sif,
             port=port,
             heap=heap,
+            active_processors=active_processors,
             ram_buffer_mb=ram_buffer_mb,
             n_shards=n_shards,
             upload_workers=upload_workers,
