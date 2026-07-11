@@ -117,7 +117,8 @@ def _run(cmd: list[str], *, dry_run: bool, **kwargs) -> Optional[subprocess.Comp
     logger.info(f"$ {' '.join(str(c) for c in cmd)}")
     if dry_run:
         return None
-    return subprocess.run([str(c) for c in cmd], check=True, **kwargs)
+    kwargs.setdefault("check", True)  # callers may override with check=False (e.g. docker rm/stop)
+    return subprocess.run([str(c) for c in cmd], **kwargs)
 
 
 def _lsolr() -> str:
@@ -441,31 +442,29 @@ def build_solr(cfg: Optional[SolrBuildConfig] = None) -> None:
 # ============================================================================
 
 
-def install_default_configset(cfg: SolrBuildConfig) -> None:
-    """Apptainer: copy the image's ``_default`` configset into SOLR_HOME.
+def install_default_configset(cfg: SolrBuildConfig, runtime_kind: str) -> None:
+    """Copy the image's ``_default`` configset into SOLR_HOME (both runtimes).
 
-    SOLR_HOME is /var/solr/data — a fresh empty bind — so HTTP CREATE with
-    configSet=_default can't find the configset (it ships in the image at
-    /opt/solr/...). Copy it in once before creating cores.
+    SOLR_HOME is /var/solr/data and starts empty (fresh apptainer bind, or a fresh
+    docker container's var dir), so HTTP CREATE with configSet=_default can't find
+    the configset — it only ships in the install dir at /opt/solr/... . Copy it in
+    once before creating cores.
     """
     if cfg.dry_run:
         logger.info("[dry-run] would install _default configset into SOLR_HOME")
         return
-    sif = cfg.sif or Path(".solr8.sif")
-    subprocess.run(
-        [
-            "apptainer",
-            "exec",
-            "--bind",
-            f"{cfg.solrhome}:/var/solr",
-            str(sif),
-            "bash",
-            "-c",
-            "mkdir -p /var/solr/data/configsets && "
-            "cp -rn /opt/solr/server/solr/configsets/_default /var/solr/data/configsets/_default",
-        ],
-        check=True,
+    copy = (
+        "mkdir -p /var/solr/data/configsets && "
+        "cp -rn /opt/solr/server/solr/configsets/_default /var/solr/data/configsets/_default"
     )
+    if runtime_kind == "docker":
+        subprocess.run(["docker", "exec", cfg.container, "bash", "-c", copy], check=True)
+    else:
+        sif = cfg.sif or Path(".solr8.sif")
+        subprocess.run(
+            ["apptainer", "exec", "--bind", f"{cfg.solrhome}:/var/solr", str(sif), "bash", "-c", copy],
+            check=True,
+        )
 
 
 def _cap_merge_threads(cfg: SolrBuildConfig) -> None:
@@ -630,9 +629,9 @@ def build_solr_sharded(cfg: Optional[SolrBuildConfig] = None) -> None:
     runtime = SolrRuntime(cfg)
     runtime.start()
     runtime.wait_ready()
+    install_default_configset(cfg, runtime.kind)  # SOLR_HOME starts empty under both runtimes
     if runtime.kind == "apptainer":
-        install_default_configset(cfg)
-        _cap_merge_threads(cfg)
+        _cap_merge_threads(cfg)  # docker keeps the configset in-container; rely on small N instead
 
     shards = [f"shard_{j}" for j in range(cfg.n_shards)]
     logger.info(f"setting up {cfg.n_shards} shard cores + target '{cfg.sharded_target}'")
