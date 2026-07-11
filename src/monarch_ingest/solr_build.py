@@ -36,10 +36,24 @@ from typing import Optional
 import duckdb
 import requests
 from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from monarch_ingest.utils.log_utils import get_logger
 
 logger = get_logger(__name__)
+
+
+def _pooled_session(base: str, pool: int, maxsize: int) -> requests.Session:
+    """A requests Session with a bounded connection pool and retry/backoff.
+
+    On macOS, Docker Desktop's localhost proxy can transiently return
+    ``OSError(55, 'No buffer space available')`` under high request rate; the
+    retry with backoff absorbs those instead of failing the whole build.
+    """
+    sess = requests.Session()
+    retry = Retry(total=5, backoff_factor=0.5, status_forcelist=(500, 502, 503, 504))
+    sess.mount(base, HTTPAdapter(pool_connections=pool, pool_maxsize=maxsize, max_retries=retry))
+    return sess
 
 # Cores whose committed doc count must equal the distinct-id count of their source
 # table. A silently short index is the worst release defect we can ship (build #328
@@ -535,8 +549,7 @@ def _load_shard_worker(a: tuple) -> tuple:
     cur = con.execute(query)
     cols = [d[0] for d in cur.description]
     url = f"{base}/{core}/update/json/docs"
-    sess = requests.Session()
-    sess.mount(base, HTTPAdapter(pool_connections=workers, pool_maxsize=workers * 2))
+    sess = _pooled_session(base, workers, workers * 2)
 
     def post(docs: list) -> int:
         r = sess.post(
