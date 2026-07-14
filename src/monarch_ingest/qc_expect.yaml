@@ -107,6 +107,8 @@ edges:
       min: 180000
     mmrrc_allele_to_genotype_edges:
       min: 25000
+    mmrrc_genotype_to_gene_edges:
+      min: 450000
     mmrrc_genotype_to_phenotype_edges:
       min: 40000
     cureid_edges:

@@ -188,6 +188,7 @@ mmrrc:
   files:
     - mmrrc_allele_to_genotype_edges.tsv
     - mmrrc_genotype_nodes.tsv
+    - mmrrc_genotype_to_gene_edges.tsv
     - mmrrc_genotype_to_phenotype_edges.tsv
 
 cureid:
