@@ -21,7 +21,6 @@ nav:
     - Alliance: 'Sources/alliance.md'
     - BGee: 'Sources/bgee.md'
     - BioGrid: 'Sources/biogrid.md'
-    - CTD: 'Sources/ctd.md'
     # - Dictybase: 'Sources/dictybase.md'
     # - Flybase: 'Sources/flybase.md'
     - GO: 'Sources/go.md'

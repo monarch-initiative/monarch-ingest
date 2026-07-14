@@ -37,8 +37,6 @@ edges:
       min: 430000
     biogrid_gene_to_gene_edges:
       min: 1340000
-    ctd_chemical_to_disease_edges:
-      min: 5000
     dictybase_gene_to_phenotype_edges:
       min: 1100
     go_annotation_edges:

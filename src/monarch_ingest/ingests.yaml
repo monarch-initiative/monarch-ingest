@@ -20,11 +20,6 @@ string_protein_links:
   files:
     - string_protein_links_edges.tsv
 
-ctd_chemical_to_disease:
-  repo: ctd-ingest
-  files:
-    - ctd_chemical_to_disease_edges.tsv
-
 dictybase_gene:
   repo: dictybase-ingest
   files:
@@ -194,11 +189,6 @@ mmrrc:
     - mmrrc_allele_to_genotype_edges.tsv
     - mmrrc_genotype_nodes.tsv
     - mmrrc_genotype_to_phenotype_edges.tsv
-
-medic_drug_to_disease:
-  repo: medic-ingest
-  files:
-    - medic_indication_edges.tsv
 
 cureid:
   repo: cureid-ingest
