@@ -3,9 +3,7 @@
     "name": "text",
     "class": "solr.TextField",
     "positionIncrementGap": "100",
-    "termVectors": "true",
-    "termOffsets": "true",
-    "termPositions": "true",
+    "storeOffsetsWithPositions": "true",
     "indexAnalyzer": {
       "tokenizer": {
         "class": "solr.StandardTokenizerFactory"
