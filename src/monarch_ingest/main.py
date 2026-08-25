@@ -330,6 +330,92 @@ def solr():
     load_solr()
 
 
+@typer_app.command("build-solr")
+def build_solr_cmd(
+    runtime: str = typer.Option("", help="Container runtime: 'docker' | 'apptainer' | '' (auto)."),
+    port: int = typer.Option(8983, help="Solr HTTP port."),
+    heap: str = typer.Option("10g", help="JVM heap (-Xms/-Xmx)."),
+    memory: str = typer.Option("12g", help="Container memory limit (docker -m)."),
+    ram_buffer_mb: int = typer.Option(2048, help="Solr ramBufferSizeMB."),
+    workers: int = typer.Option(4, help="Parallel upload workers per bulk load."),
+    sif: Optional[Path] = typer.Option(None, help="Apptainer .sif (pulled from image if absent)."),
+    duckdb_path: Path = typer.Option(Path("output/monarch-kg.duckdb"), "--duckdb", help="KG duckdb."),
+    schema: Path = typer.Option(Path("output/monarch-kg-schema.yaml"), help="Koza-produced KG schema."),
+    skip_tarball: bool = typer.Option(False, help="Leave Solr running, don't produce solr.tar.gz."),
+    dry_run: bool = typer.Option(False, help="Print the plan without starting Solr or loading."),
+):
+    """Runtime-agnostic (Apptainer/Docker) Solr build — replacement for scripts/load_solr.sh."""
+    from monarch_ingest.solr_build import SolrBuildConfig, build_solr
+
+    build_solr(
+        SolrBuildConfig(
+            duckdb=duckdb_path,
+            schema=schema,
+            runtime=runtime,
+            sif=sif,
+            port=port,
+            heap=heap,
+            memory=memory,
+            ram_buffer_mb=ram_buffer_mb,
+            parallel_workers=workers,
+            skip_tarball=skip_tarball,
+            dry_run=dry_run,
+        )
+    )
+
+
+@typer_app.command("build-solr-sharded")
+def build_solr_sharded_cmd(
+    n_shards: int = typer.Option(4, "--shards", help="Number of shards (keep <= node cores / 4)."),
+    upload_workers: int = typer.Option(4, help="Concurrent POST threads within each shard."),
+    merge_threads: int = typer.Option(2, help="ConcurrentMergeScheduler maxThreadCount per shard."),
+    memory_limit: str = typer.Option("4GB", help="DuckDB memory_limit per shard reader."),
+    batch: int = typer.Option(5000, help="Rows per POST batch."),
+    target: str = typer.Option("association", help="Merged target core name."),
+    table: str = typer.Option("_solr_edges", help="Source duckdb table to shard."),
+    top_class: str = typer.Option("Association", help="LinkML class for create-schema."),
+    runtime: str = typer.Option("", help="Container runtime: 'docker' | 'apptainer' | '' (auto)."),
+    port: int = typer.Option(8983, help="Solr HTTP port."),
+    heap: str = typer.Option("16g", help="JVM heap (-Xms/-Xmx)."),
+    ram_buffer_mb: int = typer.Option(512, help="Solr ramBufferSizeMB (per core)."),
+    sif: Optional[Path] = typer.Option(None, help="Apptainer .sif (pulled from image if absent)."),
+    solrhome: Path = typer.Option(
+        Path(".solrhome"), help="Host dir bound to /var/solr (point at node-local disk, e.g. /tmp/solrhome)."
+    ),
+    tarball: Path = typer.Option(Path("output/solr.tar.gz"), help="Output solr tarball path."),
+    duckdb_path: Path = typer.Option(Path("output/monarch-kg.duckdb"), "--duckdb", help="KG duckdb."),
+    schema: Path = typer.Option(Path("output/monarch-kg-schema.yaml"), help="Koza-produced KG schema."),
+    skip_tarball: bool = typer.Option(False, help="Leave Solr running, don't produce solr.tar.gz."),
+    dry_run: bool = typer.Option(False, help="Print the plan without starting Solr or loading."),
+):
+    """Sharded single-core Solr build: N shards loaded in parallel, then MERGEINDEXES-collapsed."""
+    from monarch_ingest.solr_build import SolrBuildConfig, build_solr_sharded
+
+    build_solr_sharded(
+        SolrBuildConfig(
+            duckdb=duckdb_path,
+            schema=schema,
+            runtime=runtime,
+            solrhome=solrhome,
+            tarball=tarball,
+            sif=sif,
+            port=port,
+            heap=heap,
+            ram_buffer_mb=ram_buffer_mb,
+            n_shards=n_shards,
+            upload_workers=upload_workers,
+            merge_threads=merge_threads,
+            duckdb_memory_limit=memory_limit,
+            batch_size=batch,
+            sharded_target=target,
+            sharded_table=table,
+            sharded_top_class=top_class,
+            skip_tarball=skip_tarball,
+            dry_run=dry_run,
+        )
+    )
+
+
 @typer_app.command()
 def export():
     from monarch_ingest.cli_utils import export_tsv
