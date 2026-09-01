@@ -139,6 +139,22 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     }
 }' http://localhost:8983/solr/entity/schema
 
+# exact_synonym
+#
+# synonym_grounding covers the union synonym field, which mixes exact, broad, narrow and
+# related scopes, so a case-insensitive whole-string hit on it does not tell you the query
+# *names* the entity. The raw exact_synonym field is a case-sensitive string, so matching it
+# directly misses any input whose case differs from the stored value. Copying exact_synonym
+# into the grounding field type gives the one thing neither offers: a case-insensitive
+# whole-string match restricted to the scope that means "this string is another name for me".
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+    "add-copy-field": {
+        "source": "exact_synonym",
+        "dest": "exact_synonym_grounding"
+    }
+}' http://localhost:8983/solr/entity/schema
+
 # taxon label
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{
