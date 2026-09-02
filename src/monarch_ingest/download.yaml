@@ -25,7 +25,7 @@
   local_name: data/monarch/phenio-relation-graph.tsv.gz
   tag: phenio
 -
-  url: https://s3.amazonaws.com/bbop-sqlite/phenio.db.gz
+  url: https://semanticsql.berkeleybop.io/phenio.db.gz
   local_name: data/monarch/phenio.db.gz
   tag: phenio
 
