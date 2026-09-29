@@ -380,6 +380,11 @@ def build_solr(cfg: Optional[SolrBuildConfig] = None) -> None:
     runtime = SolrRuntime(cfg)
     runtime.start()
     runtime.wait_ready()
+    # SOLR_HOME (/var/solr/data) starts empty under both runtimes, so HTTP CREATE
+    # with configSet=_default can't find the configset (it only ships in the
+    # install dir). Copy it in once before creating any core — same step the
+    # sharded path already performs.
+    install_default_configset(cfg, runtime.kind)
 
     for core in ("entity", "association", "sssom", "infores"):
         _create_core(cfg, core)
