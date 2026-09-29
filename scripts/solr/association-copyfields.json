@@ -1,0 +1,94 @@
+{
+  "delete-dynamic-field": {
+    "name": "*_t"
+  },
+  "add-dynamic-field": [
+    {
+      "name": "*_t",
+      "type": "text",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    },
+    {
+      "name": "*_ac",
+      "type": "autocomplete",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    },
+    {
+      "name": "*_sortable_float",
+      "type": "sortable_float",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    }
+  ],
+  "add-copy-field": [
+    {
+      "source": "subject_label",
+      "dest": "subject_label_t"
+    },
+    {
+      "source": "subject_closure_label",
+      "dest": "subject_closure_label_t"
+    },
+    {
+      "source": "subject_taxon",
+      "dest": "subject_taxon_t"
+    },
+    {
+      "source": "subject_taxon_label",
+      "dest": "subject_taxon_label_t"
+    },
+    {
+      "source": "predicate",
+      "dest": "predicate_t"
+    },
+    {
+      "source": "object_label",
+      "dest": "object_label_t"
+    },
+    {
+      "source": "object_closure_label",
+      "dest": "object_closure_label_t"
+    },
+    {
+      "source": "object_taxon",
+      "dest": "object_taxon_t"
+    },
+    {
+      "source": "object_taxon_label",
+      "dest": "object_taxon_label_t"
+    },
+    {
+      "source": "primary_knowledge_source",
+      "dest": "primary_knowledge_source_t"
+    },
+    {
+      "source": "qualifiers_label",
+      "dest": "qualifiers_label_t"
+    },
+    {
+      "source": "onset_qualifier_label",
+      "dest": "onset_qualifier_label_t"
+    },
+    {
+      "source": "frequency_qualifier_label",
+      "dest": "frequency_qualifier_label_t"
+    },
+    {
+      "source": "sex_qualifier_label",
+      "dest": "sex_qualifier_label_t"
+    },
+    {
+      "source": "has_quotient",
+      "dest": "has_quotient_sortable_float"
+    },
+    {
+      "source": "has_percentage",
+      "dest": "has_percentage_sortable_float"
+    }
+  ]
+}

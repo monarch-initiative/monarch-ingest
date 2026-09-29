@@ -1,0 +1,98 @@
+{
+  "delete-dynamic-field": {
+    "name": "*_t"
+  },
+  "add-dynamic-field": [
+    {
+      "name": "*_t",
+      "type": "text",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    },
+    {
+      "name": "*_ac",
+      "type": "autocomplete",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    },
+    {
+      "name": "*_grounding",
+      "type": "grounding",
+      "indexed": true,
+      "stored": true,
+      "multiValued": true
+    }
+  ],
+  "add-copy-field": [
+    {
+      "source": "name",
+      "dest": "name_t"
+    },
+    {
+      "source": "name",
+      "dest": "name_ac"
+    },
+    {
+      "source": "name",
+      "dest": "name_grounding"
+    },
+    {
+      "source": "full_name",
+      "dest": "full_name_t"
+    },
+    {
+      "source": "full_name",
+      "dest": "full_name_ac"
+    },
+    {
+      "source": "full_name",
+      "dest": "full_name_grounding"
+    },
+    {
+      "source": "symbol",
+      "dest": "symbol_t"
+    },
+    {
+      "source": "symbol",
+      "dest": "symbol_ac"
+    },
+    {
+      "source": "symbol",
+      "dest": "symbol_grounding"
+    },
+    {
+      "source": "synonym",
+      "dest": "synonym_t"
+    },
+    {
+      "source": "synonym",
+      "dest": "synonym_ac"
+    },
+    {
+      "source": "synonym",
+      "dest": "synonym_grounding"
+    },
+    {
+      "source": "in_taxon_label",
+      "dest": "in_taxon_label_t"
+    },
+    {
+      "source": "in_taxon_label",
+      "dest": "in_taxon_label_ac"
+    },
+    {
+      "source": "in_taxon",
+      "dest": "in_taxon_t"
+    },
+    {
+      "source": "description",
+      "dest": "description_t"
+    },
+    {
+      "source": "xref",
+      "dest": "xref_t"
+    }
+  ]
+}
