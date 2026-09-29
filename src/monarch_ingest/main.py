@@ -9,7 +9,6 @@ from monarch_ingest.utils.ingest_utils import validate_qc_counts
 
 import typer
 
-
 typer_app = typer.Typer()
 
 OUTPUT_DIR = "output"
@@ -54,6 +53,7 @@ def download(
     after_download_script = Path("scripts/after_download.sh")
     if after_download_script.exists():
         import subprocess
+
         logger = get_logger()
         logger.info("Running post-download processing...")
         result = subprocess.run(["sh", str(after_download_script)], capture_output=True, text=True)
@@ -86,13 +86,9 @@ def build_receipt_cmd(
         "-i",
         help="Directory of per-ingest release-metadata.yaml files",
     ),
-    output_dir: str = typer.Option(
-        OUTPUT_DIR, "--output-dir", "-o", help="Directory to write metadata.yaml"
-    ),
+    output_dir: str = typer.Option(OUTPUT_DIR, "--output-dir", "-o", help="Directory to write metadata.yaml"),
     kg_name: str = typer.Option("monarch-kg", "--kg-name", help="Name of the KG being built"),
-    kg_version: str = typer.Option(
-        None, "--kg-version", help="Version tag (defaults to today's date)"
-    ),
+    kg_version: str = typer.Option(None, "--kg-version", help="Version tag (defaults to today's date)"),
 ):
     """Aggregate per-ingest release-metadata.yaml files into output/metadata.yaml."""
     from importlib.metadata import version as pkg_version, PackageNotFoundError
@@ -150,6 +146,70 @@ def build_receipt_cmd(
         logger.warning(f"rolling-source drift on {d['id']}: {d['by_ingest']}")
 
 
+@typer_app.command("release-notes")
+def release_notes_cmd(
+    output_dir: str = typer.Option(
+        OUTPUT_DIR,
+        "--output-dir",
+        "-o",
+        help="Directory holding metadata.yaml/qc_report.yaml and where release-notes.md is written",
+    ),
+    previous_url: str = typer.Option(
+        None,
+        "--previous-url",
+        help="Base URL of the previous release to diff against (defaults to the published latest/)",
+    ),
+    previous_dir: str = typer.Option(
+        None,
+        "--previous-dir",
+        help="Local directory of the previous release (metadata.yaml/qc_report.yaml); overrides --previous-url",
+    ),
+    no_previous: bool = typer.Option(
+        False, "--no-previous", help="Skip diffing against a previous release (first-release layout)"
+    ),
+):
+    """Render output/release-notes.md from the build receipt + QC report.
+
+    Diffs the current build against the previous release (fetched from the
+    published `latest/` by default) to report source version changes and
+    per-provider count deltas. Run after `build-receipt`.
+    """
+    from monarch_ingest.release_notes import (
+        load_previous_release,
+        render_release_notes,
+        write_release_notes,
+    )
+
+    logger = get_logger()
+    out = Path(output_dir)
+
+    receipt_path = out / "metadata.yaml"
+    if not receipt_path.is_file():
+        logger.error(f"No build receipt at {receipt_path}; run `ingest build-receipt` first.")
+        raise typer.Exit(code=1)
+    receipt = yaml.safe_load(receipt_path.read_text())
+
+    qc_path = out / "qc_report.yaml"
+    qc_report = yaml.safe_load(qc_path.read_text()) if qc_path.is_file() else None
+    if qc_report is None:
+        logger.warning(f"No {qc_path}; release notes will omit count deltas.")
+
+    prev_receipt = prev_qc = None
+    if not no_previous:
+        prev_receipt, prev_qc = load_previous_release(
+            base_url=previous_url,
+            previous_dir=previous_dir,
+            kg_name=receipt.get("id", "monarch-kg"),
+        )
+        if prev_receipt is None:
+            logger.warning("Previous release not available; writing first-release notes.")
+
+    markdown = render_release_notes(receipt, qc_report, prev_receipt, prev_qc)
+    notes_path = out / "release-notes.md"
+    write_release_notes(markdown, notes_path)
+    logger.info(f"Wrote release notes to {notes_path}")
+
+
 @typer_app.command()
 def transform(
     # data_dir: str = typer.Option('data', help='Path to data to ingest),
@@ -164,7 +224,6 @@ def transform(
     force: bool = typer.Option(
         False, "--force", "-f", help="Force ingest, even if output exists (on by default for single ingests)"
     ),
-
     verbose: Optional[bool] = typer.Option(
         None,
         "--debug/--quiet",
