@@ -3427,7 +3427,7 @@ wheels = [
 [[package]]
 name = "pheno-comparisons"
 version = "0.1.0"
-source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#67220455baab904aca369d00c1499c5bc6b3b836" }
+source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#e0a3d37dbffd846a6286c095db8ea431342082ba" }
 dependencies = [
     { name = "duckdb" },
     { name = "koza" },
