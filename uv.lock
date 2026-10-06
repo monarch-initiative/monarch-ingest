@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.6.2"
-source = { registry = "https://pypi.org/simple" }
+version = "2.6.2.post1.dev0+4a141dc"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=annotation-information-content#4a141dcf57ff0ea3e094a94f5c62e6c6bdeacc6a" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -2196,10 +2196,6 @@ dependencies = [
     { name = "sssom" },
     { name = "tqdm" },
     { name = "typer" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/ea/27cdf79c0cc060dafdd84874b6e3ec68ce8aad5c37f3b286973c1c82cd5a/koza-2.6.2.tar.gz", hash = "sha256:9f0a62d96fbacbe17b5e0c031ed46d1571df0c8a983c5dc73e955057067e43df", size = 435328, upload-time = "2026-07-28T05:12:26.922Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/60/1e8379044f3075c80f7ca9196191bded62d50f3535f9743f6e07e3735849/koza-2.6.2-py3-none-any.whl", hash = "sha256:70e2bdb07d938de128df5dcbcb7721e9d2403bde3d8faaa39c8ef24eb2a3d6cc", size = 168602, upload-time = "2026-07-28T05:12:25.604Z" },
 ]
 
 [package.optional-dependencies]
@@ -2666,6 +2662,7 @@ dependencies = [
     { name = "notebook" },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pheno-comparisons" },
     { name = "pydantic" },
     { name = "pystow" },
     { name = "sh" },
@@ -2692,7 +2689,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], specifier = ">=2.6.2,<3" },
+    { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=annotation-information-content" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.3" },
@@ -2702,6 +2699,7 @@ requires-dist = [
     { name = "multi-indexer", specifier = "==0.0.5" },
     { name = "notebook", specifier = ">=7.3.2,<8" },
     { name = "pandas", specifier = ">=2.0.3" },
+    { name = "pheno-comparisons", git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg" },
     { name = "pydantic", specifier = ">=2.5,<3" },
     { name = "pystow", specifier = ">=0.5.4,<1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.1.1,<9" },
@@ -3424,6 +3422,16 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/c3/059298687310d527a58bb01f3b1965787ee3b40dce76752eda8b44e9a2c5/pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523", size = 63772, upload-time = "2023-11-25T06:56:14.81Z" },
+]
+
+[[package]]
+name = "pheno-comparisons"
+version = "0.1.0"
+source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#67220455baab904aca369d00c1499c5bc6b3b836" }
+dependencies = [
+    { name = "duckdb" },
+    { name = "koza" },
+    { name = "pyyaml" },
 ]
 
 [[package]]

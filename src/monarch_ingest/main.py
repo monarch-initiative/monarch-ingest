@@ -295,11 +295,30 @@ def information_content_cmd():
     parallel post-merge stages — it takes a write lock on monarch-kg.duckdb so
     the read-only fan-out (solr, connectivity, sqlite, ...) doesn't race it.
     The api's in-process similarity engine reads these tables from the KG
-    artifact instead of rebuilding them per worker.
+    artifact instead of rebuilding them per worker. Also writes the
+    annotation-IC tables the `pheno-comparisons` stage reads.
     """
     from monarch_ingest.cli_utils import apply_information_content
 
     apply_information_content()
+
+
+@typer_app.command("pheno-comparisons")
+def pheno_comparisons_cmd(
+    kg_version: str = typer.Option(None, "--kg-version", help="KG version tag (defaults to today's date)"),
+    memory_limit: str = typer.Option(None, "--memory-limit", help="DuckDB memory limit, e.g. 32GB"),
+    threads: int = typer.Option(None, "--threads", help="DuckDB threads"),
+):
+    """Build the HP-HP / HP-MP / HP-ZP phenotype comparison tarballs into output/pheno-comparisons/.
+
+    These are Exomiser's cross-species phenotype similarity tables. Reads monarch-kg.duckdb read-only, so it can run in the parallel post-merge
+    stage; run after `information-content`, which writes the annotation-IC tables.
+    """
+    from datetime import date
+
+    from monarch_ingest.cli_utils import build_pheno_comparisons
+
+    build_pheno_comparisons(kg_version or date.today().isoformat(), memory_limit=memory_limit, threads=threads)
 
 
 @typer_app.command()
