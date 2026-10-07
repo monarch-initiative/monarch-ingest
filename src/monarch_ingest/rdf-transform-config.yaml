@@ -1,0 +1,51 @@
+# kgx transform config for the RDF (N-Triples) export of the merged KG.
+#
+# Run from the repository root:
+#   uv run kgx transform --stream --parallel 8 \
+#     --transform-config src/monarch_ingest/rdf-transform-config.yaml
+#
+# kgx resolves relative paths in this file against this file's directory.
+# Tracking issue: https://github.com/monarch-initiative/monarch-app/issues/1424
+
+configuration:
+  output_directory: ../../output
+
+  # Columns koza adds while loading and closurizing the graph. They are
+  # pipeline bookkeeping, not Biolink slots, and without this list each one
+  # is written under https://www.example.org/UNKNOWN/.
+  exclude_node_properties:
+    - file_source  # source file stem injected by koza at load time
+    - namespace    # id prefix, added by closurize
+  exclude_edge_properties:
+    - file_source
+    - grouping_key  # closurize grouping hash
+
+  # CURIE prefixes used in the graph that the Biolink context kgx loads does
+  # not define. Expansions follow each node's `iri` column where the graph
+  # carries one, otherwise Bioregistry.
+  prefix_map:
+    Reactome: "https://reactome.org/content/detail/"
+    # Biolink maps FYECO to https://www.pombase.org/term/, which 404s;
+    # PomBase term pages need the prefix in the path.
+    FYECO: "https://www.pombase.org/term/FYECO:"
+    WBls: "http://purl.obolibrary.org/obo/WBls_"
+    FBDV: "http://purl.obolibrary.org/obo/FBdv_"
+    semapv: "https://w3id.org/semapv/vocab/"
+    MGPO: "http://purl.obolibrary.org/obo/MGPO_"
+    PHIPO: "http://purl.obolibrary.org/obo/PHIPO_"
+    PLANP: "http://purl.obolibrary.org/obo/PLANP_"
+    UBPROP: "http://purl.obolibrary.org/obo/UBPROP_"
+    OMO: "http://purl.obolibrary.org/obo/OMO_"
+    CP: "http://purl.obolibrary.org/obo/CP_"
+    OBO: "http://purl.obolibrary.org/obo/"
+
+transform:
+  source:
+    monarch-kg:
+      input:
+        format: duckdb
+        filename:
+          - ../../output/monarch-kg.duckdb
+      output:
+        format: nt
+        filename: monarch-kg.nt

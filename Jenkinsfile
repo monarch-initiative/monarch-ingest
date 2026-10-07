@@ -106,7 +106,7 @@ pipeline {
                 stage('kgx-transforms'){
                     steps {
                         sh '''
-                            uv run kgx transform --stream --parallel 8 -i duckdb -f nt -o output/monarch-kg.nt output/monarch-kg.duckdb
+                            uv run kgx transform --stream --parallel 8 --transform-config src/monarch_ingest/rdf-transform-config.yaml
                             pigz --force output/monarch-kg.nt
                         '''
                     }

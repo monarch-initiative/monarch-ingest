@@ -89,4 +89,4 @@ lint.select = [
 max-complexity = 10
 
 [tool.uv.sources]
-kgx = {git = "https://github.com/biolink/kgx.git", branch="rdf-optimization"} #TODO: switch back to master once https://github.com/biolink/kgx/pull/545 lands
+kgx = {git = "https://github.com/biolink/kgx.git", branch="transform-config-property-exclusion"} #TODO: switch to a release once this branch is merged and published
