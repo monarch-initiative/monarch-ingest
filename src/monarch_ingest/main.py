@@ -157,7 +157,7 @@ def release_notes_cmd(
     previous_url: str = typer.Option(
         None,
         "--previous-url",
-        help="Base URL of the previous release to diff against (defaults to the published latest/)",
+        help="Base URL of the previous release to diff against (defaults to the published production monarch-kg/latest/)",
     ),
     previous_dir: str = typer.Option(
         None,
@@ -170,9 +170,9 @@ def release_notes_cmd(
 ):
     """Render output/release-notes.md from the build receipt + QC report.
 
-    Diffs the current build against the previous release (fetched from the
-    published `latest/` by default) to report source version changes and
-    per-provider count deltas. Run after `build-receipt`.
+    Diffs the current build against the previous production release (fetched
+    from the published monarch-kg/latest/ by default) to report source version
+    changes and per-provider count deltas. Run after `build-receipt`.
     """
     from monarch_ingest.release_notes import (
         load_previous_release,

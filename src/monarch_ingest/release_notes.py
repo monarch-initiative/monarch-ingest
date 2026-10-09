@@ -26,8 +26,10 @@ import yaml
 
 from monarch_ingest.release_metadata import ROLLING_VERSION_METHODS
 
-# Where published releases live; used to fetch the previous release for diffing.
-DEFAULT_PREVIOUS_BASE_URL = "https://data.monarchinitiative.org/monarch-kg-dev/latest/"
+# Diff against the previous *production* (non-draft) release, not the daily
+# monarch-kg-dev builds — consecutive dev rebuilds differ by almost nothing, so
+# the meaningful changelog lives between the spaced-out monarch-kg releases.
+DEFAULT_PREVIOUS_BASE_URL = "https://data.monarchinitiative.org/monarch-kg/latest/"
 
 
 def _iter_sources(nodes):
