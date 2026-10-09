@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.6.2.post1.dev0+4a141dc"
-source = { git = "https://github.com/monarch-initiative/koza.git?branch=annotation-information-content#4a141dcf57ff0ea3e094a94f5c62e6c6bdeacc6a" }
+version = "2.6.2.post55.dev0+1a0f254"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#1a0f2541a18a4ddc210d94b80b93efab0a8616b4" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -2190,6 +2190,7 @@ dependencies = [
     { name = "mergedeep" },
     { name = "ordered-set" },
     { name = "orjson" },
+    { name = "prefixmaps" },
     { name = "pydantic" },
     { name = "pyyaml" },
     { name = "requests" },
@@ -2689,7 +2690,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=annotation-information-content" },
+    { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=main" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.3" },
@@ -3427,7 +3428,7 @@ wheels = [
 [[package]]
 name = "pheno-comparisons"
 version = "0.1.0"
-source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#893f60ed6a020249bd32174171fee694ff2d6f2a" }
+source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#f839d2a61f83dd90e11a42b0d616d7466afd71f2" }
 dependencies = [
     { name = "duckdb" },
     { name = "koza" },

@@ -90,8 +90,8 @@ lint.select = [
 max-complexity = 10
 
 [tool.uv.sources]
-# Branch dependencies for the phenotype-comparisons bundle; switch to releases once these merge:
-# monarch-initiative/koza#256 and the automate-pheno-comparisons PR.
-koza = { git = "https://github.com/monarch-initiative/koza.git", branch = "annotation-information-content" }
+# Branch dependencies for the phenotype-comparisons bundle; switch to releases before merge:
+# koza main has #256 (unreleased); pheno-comparisons is the automate-pheno-comparisons PR branch.
+koza = { git = "https://github.com/monarch-initiative/koza.git", branch = "main" }
 pheno-comparisons = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git", branch = "pheno-comparisons-from-kg" }
 kgx = {git = "https://github.com/biolink/kgx.git", branch="rdf-optimization"} #TODO: switch back to master once https://github.com/biolink/kgx/pull/545 lands
