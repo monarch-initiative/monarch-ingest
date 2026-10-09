@@ -8,6 +8,7 @@ uv run ingest transform --ingest_file src/monarch_ingest/ingest_configs/mokg_tra
 uv run ingest merge --kg-name mokg
 uv run ingest connectivity --input-db output/mokg.duckdb --output output/connectivity_summary.yaml
 uv run ingest build-receipt --kg-name mokg
+uv run ingest release-notes
 
 #This is a command to convert the KGX output found in output/mokg.tar.gz into RDF output.
 #This is taken from https://github.com/monarch-initiative/monarch-ingest/blob/3d2b0b3693a021d7660214bcd81abc4409f8efe2/scripts/kgx_transforms.sh#L12
