@@ -1,8 +1,6 @@
 import csv
 import glob
-import gzip
 import os
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -755,6 +753,53 @@ def apply_information_content(
         f"closure_size ({result.closure_size_entity_count:,} entities)"
     )
 
+    # Annotation-based IC tables for the phenotype comparison release (one per
+    # corpus: MONDO->HP, MGI->MP, ZFIN->ZP). Written here, in the sequential
+    # stage, so the parallel `pheno-comparisons` stage can open the KG read-only.
+    from pheno_comparisons import compute_information_content_tables
+
+    for row in compute_information_content_tables(database_path):
+        logger.info(
+            f"Built {row['ic_table']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
+        )
+
+
+def build_pheno_comparisons(
+    kg_version: str,
+    name: str = "monarch-kg",
+    output_dir: str = OUTPUT_DIR,
+    metadata_dir: str = "data/release-metadata",
+    memory_limit: Optional[str] = None,
+    threads: Optional[int] = None,
+):
+    """Build the phenotype comparison tarballs into `<output_dir>/pheno-comparisons/`.
+
+    These are the HP-HP / HP-MP / HP-ZP tables Exomiser uses for cross-species
+    phenotype matching. Reads `<output_dir>/<name>.duckdb` read-only, so it runs in the parallel
+    post-merge stage; needs the annotation-IC tables `information-content`
+    writes. PHENIO / HP / MP / ZP versions for the logs come from the per-ingest
+    release metadata (the kg-phenio entry). The tarballs upload with the rest of
+    `output/` in the release step.
+    """
+    from pheno_comparisons import build_release, ontology_versions
+
+    from monarch_ingest.release_metadata import load_per_ingest_metadata
+
+    logger = get_logger()
+    versions = ontology_versions(load_per_ingest_metadata(metadata_dir)) if Path(metadata_dir).is_dir() else {}
+    logger.info(f"Building phenotype comparisons for KG {kg_version} (versions: {versions})")
+    tarballs = build_release(
+        Path(output_dir) / f"{name}.duckdb",
+        Path(output_dir) / "pheno-comparisons",
+        kg_version,
+        versions=versions,
+        work_dir=Path("data") / "pheno-comparisons-work",
+        memory_limit=memory_limit,
+        threads=threads,
+    )
+    for t in tarballs:
+        logger.info(f"Wrote {t}")
+
 
 #     sh.mv(database, f"{output_dir}/")
 
@@ -762,7 +807,7 @@ def apply_information_content(
 def load_sqlite():
     """
     Load data from DuckDB to SQLite using DuckDB's SQLite extension.
-    Creates monarch-kg.db and updates phenio.db.
+    Creates monarch-kg.db.
     """
     logger = get_logger()
 
@@ -836,44 +881,8 @@ def load_sqlite():
     finally:
         sqlite_con.close()
 
-    # Populate phenio.db
-    logger.info("Populating phenio.db...")
-    phenio_gz_path = Path("data/monarch/phenio.db.gz")
-    phenio_db_path = Path("output/phenio.db")
-
-    if phenio_gz_path.exists():
-        # Copy and decompress phenio.db
-        shutil.copy(phenio_gz_path, "output/phenio.db.gz")
-
-        with gzip.open("output/phenio.db.gz", 'rb') as f_in:
-            with open(phenio_db_path, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-
-        Path("output/phenio.db.gz").unlink()
-
-        # Use DuckDB to populate phenio.db from monarch-kg.duckdb
-        con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
-        try:
-            con.execute("INSTALL sqlite")
-            con.execute("LOAD sqlite")
-            con.execute("ATTACH 'output/phenio.db' AS phenio_db (TYPE SQLITE, READ_ONLY FALSE)")
-
-            con.execute(
-                """
-                INSERT INTO phenio_db.term_association (id, subject, predicate, object, evidence_type, publication, source) 
-                SELECT id, subject, predicate, object, has_evidence as evidence_type, publications as publication, primary_knowledge_source as source 
-                FROM edges 
-                WHERE category IN ('biolink:GeneToPhenotypicFeatureAssociation','biolink:DiseaseToPhenotypicFeatureAssociation') 
-                  AND predicate = 'biolink:has_phenotype' 
-                  AND (negated = false or negated is null) 
-            """)
-            con.execute("DETACH phenio_db")
-        finally:
-            con.close()
-
     # Compress databases
     logger.info("Compressing databases...")
-    subprocess.run(["pigz", "--force", "output/phenio.db"], check=False)
     subprocess.run(["pigz", "--force", "output/monarch-kg.db"], check=False)
 
     logger.info("SQLite database loading completed.")
