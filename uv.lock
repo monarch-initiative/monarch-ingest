@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.7.0.post6.dev0+59d871d"
-source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#59d871dbefc54c3125a79d5c51fb25b0789ced05" }
+version = "2.7.0.post15.dev0+7993367"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#7993367a40fea38089da48a5a2766fe74ee61a3c" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
