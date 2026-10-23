@@ -191,6 +191,16 @@ mmrrc:
     - mmrrc_genotype_to_gene_edges.tsv
     - mmrrc_genotype_to_phenotype_edges.tsv
 
+# MeDIC v2.0.0-rc1 (monarch-initiative/medic, not the kozahub medic-ingest repo).
+# Pinned to the release-candidate assets by explicit URL: releases/latest on
+# that repo still resolves to v1.0.1, and the rc is a prerelease. The KGX
+# export is JSONL; the merge discovers *_nodes.jsonl / *_edges.jsonl directly.
+# Switch to the tagged v2.0.0 release URLs once it is cut.
+medic:
+  url:
+    - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_nodes.jsonl
+    - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_edges.jsonl
+
 cureid:
   repo: cureid-ingest
   files:
