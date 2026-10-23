@@ -763,6 +763,92 @@ def apply_information_content(
             f"Built {row['ic_table']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
         )
 
+    # Annotation-IC tables for the Monarch API's other phenotype search groups (#1475 in
+    # monarch-app), registered in the same corpus table so the API finds every table one way.
+    for row in compute_search_annotation_ic_tables(database_path):
+        logger.info(
+            f"Built {row['ic_table']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
+        )
+
+
+# Annotation corpora the Monarch API's phenotype search needs beyond the Exomiser comparison
+# corpora pheno_comparisons builds (MONDO->HP, MGI->MP, ZFIN->ZP). One per remaining search group:
+# (corpus key, IC table, description, subject prefix, object prefix).
+SEARCH_ANNOTATION_IC_CORPORA = [
+    ("hgnc_hp", "information_content_hgnc_hp", "human genes (HGNC) -> HP", "HGNC", "HP"),
+    ("rgd_mp", "information_content_rgd_mp", "rat genes (RGD) -> MP", "RGD", "MP"),
+    (
+        "wb_wbphenotype",
+        "information_content_wb_wbphenotype",
+        "C. elegans genes (WB) -> WBPhenotype",
+        "WB",
+        "WBPhenotype",
+    ),
+]
+
+
+def compute_search_annotation_ic_tables(database_path: Path) -> list:
+    """Write one annotation-IC table per remaining search group and register each in the
+    corpus table pheno_comparisons writes, which the API reads to map a search group to its table.
+
+    Must run after `compute_information_content_tables`, which (re)creates the corpus table.
+    Needs write access to the KG, so it belongs in the sequential `information-content` stage.
+    """
+    from datetime import datetime, timezone
+    from importlib.metadata import version as package_version
+
+    from koza.graph_operations import compute_annotation_information_content
+    from koza.model.graph_operations import AnnotationInformationContentConfig
+    from pheno_comparisons.spec import CORPUS_TABLE, GENE_TO_PHENOTYPE
+
+    rows = []
+    for key, ic_table, description, subject_prefix, object_prefix in SEARCH_ANNOTATION_IC_CORPORA:
+        result = compute_annotation_information_content(
+            AnnotationInformationContentConfig(
+                database_path=database_path,
+                output_table=ic_table,
+                association_categories=[GENE_TO_PHENOTYPE],
+                subject_prefixes=[subject_prefix],
+                object_prefixes=[object_prefix],
+                quiet=True,
+            )
+        )
+        rows.append(
+            [
+                key,
+                ic_table,
+                description,
+                [GENE_TO_PHENOTYPE],
+                [subject_prefix],
+                [object_prefix],
+                result.entity_count,
+                result.association_count,
+                result.term_count,
+                package_version("koza"),
+                datetime.now(timezone.utc).isoformat(),
+            ]
+        )
+    con = duckdb.connect(str(database_path))
+    try:
+        con.execute(f"DELETE FROM {CORPUS_TABLE} WHERE corpus IN (SELECT unnest(?))", [[r[0] for r in rows]])
+        con.executemany(f"INSERT INTO {CORPUS_TABLE} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
+    finally:
+        con.close()
+    columns = [
+        "corpus",
+        "ic_table",
+        "description",
+        "categories",
+        "subject_prefixes",
+        "object_prefixes",
+        "entity_count",
+        "association_count",
+        "term_count",
+        "koza_version",
+        "computed_at",
+    ]
+    return [dict(zip(columns, r)) for r in rows]
+
 
 def build_pheno_comparisons(
     kg_version: str,

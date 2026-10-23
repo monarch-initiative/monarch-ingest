@@ -68,7 +68,7 @@ A SQLite database file is produced by loading node and edge files into a SQLite 
 
 ## Information content and phenotype comparisons
 
-After closure, the `information-content` stage writes the similarity precompute tables into `monarch-kg.duckdb` with koza. `information_content` and `closure_size` are read by the Monarch API. The annotation-based IC tables `information_content_mondo_hp`, `information_content_mgi_mp` and `information_content_zfin_zp` are each computed from one set of `has_phenotype` edges.
+After closure, the `information-content` stage writes the similarity precompute tables into `monarch-kg.duckdb` with koza. `information_content` and `closure_size` are read by the Monarch API. The annotation-based IC tables `information_content_mondo_hp`, `information_content_mgi_mp` and `information_content_zfin_zp` are each computed from one set of `has_phenotype` edges. The Monarch API's phenotype search also needs one for each of its other search groups, so the stage adds `information_content_hgnc_hp`, `information_content_rgd_mp` and `information_content_wb_wbphenotype`. Every annotation-IC table is listed in `pheno_comparison_corpora`, which the API reads to find the table for a search group.
 
 The parallel `pheno-comparisons` stage then opens the KG read-only and builds the HP-HP, HP-MP and HP-ZP phenotype similarity tables Exomiser uses, with the [pheno-comparisons](https://github.com/Knowledge-Graph-Hub/automate-pheno-comparisons) package. They are written as `output/pheno-comparisons/<comparison>_kg-<release>.tsv.tar.gz` and published with the release.
 
