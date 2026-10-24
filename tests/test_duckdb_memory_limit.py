@@ -21,3 +21,10 @@ def test_connect_duckdb_keeps_default_without_env(tmp_path, monkeypatch):
     con = connect_duckdb(tmp_path / "kg.duckdb")
     assert con.execute("SELECT current_setting('memory_limit')").fetchone()[0] == default
     con.close()
+
+
+def test_connect_duckdb_honors_thread_cap(tmp_path, monkeypatch):
+    monkeypatch.setenv("DUCKDB_THREADS", "2")
+    con = connect_duckdb(tmp_path / "kg.duckdb")
+    assert con.execute("SELECT current_setting('threads')").fetchone()[0] == 2
+    con.close()

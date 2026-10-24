@@ -57,15 +57,19 @@ SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/mona
 
 
 def connect_duckdb(database, read_only: bool = False) -> duckdb.DuckDBPyConnection:
-    """`duckdb.connect`, capped by the DUCKDB_MEMORY_LIMIT env var (e.g. "20GB") if set.
+    """`duckdb.connect`, capped by DUCKDB_MEMORY_LIMIT (e.g. "20GB") and
+    DUCKDB_THREADS (e.g. "4") from the environment, when set.
 
-    DuckDB defaults to 80% of RAM; steps like prepare-solr (which materializes
-    every denormalized edge) reach that on a small host. Under a cap DuckDB
-    spills to disk instead. koza's closurize reads the same variable.
+    DuckDB defaults to 80% of RAM and one thread per core; steps like
+    prepare-solr (which materializes every denormalized edge) reach that on a
+    small host. Under a cap DuckDB spills to disk instead, and fewer threads
+    keep its working set closer to the cap. koza reads DUCKDB_MEMORY_LIMIT too.
     """
     conn = duckdb.connect(str(database), read_only=read_only)
     if limit := os.environ.get("DUCKDB_MEMORY_LIMIT"):
         conn.execute("SET memory_limit = '{}'".format(limit.replace("'", "''")))
+    if threads := os.environ.get("DUCKDB_THREADS"):
+        conn.execute(f"SET threads = {int(threads)}")
     return conn
 
 
@@ -703,6 +707,10 @@ def prepare_solr(
     logger = get_logger()
     logger.info(f"Materializing _solr_edges in {database_path}...")
     conn = connect_duckdb(str(database_path))
+    # Row order of _solr_edges doesn't matter (Solr indexes by id), and keeping
+    # it forces DuckDB to buffer the whole view: on a 31 GB host the untuned
+    # CREATE TABLE passed 22 GB RSS under a 20 GB memory_limit.
+    conn.execute("SET preserve_insertion_order = false")
     try:
         conn.execute(
             """
