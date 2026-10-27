@@ -54,6 +54,23 @@ MODEL_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-a
 SIMILARITY_YAML_URL = "https://raw.githubusercontent.com/monarch-initiative/monarch-app/main/backend/src/monarch_py/datamodels/similarity.yaml"
 
 
+def connect_duckdb(database, read_only: bool = False) -> duckdb.DuckDBPyConnection:
+    """`duckdb.connect`, capped by DUCKDB_MEMORY_LIMIT (e.g. "20GB") and
+    DUCKDB_THREADS (e.g. "4") from the environment, when set.
+
+    DuckDB defaults to 80% of RAM and one thread per core; steps like
+    prepare-solr (which materializes every denormalized edge) reach that on a
+    small host. Under a cap DuckDB spills to disk instead, and fewer threads
+    keep its working set closer to the cap. koza reads DUCKDB_MEMORY_LIMIT too.
+    """
+    conn = duckdb.connect(str(database), read_only=read_only)
+    if limit := os.environ.get("DUCKDB_MEMORY_LIMIT"):
+        conn.execute("SET memory_limit = '{}'".format(limit.replace("'", "''")))
+    if threads := os.environ.get("DUCKDB_THREADS"):
+        conn.execute(f"SET threads = {int(threads)}")
+    return conn
+
+
 def ensure_model_files(force: bool = True) -> tuple[Path, Path]:
     """
     Download model.yaml and similarity.yaml files to current directory using pystow.
@@ -606,7 +623,7 @@ def _merge_files_koza(
 
     # Create information_resource table from infores catalog
     logger.info("Creating information_resource table...")
-    db = duckdb.connect(str(database_path))
+    db = connect_duckdb(str(database_path))
     db.execute(
         "create or replace table information_resource as select * from read_json('data/infores/infores_catalog.jsonl')"
     )
@@ -654,7 +671,7 @@ def apply_closure(
         raise RuntimeError(f"Closurize failed: {result.errors}")
 
     schema_yaml_path = Path(output_dir) / f"{name}-schema.yaml"
-    conn = duckdb.connect(str(database_path), read_only=True)
+    conn = connect_duckdb(str(database_path), read_only=True)
     try:
         schema_yaml_path.write_text(export_schema(conn, project_denormalized=True))
     finally:
@@ -687,7 +704,11 @@ def prepare_solr(
     database_path = Path(output_dir) / f"{name}.duckdb"
     logger = get_logger()
     logger.info(f"Materializing _solr_edges in {database_path}...")
-    conn = duckdb.connect(str(database_path))
+    conn = connect_duckdb(str(database_path))
+    # Row order of _solr_edges doesn't matter (Solr indexes by id), and keeping
+    # it forces DuckDB to buffer the whole view: on a 31 GB host the untuned
+    # CREATE TABLE passed 22 GB RSS under a 20 GB memory_limit.
+    conn.execute("SET preserve_insertion_order = false")
     try:
         conn.execute(
             """
@@ -822,7 +843,7 @@ def load_sqlite():
     sqlite3.connect('output/monarch-kg.db').close()
 
     # Connect to the DuckDB database
-    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    con = connect_duckdb('output/monarch-kg.duckdb', read_only=True)
 
     try:
         # Install and load SQLite extension
@@ -917,7 +938,7 @@ def get_monarch_schema() -> SchemaView:
 
 
 def load_jsonl():
-    db = duckdb.connect('output/monarch-kg.duckdb')
+    db = connect_duckdb('output/monarch-kg.duckdb')
 
     class_ancestor_df, all_slot_names, biolink_model = get_biolink_ancestor_df()
 
@@ -1068,7 +1089,7 @@ def load_neo4j_csv():
     Create CSV files for Neo4j import from the DuckDB database.
     This function exports nodes and edges to CSV files in the output directory.
     """
-    db = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    db = connect_duckdb('output/monarch-kg.duckdb', read_only=True)
 
     # Get column names and types from database
     node_info = db.sql("DESCRIBE nodes").df()
@@ -1160,7 +1181,7 @@ def create_qc_reports():
         raise FileNotFoundError(qc_sql, "generate_reports.sql QC SQL script not found")
     sql = qc_sql.read_text()
 
-    con = duckdb.connect('output/monarch-kg.duckdb', read_only=True)
+    con = connect_duckdb('output/monarch-kg.duckdb', read_only=True)
     con.execute(sql)
 
 

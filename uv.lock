@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.7.0"
-source = { registry = "https://pypi.org/simple" }
+version = "2.7.0.post17.dev0+10558e1"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#10558e1f0fc99cb7846a11c554bf2f3f52ee2d99" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -2197,10 +2197,6 @@ dependencies = [
     { name = "sssom" },
     { name = "tqdm" },
     { name = "typer" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/01/49/7b59dd66b7a9988edda665982fdfeb991bdf139483971a9983314bc406ef/koza-2.7.0.tar.gz", hash = "sha256:31a92591107f7411b53b0da3ecd17a0951fe74d7ff9a475e3b0bce82e93cc3df", size = 483587, upload-time = "2026-10-21T17:33:53.123Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/74/db/25f712f79a1c7bcbfe9a4290b915186dc88464c5f13c6d10cfc5e6710941/koza-2.7.0-py3-none-any.whl", hash = "sha256:8034ed218d05374bfc2a9f0029ca805fc998f23e23357a8362a602dac50e01a1", size = 196730, upload-time = "2026-10-21T17:33:51.446Z" },
 ]
 
 [package.optional-dependencies]
@@ -2694,7 +2690,7 @@ requires-dist = [
     { name = "importlib-metadata", specifier = ">=4.6.1" },
     { name = "kghub-downloader", specifier = ">=0.4.5,<1" },
     { name = "kgx", git = "https://github.com/biolink/kgx.git?branch=rdf-optimization" },
-    { name = "koza", extras = ["grape"], specifier = ">=2.7.0,<3" },
+    { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=main" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
     { name = "linkml-solr", specifier = "==0.2.3" },
