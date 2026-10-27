@@ -66,6 +66,14 @@ For Solr (and secondarily SQLite) we produce a denormalized edge file, which inc
 
 A SQLite database file is produced by loading node and edge files into a SQLite database using [a simple shell script](https://github.com/monarch-initiative/monarch-ingest/blob/main/scripts/load_sqlite.sh), along with the primary node and edge tables, edge tables for danging and denormalized edges are included as well. 
 
+## Information content and phenotype comparisons
+
+After closure, the `information-content` stage writes the similarity precompute tables into `monarch-kg.duckdb` with koza. `information_content` and `closure_size` are read by the Monarch API. The annotation-based IC tables `information_content_mondo_hp`, `information_content_mgi_mp` and `information_content_zfin_zp` are each computed from one set of `has_phenotype` edges.
+
+The parallel `pheno-comparisons` stage then opens the KG read-only and builds the HP-HP, HP-MP and HP-ZP phenotype similarity tables Exomiser uses, with the [pheno-comparisons](https://github.com/Knowledge-Graph-Hub/automate-pheno-comparisons) package. They are written as `output/pheno-comparisons/<comparison>_kg-<release>.tsv.tar.gz` and published with the release.
+
+The KG release no longer includes a PHENIO SQLite (`phenio.db.gz`). The ontology closure lives in `monarch-kg.duckdb`, and a SemanticSQL build of PHENIO is available from the [SemanticSQL](https://github.com/INCATools/semantic-sql) project.
+
 ## Solr
 
 Our solr index is loaded directly from the node kgx tsv file and the denormalized edge tsv file using [LinkML-Solr](https://github.com/linkml/linkml-solr/tree/main/linkml_solr). The [LinkML](https://linkml.io/linkml/) [schema](https://github.com/monarch-initiative/monarch-py/blob/main/src/monarch_py/datamodels/model.yaml) for the Solr index is lives in the monarch-py data access library (see documentation for [Entity](https://monarch-initiative.github.io/monarch-py/Data-Model/Entity/) and [Association](https://monarch-initiative.github.io/monarch-py/Data-Model/Association/) classes). 

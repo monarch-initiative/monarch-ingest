@@ -121,6 +121,12 @@ pipeline {
                         sh 'uv run ingest sqlite'
                     }
                 }
+                stage('pheno-comparisons') {
+                    steps {
+                        // HP-HP / HP-MP / HP-ZP similarity tarballs for Exomiser; reads the KG read-only.
+                        sh 'uv run ingest pheno-comparisons --kg-version ${RELEASE} --memory-limit 32GB --threads 8'
+                    }
+                }
                 stage('make exports') {
                     steps {
                         sh 'uv run ingest export'
