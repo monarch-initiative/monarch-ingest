@@ -2397,7 +2397,7 @@ wheels = [
 [[package]]
 name = "linkml-solr"
 version = "0.2.3"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/kevinschaper/linkml-solr.git?branch=feat%2Finlined-json-fields#f1ccf6fcbd7d18aad02c7fdd9c2a1c9e57cf6faa" }
 dependencies = [
     { name = "duckdb" },
     { name = "jsonasobj" },
@@ -2406,10 +2406,6 @@ dependencies = [
     { name = "linkml-runtime" },
     { name = "pysolr" },
     { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/21/0d34262581a48a637ddda70a523b9fbfb3cf14044d4764ee9511489cc8ce/linkml_solr-0.2.3.tar.gz", hash = "sha256:5de9a3ff2c6f6fc466293e61d87ef72bdd4097b0fceee2e4b6958effc4c209cc", size = 18008, upload-time = "2026-06-09T15:24:52.79Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/09/716105c0bc0615e1d31f084c34c0cf52b7af50f1061a8d2569353e862111/linkml_solr-0.2.3-py3-none-any.whl", hash = "sha256:e921d758dd30dd7e1cdf2b327f4a6dff21738ff253174fa6166d7d2df6dc29eb", size = 22086, upload-time = "2026-06-09T15:24:51.86Z" },
 ]
 
 [[package]]
@@ -2692,7 +2688,7 @@ requires-dist = [
     { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=main" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
-    { name = "linkml-solr", specifier = "==0.2.3" },
+    { name = "linkml-solr", git = "https://github.com/kevinschaper/linkml-solr.git?branch=feat%2Finlined-json-fields" },
     { name = "loguru" },
     { name = "mkdocs", marker = "extra == 'dev'", specifier = ">=1.4,<2" },
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.5" },
