@@ -196,7 +196,14 @@ mmrrc:
 # that repo still resolves to v1.0.1, and the rc is a prerelease. The KGX
 # export is JSONL; the merge discovers *_nodes.jsonl / *_edges.jsonl directly.
 # Switch to the tagged v2.0.0 release URLs once it is cut.
+#
+# The medic filter (utils/source_filters.py) loads MeDIC's edges but only the
+# DRON/RXCUI/UNII drug nodes: phenio provides the CHEBI/MONDO/HP nodes, and edges
+# to UMLS or not-yet-imported CHEBI terms dangle so the merge reports them. Edges
+# whose disease_context_qualifier is free text or non-MONDO are excluded
+# (output/qc/medic_excluded_edges.jsonl).
 medic:
+  filter: medic
   url:
     - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_nodes.jsonl
     - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_edges.jsonl

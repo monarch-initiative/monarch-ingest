@@ -46,6 +46,7 @@ from monarch_ingest.utils.ingest_utils import (
     is_metadata_only,
 )
 from monarch_ingest.utils.log_utils import get_logger
+from monarch_ingest.utils.source_filters import SOURCE_FILTERS
 from monarch_ingest.utils.export_utils import export
 
 
@@ -117,20 +118,28 @@ def transform_one(
             f"{ingest} has been found to be modular, downloading provided urls to {output_dir}/transform_output"
         )
         save_as_map = ingests[ingest].get("save_as", {})
+        # A filtered entry downloads to data/<ingest>/ and the filter writes transform_output.
+        source_filter = ingests[ingest].get("filter")
+        download_dir = f"data/{ingest}" if source_filter else f"{output_dir}/transform_output"
         for url in urls:
             filename = url.split("/")[-1]
             filename = save_as_map.get(filename, filename)
-            # Creates/checks existance of $OUTPUT_DIR/ and $OUTPUT_DIR/transform_output/
-            os.makedirs(f"{output_dir}/transform_output", exist_ok=True)
-            if Path(f"{output_dir}/transform_output/{filename}").is_file() and not force:
-                logger.info(f"{ingest}: {url} already found at {output_dir}/transform_output/{filename}")
+            # Creates/checks existance of the download directory
+            os.makedirs(download_dir, exist_ok=True)
+            if Path(f"{download_dir}/{filename}").is_file() and not force:
+                logger.info(f"{ingest}: {url} already found at {download_dir}/{filename}")
                 continue
 
             response = requests.get(url, allow_redirects=True)
             response.raise_for_status()  # Raise an exception for HTTP error status codes (4xx, 5xx)
-            with open(f"{output_dir}/transform_output/{filename}", "wb") as f:
+            with open(f"{download_dir}/{filename}", "wb") as f:
                 f.write(response.content)
-                logger.info(f"{ingest}: {url} downloaded to {output_dir}/transform_output/{filename}")
+                logger.info(f"{ingest}: {url} downloaded to {download_dir}/{filename}")
+        if source_filter:
+            logger.info(f"{ingest}: applying the {source_filter} filter")
+            SOURCE_FILTERS[source_filter](
+                Path(download_dir), Path(f"{output_dir}/transform_output"), Path(f"{output_dir}/qc")
+            )
         return
 
     source_file = Path(Path(__file__).parent, ingests[ingest]["config"])
