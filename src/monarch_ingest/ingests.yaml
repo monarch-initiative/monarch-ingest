@@ -195,7 +195,14 @@ mmrrc:
 # categories, nested `sources`), with a known data regression, so it is staged
 # in a bucket rather than published as a release. Built from
 # monarch-initiative/medic#109 at 7b58f97. Not for a production KG release.
+#
+# The medic filter (utils/source_filters.py) loads MeDIC's edges but only the
+# DRON/RXCUI/UNII drug nodes: phenio provides the CHEBI/MONDO/HP nodes, and edges
+# to UMLS or not-yet-imported CHEBI terms dangle so the merge reports them. Edges
+# whose disease_context_qualifier is free text or non-MONDO are excluded
+# (output/qc/medic_excluded_edges.jsonl).
 medic:
+  filter: medic
   url:
     - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_nodes.jsonl
     - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_edges.jsonl
