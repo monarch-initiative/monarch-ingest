@@ -200,8 +200,8 @@ mmrrc:
 # The medic filter (utils/source_filters.py) loads MeDIC's edges but only the
 # DRON/RXCUI/UNII drug nodes: phenio provides the CHEBI/MONDO/HP nodes, and edges
 # to UMLS or not-yet-imported CHEBI terms dangle so the merge reports them. Edges
-# whose disease_context_qualifier is free text or non-MONDO are excluded
-# (output/qc/medic_excluded_edges.jsonl).
+# are excluded (output/qc/medic_excluded_edges.jsonl) unless their pair is HIGH
+# reliability and their disease_context_qualifier is empty or a MONDO term.
 medic:
   filter: medic
   url:

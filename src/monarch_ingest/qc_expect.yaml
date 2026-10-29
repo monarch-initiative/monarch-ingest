@@ -41,7 +41,7 @@ nodes:
     cureid_nodes:
       min: 10
     medic_nodes:
-      min: 150
+      min: 50
     loinc_nodes_nodes:
       min: 100000
     loinc_parts_nodes:
@@ -116,7 +116,7 @@ edges:
     cureid_edges:
       min: 200
     medic_edges:
-      min: 37000
+      min: 27000
     loinc_hierarchy_edges:
       min: 24000
     loinc_composition_edges:
