@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 
 docker stop my_solr || true
@@ -192,9 +192,10 @@ else
   docker stop my_solr
 
   # Tar from a sidecar that mounts the stopped container's volumes — the
-  # index is now quiet on disk.
+  # index is now quiet on disk. Compress on the host with pigz: gzip in the
+  # sidecar is single-threaded and takes most of an hour on the full index.
   docker run --rm --volumes-from my_solr busybox \
-    tar czf - -C /var/solr data > output/solr.tar.gz
+    tar cf - -C /var/solr data | pigz > output/solr.tar.gz
 
   docker rm my_solr
 fi
