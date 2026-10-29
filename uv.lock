@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.7.0.post18.dev0+6e586f3"
-source = { git = "https://github.com/monarch-initiative/koza.git?branch=feat%2Fshared-annotation-ic-table#6e586f3f5e35b39797efd1ba6b95f4164a7a0099" }
+version = "2.7.0.post19.dev0+2baddae"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=feat%2Fshared-annotation-ic-table#2baddae2a4308a9592ab94c6787559764b95fc30" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -3428,7 +3428,7 @@ wheels = [
 [[package]]
 name = "pheno-comparisons"
 version = "0.1.0"
-source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#07ecbb88b43f81d88e004d071799e6f55466e916" }
+source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#2c843dec2653a2a6e78960f42792ed470ace44cb" }
 dependencies = [
     { name = "duckdb" },
     { name = "koza" },
