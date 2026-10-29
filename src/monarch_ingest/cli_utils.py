@@ -774,14 +774,15 @@ def apply_information_content(
         f"closure_size ({result.closure_size_entity_count:,} entities)"
     )
 
-    # Annotation-based IC tables for the phenotype comparison release (one per
-    # corpus: MONDO->HP, MGI->MP, ZFIN->ZP). Written here, in the sequential
-    # stage, so the parallel `pheno-comparisons` stage can open the KG read-only.
+    # Annotation-based IC for the phenotype comparison release (corpora MONDO->HP,
+    # MGI->MP, ZFIN->ZP, as rows of annotation_information_content). Written here,
+    # in the sequential stage, so the parallel `pheno-comparisons` stage can open
+    # the KG read-only.
     from pheno_comparisons import compute_information_content_tables
 
     for row in compute_information_content_tables(database_path):
         logger.info(
-            f"Built {row['ic_table']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
+            f"Built annotation IC {row['corpus']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
         )
 
 

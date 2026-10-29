@@ -95,5 +95,7 @@ max-complexity = 10
 pheno-comparisons = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git", branch = "pheno-comparisons-from-kg" }
 kgx = {git = "https://github.com/biolink/kgx.git", branch="rdf-optimization"} #TODO: switch back to master once https://github.com/biolink/kgx/pull/545 lands
 # Track koza main for the graph-schema work (inlined record slots, schema
-# overlays) and duckdb 2 support until the next koza release.
-koza = {git = "https://github.com/monarch-initiative/koza.git", branch = "main"}
+# overlays) and duckdb 2 support until the next koza release, plus the shared
+# annotation-IC table (corpus / ic_corpus) from its feat/shared-annotation-ic-table
+# PR branch; switch back to main once that merges.
+koza = {git = "https://github.com/monarch-initiative/koza.git", branch = "feat/shared-annotation-ic-table"}
