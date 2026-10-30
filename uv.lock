@@ -2396,7 +2396,7 @@ wheels = [
 
 [[package]]
 name = "linkml-solr"
-version = "0.2.3"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "duckdb" },
@@ -2407,9 +2407,9 @@ dependencies = [
     { name = "pysolr" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/21/0d34262581a48a637ddda70a523b9fbfb3cf14044d4764ee9511489cc8ce/linkml_solr-0.2.3.tar.gz", hash = "sha256:5de9a3ff2c6f6fc466293e61d87ef72bdd4097b0fceee2e4b6958effc4c209cc", size = 18008, upload-time = "2026-06-09T15:24:52.79Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/d6/a62c4c2ab88943f98de3c2101fc196e17e015961220f346cfe2c4bf7422e/linkml_solr-0.4.0.tar.gz", hash = "sha256:761df3aae0e59b3fb6a350e0622bc0f4737e7be6a32a855dae8a50bc6917fdbe", size = 29840, upload-time = "2026-10-30T01:42:45.085Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/09/716105c0bc0615e1d31f084c34c0cf52b7af50f1061a8d2569353e862111/linkml_solr-0.2.3-py3-none-any.whl", hash = "sha256:e921d758dd30dd7e1cdf2b327f4a6dff21738ff253174fa6166d7d2df6dc29eb", size = 22086, upload-time = "2026-06-09T15:24:51.86Z" },
+    { url = "https://files.pythonhosted.org/packages/65/0b/767b14efce609081dab9d00ed530c9c8cd5313b4ad4de5f4ee8c9b058cd8/linkml_solr-0.4.0-py3-none-any.whl", hash = "sha256:c7eae48d164cdccbe12755c2e6073f95a9dab6ddffdaa5526315c795e6003f73", size = 34612, upload-time = "2026-10-30T01:42:44.065Z" },
 ]
 
 [[package]]
@@ -2693,7 +2693,7 @@ requires-dist = [
     { name = "koza", extras = ["grape"], git = "https://github.com/monarch-initiative/koza.git?branch=main" },
     { name = "linkml", specifier = ">=1.9,<2" },
     { name = "linkml-runtime", specifier = ">=1.7.5,<2" },
-    { name = "linkml-solr", specifier = "==0.2.3" },
+    { name = "linkml-solr", specifier = "==0.4.0" },
     { name = "loguru" },
     { name = "mkdocs", marker = "extra == 'dev'", specifier = ">=1.4,<2" },
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.5" },
