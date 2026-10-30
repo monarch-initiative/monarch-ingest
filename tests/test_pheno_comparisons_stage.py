@@ -32,6 +32,7 @@ EDGES = (
     + [(f"ZFIN:{i}", "ZP:2", GENE) for i in (2, 3, 4)]
     + [("HGNC:1", "HP:1", GENE), ("HGNC:2", "HP:2", GENE)]
     + [("RGD:1", "MP:1", GENE)]
+    + [("WB:1", "WBPhenotype:1", GENE)]  # every search group needs annotations, or the stage fails
 )
 
 
@@ -72,7 +73,7 @@ def test_information_content_then_pheno_comparisons(output_dir):
     corpora = {r[0] for r in con.execute("SELECT corpus FROM pheno_comparison_corpora").fetchall()}
     con.close()
     assert {"information_content", "closure_size", "annotation_information_content"} <= tables
-    assert {"mondo_hp", "mgi_mp", "zfin_zp"} <= corpora
+    assert corpora == {"mondo_hp", "mgi_mp", "zfin_zp", "hgnc_hp", "rgd_mp", "wb_wbphenotype"}
 
     build_pheno_comparisons("2026-10-07", output_dir=str(output_dir), metadata_dir="no-such-dir", threads=1)
     tarballs = sorted(p.name for p in (output_dir / "pheno-comparisons").iterdir())
