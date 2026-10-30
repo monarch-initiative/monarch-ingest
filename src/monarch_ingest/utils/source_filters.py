@@ -20,6 +20,17 @@ MEDIC_CONTEXT_PREFIX = "MONDO:"
 # The drug-disease-compare label audit of this export found HIGH pairs wrong 7.9% of
 # the time against 66.7% for LOW (and 18% for an undersampled MEDIUM).
 MEDIC_RELIABILITY = "HIGH"
+# The edge category for each MeDIC predicate, as MeDIC's v2 export assigns it. The
+# v2.0.0-rc1 files carry no category; without one the edges match no association
+# section and break the per-category exports.
+MEDIC_CATEGORIES = {
+    "biolink:treats": "biolink:ChemicalOrDrugOrTreatmentToDiseaseOrPhenotypicFeatureAssociation",
+    "biolink:preventative_for_condition": "biolink:ChemicalOrDrugOrTreatmentToDiseaseOrPhenotypicFeatureAssociation",
+    "biolink:in_clinical_trials_for": "biolink:ChemicalOrDrugOrTreatmentToDiseaseOrPhenotypicFeatureAssociation",
+    "biolink:studied_to_treat": "biolink:ChemicalOrDrugOrTreatmentToDiseaseOrPhenotypicFeatureAssociation",
+    "biolink:contraindicated_in": "biolink:ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation",
+    "biolink:diagnoses": "biolink:ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation",
+}
 
 
 def _medic_exclusion(edge: dict) -> Optional[str]:
@@ -38,14 +49,15 @@ def filter_medic(raw_dir: Path, output_dir: Path, qc_dir: Path) -> None:
     """Load MeDIC's edges, and only the drug nodes phenio can't provide.
 
     Excluded edges are written to `qc_dir/medic_excluded_edges.jsonl`. Lines are
-    copied through unchanged.
+    copied through unchanged, except that a kept edge with no category gets the one
+    its predicate maps to (MEDIC_CATEGORIES).
     """
     logger = get_logger(None)
     output_dir.mkdir(parents=True, exist_ok=True)
     qc_dir.mkdir(parents=True, exist_ok=True)
 
     subjects = set()
-    kept = 0
+    kept = categorized = 0
     excluded = Counter()
     with (
         open(raw_dir / "medic_edges.jsonl") as src,
@@ -58,6 +70,10 @@ def filter_medic(raw_dir: Path, output_dir: Path, qc_dir: Path) -> None:
             edge = json.loads(line)
             reason = _medic_exclusion(edge)
             if reason is None:
+                if not edge.get("category") and edge.get("predicate") in MEDIC_CATEGORIES:
+                    edge["category"] = [MEDIC_CATEGORIES[edge["predicate"]]]
+                    line = json.dumps(edge) + "\n"
+                    categorized += 1
                 out.write(line)
                 subjects.add(edge["subject"])
                 kept += 1
@@ -68,6 +84,8 @@ def filter_medic(raw_dir: Path, output_dir: Path, qc_dir: Path) -> None:
         f"medic: kept {kept} edges, excluded "
         + ", ".join(f"{n} ({reason})" for reason, n in excluded.most_common())
     )
+    if categorized:
+        logger.warning(f"medic: {categorized} kept edges had no category; filled in from the predicate")
 
     nodes = 0
     with open(raw_dir / "medic_nodes.jsonl") as src, open(output_dir / "medic_nodes.jsonl", "w") as out:

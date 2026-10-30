@@ -185,9 +185,15 @@ def export_exploded_annotations(
 
 
 def get_association_categories(database) -> List[str]:
+    """Distinct edge categories; edges with no category are skipped (and logged),
+    since they have no per-category export to go to."""
+    uncategorized = database.execute("SELECT count(*) FROM denormalized_edges WHERE category IS NULL").fetchone()[0]
+    if uncategorized:
+        logger.warning(f"{uncategorized} edges have no category and are left out of the per-category exports")
     sql = """
     SELECT DISTINCT category
     FROM denormalized_edges
+    WHERE category IS NOT NULL
     """
     # return as list of strings, extracting only column from tuple
     return [row[0] for row in database.execute(sql).fetchall()]

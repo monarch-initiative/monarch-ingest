@@ -1,6 +1,15 @@
 """Tests for monarch_ingest.utils.export_utils — pure functions, no mocking needed."""
 
-from monarch_ingest.utils.export_utils import camel_to_snake, get_fields, DEFAULT_FIELDS, DISEASE_TO_PHENOTYPE_APPENDS, GENE_TO_GENE_APPENDS
+import duckdb
+
+from monarch_ingest.utils.export_utils import (
+    camel_to_snake,
+    get_association_categories,
+    get_fields,
+    DEFAULT_FIELDS,
+    DISEASE_TO_PHENOTYPE_APPENDS,
+    GENE_TO_GENE_APPENDS,
+)
 
 
 class TestCamelToSnake:
@@ -63,3 +72,12 @@ class TestGetFields:
         fields = get_fields("biolink:DiseaseToPhenotypicFeatureAssociation")
         for appended in DISEASE_TO_PHENOTYPE_APPENDS:
             assert appended not in fields
+
+
+def test_get_association_categories_skips_uncategorized_edges():
+    database = duckdb.connect()
+    database.execute("CREATE TABLE denormalized_edges (id VARCHAR, category VARCHAR)")
+    database.execute(
+        "INSERT INTO denormalized_edges VALUES ('e1', 'biolink:Association'), ('e2', NULL), ('e3', 'biolink:Association')"
+    )
+    assert get_association_categories(database) == ["biolink:Association"]

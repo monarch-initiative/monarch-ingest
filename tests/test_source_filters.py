@@ -48,6 +48,21 @@ class TestFilterMedic:
         assert read_ids(out / "medic_edges.jsonl") == ["e1"]
         assert read_ids(qc / "medic_excluded_edges.jsonl") == ["e2", "e3", "e4"]
 
+    def test_missing_category_is_filled_from_the_predicate(self, tmp_path):
+        edges = [
+            {"id": "e1", "subject": "CHEBI:1", "predicate": "biolink:treats", "object": "MONDO:1", **HIGH},
+            {"id": "e2", "subject": "CHEBI:1", "predicate": "biolink:contraindicated_in", "object": "MONDO:2", **HIGH},
+            {"id": "e3", "subject": "CHEBI:1", "predicate": "biolink:treats", "object": "MONDO:3",
+             "category": ["biolink:Association"], **HIGH},
+        ]
+        out, _ = self.run(tmp_path, [], edges)
+        categories = [json.loads(line)["category"] for line in (out / "medic_edges.jsonl").read_text().splitlines()]
+        assert categories == [
+            ["biolink:ChemicalOrDrugOrTreatmentToDiseaseOrPhenotypicFeatureAssociation"],
+            ["biolink:ChemicalEntityToDiseaseOrPhenotypicFeatureAssociation"],
+            ["biolink:Association"],
+        ]
+
     def test_only_non_chebi_drug_nodes_with_kept_edges(self, tmp_path):
         nodes = [{"id": i} for i in ["CHEBI:1", "MONDO:1", "UMLS:C1", "DRON:1", "RXCUI:1", "UNII:1", "RXCUI:2"]]
         edges = [
