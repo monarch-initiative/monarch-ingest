@@ -2179,8 +2179,8 @@ dependencies = [
 
 [[package]]
 name = "koza"
-version = "2.7.0.post17.dev0+10558e1"
-source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#10558e1f0fc99cb7846a11c554bf2f3f52ee2d99" }
+version = "2.7.0.post20.dev0+24399bf"
+source = { git = "https://github.com/monarch-initiative/koza.git?branch=main#24399bf773fc847cee3da56bcba0b43d2ae7d0e6" }
 dependencies = [
     { name = "biolink-model" },
     { name = "coverage" },
@@ -2663,6 +2663,7 @@ dependencies = [
     { name = "notebook" },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pheno-comparisons" },
     { name = "pydantic" },
     { name = "pystow" },
     { name = "sh" },
@@ -2699,6 +2700,7 @@ requires-dist = [
     { name = "multi-indexer", specifier = "==0.0.5" },
     { name = "notebook", specifier = ">=7.3.2,<8" },
     { name = "pandas", specifier = ">=2.0.3" },
+    { name = "pheno-comparisons", git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg" },
     { name = "pydantic", specifier = ">=2.5,<3" },
     { name = "pystow", specifier = ">=0.5.4,<1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.1.1,<9" },
@@ -3421,6 +3423,16 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/c3/059298687310d527a58bb01f3b1965787ee3b40dce76752eda8b44e9a2c5/pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523", size = 63772, upload-time = "2023-11-25T06:56:14.81Z" },
+]
+
+[[package]]
+name = "pheno-comparisons"
+version = "0.1.0"
+source = { git = "https://github.com/kevinschaper/automate-pheno-comparisons.git?branch=pheno-comparisons-from-kg#ac8ce712cc7e2c91cad50ab514634f5bfac737bb" }
+dependencies = [
+    { name = "duckdb" },
+    { name = "koza" },
+    { name = "pyyaml" },
 ]
 
 [[package]]

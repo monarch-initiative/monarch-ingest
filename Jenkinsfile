@@ -78,8 +78,10 @@ pipeline {
                 sh 'uv run ingest prepare-solr'
             }
         }
-        // Compute the similarity precompute tables (information_content, closure_size)
-        // the api reads in-process. Sequential like prepare-solr: it write-locks
+        // Compute the similarity precompute tables the api reads in-process
+        // (information_content, closure_size) and the annotation IC the
+        // pheno-comparisons stage reads (annotation_information_content,
+        // pheno_comparison_corpora). Sequential like prepare-solr: it write-locks
         // monarch-kg.duckdb, so it must finish before the read-only fan-out below.
         stage('information-content') {
             steps {
@@ -119,6 +121,12 @@ pipeline {
                 stage('sqlite') {
                     steps {
                         sh 'uv run ingest sqlite'
+                    }
+                }
+                stage('pheno-comparisons') {
+                    steps {
+                        // HP-HP / HP-MP / HP-ZP similarity tarballs for Exomiser; reads the KG read-only.
+                        sh 'uv run ingest pheno-comparisons --kg-version ${RELEASE} --memory-limit 32GB --threads 8'
                     }
                 }
                 stage('make exports') {
