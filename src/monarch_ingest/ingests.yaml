@@ -191,11 +191,11 @@ mmrrc:
     - mmrrc_genotype_to_gene_edges.tsv
     - mmrrc_genotype_to_phenotype_edges.tsv
 
-# MeDIC v2.0.0-rc1 (monarch-initiative/medic, not the kozahub medic-ingest repo).
-# Pinned to the release-candidate assets by explicit URL: releases/latest on
-# that repo still resolves to v1.0.1, and the rc is a prerelease. The KGX
-# export is JSONL; the merge discovers *_nodes.jsonl / *_edges.jsonl directly.
-# Switch to the tagged v2.0.0 release URLs once it is cut.
+# MeDIC v2 (monarch-initiative/medic, not the kozahub medic-ingest repo), from the
+# staged export of monarch-initiative/medic#109 at 7b58f97: the v2.0.0-rc1 release
+# assets have no edge category or `sources`. The staged export is not a release;
+# switch to the tagged v2.0.0 release URLs once it is cut. The KGX export is
+# JSONL; the merge discovers *_nodes.jsonl / *_edges.jsonl directly.
 #
 # The medic filter (utils/source_filters.py) loads MeDIC's edges but only the
 # DRON/RXCUI/UNII drug nodes: phenio provides the CHEBI/MONDO/HP nodes, and edges
@@ -205,8 +205,8 @@ mmrrc:
 medic:
   filter: medic
   url:
-    - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_nodes.jsonl
-    - https://github.com/monarch-initiative/medic/releases/download/v2.0.0-rc1/medic_edges.jsonl
+    - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_nodes.jsonl
+    - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_edges.jsonl
 
 cureid:
   repo: cureid-ingest
