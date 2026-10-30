@@ -78,8 +78,10 @@ pipeline {
                 sh 'uv run ingest prepare-solr'
             }
         }
-        // Compute the similarity precompute tables (information_content, closure_size)
-        // the api reads in-process. Sequential like prepare-solr: it write-locks
+        // Compute the similarity precompute tables the api reads in-process
+        // (information_content, closure_size) and the annotation IC the
+        // pheno-comparisons stage reads (annotation_information_content,
+        // pheno_comparison_corpora). Sequential like prepare-solr: it write-locks
         // monarch-kg.duckdb, so it must finish before the read-only fan-out below.
         stage('information-content') {
             steps {

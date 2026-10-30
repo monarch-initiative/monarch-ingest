@@ -70,7 +70,7 @@ A SQLite database file is produced by loading node and edge files into a SQLite 
 
 After closure, the `information-content` stage writes the similarity precompute tables into `monarch-kg.duckdb` with koza. `information_content` and `closure_size` are read by the Monarch API. Annotation-based IC goes into one table, `annotation_information_content` (`corpus`, `term`, `ic`). Each corpus is computed from one set of `has_phenotype` edges: `mondo_hp` (diseases to HP), `mgi_mp` (mouse genes to MP) and `zfin_zp` (zebrafish genes to ZP). `pheno_comparison_corpora` records each corpus's edge filters and counts.
 
-The parallel `pheno-comparisons` stage then opens the KG read-only and builds the HP-HP, HP-MP and HP-ZP phenotype similarity tables Exomiser uses, with the [pheno-comparisons](https://github.com/Knowledge-Graph-Hub/automate-pheno-comparisons) package. They are written as `output/pheno-comparisons/<comparison>_kg-<release>.tsv.tar.gz` and published with the release.
+The parallel `pheno-comparisons` stage then opens the KG read-only and builds the HP-HP, HP-MP and HP-ZP phenotype similarity tables Exomiser uses, with the [pheno-comparisons](https://github.com/Knowledge-Graph-Hub/automate-pheno-comparisons) package (installed from the branch of automate-pheno-comparisons#54 until that merges). They are written as `output/pheno-comparisons/<comparison>_kg-<release>.tsv.tar.gz` and published with the release.
 
 The KG release no longer includes a PHENIO SQLite (`phenio.db.gz`). The ontology closure lives in `monarch-kg.duckdb`, and a SemanticSQL build of PHENIO is available from the [SemanticSQL](https://github.com/INCATools/semantic-sql) project.
 

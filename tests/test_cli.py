@@ -58,3 +58,27 @@ class TestVersion:
         result = runner.invoke(typer_app, ["--version"])
         assert result.exit_code == 0
         assert "monarch_ingest version:" in result.output
+
+
+class TestPhenoComparisons:
+    @patch("monarch_ingest.cli_utils.build_pheno_comparisons")
+    def test_passes_options_through(self, mock_build):
+        result = runner.invoke(
+            typer_app, ["pheno-comparisons", "--kg-version", "2026-10-07", "--memory-limit", "32GB", "--threads", "8"]
+        )
+        assert result.exit_code == 0, result.output
+        mock_build.assert_called_once_with("2026-10-07", memory_limit="32GB", threads=8)
+
+    @patch("monarch_ingest.cli_utils.build_pheno_comparisons")
+    def test_kg_version_defaults_to_today(self, mock_build):
+        from datetime import date
+
+        result = runner.invoke(typer_app, ["pheno-comparisons"])
+        assert result.exit_code == 0, result.output
+        assert mock_build.call_args.args == (date.today().isoformat(),)
+
+    @patch("monarch_ingest.cli_utils.apply_information_content")
+    def test_information_content_command(self, mock_apply):
+        result = runner.invoke(typer_app, ["information-content"])
+        assert result.exit_code == 0, result.output
+        mock_apply.assert_called_once_with()
