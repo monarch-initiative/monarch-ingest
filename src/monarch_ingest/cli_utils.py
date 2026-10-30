@@ -875,6 +875,18 @@ def build_pheno_comparisons(
 #     sh.mv(database, f"{output_dir}/")
 
 
+def sqlite_select_list(con, table: str) -> str:
+    """SELECT list for copying `table` to SQLite: nested columns (see
+    `is_nested_column_type`) become JSON text, everything else is copied as-is."""
+    parts = []
+    for name, col_type, *_ in con.execute(f"DESCRIBE {table}").fetchall():
+        if is_nested_column_type(col_type):
+            parts.append(f'to_json("{name}")::VARCHAR AS "{name}"')
+        else:
+            parts.append(f'"{name}"')
+    return ", ".join(parts)
+
+
 def load_sqlite():
     """
     Load data from DuckDB to SQLite using DuckDB's SQLite extension.
@@ -905,16 +917,16 @@ def load_sqlite():
 
         # Copy tables from DuckDB to SQLite
         logger.info("Loading nodes...")
-        con.execute("CREATE TABLE sqlite_db.nodes AS SELECT * FROM nodes")
+        con.execute(f"CREATE TABLE sqlite_db.nodes AS SELECT {sqlite_select_list(con, 'nodes')} FROM nodes")
 
         logger.info("Loading edges...")
-        con.execute("CREATE TABLE sqlite_db.edges AS SELECT * FROM edges")
+        con.execute(f"CREATE TABLE sqlite_db.edges AS SELECT {sqlite_select_list(con, 'edges')} FROM edges")
 
         logger.info("Loading denormalized_nodes...")
-        con.execute("CREATE TABLE sqlite_db.denormalized_nodes AS SELECT * FROM denormalized_nodes")
+        con.execute(f"CREATE TABLE sqlite_db.denormalized_nodes AS SELECT {sqlite_select_list(con, 'denormalized_nodes')} FROM denormalized_nodes")
 
         logger.info("Loading denormalized_edges...")
-        con.execute("CREATE TABLE sqlite_db.denormalized_edges AS SELECT * FROM denormalized_edges")
+        con.execute(f"CREATE TABLE sqlite_db.denormalized_edges AS SELECT {sqlite_select_list(con, 'denormalized_edges')} FROM denormalized_edges")
 
         # Load closure from TSV file
         logger.info("Loading closure...")
@@ -1105,6 +1117,14 @@ def get_neo4j_column(field: str) -> str:
     return field
 
 
+def is_nested_column_type(col_type: str) -> bool:
+    """Whether a DuckDB column holds records (STRUCT / MAP, or lists of them),
+    e.g. Biolink `sources`. Neo4j properties and SQLite columns can't hold
+    those natively, so exports write them as JSON text."""
+    upper = (col_type or "").upper()
+    return "STRUCT(" in upper or "MAP(" in upper
+
+
 def get_neo4j_column_from_db(field: str, column_types: dict) -> str:
     """
     Convert a field name to a column specification with Neo4j type annotations.
@@ -1116,6 +1136,11 @@ def get_neo4j_column_from_db(field: str, column_types: dict) -> str:
     ensure_model_files, which couldn't resolve `monarch_kg_schema.yaml`).
     """
     col_type = column_types.get(field, "VARCHAR").upper()
+    if is_nested_column_type(col_type):
+        # Neo4j properties can't be maps. One JSON string keeps the records
+        # intact; a string[] would be split on the ';' array delimiter, which
+        # URLs inside the records can contain. Decode with apoc.convert.fromJsonList.
+        return f'to_json({field})::VARCHAR as "{field}:string"'
     is_array = col_type.endswith("[]")
     base = col_type[:-2] if is_array else col_type
 
@@ -1123,14 +1148,17 @@ def get_neo4j_column_from_db(field: str, column_types: dict) -> str:
                      "UBIGINT", "UINTEGER", "USMALLINT", "UTINYINT"}
     float_types = {"DOUBLE", "FLOAT", "REAL", "DECIMAL"}
 
+    # Arrays keep their element type (long[], float[], ...); Neo4j splits them on ';'.
+    value = f"array_to_string({field}, ';')" if is_array else field
+    suffix = "[]" if is_array else ""
     if base in integer_types:
-        return f'{field} as "{field}:long"'
+        return f'{value} as "{field}:long{suffix}"'
     if base in float_types or base.startswith("DECIMAL"):
-        return f'{field} as "{field}:float"'
+        return f'{value} as "{field}:float{suffix}"'
     if base == "BOOLEAN":
-        return f'{field} as "{field}:boolean"'
+        return f'{value} as "{field}:boolean{suffix}"'
     if is_array:
-        return f"""array_to_string({field}, ';') as "{field}:string[]" """
+        return f"""{value} as "{field}:string[]" """
     return field
 
 
