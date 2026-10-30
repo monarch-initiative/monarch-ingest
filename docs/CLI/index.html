@@ -560,6 +560,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-pheno-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest pheno-comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1513,6 +1524,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ingest-pheno-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest pheno-comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ingest-jsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1652,6 +1674,7 @@
 <li><code>closure</code></li>
 <li><code>prepare-solr</code>: Materialize <code>_solr_edges</code>...</li>
 <li><code>information-content</code>: Compute semantic-similarity precompute...</li>
+<li><code>pheno-comparisons</code>: Build the HP-HP / HP-MP / HP-ZP phenotype...</li>
 <li><code>jsonl</code></li>
 <li><code>neo4j-csv</code></li>
 <li><code>sqlite</code></li>
@@ -1758,12 +1781,27 @@ connectivity) are running.</p>
 parallel post-merge stages — it takes a write lock on monarch-kg.duckdb so
 the read-only fan-out (solr, connectivity, sqlite, ...) doesn&#x27;t race it.
 The api&#x27;s in-process similarity engine reads these tables from the KG
-artifact instead of rebuilding them per worker.</p>
+artifact instead of rebuilding them per worker. Also writes the
+annotation-IC tables the <code>pheno-comparisons</code> stage reads.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>information-content<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
+<li><code>--help</code>: Show this message and exit.</li>
+</ul>
+<h2 id="ingest-pheno-comparisons"><code>ingest pheno-comparisons</code></h2>
+<p>Build the HP-HP / HP-MP / HP-ZP phenotype comparison tarballs into output/pheno-comparisons/.</p>
+<p>These are Exomiser&#x27;s cross-species phenotype similarity tables. Reads monarch-kg.duckdb read-only, so it can run in the parallel post-merge
+stage; run after <code>information-content</code>, which writes the annotation-IC tables.</p>
+<p><strong>Usage</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ingest<span class="w"> </span>pheno-comparisons<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><code>--kg-version TEXT</code>: KG version tag (defaults to today&#x27;s date)</li>
+<li><code>--memory-limit TEXT</code>: DuckDB memory limit, e.g. 32GB</li>
+<li><code>--threads INTEGER</code>: DuckDB threads</li>
 <li><code>--help</code>: Show this message and exit.</li>
 </ul>
 <h2 id="ingest-jsonl"><code>ingest jsonl</code></h2>
