@@ -785,6 +785,55 @@ def apply_information_content(
             f"Built annotation IC {row['corpus']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
         )
 
+    # Annotation IC for the Monarch API's other phenotype search groups (#1475 in monarch-app),
+    # as more corpora of the same tables, so the API finds every corpus one way.
+    for row in compute_search_annotation_ic(database_path):
+        logger.info(
+            f"Built annotation IC {row['corpus']} ({row['term_count']:,} terms, {row['entity_count']:,} entities)"
+        )
+
+
+def search_annotation_corpora() -> list:
+    """Annotation corpora the Monarch API's phenotype search needs beyond the Exomiser comparison
+    corpora pheno_comparisons builds (mondo_hp, mgi_mp, zfin_zp): one per remaining search group.
+
+    Gene-to-phenotype edges only. A handful of HGNC -> HP edges carry the disease-to-phenotype
+    category instead (monarch-app#1490); they're left out until that is fixed upstream.
+    """
+    from pheno_comparisons.spec import GENE_TO_PHENOTYPE, Corpus
+
+    return [
+        Corpus(
+            key=key,
+            categories=[GENE_TO_PHENOTYPE],
+            subject_prefixes=[subject_prefix],
+            object_prefixes=[object_prefix],
+            description=description,
+        )
+        for key, description, subject_prefix, object_prefix in (
+            ("hgnc_hp", "human genes (HGNC) -> HP", "HGNC", "HP"),
+            ("rgd_mp", "rat genes (RGD) -> MP", "RGD", "MP"),
+            ("wb_wbphenotype", "C. elegans genes (WB) -> WBPhenotype", "WB", "WBPhenotype"),
+        )
+    ]
+
+
+def compute_search_annotation_ic(database_path: Path) -> list:
+    """Write the annotation IC of each remaining search group into the KG's shared annotation-IC
+    table and register it in the corpus table the API reads to map a search group to its corpus.
+
+    Uses pheno_comparisons' own corpus code, so the filters, the registry schema and the
+    rerun behaviour (only these corpora's rows are replaced) are the same as for its corpora.
+    Needs write access to the KG, so it belongs in the sequential `information-content` stage.
+    """
+    from pheno_comparisons import CORPORA, compute_information_content_tables
+
+    corpora = search_annotation_corpora()
+    clash = sorted({c.key for c in corpora} & set(CORPORA))
+    if clash:
+        raise ValueError(f"search corpora {clash} clash with pheno_comparisons' own corpora")
+    return compute_information_content_tables(database_path, corpora=corpora)
+
 
 def build_pheno_comparisons(
     kg_version: str,
