@@ -125,6 +125,55 @@ def collect_kg_artifacts(output_dir: str | Path, names: list[str]) -> list[dict]
     return artifacts
 
 
+def collect_attributions(metadata_files, license_urls: dict | None = None) -> list[dict]:
+    """Attribution notices a release must carry, from downloaded KGX metadata files.
+
+    A source whose terms require attribution states it as `license.attribution_notice`
+    in its `*_kgx_metadata.yaml` (MeDIC does). `metadata_files` are the downloaded
+    files, each in `data/<ingest>/`; `license_urls` maps an ingest name to a public
+    terms URL that overrides the file's own `license.terms`.
+    """
+    license_urls = license_urls or {}
+    attributions = []
+    for path in sorted(Path(p) for p in metadata_files):
+        metadata = yaml.safe_load(path.read_text()) or {}
+        license_info = metadata.get("license")
+        if not isinstance(license_info, dict) or not license_info.get("attribution_notice"):
+            continue
+        ingest = path.parent.name
+        version = next(
+            (str(v) for k, v in metadata.items() if k.endswith("version") and k != "biolink_version"),
+            None,
+        )
+        attribution = {"ingest": ingest, "source": metadata.get("name") or ingest}
+        if version:
+            attribution["version"] = version
+        attribution["notice"] = " ".join(str(license_info["attribution_notice"]).split())
+        terms = license_urls.get(ingest) or license_info.get("terms")
+        if terms:
+            attribution["terms"] = terms
+        attributions.append(attribution)
+    return attributions
+
+
+def write_notice(attributions: list[dict], output_path: str | Path) -> None:
+    """Write the release's NOTICE.md from `collect_attributions` output."""
+    lines = [
+        "# Third-party data notices",
+        "",
+        "This knowledge graph includes data from the sources below, whose terms require",
+        "attribution. Redistributing the graph, or data derived from it, takes on these",
+        "obligations.",
+    ]
+    for a in attributions:
+        heading = f"{a['source']} {a['version']}" if a.get("version") else a["source"]
+        lines += ["", f"## {heading}", "", a["notice"]]
+        if a.get("terms"):
+            lines += ["", f"Terms: {a['terms']}"]
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    Path(output_path).write_text("\n".join(lines) + "\n")
+
+
 def write_receipt(receipt: dict, output_path: str | Path) -> None:
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     Path(output_path).write_text(yaml.safe_dump(receipt, sort_keys=False, default_flow_style=False))

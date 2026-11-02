@@ -3,6 +3,8 @@
 import yaml
 
 from monarch_ingest.release_metadata import (
+    collect_attributions,
+    write_notice,
     aggregate,
     find_disagreements,
 )
@@ -130,3 +132,53 @@ def test_aggregate_handles_kg_phenio_recursive_shape(tmp_path):
     phenio = kgp["sources"][0]
     assert phenio["id"] == "phenio"
     assert {s["id"] for s in phenio["sources"]} == {"infores:bfo", "infores:chebi"}
+
+
+def _kgx_metadata(tmp_path, ingest, doc):
+    path = tmp_path / "data" / ingest / f"{ingest}_kgx_metadata.yaml"
+    path.parent.mkdir(parents=True)
+    path.write_text(yaml.safe_dump(doc))
+    return path
+
+
+def test_collect_attributions_reads_the_kgx_license_notice(tmp_path):
+    medic = _kgx_metadata(
+        tmp_path,
+        "medic",
+        {
+            "name": "MeDIC",
+            "biolink_version": "4.4.6",
+            "medic_version": "2.0.0",
+            "license": {
+                "attribution_notice": "Contains data from EMA\n  and PMDA. Data has been edited.",
+                "terms": "https://github.com/monarch-initiative/medic/blob/main/LICENSING.md",
+            },
+        },
+    )
+    plain = _kgx_metadata(tmp_path, "other", {"name": "Other", "license": "CC0"})
+
+    attributions = collect_attributions(
+        [medic, plain], {"medic": "https://data.monarchinitiative.org/medic/v2.0.0/LICENSING.md"}
+    )
+
+    assert attributions == [
+        {
+            "ingest": "medic",
+            "source": "MeDIC",
+            "version": "2.0.0",
+            "notice": "Contains data from EMA and PMDA. Data has been edited.",
+            "terms": "https://data.monarchinitiative.org/medic/v2.0.0/LICENSING.md",
+        }
+    ]
+
+
+def test_write_notice_lists_each_source(tmp_path):
+    out = tmp_path / "NOTICE.md"
+    write_notice(
+        [{"source": "MeDIC", "version": "2.0.0", "notice": "Contains data from EMA.", "terms": "https://x/LICENSING.md"}],
+        out,
+    )
+    text = out.read_text()
+    assert "## MeDIC 2.0.0" in text
+    assert "Contains data from EMA." in text
+    assert "Terms: https://x/LICENSING.md" in text
