@@ -191,22 +191,27 @@ mmrrc:
     - mmrrc_genotype_to_gene_edges.tsv
     - mmrrc_genotype_to_phenotype_edges.tsv
 
-# MeDIC v2 (monarch-initiative/medic, not the kozahub medic-ingest repo), from the
-# staged export of monarch-initiative/medic#109 at 7b58f97: the v2.0.0-rc1 release
-# assets have no edge category or `sources`. The staged export is not a release;
-# switch to the tagged v2.0.0 release URLs once it is cut. The KGX export is
-# JSONL; the merge discovers *_nodes.jsonl / *_edges.jsonl directly.
+# MeDIC v2.0.0 (monarch-initiative/medic, not the kozahub medic-ingest repo). The
+# repository and its release are private, so the release's KGX export is mirrored,
+# decompressed, at data.monarchinitiative.org/medic/v2.0.0/ along with its
+# NOTICE.md and LICENSING.md. The merge discovers *_nodes.jsonl / *_edges.jsonl
+# directly.
 #
 # The medic filter (utils/source_filters.py) loads MeDIC's edges but only the
 # DRON/RXCUI/UNII drug nodes: phenio provides the CHEBI/MONDO/HP nodes, and edges
 # to UMLS or not-yet-imported CHEBI terms dangle so the merge reports them. Edges
 # are excluded (output/qc/medic_excluded_edges.jsonl) unless their pair is HIGH
 # reliability and their disease_context_qualifier is empty or a MONDO term.
+#
+# MeDIC's terms require attribution (EMA, PMDA): build-receipt copies the notice
+# from medic_kgx_metadata.yaml into the release's NOTICE.md, linking license_url.
 medic:
   filter: medic
+  license_url: https://data.monarchinitiative.org/medic/v2.0.0/LICENSING.md
   url:
-    - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_nodes.jsonl
-    - https://data.monarchinitiative.org/medic-staging/7b58f97/medic_edges.jsonl
+    - https://data.monarchinitiative.org/medic/v2.0.0/medic_nodes.jsonl
+    - https://data.monarchinitiative.org/medic/v2.0.0/medic_edges.jsonl
+    - https://data.monarchinitiative.org/medic/v2.0.0/medic_kgx_metadata.yaml
 
 cureid:
   repo: cureid-ingest

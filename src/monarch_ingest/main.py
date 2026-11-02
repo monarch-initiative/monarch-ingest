@@ -100,9 +100,12 @@ def build_receipt_cmd(
     from monarch_ingest.cli_utils import get_release_version
     from monarch_ingest.release_metadata import (
         aggregate,
+        collect_attributions,
         collect_kg_artifacts,
+        write_notice,
         write_receipt,
     )
+    from monarch_ingest.utils.ingest_utils import get_ingests
 
     logger = get_logger()
 
@@ -131,6 +134,18 @@ def build_receipt_cmd(
         packages=packages,
         artifacts=artifacts,
     )
+
+    # sources whose terms require attribution, from their downloaded KGX metadata
+    license_urls = {
+        name: entry["license_url"]
+        for name, entry in get_ingests().items()
+        if isinstance(entry, dict) and entry.get("license_url")
+    }
+    attributions = collect_attributions(Path("data").glob("*/*kgx_metadata.yaml"), license_urls)
+    if attributions:
+        receipt["attributions"] = attributions
+        write_notice(attributions, Path(output_dir) / "NOTICE.md")
+        logger.info(f"Wrote NOTICE.md with {len(attributions)} attribution notice(s)")
 
     out_path = Path(output_dir) / "metadata.yaml"
     write_receipt(receipt, out_path)

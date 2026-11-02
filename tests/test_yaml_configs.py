@@ -36,11 +36,12 @@ class TestIngestsYaml:
                 )
 
     def test_all_urls_end_with_supported_extension(self):
-        """All ingest source URLs must be TSV or JSONL files."""
+        """All ingest source URLs must be TSV or JSONL files, or a KGX metadata
+        YAML (read by build-receipt for attribution notices, not merged)."""
         ingests = get_ingests()
         for name, entry in ingests.items():
             for url in ingest_urls(entry):
-                assert url.endswith(".tsv") or url.endswith(".jsonl"), (
+                assert url.endswith((".tsv", ".jsonl", "_kgx_metadata.yaml")), (
                     f"Ingest '{name}' has URL with unsupported extension: {url}"
                 )
 
