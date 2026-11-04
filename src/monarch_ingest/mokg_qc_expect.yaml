@@ -45,8 +45,8 @@ edges:
       min: 8400
     hpoa_disease_to_phenotype_edges:
       min: 240000
-    hpoa_gene_to_disease_edges:
-      min: 15000
+    orphanet_gene_to_disease_edges:
+      min: 8000
     hpoa_gene_to_phenotype_edges:
       min: 300000
     panther_genome_orthologs_edges:

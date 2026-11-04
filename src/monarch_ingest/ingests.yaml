@@ -115,7 +115,7 @@ hpoa:
   files:
     - hpoa_disease_mode_of_inheritance_edges.tsv
     - hpoa_disease_to_phenotype_edges.tsv
-    - hpoa_gene_to_disease_edges.tsv
+    - orphanet_gene_to_disease_edges.tsv
     - hpoa_gene_to_phenotype_edges.tsv
 
 ncbi_gene:

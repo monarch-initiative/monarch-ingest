@@ -6,40 +6,39 @@ using the HPO ontology. Here we create Biolink associations
 between diseases and phenotypic features, together with their evidence,
 and age of onset and frequency (if known).
 
-There are four HPOA ingests - 'disease-to-phenotype', 'disease-to-mode-of-inheritance', 'gene-to-disease' and 'disease-to-mode-of-inheritance' - that parse out records from the [HPO Annotation File](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa).
+The [monarch-phenotype-profile-ingest](https://github.com/monarch-initiative/monarch-phenotype-profile-ingest) repository produces four files from HPOA and Orphanet: 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-phenotype' from the [HPO Annotation files](http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa), and 'gene-to-disease' from [Orphanet product 6](https://www.orphadata.com/genes/).
 
-The 'disease-to-phenotype', 'disease-to-mode-of-inheritance' and 'gene-to-disease' parsers currently only process the "abnormal" annotations.
+The 'disease-to-phenotype' and 'disease-to-mode-of-inheritance' parsers currently only process the "abnormal" annotations.
 Association to "remarkable normality" may be added in the near future.
 
 The 'disease-to-mode-of-inheritance' ingest script parses 'inheritance' record information out from the annotation file.
 
 ## [Gene to Disease](#gene_to_disease)
 
-This ingest replaces the direct OMIM ingest so that we share g2d associations 1:1 with HPO. The mapping between association_type and biolink predicates shown below is the one way in which this ingest is opinionated, but attempts to be a direct translation into the biolink model.
+Gene-to-disease associations come from Orphanet's gene–disorder file, [product 6](https://www.orphadata.com/genes/) (`en_product6.xml`), producing `orphanet_gene_to_disease_edges.tsv`. HPOA's `genes_to_disease.txt` is no longer used for this: it types every Orphanet row `UNKNOWN`, while product 6 carries a per-gene association type and assessment status. OMIM gene-to-disease associations come from the separate [omim-ingest](https://github.com/monarch-initiative/omim-ingest) (`omim_gene_to_disease_edges.tsv`).
 
-**genes_to_disease.txt** with the following fields:
+Genes are resolved to NCBIGene through the HGNC complete set (by HGNC id, falling back to the symbol); the few rows with no NCBIGene id (withdrawn HGNC loci, snoRNA clusters) are skipped. An Orphanet association type the ingest does not know fails the transform, so a new upstream category gets reviewed rather than silently mapped.
 
-  - 'ncbi_gene_id'
-  - 'gene_symbol'
-  - 'association_type'
-  - 'disease_id'
-  - 'source'
+| Orphanet association type | status | association | predicate |
+|---|---|---|---|
+| Disease-causing germline mutation(s) [/ (loss of function) / (gain of function)] in | Assessed | `CausalGeneToDiseaseAssociation` | `biolink:causes` (loss/gain of function in `subject_form_or_variant_qualifier`) |
+| Disease-causing somatic mutation(s) in | Assessed | `CausalGeneToDiseaseAssociation` | `biolink:causes` (not treated as Mendelian for gene-to-phenotype) |
+| Major susceptibility factor in, Modifying germline mutation in | Assessed | `CorrelatedGeneToDiseaseAssociation` | `biolink:contributes_to` |
+| Candidate gene tested in, Biomarker tested in, Part of a fusion gene in, Role in the phenotype of | any | `CorrelatedGeneToDiseaseAssociation` | `biolink:gene_associated_with_condition` |
+| any | Not yet assessed | `CorrelatedGeneToDiseaseAssociation` | `biolink:gene_associated_with_condition` |
 
 __**Biolink Captured**__
 
-* biolink:CorrelatedGeneToDiseaseAssociation or biolink:CausalGeneToDiseaseAssociation (depending on predicate)
-    * id (random uuid)
-    * subject (ncbi_gene_id)
-    * predicate (association_type)
-      * MENDELIAN: `biolink:causes`
-      * POLYGENIC: `biolink:contributes_to`
-      * UNKNOWN: `biolink:gene_associated_with_condition`
-    * object (disease_id)
-    * primary_knowledge_source (source)
-      * medgen: `infores:omim`
-      * orphanet: `infores:orphanet`
+* biolink:CausalGeneToDiseaseAssociation or biolink:CorrelatedGeneToDiseaseAssociation (per the table above)
+    * subject (NCBIGene id)
+    * predicate (per the table above)
+    * object (Orphanet disorder, mapped to Mondo in the merge)
+    * original_predicate (the Orphanet association type)
+    * original_subject (HGNC id)
+    * qualifiers (the Orphanet assessment status)
+    * publications (PMIDs from `SourceOfValidation`)
+    * primary_knowledge_source (`infores:orphanet`)
     * aggregator_knowledge_source (["infores:monarchinitiative"])
-      * also for medgen: `infores:medgen`
 
 ## [Disease to Phenotype](#disease_to_phenotype)
 
@@ -118,7 +117,7 @@ __**Biolink captured**__
 
 ## [Gene to Phenotype](#gene_to_phenotype)
 
-The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt) file, which has the following fields:
+The gene-to-phenotype ingest processes the tab-delimited [HPOA gene_to_phenotype.txt](http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt) file. It keeps only genes with a Mendelian (causal germline) association to the disease, taking OMIM association types from HPOA and Orphanet types from product 6 (see [Gene to Disease](#gene_to_disease)), so Orphanet-curated causal genes contribute gene-to-phenotype edges. The file has the following fields:
 
   - 'ncbi_gene_id'
   - 'gene_symbol'
