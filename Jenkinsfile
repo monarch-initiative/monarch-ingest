@@ -113,9 +113,14 @@ pipeline {
                         '''
                     }
                 }
+                // A failed dump marks the build UNSTABLE but doesn't block the
+                // release: the dumps can be rebuilt from the released neo4j CSVs
+                // and uploaded afterwards.
                 stage('neo4j-dump') {
                     steps {
-                        sh './scripts/load_neo4j.sh'
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                            sh './scripts/load_neo4j.sh'
+                        }
                     }
                 }
                 stage('sqlite') {
