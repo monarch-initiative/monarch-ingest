@@ -25,6 +25,20 @@
   local_name: data/monarch/phenio-relation-graph.tsv.gz
   tag: phenio
 
+### dismech (disease mechanisms; built into output/dismech.duckdb by `ingest dismech-db`, kept out of the KG)
+-
+  url: https://github.com/monarch-initiative/dismech/releases/latest/download/kb.zip
+  local_name: data/dismech/kb.zip
+  tag: dismech
+-
+  url: https://github.com/monarch-initiative/dismech/releases/latest/download/pathographs.zip
+  local_name: data/dismech/pathographs.zip
+  tag: dismech
+-
+  url: https://github.com/monarch-initiative/dismech/releases/latest/download/release_manifest.json
+  local_name: data/dismech/release_manifest.json
+  tag: dismech
+
 ### Information Resource Registry
 -
   url: https://raw.githubusercontent.com/biolink/information-resource-registry/refs/heads/main/infores_catalog.yaml
