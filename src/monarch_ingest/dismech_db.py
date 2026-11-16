@@ -11,6 +11,7 @@ Schemas:
           causal_edge          downstream / sequelae edges between nodes
           phenotype            one row per (disorder, phenotype), with its upstream causal subgraph
           phenotype_mechanism  (mechanism node, phenotype) for every node upstream of a phenotype
+          gene                 one row per (disorder, gene) in dismech's genetics, as causal or correlated
           treatment            one row per (disorder, treatment), with agents and targets
           descriptor           ontology terms (GO, CL, UBERON, CHEBI, HGNC...) on mechanism nodes
           pathograph_disorder  dismech's pathograph index (MONDO -> graph file)
@@ -20,8 +21,10 @@ Schemas:
   app   shaped for monarch-app endpoints; may copy KG data
           kg_disease_phenotype KG disease -> phenotype edges, sorted by disease
           kg_phenotype_disease the same edges, sorted by phenotype
+          kg_gene_disease      KG causal / correlated gene -> disease edges, sorted by gene
+          kg_disease_gene      the same edges, sorted by disease
           hp_closure           HP subClassOf closure (reflexive)
-          kg_node              labels for the CHEBI/GO/CL/UBERON/HGNC ids dismech uses, when the KG has them
+          kg_node              KG labels for the MONDO/CHEBI/GO/CL/UBERON/HGNC ids dismech uses
 
 Node ids are dismech:<file stem>#<slug of node name>. They are not stable across renames.
 
@@ -115,6 +118,15 @@ def text(v):
 
 def enum(v):
     return str(v) if v else None
+
+
+def gene_kind(relationship_type, association):
+    """causal or correlated, matching the KG's two gene-disease association categories"""
+    if relationship_type:
+        return "causal" if relationship_type == "CAUSATIVE" else "correlated"
+    if isinstance(association, str) and re.search(r"causa|pathogenic", association, re.IGNORECASE):
+        return "causal"
+    return "correlated"
 
 
 def read_disorders(kb):
@@ -275,6 +287,37 @@ def flatten(kb):
                 }
             )
 
+        for g in d.get("genetic") or []:
+            if not isinstance(g, dict) or not g.get("name"):
+                continue
+            gene_id, symbol = term(g.get("gene_term"))
+            if not gene_id:
+                continue
+            rel, assoc = enum(g.get("relationship_type")), g.get("association")
+            tables["gene"].append(
+                {
+                    **base,
+                    "disorder": disorder,
+                    "gene_id": gene_id,
+                    "symbol": symbol or g["name"],
+                    "name": g["name"],
+                    "relationship_type": rel,
+                    "association": assoc if isinstance(assoc, str) else None,
+                    "kind": gene_kind(rel, assoc),
+                    "variant_origin": enum(g.get("variant_origin")),
+                    "validity": [
+                        {
+                            "classification": enum(v.get("validity_classification")),
+                            "classified_by": enum(v.get("classified_by")),
+                        }
+                        for v in g.get("gene_disease_validity") or []
+                        if isinstance(v, dict)
+                    ],
+                    "notes": text(g.get("notes")),
+                    "evidence": evidence(g.get("evidence")),
+                }
+            )
+
         for t in d.get("treatments") or []:
             if not isinstance(t, dict) or not t.get("name"):
                 continue
@@ -369,6 +412,7 @@ _ID_KEY = "try_cast(split_part({col}, ':', 2) AS BIGINT)"
 # per-entity lookups the API filters on, so reads skip most row groups
 ORDER = {
     "phenotype": _ID_KEY.format(col="mondo_id") + ", mondo_id",
+    "gene": "gene_id, mondo_id",
     "treatment": _ID_KEY.format(col="mondo_id") + ", mondo_id",
     "pathograph_disorder": _ID_KEY.format(col="mondo_id") + ", mondo_id",
     "pathograph_node": "file, ord",
@@ -439,6 +483,19 @@ def build_dismech_db(kb, pathographs, kg, out, release: str):
     )
     con.execute(f"CREATE TABLE app.kg_disease_phenotype AS {source} ORDER BY subject_key, subject")
     con.execute(f"CREATE TABLE app.kg_phenotype_disease AS {source} ORDER BY object_key, object")
+    gene_columns = (
+        "subject, subject_label, object, object_label, category, predicate, primary_knowledge_source, "
+        "original_subject, publications, has_evidence"
+    )
+    gene_source = (
+        f"SELECT {_ID_KEY.format(col='subject')} AS subject_key, {_ID_KEY.format(col='object')} AS object_key, "
+        f"{gene_columns} FROM kg._solr_edges WHERE category IN "
+        "('biolink:CausalGeneToDiseaseAssociation', 'biolink:CorrelatedGeneToDiseaseAssociation') "
+        "AND subject LIKE 'HGNC:%' AND object LIKE 'MONDO:%'"
+    )
+    con.execute(f"CREATE TABLE app.kg_gene_disease AS {gene_source} ORDER BY subject_key, subject")
+    con.execute(f"CREATE TABLE app.kg_disease_gene AS {gene_source} ORDER BY object_key, object")
+
     con.execute(
         "CREATE TABLE app.hp_closure AS "
         f"SELECT {_ID_KEY.format(col='object_id')} AS ancestor_key, subject_id AS hpo_id, object_id AS ancestor_id "
@@ -451,9 +508,18 @@ def build_dismech_db(kb, pathographs, kg, out, release: str):
         "  SELECT term_id FROM core.descriptor"
         "  UNION SELECT unnest(agents).id FROM core.treatment"
         "  UNION SELECT gene_id FROM core.pathograph_gene"
+        "  UNION SELECT gene_id FROM core.gene"
+        "  UNION SELECT mondo_id FROM core.disorder"
         ") ORDER BY id"
     )
-    for table in ("kg_disease_phenotype", "kg_phenotype_disease", "hp_closure", "kg_node"):
+    for table in (
+        "kg_disease_phenotype",
+        "kg_phenotype_disease",
+        "kg_gene_disease",
+        "kg_disease_gene",
+        "hp_closure",
+        "kg_node",
+    ):
         logger.info(f"app.{table}: {con.execute(f'SELECT count(*) FROM app.{table}').fetchone()[0]} rows")
     con.execute("DETACH kg")
     con.execute("CHECKPOINT")

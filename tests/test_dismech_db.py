@@ -29,6 +29,15 @@ DISORDER = {
             "evidence": [{"reference": "PMID:1", "supports": "SUPPORT", "snippet": "cirrhosis"}],
         }
     ],
+    "genetic": [
+        {
+            "name": "ATP7B",
+            "relationship_type": "CAUSATIVE",
+            "gene_term": {"term": {"id": "hgnc:870", "label": "ATP7B"}},
+        },
+        {"name": "MODX", "association": "Risk Factor", "gene_term": {"term": {"id": "hgnc:1", "label": "MODX"}}},
+        {"name": "no term"},
+    ],
     "treatments": [
         {
             "name": "Trientine",
@@ -70,14 +79,17 @@ def release(tmp_path):
     con.execute(
         "CREATE TABLE _solr_edges AS SELECT * FROM (VALUES "
         "('MONDO:0010200', 'Wilson disease', 'biolink:has_phenotype', 'HP:0001392', 'Abnormality of the liver',"
-        " NULL, 'infores:omim', 'OMIM:277900', NULL, NULL, NULL, '2', '2', NULL, NULL, [], []),"
+        " NULL, 'infores:omim', 'OMIM:277900', NULL, NULL, NULL, '2', '2', NULL, NULL, [], [], 'x'),"
         "('MONDO:0000001', 'other', 'biolink:has_phenotype', 'HP:0001394', 'Cirrhosis',"
-        " 'true', 'infores:orphanet', 'ORPHA:1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, [], []),"
+        " 'true', 'infores:orphanet', 'ORPHA:1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, [], [], 'x'),"
         "('HGNC:870', 'ATP7B', 'biolink:has_phenotype', 'HP:0001394', 'Cirrhosis',"
-        " NULL, 'infores:hpo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, [], [])"
+        " NULL, 'infores:hpo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, [], [], 'x'),"
+        "('HGNC:870', 'ATP7B', 'biolink:causes', 'MONDO:0010200', 'Wilson disease',"
+        " NULL, 'infores:omim', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, [], [],"
+        " 'biolink:CausalGeneToDiseaseAssociation')"
         ") t(subject, subject_label, predicate, object, object_label, negated, primary_knowledge_source,"
         " original_subject, frequency_qualifier, frequency_qualifier_label, has_percentage, has_count, has_total,"
-        " onset_qualifier_label, sex_qualifier_label, publications, has_evidence)"
+        " onset_qualifier_label, sex_qualifier_label, publications, has_evidence, category)"
     )
     con.execute(
         "CREATE TABLE closure AS SELECT * FROM (VALUES "
@@ -183,6 +195,16 @@ def test_hp_closure_keeps_hp_ancestors_only(db):
         r[0] for r in db.execute("SELECT ancestor_id FROM app.hp_closure WHERE hpo_id = 'HP:0001394'").fetchall()
     }
     assert ancestors == {"HP:0001394", "HP:0001392"}
+
+
+def test_genetics_are_causal_or_correlated(db):
+    genes = {r["gene_id"]: r["kind"] for r in rows(db, "SELECT gene_id, kind FROM core.gene")}
+    assert genes == {"HGNC:870": "causal", "HGNC:1": "correlated"}
+
+
+def test_kg_gene_disease_slices(db):
+    for table in ("app.kg_gene_disease", "app.kg_disease_gene"):
+        assert db.execute(f"SELECT subject, object FROM {table}").fetchall() == [("HGNC:870", "MONDO:0010200")]
 
 
 def test_reads_release_zips(release, tmp_path):
