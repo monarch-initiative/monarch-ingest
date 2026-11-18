@@ -128,6 +128,15 @@ pipeline {
                         sh 'uv run ingest sqlite'
                     }
                 }
+                // dismech.duckdb for monarch-app (pathographs and dismech views). Reads the KG
+                // read-only; a failure marks the build UNSTABLE rather than blocking the release.
+                stage('dismech-db') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                            sh 'uv run ingest dismech-db'
+                        }
+                    }
+                }
                 stage('pheno-comparisons') {
                     steps {
                         // HP-HP / HP-MP / HP-ZP similarity tarballs for Exomiser; reads the KG read-only.

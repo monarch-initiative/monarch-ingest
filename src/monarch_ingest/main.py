@@ -318,6 +318,29 @@ def information_content_cmd():
     apply_information_content()
 
 
+@typer_app.command("dismech-db")
+def dismech_db_cmd(
+    kb: str = typer.Option("data/dismech/kb.zip", help="dismech release kb.zip, or a dismech checkout"),
+    pathographs: str = typer.Option("data/dismech/pathographs.zip", help="dismech release pathographs.zip"),
+    manifest: str = typer.Option(
+        "data/dismech/release_manifest.json", help="dismech release_manifest.json, for the release tag"
+    ),
+    release: str = typer.Option(None, help="dismech release tag; defaults to the manifest's"),
+    kg: str = typer.Option(f"{OUTPUT_DIR}/monarch-kg.duckdb", help="Merged KG, opened read-only"),
+    out: str = typer.Option(f"{OUTPUT_DIR}/dismech.duckdb", help="Output file"),
+):
+    """Build output/dismech.duckdb: one dismech release, flattened, plus the KG slices monarch-app joins to it.
+
+    dismech stays out of the KG (no dismech nodes or edges are merged); monarch-app attaches this
+    file read-only for pathographs and its experimental phenotype, treatment and mechanism views.
+    Reads monarch-kg.duckdb read-only (including `_solr_edges`), so run it after `prepare-solr`,
+    in the parallel post-merge stage.
+    """
+    from monarch_ingest.dismech_db import build_dismech_db, release_tag
+
+    build_dismech_db(kb, pathographs, kg, out, release or release_tag(manifest))
+
+
 @typer_app.command("pheno-comparisons")
 def pheno_comparisons_cmd(
     kg_version: str = typer.Option(None, "--kg-version", help="KG version tag (defaults to today's date)"),
