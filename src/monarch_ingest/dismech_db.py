@@ -23,7 +23,7 @@ Schemas:
           kg_phenotype_disease the same edges, sorted by phenotype
           kg_gene_disease      KG causal / correlated gene -> disease edges, sorted by gene
           kg_disease_gene      the same edges, sorted by disease
-          hp_closure           HP subClassOf closure (reflexive)
+          hp_closure           HP subClassOf closure (reflexive), with UPHENO ancestors
           kg_node              KG labels for the MONDO/CHEBI/GO/CL/UBERON/HGNC ids dismech uses
 
 Node ids are dismech:<file stem>#<slug of node name>. They are not stable across renames.
@@ -500,7 +500,7 @@ def build_dismech_db(kb, pathographs, kg, out, release: str):
         "CREATE TABLE app.hp_closure AS "
         f"SELECT {_ID_KEY.format(col='object_id')} AS ancestor_key, subject_id AS hpo_id, object_id AS ancestor_id "
         "FROM kg.closure WHERE predicate_id = 'rdfs:subClassOf' "
-        "AND subject_id LIKE 'HP:%' AND object_id LIKE 'HP:%' "
+        "AND subject_id LIKE 'HP:%' AND (object_id LIKE 'HP:%' OR object_id LIKE 'UPHENO:%') "
         "ORDER BY ancestor_key, hpo_id"
     )
     con.execute(

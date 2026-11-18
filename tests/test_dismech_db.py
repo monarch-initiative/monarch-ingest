@@ -94,7 +94,8 @@ def release(tmp_path):
     con.execute(
         "CREATE TABLE closure AS SELECT * FROM (VALUES "
         "('HP:0001394', 'rdfs:subClassOf', 'HP:0001394'), ('HP:0001394', 'rdfs:subClassOf', 'HP:0001392'),"
-        "('HP:0001392', 'rdfs:subClassOf', 'HP:0001392'), ('HP:0001394', 'rdfs:subClassOf', 'UPHENO:1')"
+        "('HP:0001392', 'rdfs:subClassOf', 'HP:0001392'), ('HP:0001394', 'rdfs:subClassOf', 'UPHENO:1'),"
+        "('MP:0000001', 'rdfs:subClassOf', 'UPHENO:1'), ('HP:0001394', 'rdfs:subClassOf', 'MP:0000001')"
         ") t(subject_id, predicate_id, object_id)"
     )
     con.execute(
@@ -190,11 +191,14 @@ def test_kg_slices_are_disease_phenotypes_only(db):
     assert db.execute("SELECT count(*) FROM app.kg_phenotype_disease").fetchone()[0] == 2
 
 
-def test_hp_closure_keeps_hp_ancestors_only(db):
-    ancestors = {
-        r[0] for r in db.execute("SELECT ancestor_id FROM app.hp_closure WHERE hpo_id = 'HP:0001394'").fetchall()
+def test_hp_closure_keeps_hp_terms_under_hp_and_upheno_ancestors(db):
+    pairs = set(db.execute("SELECT hpo_id, ancestor_id FROM app.hp_closure").fetchall())
+    assert pairs == {
+        ("HP:0001394", "HP:0001394"),
+        ("HP:0001394", "HP:0001392"),
+        ("HP:0001392", "HP:0001392"),
+        ("HP:0001394", "UPHENO:1"),
     }
-    assert ancestors == {"HP:0001394", "HP:0001392"}
 
 
 def test_genetics_are_causal_or_correlated(db):
